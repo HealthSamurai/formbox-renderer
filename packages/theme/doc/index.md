@@ -4,7 +4,17 @@ order: 1
 icon: book-open
 ---
 
+This package defines the theme contract for Formbox Renderer. Use it when you build a theme or want strict typing while customizing an existing theme.
+
 ## Install
+
+If you only need types in an app, install as a dev dependency:
+
+```bash
+pnpm add -D @formbox/theme
+```
+
+If you are publishing a theme package, add it as a dependency:
 
 ```bash
 pnpm add @formbox/theme
@@ -12,7 +22,7 @@ pnpm add @formbox/theme
 
 ## Quick start
 
-Create a theme by implementing the Theme contract. You can start from a base theme and override only what you need.
+Create a theme by implementing the `Theme` contract. The easiest path is to start from an existing theme and override the components you want to replace.
 
 ```tsx
 import type { Theme } from "@formbox/theme";
@@ -29,29 +39,22 @@ const theme: Theme = {
 
 ## Theme contract
 
-A Theme is a full object with React components for every slot listed in the component reference. The renderer never
-touches DOM APIs directly, so the theme is responsible for markup, layout, and styling while keeping the data flow
-purely through props.
+A `Theme` is a full object with React components for every slot listed in the reference. The renderer never touches DOM APIs directly; the theme owns markup, layout, and styling. Data flows only through props.
 
-You may create a complete theme from scratch or extend an existing one with object spread. The Theme type is strict, so
-every component must be provided.
+The `Theme` type is strict. You must supply every component, either by building a complete theme from scratch or by extending a base theme.
 
 ## Conventions
 
-- Controlled props: text/number/date inputs use value and onChange. Single-selects pass selectedOption, multi-selects
-  pass selectedOptions with onSelect/onDeselect, and checkbox lists use tokens for the selected set. onChange receives
-  the next value, never a DOM event.
-- Disabled states: the renderer uses disabled to indicate non-editable inputs. Prefer disabled over readOnly in theme
-  components.
-- Accessibility: ariaLabelledBy and ariaDescribedBy are string ids. Wire them to the relevant elements.
-- Ids: when id is provided, pass it through to the focusable control.
-- children is the slot name for single content. Option data types use label for the display content.
-- Optional = Yes means the renderer may omit the prop at runtime; Optional = No means it is always passed. Treat undefined as not provided.
+- Inputs are controlled. Callbacks receive values, not DOM events.
+- Use `disabled` to indicate non-editable state; avoid `readOnly` unless your component needs it.
+- `ariaLabelledBy` and `ariaDescribedBy` are id strings. Forward them directly to the focusable element.
+- When `id` is provided, apply it to the primary focusable element.
+- `children` is the slot for rendered content. Option types use `label` for display content.
+- When a prop is optional, the renderer may omit it. Treat `undefined` as not provided.
 
 ## Renderer composition overview
 
-The renderer composes your theme in a predictable tree. You control layout, but the nesting explains where headers,
-errors, and actions appear.
+The renderer composes your theme in a predictable tree. You control layout, but the nesting describes where headers, errors, and actions appear.
 
 Overview diagram (simplified):
 
@@ -113,9 +116,12 @@ GroupScaffold
 
 ## Renderer guarantees
 
-- `id`, `ariaLabelledBy`, and `ariaDescribedBy` values are unique within a form render and stable for a given node or
-  answer instance.
+- `id`, `ariaLabelledBy`, and `ariaDescribedBy` values are unique within a render and stable for a given node or answer.
 - `ariaDescribedBy` strings are already space-joined; use them as-is.
-- Option tokens are stable across renders; selected options may remain when the option list changes.
-- When needed, the renderer passes disabled legacy options so stored answers can still render.
+- Option tokens are stable across renders; selected options may remain when the options list changes.
+- When needed, the renderer passes disabled legacy options so stored answers still render.
 - `label` and `children` props are ready-to-render `ReactNode` values.
+
+## Next
+
+See `reference.md` for component props and `behavior.md` for runtime behavior details.

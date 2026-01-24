@@ -4,6 +4,19 @@ order: 3
 icon: list
 ---
 
+This reference lists every component in the Theme contract and the props the renderer passes at runtime.
+
+## How to read this reference
+
+- Optional column: "Yes" means the renderer may omit the prop. Treat `undefined` as not provided.
+- `ariaLabelledBy` and `ariaDescribedBy` are already space-joined strings. Forward them to the focusable element.
+- Inputs are controlled. Callbacks receive values, not DOM events.
+- `children` and `label` props are already rendered `ReactNode` values.
+
+## Shared types
+
+`OptionItem`, `SelectedOptionItem`, `CustomOptionAction`, and `Attachment` are exported by `@formbox/theme`. Import them when you need to type your components or helpers.
+
 ## Component reference
 
 ### Link

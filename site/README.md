@@ -1,11 +1,38 @@
 # @formbox/site
 
-Landing site and Storybook for Formbox Renderer. The landing page lives at `/` and Storybook is served from `/storybook`.
+Docs site and Storybook for Formbox Renderer. You do not need this package to use the renderer in your app.
 
-## Commands
+## Run locally
 
-- `pnpm dev` – start the landing site (Vite)
-- `pnpm storybook` – start Storybook on port 6006
-- `pnpm build` – build landing to `dist` and Storybook to `dist/storybook`
-- `pnpm build:storybook` – build Storybook only
-- `pnpm preview` – preview the landing build
+```bash
+pnpm --filter @formbox/site dev
+```
+
+Storybook:
+
+```bash
+pnpm --filter @formbox/site storybook
+```
+
+Build:
+
+```bash
+pnpm --filter @formbox/site build
+```
+
+Build Storybook only:
+
+```bash
+pnpm --filter @formbox/site build:storybook
+```
+
+Preview the landing build:
+
+```bash
+pnpm --filter @formbox/site preview
+```
+
+## Output paths
+
+- Landing site: `dist/`
+- Storybook: `dist/storybook/`

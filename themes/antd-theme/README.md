@@ -5,20 +5,17 @@ Ant Design theme for Formbox Renderer.
 ## Install
 
 ```bash
-pnpm add @formbox/antd-theme
+pnpm add @formbox/renderer @formbox/antd-theme
+# or
+npm install @formbox/renderer @formbox/antd-theme
 ```
 
-Include the compiled CSS:
-
-```ts
-import "@formbox/antd-theme/style.css";
-```
-
-## Usage
+## Use
 
 ```tsx
 import Renderer from "@formbox/renderer";
 import { theme } from "@formbox/antd-theme";
+import "@formbox/antd-theme/style.css";
 
 <Renderer questionnaire={questionnaire} theme={theme} />;
 ```

@@ -1,24 +1,21 @@
 # @formbox/hs-theme
 
-Health Samurai-styled theme for Formbox Renderer.
+Health Samurai theme for Formbox Renderer.
 
 ## Install
 
 ```bash
-pnpm add @formbox/hs-theme
+pnpm add @formbox/renderer @formbox/hs-theme
+# or
+npm install @formbox/renderer @formbox/hs-theme
 ```
 
-Include the compiled CSS:
-
-```ts
-import "@formbox/hs-theme/style.css";
-```
-
-## Usage
+## Use
 
 ```tsx
 import Renderer from "@formbox/renderer";
 import { theme } from "@formbox/hs-theme";
+import "@formbox/hs-theme/style.css";
 
 <Renderer questionnaire={questionnaire} theme={theme} />;
 ```
