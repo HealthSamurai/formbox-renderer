@@ -1,5 +1,6 @@
 import type {
   GroupRendererDefinition,
+  GroupListRendererDefinition,
   IQuestionNode,
   QuestionRendererDefinition,
 } from "./types.ts";
@@ -21,15 +22,15 @@ import { NumberSpinnerRenderer } from "./component/question/renderer/number-spin
 import { QuantitySliderRenderer } from "./component/question/renderer/quantity-slider-renderer.tsx";
 import { QuantitySpinnerRenderer } from "./component/question/renderer/quantity-spinner-renderer.tsx";
 import { UnsupportedRenderer } from "./component/question/renderer/unsupported-renderer.tsx";
+import { DefaultListRenderer } from "./component/group/renderer/default-list-renderer.tsx";
 import { DefaultRenderer } from "./component/group/renderer/default-renderer.tsx";
 import { FooterRenderer } from "./component/group/renderer/footer-renderer.tsx";
 import { GridRenderer } from "./component/group/renderer/grid-renderer.tsx";
-import { GridTableRenderer } from "./component/group/renderer/grid-table-renderer.tsx";
+import { GridTableListRenderer } from "./component/group/renderer/grid-table-list-renderer.tsx";
 import { HeaderRenderer } from "./component/group/renderer/header-renderer.tsx";
 import { PageRenderer } from "./component/group/renderer/page-renderer.tsx";
 import { SelectionTableRenderer } from "./component/group/renderer/selection-table-renderer.tsx";
 import { TabContainerRenderer } from "./component/group/renderer/tab-container-renderer.tsx";
-import { isGroupListStore } from "./store/group/group-list-store.ts";
 
 export const questions: QuestionRendererDefinition[] = [
   {
@@ -198,12 +199,6 @@ export const groups: GroupRendererDefinition[] = [
     renderer: GridRenderer,
   },
   {
-    name: "group-gtable",
-    priority: 10,
-    matcher: (node) => isGroupListStore(node) && node.control === "gtable",
-    renderer: GridTableRenderer,
-  },
-  {
     name: "group-htable",
     priority: 10,
     matcher: (node) => node.control === "htable",
@@ -226,6 +221,69 @@ export const groups: GroupRendererDefinition[] = [
     priority: Number.NEGATIVE_INFINITY,
     matcher: () => true,
     renderer: DefaultRenderer,
+  },
+];
+
+export const groupLists: GroupListRendererDefinition[] = [
+  {
+    name: "group-tab-container",
+    priority: 100,
+    matcher: (node) => node.control === "tab-container",
+    renderer: DefaultListRenderer,
+  },
+  {
+    name: "group-page",
+    priority: 10,
+    matcher: (node) => node.control === "page",
+    renderer: DefaultListRenderer,
+  },
+  {
+    name: "group-header",
+    priority: 10,
+    matcher: (node) => node.control === "header",
+    renderer: DefaultListRenderer,
+  },
+  {
+    name: "group-footer",
+    priority: 10,
+    matcher: (node) => node.control === "footer",
+    renderer: DefaultListRenderer,
+  },
+  {
+    name: "group-grid",
+    priority: 10,
+    matcher: (node) => node.control === "grid",
+    renderer: DefaultListRenderer,
+  },
+  {
+    name: "group-gtable",
+    priority: 10,
+    matcher: (node) => node.control === "gtable",
+    renderer: GridTableListRenderer,
+  },
+  {
+    name: "group-htable",
+    priority: 10,
+    matcher: (node) => node.control === "htable",
+    renderer: DefaultListRenderer,
+  },
+  {
+    name: "group-table",
+    priority: 10,
+    matcher: (node) => node.control === "table",
+    renderer: DefaultListRenderer,
+  },
+  {
+    name: "group-list",
+    priority: 10,
+    matcher: (node) => node.control === "list",
+    renderer: DefaultListRenderer,
+  },
+  {
+    name: "group-default",
+    priority: Number.NEGATIVE_INFINITY,
+    matcher: () => true,
+    renderer: DefaultListRenderer,
   },
 ];
 

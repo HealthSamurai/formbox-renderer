@@ -1,6 +1,5 @@
 import {
   ExpressionEnvironment,
-  GroupRendererDefinition,
   IExpressionEnvironmentProvider,
   IExpressionRegistry,
   IForm,
@@ -8,15 +7,18 @@ import {
   IGroupList,
   INode,
   IPresentableNode,
+  IQuestionNode,
   IScope,
   IValueSetExpander,
+  GroupListRendererDefinition,
+  GroupRendererDefinition,
   QuestionRendererDefinition,
   SnapshotKind,
 } from "../../types.ts";
-import { QuestionRendererRegistry } from "../question/question-renderer-registry.ts";
-import { GroupRendererRegistry } from "../group/group-renderer-registry.ts";
+import { RendererRegistry } from "../../renderer-registry.ts";
 import {
   groups as defaultGroupRenderers,
+  groupLists as defaultGroupListRenderers,
   questions as defaultQuestionRenderers,
 } from "../../renderer-definitions.ts";
 import {
@@ -77,8 +79,18 @@ export class FormStore implements IForm, IExpressionEnvironmentProvider {
   private pageIndex = 0;
 
   readonly coordinator = new EvaluationCoordinator();
-  readonly questionRendererRegistry: QuestionRendererRegistry;
-  readonly groupRendererRegistry: GroupRendererRegistry;
+  readonly questionRendererRegistry: RendererRegistry<
+    IQuestionNode,
+    QuestionRendererDefinition
+  >;
+  readonly groupRendererRegistry: RendererRegistry<
+    IGroupNode,
+    GroupRendererDefinition
+  >;
+  readonly groupListRendererRegistry: RendererRegistry<
+    IGroupList,
+    GroupListRendererDefinition
+  >;
   readonly expressionRegistry: IExpressionRegistry;
   readonly valueSetExpander: IValueSetExpander;
 
@@ -86,15 +98,14 @@ export class FormStore implements IForm, IExpressionEnvironmentProvider {
     readonly questionnaire: Questionnaire,
     response?: QuestionnaireResponse,
     terminologyServerUrl?: string,
-    questionRenderers?: QuestionRendererDefinition[],
-    groupRenderers?: GroupRendererDefinition[],
   ) {
-    this.questionRendererRegistry = new QuestionRendererRegistry(
-      questionRenderers ?? defaultQuestionRenderers,
+    this.questionRendererRegistry = new RendererRegistry(
+      defaultQuestionRenderers,
     );
 
-    this.groupRendererRegistry = new GroupRendererRegistry(
-      groupRenderers ?? defaultGroupRenderers,
+    this.groupRendererRegistry = new RendererRegistry(defaultGroupRenderers);
+    this.groupListRendererRegistry = new RendererRegistry(
+      defaultGroupListRenderers,
     );
 
     makeObservable(this);

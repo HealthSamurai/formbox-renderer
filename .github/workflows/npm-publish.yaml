@@ -47,4 +47,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_PROVENANCE: true
         with:
+          commitMessage: "chore(release): version packages"
           publish: pnpm release

@@ -41,11 +41,10 @@ import {
   TriggerDefinition,
   UsageContext,
 } from "fhir/r5";
-import type { GroupRendererRegistry } from "./store/group/group-renderer-registry.ts";
 import type { ComponentType, HTMLAttributes, ReactNode } from "react";
-import { QuestionRendererRegistry } from "./store/question/question-renderer-registry.ts";
 import { PolyCarrierFor, PolyKeyFor } from "./utilities.ts";
 import type { FormPagination, OptionItem } from "@formbox/theme";
+import type { RendererRegistry } from "./renderer-registry.ts";
 
 export type OperationOutcomeIssueCode =
   | "business-rule" // Expression cycles / logic conflicts
@@ -483,15 +482,26 @@ export interface IActualNode extends IPresentableNode {
   readonly isDirty: boolean;
 }
 
-export type GroupRendererProperties = { node: IGroupNode | IGroupList };
+export type GroupRendererProperties = { node: IGroupNode };
 
-export type GroupRendererMatcher = (target: IGroupNode | IGroupList) => boolean;
+export type GroupRendererMatcher = (target: IGroupNode) => boolean;
 
 export interface GroupRendererDefinition {
   name: string;
   priority: number;
   matcher: GroupRendererMatcher;
   renderer: ComponentType<GroupRendererProperties>;
+}
+
+export type GroupListRendererProperties = { node: IGroupList };
+
+export type GroupListRendererMatcher = (target: IGroupList) => boolean;
+
+export interface GroupListRendererDefinition {
+  name: string;
+  priority: number;
+  matcher: GroupListRendererMatcher;
+  renderer: ComponentType<GroupListRendererProperties>;
 }
 
 export interface IGroupRow {
@@ -541,7 +551,7 @@ export interface IGroupList extends IPresentableNode {
   readonly minOccurs: number;
   readonly maxOccurs: number;
   readonly control: GroupItemControl | undefined;
-  readonly renderer: ComponentType<GroupRendererProperties> | undefined;
+  readonly renderer: ComponentType<GroupListRendererProperties> | undefined;
   readonly grid: IGrid;
   addNode(): void;
   removeNode(node: IGroupNode): void;
@@ -692,8 +702,18 @@ export interface IForm {
   readonly scope: IScope;
   readonly valueSetExpander: IValueSetExpander;
   readonly preferredTerminologyServers: ReadonlyArray<string>;
-  readonly questionRendererRegistry: QuestionRendererRegistry;
-  readonly groupRendererRegistry: GroupRendererRegistry;
+  readonly questionRendererRegistry: RendererRegistry<
+    IQuestionNode,
+    QuestionRendererDefinition
+  >;
+  readonly groupRendererRegistry: RendererRegistry<
+    IGroupNode,
+    GroupRendererDefinition
+  >;
+  readonly groupListRendererRegistry: RendererRegistry<
+    IGroupList,
+    GroupListRendererDefinition
+  >;
   reportRenderingIssue(issue: OperationOutcomeIssue): void;
 
   readonly isSubmitAttempted: boolean;

@@ -1,7 +1,7 @@
 import { action, computed, observable, override } from "mobx";
 import {
   GROUP_ITEM_CONTROLS,
-  GroupRendererProperties,
+  GroupListRendererProperties,
   type GroupItemControl,
   IForm,
   IGroupNode,
@@ -74,8 +74,8 @@ export class GroupListStore
   }
 
   @computed
-  get renderer(): ComponentType<GroupRendererProperties> | undefined {
-    return this.form.groupRendererRegistry.resolve(this)?.renderer;
+  get renderer(): ComponentType<GroupListRendererProperties> | undefined {
+    return this.form.groupListRendererRegistry.resolve(this)?.renderer;
   }
 
   @computed({ keepAlive: true })
