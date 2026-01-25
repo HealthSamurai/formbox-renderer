@@ -35,7 +35,7 @@ Use standard link behavior; avoid preventing default unless you provide equivale
 
 ### Errors
 
-Inline list of validation messages for a specific control, answer, or the form summary. Keep each message distinct and
+Inline list of validation messages for a specific control, answer, or form-level errors. Keep each message distinct and
 close to the related input or summary area.
 
 | Prop       | Type       | Optional | Description                                                                |

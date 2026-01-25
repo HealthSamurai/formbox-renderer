@@ -14,7 +14,6 @@ export { CheckboxList } from "./components/checkbox-list.tsx";
 export { MultiSelectInput } from "./components/multi-select-input.tsx";
 export { CustomOptionForm } from "./components/custom-option-form.tsx";
 export { Errors } from "./components/errors.tsx";
-export { ErrorSummary } from "./components/error-summary.tsx";
 export { Label } from "./components/label.tsx";
 export { QuestionScaffold } from "./components/question-scaffold.tsx";
 export { OptionsLoading } from "./components/options-loading.tsx";
@@ -54,7 +53,6 @@ import { CheckboxList } from "./components/checkbox-list.tsx";
 import { MultiSelectInput } from "./components/multi-select-input.tsx";
 import { CustomOptionForm } from "./components/custom-option-form.tsx";
 import { Errors } from "./components/errors.tsx";
-import { ErrorSummary } from "./components/error-summary.tsx";
 import { Label } from "./components/label.tsx";
 import { QuestionScaffold } from "./components/question-scaffold.tsx";
 import { OptionsLoading } from "./components/options-loading.tsx";
@@ -93,7 +91,6 @@ export const theme: Theme = {
   MultiSelectInput,
   CustomOptionForm,
   Errors,
-  ErrorSummary,
   Label,
   QuestionScaffold,
   OptionsLoading,

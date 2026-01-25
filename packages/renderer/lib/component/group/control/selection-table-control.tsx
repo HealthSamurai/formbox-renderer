@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import type { IGroupNode } from "../../../types.ts";
 import { NodeHeader } from "../../node/node-header.tsx";
-import { NodeErrors } from "../../node/node-errors.tsx";
+import { renderErrors } from "../../node/errors.tsx";
 import { useTheme } from "../../../ui/theme.tsx";
 import { ValueDisplay } from "../../question/fhir/value-display.tsx";
 import { SelectionTableCell } from "../component/selection-table-cell.tsx";
@@ -20,7 +20,7 @@ export const SelectionTableControl = observer(function SelectionTableControl({
         token: question.token,
         content: <NodeHeader node={question} as="text" />,
         isLoading: question.answerOption.select.isLoading,
-        errors: question.hasErrors && <NodeErrors node={question} />,
+        errors: renderErrors(question),
       }))}
       rows={node.table.optionAxis.map((option) => ({
         token: option.token,
@@ -56,7 +56,7 @@ export const SelectionTableControl = observer(function SelectionTableControl({
         token: question.token,
         content: <NodeHeader node={question} as="text" />,
         isLoading: question.answerOption.select.isLoading,
-        errors: question.hasErrors && <NodeErrors node={question} />,
+        errors: renderErrors(question),
         cells: node.table.optionAxis.map((option) => ({
           token: buildId(question.token, option.token),
           content: (

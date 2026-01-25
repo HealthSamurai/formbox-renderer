@@ -3,11 +3,10 @@ import { useCallback } from "react";
 import { observer } from "mobx-react-lite";
 import { NodeList } from "../node/node-list.tsx";
 import { useTheme } from "../../ui/theme.tsx";
-import { AnswerErrors } from "./answer-errors.tsx";
+import { renderErrors } from "../node/errors.tsx";
 import {
   concatIds,
-  getAnswerErrorId,
-  getNodeErrorId,
+  getIssueErrorId,
   getNodeHelpId,
   getNodeLabelId,
   buildId,
@@ -43,8 +42,8 @@ export const AnswerScaffold = observer(function AnswerScaffold<
           ariaLabelledBy={getNodeLabelId(answer.question)}
           ariaDescribedBy={concatIds(
             getNodeHelpId(answer.question),
-            getNodeErrorId(answer.question),
-            getAnswerErrorId(answer),
+            getIssueErrorId(answer.question),
+            getIssueErrorId(answer),
           )}
           answer={answer as IAnswer<T>}
         />
@@ -53,9 +52,7 @@ export const AnswerScaffold = observer(function AnswerScaffold<
       canRemove={
         answer.question.repeats ? answer.question.canRemove : undefined
       }
-      errors={
-        answer.issues.length > 0 ? <AnswerErrors answer={answer} /> : undefined
-      }
+      errors={renderErrors(answer)}
       children={<NodeList nodes={answer.nodes} />}
     />
   );

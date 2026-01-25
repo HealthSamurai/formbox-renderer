@@ -2,15 +2,14 @@ import { observer } from "mobx-react-lite";
 import { useMemo } from "react";
 import type { AnswerType, IQuestionNode, OptionItem } from "../../../types.ts";
 import { useTheme } from "../../../ui/theme.tsx";
-import { AnswerErrors } from "../../answer/answer-errors.tsx";
+import { renderErrors } from "../../node/errors.tsx";
 import { getValueControl } from "../fhir/value-control.ts";
 import { ValueDisplay } from "../fhir/value-display.tsx";
 import { strings } from "../../../strings.ts";
 import {
   buildId,
   concatIds,
-  getAnswerErrorId,
-  getNodeErrorId,
+  getIssueErrorId,
   getNodeHelpId,
   getNodeLabelId,
 } from "../../../utilities.ts";
@@ -25,17 +24,15 @@ export const MultiDropdownSelectControl = observer(
     const store = node.answerOption.select;
     const CustomControl = getValueControl(store.customType);
 
-    const selectedOptions = useMemo(() => {
-      return store.selectedOptions.map((selection) => ({
-        token: selection.token,
-        label: (
-          <ValueDisplay type={selection.answerType} value={selection.value} />
-        ),
-        ariaDescribedBy: getAnswerErrorId(selection.answer),
-        errors: <AnswerErrors answer={selection.answer} />,
-        disabled: selection.disabled,
-      }));
-    }, [store.selectedOptions]);
+    const selectedOptions = store.selectedOptions.map((selection) => ({
+      token: selection.token,
+      label: (
+        <ValueDisplay type={selection.answerType} value={selection.value} />
+      ),
+      ariaDescribedBy: getIssueErrorId(selection.answer),
+      errors: renderErrors(selection.answer),
+      disabled: selection.disabled,
+    }));
 
     const formState = store.customOptionFormState;
 
@@ -46,10 +43,10 @@ export const MultiDropdownSelectControl = observer(
             answer={formState.answer}
             id={buildId(formState.answer.token, "custom-input")}
             ariaLabelledBy={getNodeLabelId(node)}
-            ariaDescribedBy={getAnswerErrorId(formState.answer)}
+            ariaDescribedBy={getIssueErrorId(formState.answer)}
           />
         }
-        errors={<AnswerErrors answer={formState.answer} />}
+        errors={renderErrors(formState.answer)}
         cancel={{
           label: strings.dialog.cancel,
           onClick: store.cancelCustomOptionForm,
@@ -87,7 +84,7 @@ export const MultiDropdownSelectControl = observer(
         specifyOtherOption={specifyOtherOption}
         id={buildId(node.token, "multi-select")}
         ariaLabelledBy={getNodeLabelId(node)}
-        ariaDescribedBy={concatIds(getNodeHelpId(node), getNodeErrorId(node))}
+        ariaDescribedBy={concatIds(getNodeHelpId(node), getIssueErrorId(node))}
         disabled={node.readOnly}
         isLoading={store.isLoading}
         selectedOptions={selectedOptions}

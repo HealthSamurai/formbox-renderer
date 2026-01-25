@@ -23,6 +23,7 @@ import {
   buildId,
   EXT,
   findExtension,
+  getIssueMessage,
   getItemControlCode,
   makeIssue,
   withQuestionnaireResponseItemMeta,
@@ -265,7 +266,9 @@ export class GroupListStore
   }
 
   get issues(): OperationOutcomeIssue[] {
-    return this.validator.issues;
+    return this.validator.issues.filter(
+      (issue) => getIssueMessage(issue) !== undefined,
+    );
   }
 
   override clearDirty(): void {}

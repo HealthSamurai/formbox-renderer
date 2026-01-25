@@ -5,7 +5,7 @@ import { useCallback } from "react";
 import {
   buildId,
   concatIds,
-  getNodeErrorId,
+  getIssueErrorId,
   getNodeHelpId,
   getNodeLabelId,
 } from "../../../utilities.ts";
@@ -40,7 +40,7 @@ export const SelectionTableCell = observer(function SelectionTableCell({
       ariaLabelledBy={concatIds(getNodeLabelId(question), ariaLabelledBy) ?? ""}
       ariaDescribedBy={concatIds(
         getNodeHelpId(question),
-        getNodeErrorId(question),
+        getIssueErrorId(question),
       )}
     />
   ) : (
@@ -54,7 +54,7 @@ export const SelectionTableCell = observer(function SelectionTableCell({
       ariaLabelledBy={concatIds(getNodeLabelId(question), ariaLabelledBy) ?? ""}
       ariaDescribedBy={concatIds(
         getNodeHelpId(question),
-        getNodeErrorId(question),
+        getIssueErrorId(question),
       )}
     />
   );

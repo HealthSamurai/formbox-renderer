@@ -25,6 +25,7 @@ import {
   evaluateEnableWhenCondition,
   EXT,
   findExtension,
+  getIssueMessage,
   normalizeExpressionValues,
 } from "../../utilities.ts";
 import { isQuestionNode } from "../question/question-store.ts";
@@ -191,7 +192,7 @@ export abstract class AbstractActualNodeStore
       issues.push(...this.validator.issues);
     }
 
-    return issues;
+    return issues.filter((issue) => getIssueMessage(issue) !== undefined);
   }
 
   @computed

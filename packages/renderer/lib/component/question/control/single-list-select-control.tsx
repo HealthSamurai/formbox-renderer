@@ -9,7 +9,7 @@ import { useTheme } from "../../../ui/theme.tsx";
 import { getValueControl } from "../fhir/value-control.ts";
 import { ValueDisplay } from "../fhir/value-display.tsx";
 import { strings } from "../../../strings.ts";
-import { AnswerErrors } from "../../answer/answer-errors.tsx";
+import { renderErrors } from "../../node/errors.tsx";
 
 export const SingleListSelectControl = observer(
   function SingleListSelectControl<T extends AnswerType>({
@@ -39,7 +39,7 @@ export const SingleListSelectControl = observer(
               ariaDescribedBy={ariaDescribedBy}
             />
           }
-          errors={<AnswerErrors answer={answer} />}
+          errors={renderErrors(answer)}
           cancel={{
             label: strings.dialog.cancel,
             onClick: store.cancelCustomOptionForm,

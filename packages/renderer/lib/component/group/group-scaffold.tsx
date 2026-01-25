@@ -1,10 +1,11 @@
 import type { ReactNode } from "react";
+import { observer } from "mobx-react-lite";
 import type { IGroupNode } from "../../types.ts";
 import { NodeHeader } from "../node/node-header.tsx";
-import { NodeErrors } from "../node/node-errors.tsx";
+import { renderErrors } from "../node/errors.tsx";
 import { useTheme } from "../../ui/theme.tsx";
 
-export function GroupScaffold({
+export const GroupScaffold = observer(function GroupScaffold({
   node,
   children,
   onRemove,
@@ -25,7 +26,7 @@ export function GroupScaffold({
   return (
     <ThemedGroupScaffold
       header={header}
-      errors={<NodeErrors node={node} />}
+      errors={renderErrors(node)}
       onRemove={onRemove}
       canRemove={canRemove}
       removeLabel={removeLabel}
@@ -33,4 +34,4 @@ export function GroupScaffold({
       {children}
     </ThemedGroupScaffold>
   );
-}
+});

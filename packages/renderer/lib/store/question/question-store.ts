@@ -40,6 +40,7 @@ import {
   EXT,
   extractExtensionsValues,
   extractExtensionValue,
+  getIssueMessage,
   getItemControlCode,
   getValue,
   buildId,
@@ -204,9 +205,8 @@ export class QuestionStore<T extends AnswerType = AnswerType>
 
   @override
   override get issues() {
-    return this.answerOption.error
-      ? [...super.issues, this.answerOption.error]
-      : super.issues;
+    const issues = [...super.issues, ...this.answerOption.issues];
+    return issues.filter((issue) => getIssueMessage(issue) !== undefined);
   }
 
   @override

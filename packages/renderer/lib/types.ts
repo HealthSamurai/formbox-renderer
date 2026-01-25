@@ -434,6 +434,11 @@ export type DataTypeToSuffix<T extends DataType> =
 
 export type SnapshotKind = "response" | "expression";
 
+export interface IssueSource {
+  readonly token: string;
+  readonly issues: ReadonlyArray<OperationOutcomeIssue>;
+}
+
 export interface IPresentableNode {
   readonly template: QuestionnaireItem;
 
@@ -611,7 +616,7 @@ export interface IOptionSelection<T extends AnswerType = AnswerType> {
 }
 
 export interface IAnswerOptions<T extends AnswerType = AnswerType> {
-  readonly error: OperationOutcomeIssue | undefined;
+  readonly issues: OperationOutcomeIssue[];
   readonly inherentOptions: ReadonlyArray<AnswerOption<T>>;
   readonly constraint: QuestionnaireItem["answerConstraint"];
   readonly select: IOptionSelection<T>;
@@ -688,7 +693,7 @@ export interface IValueSetExpander {
   ): Promise<Coding[]>;
 }
 
-export interface IForm {
+export interface IForm extends IssueSource {
   questionnaire: Questionnaire;
   response: QuestionnaireResponse | undefined;
   nodes: Array<IPresentableNode>;

@@ -95,10 +95,12 @@ export class AnswerOptionStore<
   }
 
   @computed
-  get error(): OperationOutcomeIssue | undefined {
-    return this.expansion?.case({
-      rejected: (error) => toOptionsIssue(error),
-    });
+  get issues() {
+    return (
+      this.expansion?.case({
+        rejected: (error) => [toOptionsIssue(error)],
+      }) ?? []
+    );
   }
 
   @computed

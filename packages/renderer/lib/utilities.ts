@@ -8,6 +8,7 @@ import {
   IGroupNode,
   IPresentableNode,
   IQuestionNode,
+  IssueSource,
   ITEM_CONTROLS,
   ItemControl,
   OperationOutcomeIssueCode,
@@ -58,6 +59,10 @@ export function buildId(
     .join("__");
 }
 
+export function randomToken(): string {
+  return Math.random().toString(36).slice(2, 10);
+}
+
 export function getNodeLabelId(node: IPresentableNode): string {
   return buildId(node.token, "label");
 }
@@ -74,12 +79,8 @@ export function getNodeFlyoverId(node: IPresentableNode): string {
   return buildId(node.token, "flyover");
 }
 
-export function getNodeErrorId(node: IPresentableNode): string | undefined {
-  return node.hasErrors ? buildId(node.token, "errors") : undefined;
-}
-
-export function getAnswerErrorId(answer: IAnswer): string | undefined {
-  return answer.issues.length > 0 ? buildId(answer.token, "errors") : undefined;
+export function getIssueErrorId(source: IssueSource): string | undefined {
+  return source.issues.length > 0 ? buildId(source.token, "errors") : undefined;
 }
 
 export function concatIds(

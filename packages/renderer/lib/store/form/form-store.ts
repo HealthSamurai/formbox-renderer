@@ -46,9 +46,11 @@ import {
   clamp,
   EXT,
   extractExtensionsValues,
+  getIssueMessage,
   getItemControlCode,
   buildId,
   makeIssue,
+  randomToken,
   shouldCreateStore,
 } from "../../utilities.ts";
 import { ValueSetExpander } from "../option/valueset-expander.ts";
@@ -56,6 +58,7 @@ import type { FormPagination } from "@formbox/theme";
 
 export class FormStore implements IForm, IExpressionEnvironmentProvider {
   private readonly initialResponse: QuestionnaireResponse | undefined;
+  readonly token = buildId("form", randomToken());
 
   readonly nodes = observable.array<IPresentableNode>([], {
     deep: false,
@@ -130,7 +133,7 @@ export class FormStore implements IForm, IExpressionEnvironmentProvider {
               item,
               undefined,
               this.scope,
-              "",
+              this.token,
               this.initialResponse?.item,
             ),
           ),
@@ -313,13 +316,12 @@ export class FormStore implements IForm, IExpressionEnvironmentProvider {
     if (this.isSubmitAttempted) {
       issues.push(...this.expressionRegistry.constraintsIssues);
     }
-    return issues;
+    return issues.filter((issue) => getIssueMessage(issue) !== undefined);
   }
 
   @action
   validateAll() {
     this.submitAttempted = true;
-    // TODO: surface a form-level summary when validation fails.
     const blockingFormIssues = this.issues.some(
       (issue) => issue.severity === "error" || issue.severity === "fatal",
     );

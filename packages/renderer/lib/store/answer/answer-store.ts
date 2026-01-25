@@ -20,6 +20,7 @@ import type {
 import {
   ANSWER_TYPE_TO_DATA_TYPE,
   asAnswerFragment,
+  getIssueMessage,
   shouldCreateStore,
 } from "../../utilities.ts";
 import { AnswerValidator } from "./answer-validator.ts";
@@ -100,7 +101,9 @@ export class AnswerStore<T extends AnswerType> implements IAnswer<T> {
 
   @computed
   get issues(): OperationOutcomeIssue[] {
-    return this.validator.issues;
+    return this.validator.issues.filter(
+      (issue) => getIssueMessage(issue) !== undefined,
+    );
   }
 
   @computed.struct
