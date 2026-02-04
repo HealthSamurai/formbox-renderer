@@ -1,7 +1,7 @@
 import Renderer from "@formbox/renderer";
 import "@formbox/hs-theme/style.css";
 import { theme } from "@formbox/hs-theme";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import {
   SmartMessagingPhase,
   useSmartMessaging,
@@ -26,6 +26,20 @@ const getPhaseMessage = (phase: SmartMessagingPhase) => {
   }
   return "";
 };
+
+const noop = () => {};
+
+function subscribeToClient() {
+  return noop;
+}
+
+function getClientSnapshot() {
+  return true;
+}
+
+function getServerSnapshot() {
+  return false;
+}
 
 function SwmClient() {
   const {
@@ -55,7 +69,7 @@ function SwmClient() {
   }
 
   if (!questionnaire || !Array.isArray(questionnaire.item)) {
-    return null;
+    return;
   }
 
   return (
@@ -78,11 +92,11 @@ function SwmClient() {
 }
 
 export default function SwmPage() {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const isClient = useSyncExternalStore(
+    subscribeToClient,
+    getClientSnapshot,
+    getServerSnapshot,
+  );
 
   if (!isClient) {
     return (
