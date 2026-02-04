@@ -1,16 +1,21 @@
 import { renderToString } from "react-dom/server";
-import { jsx, jsxs, Fragment as Fragment$1 } from "react/jsx-runtime";
+import { jsx, jsxs, Fragment } from "react/jsx-runtime";
 import classNames from "classnames";
 import { twMerge } from "tailwind-merge";
 import * as React from "react";
-import React__default, { useRef, useState, useEffect, useCallback, Fragment, useMemo } from "react";
-import { Github, ChevronRight, SquarePen, ArrowUp, ArrowLeft, ArrowRight, Star, CircleDot, ArrowUpRight, X, Search as Search$1, Shield, Sparkles, HeartPulse, LayoutGrid, List, Settings, BookOpen, Paintbrush2, Palette, Rocket, ChevronDown, Menu } from "lucide-react";
+import React__default, { useRef, useState, useEffect, useCallback, createContext, useMemo, useContext, forwardRef, createElement, Children, useLayoutEffect, useSyncExternalStore, Fragment as Fragment$1 } from "react";
+import { Github, ChevronRight, SquarePen, ArrowUp, ArrowLeft, ArrowRight, Star, CircleDot, ArrowUpRight, X as X$1, Search as Search$1, Shield, Sparkles, HeartPulse, LayoutGrid, List, Settings, BookOpen, Paintbrush2, Palette, Rocket, ChevronDown, Menu } from "lucide-react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
 import { Renderer, Triangle, Program, Color, Mesh } from "ogl";
+import { observer } from "mobx-react-lite";
+import Nt$1 from "fhirpath/fhir-context/r5/index.js";
+import { action, extendObservable, observable, computed, observe, transaction, reaction, ObservableMap, makeObservable, runInAction, isObservableObject, $mobx, isComputedProp, _getAdministration, keys, isObservableArray, isObservableMap, isComputed, comparer, autorun, override } from "mobx";
+import Sr from "fhirpath";
+import { useSmartMessaging, SmartMessagingPhase } from "sdc-smart-web-messaging-react";
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
-function cn(...inputs) {
+function cn$2(...inputs) {
   return twMerge(classNames(...inputs));
 }
 const slugify$1 = (value) => {
@@ -40,7 +45,7 @@ function CodeBlock({ html, code, className }) {
   return /* @__PURE__ */ jsx(
     "div",
     {
-      className: cn(
+      className: cn$2(
         "overflow-x-auto rounded-xl border border-border/60 bg-muted/60 p-4 text-xs text-foreground [&_pre]:m-0 [&_pre]:bg-transparent [&_pre]:p-0 [&_pre]:font-mono [&_code]:font-mono [&_code]:text-xs",
         className
       ),
@@ -231,7 +236,7 @@ const Button = React.forwardRef(
     return /* @__PURE__ */ jsx(
       Comp,
       {
-        className: cn(buttonVariants({ variant, size, className })),
+        className: cn$2(buttonVariants({ variant, size, className })),
         ref,
         ...props
       }
@@ -348,7 +353,7 @@ function SplitText({
   ease = "power3.out",
   splitType = "chars",
   from = DEFAULT_FROM,
-  to = DEFAULT_TO,
+  to: to2 = DEFAULT_TO,
   threshold = 0.1,
   rootMargin = "-100px",
   tag = "p",
@@ -445,7 +450,7 @@ function SplitText({
           targets,
           { ...from },
           {
-            ...to,
+            ...to2,
             duration,
             ease,
             stagger: delay / 1e3,
@@ -488,7 +493,7 @@ function SplitText({
     ease,
     splitType,
     from,
-    to,
+    to2,
     threshold,
     rootMargin
   ]);
@@ -672,9 +677,9 @@ const Threads = ({
     let targetMouse = [0.5, 0.5];
     function handleMouseMove(event) {
       const rect = container.getBoundingClientRect();
-      const x = (event.clientX - rect.left) / rect.width;
-      const y = 1 - (event.clientY - rect.top) / rect.height;
-      targetMouse = [x, y];
+      const x2 = (event.clientX - rect.left) / rect.width;
+      const y2 = 1 - (event.clientY - rect.top) / rect.height;
+      targetMouse = [x2, y2];
     }
     function handleMouseLeave() {
       targetMouse = [0.5, 0.5];
@@ -1590,6 +1595,14956 @@ function Landing() {
     ] })
   ] });
 }
+var ucumPkg = {};
+var config = {};
+var hasRequiredConfig;
+function requireConfig() {
+  if (hasRequiredConfig) return config;
+  hasRequiredConfig = 1;
+  Object.defineProperty(config, "__esModule", {
+    value: true
+  });
+  config.Ucum = void 0;
+  var Ucum = {
+    /**
+     *  Flag indicating whether or not we're using case sensitive labels
+     *  I don't think we need this.  I think we're just going with
+     *  case sensitive, per Clem.   Gunther's code has this flag, but I
+     *  am removing it, at least for now.  lm, 6/2016
+     */
+    //caseSensitive_: true ,
+    /**
+     *  The number of elements in a Dimension array.   Currently this
+     *  is set as a configuration variable, but when we get to the point
+     *  of loading the unit definitions from a file, this value will be
+     *  set from that.
+     */
+    dimLen_: 7,
+    /**
+     *  The characters used as valid operators in a UCUM unit expression,
+     *  where '.' is for multiplication and '/' is for division.
+     */
+    validOps_: [".", "/"],
+    /**
+     * The string used to separate a unit code and unit name when they
+     * are displayed together
+     */
+    codeSep_: ": ",
+    // Message text variations for validation methods and conversion methods
+    valMsgStart_: "Did you mean ",
+    valMsgEnd_: "?",
+    cnvMsgStart_: "We assumed you meant ",
+    cnvMsgEnd_: ".",
+    /**
+       * Default opening string used to emphasize portions of error messages.
+       * Used when NOT displaying messages on a web site, i.e., for output
+       * from the library methods or to a file.
+       */
+    openEmph_: " ->",
+    /**
+     * Default closing string used to emphasize portions of error messages.
+     * Used when NOT displaying messages on a web site, i.e., for output
+     * from the library methods or to a file.
+     */
+    closeEmph_: "<- ",
+    /**
+     * Opening HTML used to emphasize portions of error messages.  Used when
+     * displaying messages on a web site; should be blank when output is
+     * to a file.
+     */
+    openEmphHTML_: ' <span class="emphSpan">',
+    /**
+     * Closing HTML used to emphasize portions of error messages.  Used when
+     * displaying messages on a web site; should be blank when output is
+     * to a file.
+     */
+    closeEmphHTML_: "</span> ",
+    /**
+     * Message that is displayed when annotations are included in a unit
+     * string, to let the user know how they are interpreted.
+     */
+    bracesMsg_: "FYI - annotations (text in curly braces {}) are ignored, except that an annotation without a leading symbol implies the default unit 1 (the unity).",
+    /**
+     * Message that is displayed or returned when a conversion is requested
+     * for two units where (only) a mass<->moles conversion is appropriate
+     * but no molecular weight was specified.
+     */
+    needMoleWeightMsg_: "Did you wish to convert between mass and moles?  The molecular weight of the substance represented by the units is required to perform the conversion.",
+    /**
+     * Message that is returned when a mass<->eq conversion is requested 
+     * (which requires a molecular weight to calculate), but no molecular 
+     * weight was provided by the user.
+     */
+    needEqWeightMsg_: "Did you wish to convert with equivalents?  The molecular weight of the substance is required to perform the conversion.",
+    /**
+     * Message that is returned when a mass<->eq or a mol<->eq conversion 
+     * is requested (which requires a charge to calculate), but no charge
+     * was provided by the user.
+     */
+    needEqChargeMsg_: "Did you wish to convert with equivalents?  The charge of the substance is required to perform the conversion.",
+    /**
+     * Hash that matches unit column names to names used in the csv file
+     * that is submitted to the data updater.
+     */
+    csvCols_: {
+      "case-sensitive code": "csCode_",
+      "LOINC property": "loincProperty_",
+      "name (display)": "name_",
+      "synonyms": "synonyms_",
+      "source": "source_",
+      "category": "category_",
+      "Guidance": "guidance_"
+    },
+    /**
+     * Name of the column in the csv file that serves as the key
+     */
+    inputKey_: "case-sensitive code",
+    /**
+     * Special codes that contain operators within brackets.  The operator
+     * within these codes causes them to parse incorrectly if they are preceded
+     * by a prefix, because the parsing algorithm splits them up on the operator.
+     * So we use this object to identify them and substitute placeholders to
+     * avoid that.
+     */
+    specUnits_: {
+      "B[10.nV]": "specialUnitOne",
+      "[m/s2/Hz^(1/2)]": "specialUnitTwo"
+    }
+  };
+  config.Ucum = Ucum;
+  return config;
+}
+var ucumLhcUtils = {};
+var ucumJsonDefs = {};
+var prefix = {};
+var hasRequiredPrefix;
+function requirePrefix() {
+  if (hasRequiredPrefix) return prefix;
+  hasRequiredPrefix = 1;
+  Object.defineProperty(prefix, "__esModule", {
+    value: true
+  });
+  prefix.Prefix = void 0;
+  requireConfig();
+  class Prefix {
+    /**
+     * Creates a single prefix object.
+     *
+     * @param attrs a hash of the values to use in creating the prefix object.
+     *  They should be:
+     *   code_ - which is the case-sensitive code used for the prefix,
+     *    e.g., k for kilo
+     *   ciCode_ - which is the case-insensitive code used for the prefix,
+     *    e.g., K for kilo
+     *   name_ - which is the name of the prefix, e.g., kilo
+     *   printSymbol_ - which is the print symbol for the prefix, e.g., k for kilo
+     *   value_ - which is teh value to use in multiplying the magnitude of
+     *    a unit, e.g., for a prefix of c the value will be .01.
+     *   exp_ - which is the exponent used to get the value. For decimal based
+     *    prefixes the base is 10 and the exp_ is applied to 10, e.g., for a
+     *    prefix of c, the exponent will be -2.  For prefixes that are not
+     *    decimal based, this will be null (but must not be undefined).
+     *
+     * @throws an error if the not all required parameters are provided
+     */
+    constructor(attrs) {
+      if (attrs["code_"] === void 0 || attrs["code_"] === null || attrs["name_"] === void 0 || attrs["name_"] === null || attrs["value_"] === void 0 || attrs["value_"] === null || attrs["exp_"] === void 0) {
+        throw new Error("Prefix constructor called missing one or more parameters.  Prefix codes (cs or ci), name, value and exponent must all be specified and all but the exponent must not be null.");
+      }
+      this.code_ = attrs["code_"];
+      this.ciCode_ = attrs["ciCode_"];
+      this.name_ = attrs["name_"];
+      this.printSymbol_ = attrs["printSymbol_"];
+      if (typeof attrs["value_"] === "string") this.value_ = parseFloat(attrs["value_"]);
+      else this.value_ = attrs["value_"];
+      this.exp_ = attrs["exp_"];
+    }
+    // end constructor
+    /**
+     * Returns the value for the current prefix object
+     * @return the value for the prefix object with the specified code
+     * */
+    getValue() {
+      return this.value_;
+    }
+    /**
+     * Returns the prefix code for the current prefix object
+     * @return the code for the current prefix object
+     */
+    getCode() {
+      return this.code_;
+    }
+    /**
+     * Returns the case-insensitive code for the current prefix object
+     * @return the case_insensitive code for the current prefix object
+     */
+    getCiCode() {
+      return this.ciCode_;
+    }
+    /**
+     * Returns the prefix name for the current prefix object
+     * @return the name for the current prefix object
+     */
+    getName() {
+      return this.name_;
+    }
+    /**
+     * Returns the print symbol for the current prefix object
+     * @return the print symbol for the current prefix object
+     */
+    getPrintSymbol() {
+      return this.printSymbol_;
+    }
+    /**
+     * Returns the exponent for the current prefix object
+     * @return the exponent for the current prefix object
+     */
+    getExp() {
+      return this.exp_;
+    }
+    /**
+     * Provides way to tell if one prefix equals another.  The second prefix
+     * must match all attribute values.
+     *
+     * @param prefix2 prefix object to check for a match
+     * @return true for a match; false if one or more attributes don't match
+     */
+    equals(prefix2) {
+      return this.code_ === prefix2.code_ && this.ciCode_ === prefix2.ciCode_ && this.name_ === prefix2.name_ && this.printSymbol_ === prefix2.printSymbol_ && this.value_ === prefix2.value_ && this.exp_ === prefix2.exp_;
+    }
+  }
+  prefix.Prefix = Prefix;
+  return prefix;
+}
+var prefixTables = {};
+var hasRequiredPrefixTables;
+function requirePrefixTables() {
+  if (hasRequiredPrefixTables) return prefixTables;
+  hasRequiredPrefixTables = 1;
+  Object.defineProperty(prefixTables, "__esModule", {
+    value: true
+  });
+  prefixTables.PrefixTables = prefixTables.PrefixTablesFactory = void 0;
+  class PrefixTablesFactory {
+    /**
+     * Constructor.  This creates the empty PrefixTable hashes once.
+     * There is one hash whose key is the prefix code and one whose
+     * key is the prefix value.
+     *
+     * Implementation of this as a singleton is based on the UnitTables
+     * implementation.  See that class for details.
+     */
+    constructor() {
+      this.byCode_ = {};
+      this.byValue_ = {};
+    }
+    /**
+     * Provides the number of prefix objects in each table
+     * @returns count of the number of prefix objects in each table
+     */
+    prefixCount() {
+      return Object.keys(this.byCode_).length;
+    }
+    /**
+     * This is used to get all prefix objects by value.  Currently it is used
+     * to create a csv file with all prefixes and units.
+     * @returns csv string containing all prefix objects, ordered by value.
+     */
+    allPrefixesByValue() {
+      let prefixBuff = "";
+      let pList = Object.keys(this.byValue_);
+      let pLen = pList.length;
+      for (let p = 0; p < pLen; p++) {
+        let pfx = this.getPrefixByValue(pList[p]);
+        prefixBuff += pfx.code_ + "," + pfx.name_ + ",," + pfx.value_ + "\r\n";
+      }
+      return prefixBuff;
+    }
+    /**
+     * This is used to get all prefix objects.  Currently it is used
+     * to get the objects to write to the json ucum definitions file
+     * that is used to provide prefix and unit definition objects for
+     * conversions and validations.
+     *
+     * @returns an array containing all prefix objects, ordered by code.
+     */
+    allPrefixesByCode() {
+      let prefixList = [];
+      let pList = Object.keys(this.byCode_);
+      pList.sort();
+      let pLen = pList.length;
+      for (let p = 0; p < pLen; p++) {
+        prefixList.push(this.getPrefixByCode(pList[p]));
+      }
+      return prefixList;
+    }
+    /**
+     * Adds a prefix object to the tables
+     *
+     * @param prefixObj the object to be added to the tables
+     */
+    add(prefixObj) {
+      this.byCode_[prefixObj.getCode()] = prefixObj;
+      this.byValue_[prefixObj.getValue()] = prefixObj;
+    }
+    /**
+     * Tests whether a prefix object is found for a specified code.  This
+     * is used to determine whether or not a prefix object has been created
+     * for the code.
+     *
+     * @param code the code to be used to find the prefix object
+     * @return boolean indicating whether or not a prefix object was found
+     *  for the specified code
+     */
+    isDefined(code) {
+      return this.byCode_[code] !== null && this.byCode_[code] !== void 0;
+    }
+    /**
+     * Obtains a prefix object for a specified code.
+     *
+     * @param code the code to be used to find the prefix object
+     * @return the prefix object found, or null if nothing was found
+     */
+    getPrefixByCode(code) {
+      return this.byCode_[code];
+    }
+    /**
+     * Obtains a prefix object for a specified value.
+     *
+     * @param value the value to be used to find the prefix object
+     * @return the prefix object found, or null if nothing was found
+     */
+    getPrefixByValue(value) {
+      return this.byValue_[value];
+    }
+  }
+  prefixTables.PrefixTablesFactory = PrefixTablesFactory;
+  var prefixTablesInstance = new PrefixTablesFactory();
+  const PrefixTables = {
+    getInstance: function() {
+      return prefixTablesInstance;
+    }
+  };
+  prefixTables.PrefixTables = PrefixTables;
+  return prefixTables;
+}
+var unit = {};
+var ucumFunctions = {};
+var hasRequiredUcumFunctions;
+function requireUcumFunctions() {
+  if (hasRequiredUcumFunctions) return ucumFunctions;
+  hasRequiredUcumFunctions = 1;
+  Object.defineProperty(ucumFunctions, "__esModule", {
+    value: true
+  });
+  ucumFunctions.default = void 0;
+  class UcumFunctions {
+    /**
+     * Constructor
+     *
+     * Creates the singleton object that contains the list of functions used
+     * to convert special units.
+     */
+    constructor() {
+      this.funcs = {};
+      this.funcs["cel"] = {
+        cnvTo: function(x2) {
+          return x2 - 273.15;
+        },
+        cnvFrom: function(x2) {
+          return x2 + 273.15;
+        }
+      };
+      this.funcs["degf"] = {
+        cnvTo: function(x2) {
+          return x2 - 459.67;
+        },
+        cnvFrom: function(x2) {
+          return x2 + 459.67;
+        }
+      };
+      this.funcs["degre"] = {
+        cnvTo: function(x2) {
+          return x2 - 273.15;
+        },
+        cnvFrom: function(x2) {
+          return x2 + 273.15;
+        }
+      };
+      this.funcs["ph"] = {
+        cnvTo: function(x2) {
+          return -Math.log(x2) / Math.LN10;
+        },
+        cnvFrom: function(x2) {
+          return Math.pow(10, -x2);
+        }
+      };
+      this.funcs["ln"] = {
+        cnvTo: function(x2) {
+          return Math.log(x2);
+        },
+        cnvFrom: function(x2) {
+          return Math.exp(x2);
+        }
+      };
+      this.funcs["2ln"] = {
+        cnvTo: function(x2) {
+          return 2 * Math.log(x2);
+        },
+        cnvFrom: function(x2) {
+          return Math.exp(x2 / 2);
+        }
+      };
+      this.funcs["lg"] = {
+        cnvTo: function(x2) {
+          return Math.log(x2) / Math.LN10;
+        },
+        cnvFrom: function(x2) {
+          return Math.pow(10, x2);
+        }
+      };
+      this.funcs["10lg"] = {
+        cnvTo: function(x2) {
+          return 10 * Math.log(x2) / Math.LN10;
+        },
+        cnvFrom: function(x2) {
+          return Math.pow(10, x2 / 10);
+        }
+      };
+      this.funcs["20lg"] = {
+        cnvTo: function(x2) {
+          return 20 * Math.log(x2) / Math.LN10;
+        },
+        cnvFrom: function(x2) {
+          return Math.pow(10, x2 / 20);
+        }
+      };
+      this.funcs["2lg"] = {
+        cnvTo: function(x2) {
+          return 2 * Math.log(x2) / Math.LN10;
+        },
+        cnvFrom: function(x2) {
+          return Math.pow(10, x2 / 2);
+        }
+      };
+      this.funcs["lgtimes2"] = this.funcs["2lg"];
+      this.funcs["ld"] = {
+        cnvTo: function(x2) {
+          return Math.log(x2) / Math.LN2;
+        },
+        cnvFrom: function(x2) {
+          return Math.pow(2, x2);
+        }
+      };
+      this.funcs["100tan"] = {
+        cnvTo: function(x2) {
+          return Math.tan(x2) * 100;
+        },
+        cnvFrom: function(x2) {
+          return Math.atan(x2 / 100);
+        }
+      };
+      this.funcs["tanTimes100"] = this.funcs["100tan"];
+      this.funcs["sqrt"] = {
+        cnvTo: function(x2) {
+          return Math.sqrt(x2);
+        },
+        cnvFrom: function(x2) {
+          return x2 * x2;
+        }
+      };
+      this.funcs["inv"] = {
+        cnvTo: function(x2) {
+          return 1 / x2;
+        },
+        cnvFrom: function(x2) {
+          return 1 / x2;
+        }
+      };
+      this.funcs["hpX"] = {
+        cnvTo: function(x2) {
+          return -this.funcs["lg"](x2);
+        },
+        cnvFrom: function(x2) {
+          return Math.pow(10, -x2);
+        }
+      };
+      this.funcs["hpC"] = {
+        cnvTo: function(x2) {
+          return -this.func["ln"](x2) / this.funcs["ln"](100);
+        },
+        cnvFrom: function(x2) {
+          return Math.pow(100, -x2);
+        }
+      };
+      this.funcs["hpM"] = {
+        cnvTo: function(x2) {
+          return -this.funcs["ln"](x2) / this.funcs["ln"](1e3);
+        },
+        cnvFrom: function(x2) {
+          return Math.pow(1e3, -x2);
+        }
+      };
+      this.funcs["hpQ"] = {
+        cnvTo: function(x2) {
+          return -this.funcs["ln"](x2) / this.funcs["ln"](5e4);
+        },
+        cnvFrom: function(x2) {
+          return Math.pow(5e4, -x2);
+        }
+      };
+    }
+    // end of constructor
+    /**
+     * Returns the function with the name specified
+     *
+     * @param fname name of the function to be returned
+     * @return the function with the specified name
+     * @throws an error message if the function is not found
+     */
+    forName(fname) {
+      fname = fname.toLowerCase();
+      let f2 = this.funcs[fname];
+      if (f2 === null) throw new Error(`Requested function ${fname} is not defined`);
+      return f2;
+    }
+    /**
+     * Returns a flag indicating whether or not the function has been
+     * defined.
+     *
+     * @param fname name of the function in question
+     * @return true if it has been defined; false if not
+     */
+    isDefined(fname) {
+      fname = fname.toLowerCase();
+      return this.funcs[fname] !== null;
+    }
+  }
+  var _default = new UcumFunctions();
+  ucumFunctions.default = _default;
+  return ucumFunctions;
+}
+var ucumInternalUtils = {};
+var unitTables = {};
+var hasRequiredUnitTables;
+function requireUnitTables() {
+  if (hasRequiredUnitTables) return unitTables;
+  hasRequiredUnitTables = 1;
+  Object.defineProperty(unitTables, "__esModule", {
+    value: true
+  });
+  unitTables.UnitTables = void 0;
+  var Ucum = requireConfig().Ucum;
+  class UnitTablesFactory {
+    /**
+     * Constructor.  This creates the empty unit tables (hashes) once. After the
+     * tables are created, it redefines this constructor to throw an error
+     * stating that the constructor is no longer available and that the
+     * getInstance function must be used.   Here's a description of the first
+     * and then all subsequent calls to this constructor.
+     *
+     * First call to constructor:
+     * 1. creates  OBJECT1
+     * 2. initializes attributes of OBJECT1
+     * 3. stores reference to OBJECT1.prototype in holdthis local variable
+     * 4. redefines OBJECT1 as a function that throws an error
+     * 5. defines the getInstance function (which is also defined outside of
+     *    the class definition - see below).
+     *
+     * All subsequent calls to constructor:
+     * 1. throw error message referring to getInstance
+     * 2. call getInstance, returns this - which is OBJECT1.
+     */
+    constructor() {
+      this.unitNames_ = {};
+      this.unitCodes_ = {};
+      this.codeOrder_ = [];
+      this.unitStrings_ = {};
+      this.unitDimensions_ = {};
+      this.unitSynonyms_ = {};
+      this.massDimIndex_ = 0;
+      this.dimVecIndexToBaseUnit_ = {};
+    }
+    /**
+     * Provides the number of unit objects written to the tables, using the
+     * codes table since codes must be unique.
+     *
+     * @returns count of the number of unit objects in the unitCodes_ table.
+     */
+    unitsCount() {
+      return Object.keys(this.unitCodes_).length;
+    }
+    /**
+     * Adds a Unit object to the tables.
+     *
+     * @param theUnit the unit to be added
+     * @returns nothing
+     * @throws passes on an error if one is thrown by the called functions for
+     *  a problem with the unit code or unit name
+     */
+    addUnit(theUnit) {
+      let uName = theUnit["name_"];
+      if (uName) {
+        this.addUnitName(theUnit);
+      }
+      this.addUnitCode(theUnit);
+      this.addUnitString(theUnit);
+      try {
+        if (theUnit["dim_"].getProperty("dimVec_")) this.addUnitDimension(theUnit);
+      } catch (err) {
+      }
+      if (theUnit.isBase_) {
+        const dimVec = theUnit.dim_.dimVec_;
+        let nonZeroIndex;
+        for (let i = 0, len = dimVec.length; nonZeroIndex == void 0 && i < len; ++i) {
+          if (dimVec[i] != 0) nonZeroIndex = i;
+        }
+        this.dimVecIndexToBaseUnit_[nonZeroIndex] = theUnit.csCode_;
+      }
+    }
+    // end addUnit
+    /**
+     * Adds a Unit object to the unitNames_ table.  More than one unit
+     * can have the same name, e.g., the two units with the name "second",
+     * where the code for one of them is 's' and the code for the other is
+     * "'".  Because of this, an array of unit objects is stored for the
+     * name.  In most cases it will be an array of one object, but this
+     * clarifies that there may be more than one.
+     *
+     * @param theUnit the unit to be added
+     * @returns nothing
+     * @throws an error if the unit has no name
+     */
+    addUnitName(theUnit) {
+      let uName = theUnit["name_"];
+      if (uName) {
+        if (this.unitNames_[uName]) this.unitNames_[uName].push(theUnit);
+        else this.unitNames_[uName] = [theUnit];
+      } else throw new Error(`UnitTables.addUnitName called for a unit with no name.  Unit code = ${theUnit["csCode_"]}.`);
+    }
+    // end addUnitName
+    /**
+     * Adds a Unit object to the unitCodes_, unitUcCodes_, unitLcCodes_ and
+     * codeOrder_ tables.  This also sets the mass dimension index when the
+     * base mass unit (gram) is read.
+     *
+     * @param theUnit the unit to be added
+     * @returns nothing
+     * @throws an error if the unitCodes_ table already contains a unit with
+     *  the code
+     */
+    addUnitCode(theUnit) {
+      let uCode = theUnit["csCode_"];
+      if (uCode) {
+        if (this.unitCodes_[uCode]) throw new Error(`UnitTables.addUnitCode called, already contains entry for unit with code = ${uCode}`);
+        else {
+          this.unitCodes_[uCode] = theUnit;
+          this.codeOrder_.push(uCode);
+          if (uCode == "g") {
+            let dimVec = theUnit.dim_.dimVec_;
+            let d = 0;
+            for (; d < dimVec.length && dimVec[d] < 1; d++) ;
+            this.massDimIndex_ = d;
+          }
+        }
+      } else throw new Error("UnitTables.addUnitCode called for unit that has no code.");
+    }
+    // end addUnitCode
+    /**
+     * Adds a unit object to the unitStrings_ table.  More than one unit
+     * can have the same string, so an array of unit objects is stored
+     * for the string.  The unit string is the string that creates a non-base
+     * unit, e.g., a Newton has a unit code of N, a name of Newton, and a
+     * unitString of kg.m/s2.
+     *
+     * If the unit has no string, nothing is stored and no error is reported.
+     *
+     * @param theUnit the unit to be added
+     * @returns nothing
+     */
+    addUnitString(theUnit) {
+      let uString = null;
+      if (Ucum.caseSensitive_ == true) uString = theUnit["csUnitString_"];
+      else uString = theUnit["ciUnitString_"];
+      if (uString) {
+        let uEntry = {
+          mag: theUnit["baseFactorStr_"],
+          unit: theUnit
+        };
+        if (this.unitStrings_[uString]) this.unitStrings_[uString].push(uEntry);
+        else this.unitStrings_[uString] = [uEntry];
+      }
+    }
+    // end addUnitString
+    /**
+     * Adds a Unit object to the unitDimensions_ table.  More than one unit
+     * can have the same dimension (commensurable units have the same dimension).
+     * Because of this, an array of unit objects is stored for the
+     * dimension.
+     *
+     * @param theUnit the unit to be added
+     * @returns nothing
+     * @throws an error if the unit has no dimension
+     */
+    addUnitDimension(theUnit) {
+      let uDim = theUnit["dim_"].getProperty("dimVec_");
+      if (uDim) {
+        if (this.unitDimensions_[uDim]) this.unitDimensions_[uDim].push(theUnit);
+        else this.unitDimensions_[uDim] = [theUnit];
+      } else throw new Error(`UnitTables.addUnitDimension called for a unit with no dimension.  Unit code = ${theUnit["csCode_"]}.`);
+    }
+    // end addUnitDimension
+    /**
+     * Builds the unitSynonyms_ table. This is called the first time the
+     * getUnitsBySynonym method is called.  The table/hash contains each word
+     * (once) from each synonym as well as each word from each unit name.
+     *
+     * Hash keys are the words.  Hash values are an array of unit codes for
+     * each unit that has that word in its synonyms or name.
+     *
+     * @returns nothing
+     */
+    buildUnitSynonyms() {
+      for (let code in this.unitCodes_) {
+        let theUnit = this.unitCodes_[code];
+        let uSyns = theUnit.synonyms_;
+        if (uSyns) {
+          let synsAry = uSyns.split(";");
+          if (synsAry[0] !== "") {
+            let aLen = synsAry.length;
+            for (let a = 0; a < aLen; a++) {
+              let theSyn = synsAry[a].trim();
+              this.addSynonymCodes(code, theSyn);
+            }
+          }
+        }
+        this.addSynonymCodes(code, theUnit.name_);
+      }
+    }
+    // end buildUnitSynonyms
+    /**
+     * Adds unit code entries to the synonyms table for a string containing
+     * one or more words to be considered as synonyms.
+     *
+     * @param theCode the unit code to be connected to the synonyms
+     * @param theSynonyms a string containing one or more words to be
+     *  considered synonyms (and thus to be added to the unitSynonyms hash).
+     */
+    addSynonymCodes(theCode, theSynonyms) {
+      let words = theSynonyms.split(" ");
+      let wLen = words.length;
+      for (let w2 = 0; w2 < wLen; w2++) {
+        let word = words[w2];
+        if (this.unitSynonyms_[word]) {
+          let synCodes = this.unitSynonyms_[word];
+          if (synCodes.indexOf(theCode) === -1) {
+            this.unitSynonyms_[word].push(theCode);
+          }
+        } else {
+          this.unitSynonyms_[word] = [theCode];
+        }
+      }
+    }
+    // end addSynonymCodes
+    /**
+     *  Returns a unit object with a case-sensitive code matching the
+     *  uCode parameter, or null if no unit is found with that code.
+     *
+     *  @param uCode the code of the unit to be returned
+     *  @returns the unit object or null if it is not found
+     */
+    getUnitByCode(uCode) {
+      let retUnit = null;
+      if (uCode) {
+        retUnit = this.unitCodes_[uCode];
+      }
+      return retUnit;
+    }
+    /**
+     *  Returns a array of unit objects based on the unit's name.  Usually this
+     *  will be an array of one, but there may be more, since unit names are
+     *  not necessarily unique.
+     *
+     *  @param uName the name of the unit to be returned.  If more than one
+     *  unit has the same name and you only want one specific unit, append the
+     *  csCode of the unit you want to the end of the name, separated by the
+     *  Ucum.codeSep_ value, e.g., inch - [in_i] vs. inch - [in_us].
+     *  @returns null if no unit was found for the specified name OR an array of
+     *  unit objects with the specified name.  Normally this will be an array
+     *  of one object.
+     *  @throws an error if no name is provided to search on
+     */
+    getUnitByName(uName) {
+      if (uName === null || uName === void 0) {
+        throw new Error("Unable to find unit by name because no name was provided.");
+      }
+      let sepPos = uName.indexOf(Ucum.codeSep_);
+      let uCode = null;
+      if (sepPos >= 1) {
+        uCode = uName.substr(sepPos + Ucum.codeSep_.length);
+        uName = uName.substr(0, sepPos);
+      }
+      let retUnits = this.unitNames_[uName];
+      if (retUnits) {
+        let uLen = retUnits.length;
+        if (uCode && uLen > 1) {
+          let i = 0;
+          for (; retUnits[i].csCode_ !== uCode && i < uLen; i++) ;
+          if (i < uLen) retUnits = [retUnits[i]];
+          else {
+            retUnits = null;
+          }
+        }
+      }
+      return retUnits;
+    }
+    // end getUnitByName
+    /**
+     *  Returns an array of unit objects with the specified unit string.
+     *  The array may contain one or more unit reference objects.
+     *  Or none, if no units have a matching unit string (which is not
+     *  considered an error)
+     *
+     *  @param name the name of the unit to be returned
+     *  @returns the array of unit references or null if none were found
+     */
+    getUnitByString(uString) {
+      let retAry = null;
+      if (uString) {
+        retAry = this.unitStrings_[uString];
+        if (retAry === void 0) retAry = null;
+      }
+      return retAry;
+    }
+    /**
+     *  Returns a array of unit objects based on the unit's dimension vector.
+     *
+     *  @param uName the dimension vector of the units to be returned.
+     *
+     *  @returns null if no unit was found for the specified vector OR an array of
+     *  one or more unit objects with the specified vector.
+     *  @throws an error if no vector is provided to search on
+     *  logs an error to the console if no unit is found
+     */
+    getUnitsByDimension(uDim) {
+      let unitsArray = null;
+      if (uDim === null || uDim === void 0) {
+        throw new Error("Unable to find unit by because no dimension vector was provided.");
+      }
+      unitsArray = this.unitDimensions_[uDim];
+      if (unitsArray === void 0 || unitsArray === null) {
+        console.log(`Unable to find unit with dimension = ${uDim}`);
+      }
+      return unitsArray;
+    }
+    // end getUnitsByDimension
+    /**
+     *  Returns a array of unit objects that include the specified synonym.
+     *
+     *  @param uSyn the synonym of the units to be returned.
+     *
+     *  @returns an object with two of the following three elements:
+     *   'status' will be error, failed or succeeded
+     *   'msg' will be included for returns with status = error or failed and
+     *     will explain why the request did not return any units
+     *   'units' any array of unit objects with the specified synonym will be
+     *     returned for requests with status = succeeded
+     */
+    getUnitBySynonym(uSyn) {
+      let retObj = {};
+      let unitsArray = [];
+      try {
+        if (uSyn === null || uSyn === void 0) {
+          retObj["status"] = "error";
+          throw new Error("Unable to find unit by synonym because no synonym was provided.");
+        }
+        if (Object.keys(this.unitSynonyms_).length === 0) {
+          this.buildUnitSynonyms();
+        }
+        let foundCodes = [];
+        foundCodes = this.unitSynonyms_[uSyn];
+        if (foundCodes) {
+          retObj["status"] = "succeeded";
+          let fLen = foundCodes.length;
+          for (let f2 = 0; f2 < fLen; f2++) {
+            unitsArray.push(this.unitCodes_[foundCodes[f2]]);
+          }
+          retObj["units"] = unitsArray;
+        }
+        if (unitsArray.length === 0) {
+          retObj["status"] = "failed";
+          retObj["msg"] = `Unable to find any units with synonym = ${uSyn}`;
+        }
+      } catch (err) {
+        retObj["msg"] = err.message;
+      }
+      return retObj;
+    }
+    // end getUnitBySynonym
+    /**
+     * Gets a list of all unit names in the Unit tables
+     *
+     * @returns an array of the unit names
+     */
+    getAllUnitNames() {
+      return Object.keys(this.unitNames_);
+    }
+    // end getAllUnitNames
+    /**
+     * Gets a list of all unit names in the tables.  Where more than one
+     * unit has the same name, the unit code, in parentheses, is appended
+     * to the end of the name.
+     *
+     * @returns {Array}
+     */
+    getUnitNamesList() {
+      let nameList = [];
+      let codes = Object.keys(this.unitCodes_);
+      codes.sort(this.compareCodes);
+      let uLen = codes.length;
+      for (let i = 0; i < uLen; i++) {
+        nameList[i] = codes[i] + Ucum.codeSep_ + this.unitCodes_[codes[i]].name_;
+      }
+      return nameList;
+    }
+    /*
+     * Returns the mass dimension index
+     * @returns this.massDimIndex_
+     */
+    getMassDimensionIndex() {
+      return this.massDimIndex_;
+    }
+    /**
+     * This provides a sort function for unit codes so that sorting ignores
+     * square brackets and case.
+     *
+     * @param a first value
+     * @param b second value
+     * @returns -1 if a is should fall before b; otherwise 1.
+     */
+    compareCodes(a, b) {
+      a = a.replace(/[\[\]]/g, "");
+      a = a.toLowerCase();
+      b = b.replace(/[\[\]]/g, "");
+      b = b.toLowerCase();
+      return a < b ? -1 : 1;
+    }
+    /**
+     * Gets a list of all unit codes in the Unit tables
+     *
+     * @returns an array of the unit names
+     */
+    getAllUnitCodes() {
+      return Object.keys(this.unitCodes_);
+    }
+    // end getAllUnitNames
+    /**
+     * This is used to get all unit objects.  Currently it is used
+     * to get the objects to write to the json ucum definitions file
+     * that is used to provide prefix and unit definition objects for
+     * conversions and validations.
+     *
+     * @returns an array containing all unit objects, ordered by definition
+     * order
+     */
+    allUnitsByDef() {
+      let unitsList = [];
+      let uLen = this.codeOrder_.length;
+      for (let u = 0; u < uLen; u++) {
+        unitsList.push(this.getUnitByCode(this.codeOrder_[u]));
+      }
+      return unitsList;
+    }
+    // end allUnitsByDef
+    /**
+     * This is used to get all unit objects, ordered by unit name.  Currently it
+     * is used to create a csv list of all units.
+     * @param sep separator character (or string) to be used to separate each
+     *  column in the output.  Optional, defaults to '|' if not specified.
+     *  (Used to use ; but the synonyms use that extensively).  Don't use a
+     *  comma or any other punctuation found in the output data.
+     * @returns a buffer containing all unit objects, ordered by name
+     * order
+     */
+    allUnitsByName(cols, sep) {
+      if (sep === void 0 || sep === null) sep = "|";
+      let unitBuff = "";
+      let unitsList = this.getAllUnitNames();
+      let uLen = unitsList.length;
+      let cLen = cols.length;
+      for (let i = 0; i < uLen; i++) {
+        let nameRecs = this.getUnitByName(unitsList[i]);
+        for (let u = 0; u < nameRecs.length; u++) {
+          let rec = nameRecs[u];
+          for (let c = 0; c < cLen; c++) {
+            if (c > 0) unitBuff += sep;
+            if (cols[c] === "dim_") {
+              if (rec.dim_ !== null && rec.dim_ !== void 0 && rec.dim_.dimVec_ instanceof Array) unitBuff += "[" + rec.dim_.dimVec_.join(",") + "]";
+              else unitBuff += "";
+            } else {
+              let cbuf = rec[cols[c]];
+              if (typeof cbuf === "string") unitBuff += cbuf.replace(/[\n\r]/g, " ");
+              else unitBuff += cbuf;
+            }
+          }
+          unitBuff += "\r\n";
+        }
+      }
+      return unitBuff;
+    }
+    // end allUnitsByName
+    /**
+     * This creates a list of all units in the tables.  It uses the byCode
+     * table, and uses the codeOrder_ array to determine the order in which
+     * the units are listed.
+     *
+     * @param doLong boolean indicating how much to output.  If true, all data
+     *  from the unit objects is included.   If false, only a few major values
+     *  are included.
+     * @param sep separator character (or string) to be used to separate each
+     *  column in the output.  Optional, defaults to '|' if not specified.
+     *  (Used to use ; but the synonyms use that extensively).
+     * @returns {string} buffer containing all the listings
+     */
+    printUnits(doLong, sep) {
+      if (doLong === void 0) doLong = false;
+      if (sep === void 0) sep = "|";
+      let codeList = "";
+      let uLen = this.codeOrder_.length;
+      let unitString2 = "csCode" + sep;
+      if (doLong) {
+        unitString2 += "ciCode" + sep;
+      }
+      unitString2 += "name" + sep;
+      if (doLong) unitString2 += "isBase" + sep;
+      unitString2 += "magnitude" + sep + "dimension" + sep + "from unit(s)" + sep + "value" + sep + "function" + sep;
+      if (doLong) unitString2 += "property" + sep + "printSymbol" + sep + "synonyms" + sep + "source" + sep + "class" + sep + "isMetric" + sep + "variable" + sep + "isSpecial" + sep + "isAbitrary" + sep;
+      unitString2 += "comment";
+      codeList = unitString2 + "\n";
+      for (let u = 0; u < uLen; u++) {
+        let curUnit = this.getUnitByCode(this.codeOrder_[u]);
+        unitString2 = this.codeOrder_[u] + sep;
+        if (doLong) {
+          unitString2 += curUnit.getProperty("ciCode_") + sep;
+        }
+        unitString2 += curUnit.getProperty("name_") + sep;
+        if (doLong) {
+          if (curUnit.getProperty("isBase_")) unitString2 += "true" + sep;
+          else unitString2 += "false" + sep;
+        }
+        unitString2 += curUnit.getProperty("magnitude_") + sep;
+        let curDim = curUnit.getProperty("dim_");
+        if (curDim) {
+          unitString2 += curDim.dimVec_ + sep;
+        } else {
+          unitString2 += "null" + sep;
+        }
+        if (curUnit.csUnitString_) unitString2 += curUnit.csUnitString_ + sep + curUnit.baseFactor_ + sep;
+        else unitString2 += "null" + sep + "null" + sep;
+        if (curUnit.cnv_) unitString2 += curUnit.cnv_ + sep;
+        else unitString2 += "null" + sep;
+        if (doLong) {
+          unitString2 += curUnit.getProperty("property_") + sep + curUnit.getProperty("printSymbol_") + sep + curUnit.getProperty("synonyms_") + sep + curUnit.getProperty("source_") + sep + curUnit.getProperty("class_") + sep + curUnit.getProperty("isMetric_") + sep + curUnit.getProperty("variable_") + sep + curUnit.getProperty("isSpecial_") + sep + curUnit.getProperty("isArbitrary_") + sep;
+        }
+        if (curUnit.defError_) unitString2 += "problem parsing this one, deferred to later.";
+        codeList += unitString2 + "\n";
+      }
+      return codeList;
+    }
+  }
+  var unitTablesInstance = new UnitTablesFactory();
+  const UnitTables = {
+    getInstance: function() {
+      return unitTablesInstance;
+    }
+  };
+  unitTables.UnitTables = UnitTables;
+  return unitTables;
+}
+var hasRequiredUcumInternalUtils;
+function requireUcumInternalUtils() {
+  if (hasRequiredUcumInternalUtils) return ucumInternalUtils;
+  hasRequiredUcumInternalUtils = 1;
+  Object.defineProperty(ucumInternalUtils, "__esModule", {
+    value: true
+  });
+  ucumInternalUtils.isNumericString = isNumericString;
+  ucumInternalUtils.isIntegerUnit = isIntegerUnit;
+  ucumInternalUtils.getSynonyms = getSynonyms;
+  var UnitTables = requireUnitTables().UnitTables;
+  function isNumericString(theString) {
+    let num = "" + theString;
+    return !isNaN(num) && !isNaN(parseFloat(num));
+  }
+  function isIntegerUnit(str) {
+    return /^\d+$/.test(str);
+  }
+  function getSynonyms(theSyn) {
+    let retObj = {};
+    let utab = UnitTables.getInstance();
+    let resp = {};
+    resp = utab.getUnitBySynonym(theSyn);
+    if (!resp["units"]) {
+      retObj["status"] = resp["status"];
+      retObj["msg"] = resp["msg"];
+    } else {
+      retObj["status"] = "succeeded";
+      let aLen = resp["units"].length;
+      retObj["units"] = [];
+      for (let a = 0; a < aLen; a++) {
+        let theUnit = resp["units"][a];
+        retObj["units"][a] = {
+          "code": theUnit.csCode_,
+          "name": theUnit.name_,
+          "guidance": theUnit.guidance_
+        };
+      }
+    }
+    return retObj;
+  }
+  return ucumInternalUtils;
+}
+var dimension = {};
+var _isFinite;
+var hasRequired_isFinite;
+function require_isFinite() {
+  if (hasRequired_isFinite) return _isFinite;
+  hasRequired_isFinite = 1;
+  _isFinite = Number.isFinite || function(value) {
+    return !(typeof value !== "number" || value !== value || value === Infinity || value === -Infinity);
+  };
+  return _isFinite;
+}
+var isInteger;
+var hasRequiredIsInteger;
+function requireIsInteger() {
+  if (hasRequiredIsInteger) return isInteger;
+  hasRequiredIsInteger = 1;
+  var isFinite2 = require_isFinite();
+  isInteger = Number.isInteger || function(val) {
+    return typeof val === "number" && isFinite2(val) && Math.floor(val) === val;
+  };
+  return isInteger;
+}
+var hasRequiredDimension;
+function requireDimension() {
+  if (hasRequiredDimension) return dimension;
+  hasRequiredDimension = 1;
+  Object.defineProperty(dimension, "__esModule", {
+    value: true
+  });
+  dimension.Dimension = void 0;
+  var UC = requireConfig();
+  var isInteger2 = requireIsInteger();
+  class Dimension {
+    /**
+     * Constructor.
+     *
+     * @param dimSetting an optional parameter that may be:
+     *  null, which means that the dimVec_ attribute for this object will be null; or
+     *  an array, which must be the length defined by Ucum.dimLen_, and
+     *    whose contents will be copied to this new object's vector; or
+     *  an integer, which must be between 0 and 1 less than the vector length
+     *    defined by Ucum.dimLen_.  This new object's vector will be
+     *    initialized to zero for all elements except the one whose index
+     *    matches the number passed in.  That element will be set to one.
+      * @throws an error if the dimSetting parameter does not meet the types
+     *  listed above.
+     *  An error will also be thrown if Ucum.dimLen_ has not been set yet,
+     *  i.e., is still zero.   Currently that won't happen, because the
+     *  value is set in the config.js file.  But further down the road
+     *  the setting will come from a definitions input file, so we check
+     *  here anyway.
+     *
+     */
+    constructor(dimSetting) {
+      if (UC.Ucum.dimLen_ === 0) {
+        throw new Error("Dimension.setDimensionLen must be called before Dimension constructor");
+      }
+      if (dimSetting === void 0 || dimSetting === null) {
+        this.assignZero();
+      } else if (dimSetting instanceof Array) {
+        if (dimSetting.length !== UC.Ucum.dimLen_) {
+          throw new Error(`Parameter error, incorrect length of vector passed to Dimension constructor, vector = ${JSON.stringify(dimSetting)}`);
+        }
+        this.dimVec_ = [];
+        for (let d = 0; d < UC.Ucum.dimLen_; d++) this.dimVec_.push(dimSetting[d]);
+      } else if (isInteger2(dimSetting)) {
+        if (dimSetting < 0 || dimSetting >= UC.Ucum.dimLen_) {
+          throw new Error("Parameter error, invalid element number specified for Dimension constructor");
+        }
+        this.assignZero();
+        this.dimVec_[dimSetting] = 1;
+      }
+    }
+    // end constructor
+    /**
+     * Sets the element at the specified position to a specified value.  The
+     * default value is 1.  If the dimension vector is null when this is called
+     * a zero-filled vector is created and then the indicated position is set.
+     *
+     * @param indexPos the index of the element to be set
+     * @param value the value to assign to the specified element; optional,
+     *  default value is 1
+     * @throws an exception if the specified position is invalid, i.e., not a
+     *   number or is less than 0 or greater than Ucum.dimLen_
+     **/
+    setElementAt(indexPos, value) {
+      if (!isInteger2(indexPos) || indexPos < 0 || indexPos >= UC.Ucum.dimLen_) {
+        throw new Error(`Dimension.setElementAt called with an invalid index position (${indexPos})`);
+      }
+      if (!this.dimVec_) {
+        this.assignZero();
+      }
+      if (value === void 0 || value === null) value = 1;
+      this.dimVec_[indexPos] = value;
+    }
+    /**
+     * Gets the value of the element at the specified position
+     *
+     * @param indexPos the index of the element whose value is to be returned
+     * @return the value of the element at indexPos, or null if the dimension
+     *  vector is null
+     * @throws an exception if the specified position is invalid, i.e., not a
+     *   number or is less than 0 or greater than Ucum.dimLen_
+     **/
+    getElementAt(indexPos) {
+      if (!isInteger2(indexPos) || indexPos < 0 || indexPos >= UC.Ucum.dimLen_) {
+        throw new Error(`Dimension.getElementAt called with an invalid index position (${indexPos})`);
+      }
+      let ret = null;
+      if (this.dimVec_) ret = this.dimVec_[indexPos];
+      return ret;
+    }
+    /**
+     * This returns the value of the property named by the parameter
+     * passed in.  Although we currently only have one property, dimVec_,
+     * that this will get, it's possible that we'll have additional
+     * properties.   If we don't this could just be replaced by a
+     * getVector function.
+     *
+     * @param propertyName name of the property to be returned, with
+     *        or without the trailing underscore.
+     * @return the requested property, if found for this Dimension
+     * @throws an error if the property is not found for this Dimension
+     */
+    getProperty(propertyName) {
+      let uProp = propertyName.charAt(propertyName.length - 1) === "_" ? propertyName : propertyName + "_";
+      return this[uProp];
+    }
+    // end getProperty
+    /**
+     * Return a string that represents the dimension vector.  Returns null if
+     * the dimension vector is null.
+     *
+     * @return the string that represents the dimension vector.  The
+     *         values are enclosed in square brackets, each separated
+     *         by a comma and a space
+     **/
+    toString() {
+      let ret = null;
+      if (this.dimVec_) ret = "[" + this.dimVec_.join(", ") + "]";
+      return ret;
+    }
+    /**
+     * Adds the vector of the dimension object passed in to this
+     * dimension object's vector.  This object's vector is changed.
+     * If either dimension vector is null, no changes are made to this object.
+     *
+     *
+     * @param dim2 the dimension whose vector is to be added to this one
+     * @return this object
+     * @throws an exception if dim2 is not a Dimension object
+     **/
+    add(dim22) {
+      if (!dim22 instanceof Dimension) {
+        throw new Error(`Dimension.add called with an invalid parameter - ${typeof dim22} instead of a Dimension object`);
+      }
+      if (this.dimVec_ && dim22.dimVec_) {
+        for (let i = 0; i < UC.Ucum.dimLen_; i++) this.dimVec_[i] += dim22.dimVec_[i];
+      }
+      return this;
+    }
+    /**
+     * Subtracts the vector of the dimension object passed in from this
+     * dimension object's vector.  This object's vector is changed.
+     * If either dimension vector is null, no changes are made to this object.
+     *
+     * @param dim2 the dimension whose vector is to be subtracted from this one
+     * @return this object
+     * @throws an exception if dim2 is not a Dimension object
+     **/
+    sub(dim22) {
+      if (!dim22 instanceof Dimension) {
+        throw new Error(`Dimension.sub called with an invalid parameter - ${typeof dim22} instead of a Dimension object`);
+      }
+      if (this.dimVec_ && dim22.dimVec_) {
+        for (let i = 0; i < UC.Ucum.dimLen_; i++) this.dimVec_[i] -= dim22.dimVec_[i];
+      }
+      return this;
+    }
+    /**
+     * Inverts this dimension object's vector (by multiplying each element
+     * by negative 1).  This object's vector is changed - unless it is null,
+     * in which case it stays that way.
+     *
+     * @return this object
+     **/
+    minus() {
+      if (this.dimVec_) {
+        for (let i = 0; i < UC.Ucum.dimLen_; i++) this.dimVec_[i] = -this.dimVec_[i];
+      }
+      return this;
+    }
+    /**
+     * Multiplies this dimension object's vector with a scalar.  This is used
+     * when a unit is raised to a power.  This object's vector is changed unless
+     * the vector is null, in which case it stays that way.
+     *
+     * @param s the scalar to use
+     * @return this object
+     * @throws an exception if s is not a number
+     */
+    mul(s2) {
+      if (!isInteger2(s2)) {
+        throw new Error(`Dimension.sub called with an invalid parameter - ${typeof dim2} instead of a number`);
+      }
+      if (this.dimVec_) {
+        for (let i = 0; i < UC.Ucum.dimLen_; i++) this.dimVec_[i] *= s2;
+      }
+      return this;
+    }
+    /**
+     * Tests for equality of this dimension object's vector and that of
+     * the dimension object passed in.  If the dimension vector for one of
+     * the objects is null, the dimension vector for the other object must
+     * also be null for the two to be equal.  (I know - duh.  still)
+     *
+     * @param dim2 the dimension object whose vector is to be compared to this one
+     * @return true if the two vectors are equal; false otherwise.
+     * @throws an exception if dim2 is not a Dimension object
+     */
+    equals(dim22) {
+      if (!dim22 instanceof Dimension) {
+        throw new Error(`Dimension.equals called with an invalid parameter - ${typeof dim22} instead of a Dimension object`);
+      }
+      let isEqual = true;
+      let dimVec2 = dim22.dimVec_;
+      if (this.dimVec_ && dimVec2) {
+        for (let i = 0; isEqual && i < UC.Ucum.dimLen_; i++) isEqual = this.dimVec_[i] === dimVec2[i];
+      } else {
+        isEqual = this.dimVec_ === null && dimVec2 === null;
+      }
+      return isEqual;
+    }
+    /**
+     * Assigns the contents of the vector belonging to the dimension object
+     * passed in to this dimension's vector.  If this dimension vector is null
+     * and the other is not, this one will get the contents of the other.  If
+     * this dimension vector is not null but the one passed in is null, this
+     * one will be set to null.
+     *
+     * @param dim2 the dimension object with the vector whose contents are
+     *  to be assigned to this dimension's vector
+     * @return this object (not sure why)
+     * @throws an exception if dim2 is not a Dimension object
+     */
+    assignDim(dim22) {
+      if (!dim22 instanceof Dimension) {
+        throw new Error(`Dimension.assignDim called with an invalid parameter - ${typeof dim22} instead of a Dimension object`);
+      }
+      if (dim22.dimVec_ === null) this.dimVec_ = null;
+      else {
+        if (this.dimVec_ === null) {
+          this.dimVec_ = [];
+        }
+        for (let i = 0; i < UC.Ucum.dimLen_; i++) this.dimVec_[i] = dim22.dimVec_[i];
+      }
+      return this;
+    }
+    /**
+     * Sets all elements of this dimension object's vector to zero.
+     * If this object's vector is null, it is created as a zero-filled vector.
+     *
+     * @return this object (not sure why)
+     */
+    assignZero() {
+      if (this.dimVec_ === null || this.dimVec_ === void 0) this.dimVec_ = [];
+      for (let i = 0; i < UC.Ucum.dimLen_; i++) {
+        this.dimVec_.push(0);
+      }
+      return this;
+    }
+    /**
+     * Tests for a dimension vector set to all zeroes.
+     *
+     * @return true if exponents (elements) of this dimension's vector are all
+     * zero; false otherwise (including if the current vector is null).
+     *
+     */
+    isZero() {
+      let allZero = this.dimVec_ !== null;
+      if (this.dimVec_) {
+        for (let i = 0; allZero && i < UC.Ucum.dimLen_; i++) allZero = this.dimVec_[i] === 0;
+      }
+      return allZero;
+    }
+    /**
+     * Tests for a Dimension object with no dimension vector (dimVec_ is null).
+     *
+     * @return true the dimension vector is null; false if it is not
+     *
+     */
+    isNull() {
+      return this.dimVec_ === null;
+    }
+    /**
+     * Creates and returns a clone of this Dimension object
+     *
+     * @return the clone
+     */
+    clone() {
+      let that = new Dimension();
+      that.assignDim(this);
+      return that;
+    }
+  }
+  dimension.Dimension = Dimension;
+  return dimension;
+}
+var hasRequiredUnit;
+function requireUnit() {
+  if (hasRequiredUnit) return unit;
+  hasRequiredUnit = 1;
+  Object.defineProperty(unit, "__esModule", {
+    value: true
+  });
+  unit.Unit = void 0;
+  var _ucumFunctions = _interopRequireDefault(requireUcumFunctions());
+  var intUtils_ = _interopRequireWildcard(requireUcumInternalUtils());
+  function _interopRequireWildcard(e, t) {
+    if ("function" == typeof WeakMap) var r = /* @__PURE__ */ new WeakMap(), n = /* @__PURE__ */ new WeakMap();
+    return (_interopRequireWildcard = function(e2, t2) {
+      if (!t2 && e2 && e2.__esModule) return e2;
+      var o, i, f2 = { __proto__: null, default: e2 };
+      if (null === e2 || "object" != typeof e2 && "function" != typeof e2) return f2;
+      if (o = t2 ? n : r) {
+        if (o.has(e2)) return o.get(e2);
+        o.set(e2, f2);
+      }
+      for (const t3 in e2) "default" !== t3 && {}.hasOwnProperty.call(e2, t3) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e2, t3)) && (i.get || i.set) ? o(f2, t3, i) : f2[t3] = e2[t3]);
+      return f2;
+    })(e, t);
+  }
+  function _interopRequireDefault(e) {
+    return e && e.__esModule ? e : { default: e };
+  }
+  var Ucum = requireConfig().Ucum;
+  var Dimension = requireDimension().Dimension;
+  var UnitTables;
+  var isInteger2 = requireIsInteger();
+  class Unit {
+    /**
+     * Constructor.
+     *
+     * @param attrs an optional parameter that may be:
+     *  a string, which is parsed by the unit parser, which creates
+     *  the unit from the parsed string; or
+     *  a hash containing all or some values for the attributes of
+     *  the unit, where the keys are the attribute names, without a
+     *  trailing underscore, e.g., name instead of name_; or
+     *  null, in which case an empty hash is created and used to
+     *  set the values forthe attributes.
+     *  If a hash (empty or not) is used, attributes for which no value
+     *  is specified are assigned a default value.
+     *
+     */
+    constructor(attrs = {}) {
+      this.isBase_ = attrs["isBase_"] || false;
+      this.name_ = attrs["name_"] || "";
+      this.csCode_ = attrs["csCode_"] || "";
+      this.ciCode_ = attrs["ciCode_"] || "";
+      this.property_ = attrs["property_"] || "";
+      this.magnitude_ = attrs["magnitude_"] || 1;
+      if (attrs["dim_"] === void 0 || attrs["dim_"] === null) {
+        this.dim_ = new Dimension();
+      } else if (attrs["dim_"]["dimVec_"] !== void 0) {
+        this.dim_ = new Dimension(attrs["dim_"]["dimVec_"]);
+      } else if (attrs["dim_"] instanceof Dimension) {
+        this.dim_ = attrs["dim_"];
+      } else if (attrs["dim_"] instanceof Array || isInteger2(attrs["dim_"])) {
+        this.dim_ = new Dimension(attrs["dim_"]);
+      } else {
+        this.dim_ = new Dimension();
+      }
+      this.printSymbol_ = attrs["printSymbol_"] || null;
+      this.class_ = attrs["class_"] || null;
+      this.isMetric_ = attrs["isMetric_"] || false;
+      this.variable_ = attrs["variable_"] || null;
+      this.cnv_ = attrs["cnv_"] || null;
+      this.cnvPfx_ = attrs["cnvPfx_"] || 1;
+      this.isSpecial_ = attrs["isSpecial_"] || false;
+      this.isArbitrary_ = attrs["isArbitrary_"] || false;
+      this.moleExp_ = attrs["moleExp_"] || 0;
+      this.equivalentExp_ = attrs["equivalentExp_"] || 0;
+      this.synonyms_ = attrs["synonyms_"] || null;
+      this.source_ = attrs["source_"] || null;
+      this.loincProperty_ = attrs["loincProperty_"] || null;
+      this.category_ = attrs["category_"] || null;
+      this.guidance_ = attrs["guidance_"] || null;
+      this.csUnitString_ = attrs["csUnitString_"] || null;
+      this.ciUnitString_ = attrs["ciUnitString_"] || null;
+      this.baseFactorStr_ = attrs["baseFactorStr_"] || null;
+      this.baseFactor_ = attrs["baseFactor_"] || null;
+      this.defError_ = attrs["defError_"] || false;
+    }
+    // end constructor
+    /**
+     * Assign the unity (= dimensionless unit 1) to this unit.
+     *
+     * @return this unit
+     */
+    assignUnity() {
+      this.name_ = "";
+      this.magnitude_ = 1;
+      if (!this.dim_) this.dim_ = new Dimension();
+      this.dim_.assignZero();
+      this.cnv_ = null;
+      this.cnvPfx_ = 1;
+      return this;
+    }
+    // end assignUnity
+    /**
+     * This assigns one or more values, as provided in the hash passed in,
+     * to this unit.
+     *
+     * @param vals hash of values to be assigned to the attributes
+     *        specified by the key(s), which should be the attribute
+     *        name without the trailing underscore, e.g., name instead
+     *        of name_.
+     * @return nothing
+     */
+    assignVals(vals) {
+      for (let key in vals) {
+        let uKey = !key.charAt(key.length - 1) === "_" ? key + "_" : key;
+        if (this.hasOwnProperty(uKey)) this[uKey] = vals[key];
+        else throw new Error(`Parameter error; ${key} is not a property of a Unit`);
+      }
+    }
+    // end assignVals
+    /**
+     * This creates a clone of this unit.
+     *
+     * @return the clone
+     */
+    clone() {
+      let retUnit = new Unit();
+      Object.getOwnPropertyNames(this).forEach((val) => {
+        if (val === "dim_") {
+          if (this["dim_"]) retUnit["dim_"] = this["dim_"].clone();
+          else retUnit["dim_"] = null;
+        } else retUnit[val] = this[val];
+      });
+      return retUnit;
+    }
+    // end clone
+    /**
+     * This assigns all properties of a unit passed to it to this unit.
+     *
+     * @param unit2 the unit whose properties are to be assigned to this one.
+     * @return nothing; this unit is updated
+     */
+    assign(unit2) {
+      Object.getOwnPropertyNames(unit2).forEach((val) => {
+        if (val === "dim_") {
+          if (unit2["dim_"]) this["dim_"] = unit2["dim_"].clone();
+          else this["dim_"] = null;
+        } else {
+          this[val] = unit2[val];
+        }
+      });
+    }
+    // end assign
+    /**
+     * This determines whether or not object properties of the unit
+     * passed in are equal to the corresponding properties in this unit.
+     * The following properties are the only ones checked:
+     *   magnitude_, dim_, cnv_ and cnvPfx_
+     *
+     * @param unit2 the unit whose properties are to be checked.
+     * @return boolean indicating whether or not they match
+     */
+    equals(unit2) {
+      return this.magnitude_ === unit2.magnitude_ && this.cnv_ === unit2.cnv_ && this.cnvPfx_ === unit2.cnvPfx_ && (this.dim_ === null && unit2.dim_ === null || this.dim_.equals(unit2.dim_));
+    }
+    // end equals
+    /**
+     * This method compares every attribute of two objects to determine
+     * if they all match.
+     *
+     * @param unit2 the unit that is to be compared to this unit
+     * @return boolean indicating whether or not every attribute matches
+     */
+    fullEquals(unit2) {
+      let thisAttr = Object.keys(this).sort();
+      let u2Attr = Object.keys(unit2).sort();
+      let keyLen = thisAttr.length;
+      let match = keyLen === u2Attr.length;
+      for (let k = 0; k < keyLen && match; k++) {
+        if (thisAttr[k] === u2Attr[k]) {
+          if (thisAttr[k] === "dim_") match = this.dim_.equals(unit2.dim_);
+          else match = this[thisAttr[k]] === unit2[thisAttr[k]];
+        } else match = false;
+      }
+      return match;
+    }
+    // end of fullEquals
+    /**
+     * This returns the value of the property named by the parameter
+     * passed in.
+     *
+     * @param propertyName name of the property to be returned, with
+     *        or without the trailing underscore.
+     * @return the requested property, if found for this unit
+     * @throws an error if the property is not found for this unit
+     */
+    getProperty(propertyName) {
+      let uProp = propertyName.charAt(propertyName.length - 1) === "_" ? propertyName : propertyName + "_";
+      return this[uProp];
+    }
+    // end getProperty
+    /**
+     * Takes a measurement consisting of a number of units and a unit and returns
+     * the equivalent number of this unit.  So, 15 mL would translate
+     * to 1 tablespoon if this object is a tablespoon.
+     *
+     * Note that the number returned may not be what is normally expected.
+     * For example, converting 10 Celsius units to Fahrenheit would "normally"
+     * return a value of 50.   But in this case you'll get back something like
+     * 49.99999999999994.
+     *
+     * If either unit is an arbitrary unit an exception is raised.
+     *
+     * @param num the magnitude for the unit to be translated (e.g. 15 for 15 mL)
+     * @param fromUnit the unit to be translated to one of this type (e.g. a mL unit)
+     *
+     * @return the number of converted units (e.g. 1 for 1 tablespoon)
+     * @throws an error if the dimension of the fromUnit differs from this unit's
+     * dimension
+     */
+    convertFrom(num, fromUnit) {
+      let newNum = 0;
+      if (this.isArbitrary_) throw new Error(`Attempt to convert to arbitrary unit "${this.csCode_}"`);
+      if (fromUnit.isArbitrary_) throw new Error(`Attempt to convert arbitrary unit "${fromUnit.csCode_}"`);
+      if (fromUnit.dim_ && this.dim_ && !fromUnit.dim_.equals(this.dim_)) {
+        if (this.isMolMassCommensurable(fromUnit)) {
+          throw new Error(Ucum.needMoleWeightMsg_);
+        } else {
+          throw new Error(`Sorry.  ${fromUnit.csCode_} cannot be converted to ${this.csCode_}.`);
+        }
+      }
+      if (fromUnit.dim_ && (!this.dim_ || this.dim_.isNull())) {
+        throw new Error(`Sorry.  ${fromUnit.csCode_} cannot be converted to ${this.csCode_}.`);
+      }
+      if (this.dim_ && (!fromUnit.dim_ || fromUnit.dim_.isNull())) {
+        throw new Error(`Sorry.  ${fromUnit.csCode_} cannot be converted to ${this.csCode_}.`);
+      }
+      let fromCnv = fromUnit.cnv_;
+      let fromMag = fromUnit.magnitude_;
+      let x2;
+      if (fromCnv != null) {
+        let fromFunc = _ucumFunctions.default.forName(fromCnv);
+        x2 = fromFunc.cnvFrom(num * fromUnit.cnvPfx_) * fromMag;
+      } else {
+        x2 = num * fromMag;
+      }
+      if (this.cnv_ != null) {
+        let toFunc = _ucumFunctions.default.forName(this.cnv_);
+        newNum = toFunc.cnvTo(x2 / this.magnitude_) / this.cnvPfx_;
+      } else {
+        newNum = x2 / this.magnitude_;
+      }
+      return newNum;
+    }
+    // end convertFrom
+    /**
+     * Takes a number and a target unit and returns the number for a measurement
+     * of this unit that corresponds to the number of the target unit passed in.
+     * So, 1 tablespoon (where this unit represents a tablespoon) would translate
+     * to 15 mL.
+     *
+     * See the note on convertFrom about return values.
+     *
+     * @param mag the magnitude for this unit (e.g. 1 for 1 tablespoon)
+     * @param toUnit the unit to which this unit is to be translated
+     *  (e.g. an mL unit)
+     *
+     * @return the converted number value (e.g. 15 mL)
+     * @throws an error if the dimension of the toUnit differs from this unit's
+     *   dimension
+     */
+    convertTo(num, toUnit) {
+      return toUnit.convertFrom(num, this);
+    }
+    // end convertTo
+    /**
+     * Takes a given number of this unit returns the number of this unit
+     * if it is converted into a coherent unit.  Does not change this unit.
+     *
+     * If this is a coherent unit already, just gives back the number
+     * passed in.
+     *
+     * @param num the number for the coherent version of this unit
+     * @return the number for the coherent version of this unit
+     */
+    convertCoherent(num) {
+      if (this.cnv_ !== null) num = this.cnv_.f_from(num / this.cnvPfx_) * this.magnitude_;
+      return num;
+    }
+    // end convertCoherent
+    /**
+     * Mutates this unit into a coherent unit and converts a given number of
+     * units to the appropriate value for this unit as a coherent unit
+     *
+     * @param num the number for this unit before conversion
+     * @return the number of this unit after conversion
+     * @throws an error if the dimensions differ
+     */
+    mutateCoherent(num) {
+      num = this.convertCoherent(num);
+      this.magnitude_ = 1;
+      this.cnv_ = null;
+      this.cnvPfx_ = 1;
+      this.name_ = "";
+      for (let i = 0, max = Dimension.getMax(); i < max; i++) {
+        let elem = this.dim_.getElementAt(i);
+        let tabs = this._getUnitTables();
+        let uA = tabs.getUnitsByDimension(new Dimension(i));
+        if (uA == null) throw new Error(`Can't find base unit for dimension ${i}`);
+        this.name_ = uA.name + elem;
+      }
+      return num;
+    }
+    // end mutateCoherent
+    /**
+     * This function converts between mol and mass (in either direction)
+     * using the molecular weight of the substance.  It assumes that the
+     * isMolMassCommensurable" function has been called to check that the units are
+     * commensurable.
+    *
+     * @param amt the quantity of this unit to be converted
+     * @param toUnit the target/to unit for which the converted # is wanted
+     * @param molecularWeight the molecular weight of the substance for which the
+     * conversion is being made
+     * @return the equivalent amount in toUnit
+     */
+    convertMolMass(amt, toUnit, molecularWeight) {
+      const molPowersToConvert = this.moleExp_ - toUnit.moleExp_;
+      let tabs = this._getUnitTables();
+      let avoNum = tabs.getUnitByCode("mol").magnitude_;
+      let moleUnitFactor = Math.pow(molecularWeight / avoNum, molPowersToConvert);
+      return this.magnitude_ / toUnit.magnitude_ * moleUnitFactor * amt;
+    }
+    // end convertMolMass
+    /**
+     * This function converts between equivalants and mass (in either direction)
+     * using the charge of the substance.  It assumes that the
+     * isEqMassCommensurable" function has been called to check that the units are
+     * commensurable.
+     *
+     * @param {number} amt - The amount of this unit to be converted.
+     * @param {object} toUnit - The target/to unit for which the converted number is wanted.
+     * @param {number} molecularWeight - The molecular weight of the substance for which the conversion is being made.
+     * @param {number} charge - The absolute value of the charge of the substance for which the conversion is being made.
+     * @returns {number} - The amount in the specified toUnit.
+     */
+    convertEqMass(amt, toUnit, molecularWeight, charge) {
+      const massPowersToConvert = toUnit.equivalentExp_ - this.equivalentExp_;
+      let equivalentMass = molecularWeight / charge;
+      let avogadroNumber = this._getUnitTables().getUnitByCode("mol").magnitude_;
+      let equivalents = this.magnitude_ * amt / Math.pow(equivalentMass, massPowersToConvert);
+      let moleFactor = toUnit.magnitude_ / Math.pow(avogadroNumber, massPowersToConvert);
+      let adjustedEquivalents = equivalents / moleFactor;
+      return adjustedEquivalents;
+    }
+    // end convertMassToEq
+    /**
+     *  Converts a unit with eq/mol/mass to another unit with eq/mol/mass.  It
+     *  assumes the units an commensurable, which can be checked via
+     *  isEqMolMassCommensurable.  It also assumes that the powers of eq/mol/mass
+     *  are different between the two units; otherwise it would be more efficient
+     *  to call one of the other convert... functions.
+     *
+     * @param {number} amt - The amount of this unit to be converted.
+     * @param {object} toUnit - The target/to unit for which the converted number is wanted.
+     * @param {number} molecularWeight - The molecular weight of the substance for which the conversion is being made.
+     * @param {number} charge - The absolute value of the charge of the substance for which the conversion is being made.
+     * @returns {number} - The equivalent amount in the specified equivalent unit.
+     */
+    convertEqMolMass(amt, toUnit, molecularWeight, charge) {
+      const eqPowersToConvert = this.equivalentExp_ - toUnit.equivalentExp_;
+      const molAmt = amt / Math.pow(charge, eqPowersToConvert);
+      const tabs = this._getUnitTables();
+      const d = tabs.getMassDimensionIndex();
+      const massPowersToConvert = this.dim_.getElementAt(d) - toUnit.dim_.getElementAt(d);
+      const molPowersToConvert = -massPowersToConvert;
+      const avoNum = tabs.getUnitByCode("mol").magnitude_;
+      let moleUnitFactor = Math.pow(molecularWeight / avoNum, molPowersToConvert);
+      return this.magnitude_ / toUnit.magnitude_ * moleUnitFactor * molAmt;
+    }
+    /**
+     * Checks if the given unit is an equivalent unit.
+     *
+     * Note: equivalent units are also be molar units, so a unit can return true for
+     * both isEquivalentUnit and isMolarUnit.
+     *
+     * @returns {boolean} - Returns true if the unit is an equivalent unit, false otherwise.
+     */
+    isEquivalentUnit() {
+      return this.equivalentExp_ !== 0;
+    }
+    // end isEquivalentUnit
+    /**
+     * Checks if the given unit is a molar unit.
+     *
+     * @returns {boolean} - Returns true if the unit is a molar unit, false otherwise.
+     */
+    isMolarUnit() {
+      return this.moleExp_ !== 0;
+    }
+    // end isMolarUnit
+    /**
+     * This function converts between equivalants and moles (in either direction)
+     * using the charge of the substance.  It assumes that the
+     * isEqMolCommensurable" function has been called to check that the units are
+     * commensurable.
+      * As with the other "convert" functions, it assumes the appropriate
+     * "is...Commensurable" function has been called.
+     *
+     * @param {number} amt - The amount of this unit for which the conversion is being made.
+     * @param {object} toUnit - The target unit for which the converted number is wanted.
+     * @param {number} charge - The absolute value of the charge of the substance for which the conversion is being made.
+     * @return {number} - The amount in molToUnit.
+     */
+    convertEqMol(amt, toUnit, charge) {
+      const eqPowersToConvert = this.equivalentExp_ - toUnit.equivalentExp_;
+      return amt * (this.magnitude_ / toUnit.magnitude_) / Math.pow(charge, eqPowersToConvert);
+    }
+    // end convertEqMol
+    /**
+     * Mutates this unit into a unit on a ratio scale and converts a specified
+     * number of units to an appropriate value for this converted unit
+     *
+     * @param num the number of this unit before it's converted
+     * @return the magnitude of this unit after it's converted
+     * @throw an error if the dimensions differ
+     */
+    mutateRatio(num) {
+      if (this.cnv_ == null) return this.mutateCoherent(num);
+      else return num;
+    }
+    // end mutateRatio
+    /**
+     * Multiplies this unit with a scalar. Special meaning for
+     * special units so that (0.1*B) is 1 dB.
+     *
+     * This function DOES NOT modify this unit.
+     *
+     * @param s the value by which this unit is to be multiplied
+     * @return a copy this unit multiplied by s
+     * */
+    multiplyThis(s2) {
+      let retUnit = this.clone();
+      if (retUnit.cnv_ != null) retUnit.cnvPfx_ *= s2;
+      else retUnit.magnitude_ *= s2;
+      let mulVal = s2.toString();
+      retUnit.name_ = this._concatStrs(mulVal, "*", this.name_, "[", "]");
+      retUnit.csCode_ = this._concatStrs(mulVal, ".", this.csCode_, "(", ")");
+      retUnit.ciCode_ = this._concatStrs(mulVal, ".", this.ciCode_, "(", ")");
+      retUnit.printSymbol_ = this._concatStrs(mulVal, ".", this.printSymbol_, "(", ")");
+      return retUnit;
+    }
+    // end multiplyThis
+    /**
+     * Multiplies this unit with another unit. If one of the
+     * units is a non-ratio unit the other must be dimensionless or
+     * else an exception is thrown.
+     *
+     * This function does NOT modify this unit
+     * @param unit2 the unit to be multiplied with this one
+     * @return this unit after it is multiplied
+     * @throws an error if one of the units is not on a ratio-scale
+     *         and the other is not dimensionless.
+     */
+    multiplyThese(unit2) {
+      var retUnit = this.clone();
+      if (retUnit.cnv_ != null) {
+        if (unit2.cnv_ == null && (!unit2.dim_ || unit2.dim_.isZero())) retUnit.cnvPfx_ *= unit2.magnitude_;
+        else throw new Error(`Attempt to multiply non-ratio unit ${retUnit.name_} failed.`);
+      } else if (unit2.cnv_ != null) {
+        if (!retUnit.dim_ || retUnit.dim_.isZero()) {
+          retUnit.cnvPfx_ = unit2.cnvPfx_ * retUnit.magnitude_;
+          retUnit.magnitude_ = unit2.magnitude_;
+          retUnit.cnv_ = unit2.cnv_;
+        } else throw new Error(`Attempt to multiply non-ratio unit ${unit2.name_}`);
+      } else {
+        retUnit.magnitude_ *= unit2.magnitude_;
+      }
+      if (!retUnit.dim_ || retUnit.dim_ && !retUnit.dim_.dimVec_) {
+        if (unit2.dim_) retUnit.dim_ = unit2.dim_.clone();
+        else retUnit.dim_ = unit2.dim_;
+      } else if (unit2.dim_ && unit2.dim_ instanceof Dimension) {
+        retUnit.dim_.add(unit2.dim_);
+      }
+      retUnit.equivalentExp_ += unit2.equivalentExp_;
+      retUnit.moleExp_ += unit2.moleExp_;
+      retUnit.name_ = this._concatStrs(retUnit.name_, "*", unit2.name_, "[", "]");
+      retUnit.csCode_ = this._concatStrs(retUnit.csCode_, ".", unit2.csCode_, "(", ")");
+      if (retUnit.ciCode_ && unit2.ciCode_) retUnit.ciCode_ = this._concatStrs(retUnit.ciCode_, ".", unit2.ciCode_, "(", ")");
+      else if (unit2.ciCode_) retUnit.ciCode_ = unit2.ciCode_;
+      retUnit.resetFieldsForDerivedUnit();
+      if (retUnit.printSymbol_ && unit2.printSymbol_) retUnit.printSymbol_ = this._concatStrs(retUnit.printSymbol_, ".", unit2.printSymbol_, "(", ")");
+      else if (unit2.printSymbol_) retUnit.printSymbol_ = unit2.printSymbol_;
+      if (!retUnit.isArbitrary_) retUnit.isArbitrary_ = unit2.isArbitrary_;
+      if (!retUnit.isSpecial_) retUnit.isSpecial_ = unit2.isSpecial_;
+      return retUnit;
+    }
+    // end multiplyThese
+    /**
+     *  Clears fields like isBase_, synonyms_, etc. when a unit has been cloned
+     *  from a known unit but it being used to construct a derived unit.
+     */
+    resetFieldsForDerivedUnit() {
+      this.guidance_ = "";
+      this.synonyms_ = null;
+      this.isBase_ = false;
+    }
+    /**
+     * Divides this unit by another unit. If this unit is not on a ratio
+     * scale an exception is raised. Mutating to a ratio scale unit
+     * is not possible for a unit, only for a measurement.
+     *
+     * This unit is NOT modified by this function.
+     * @param unit2 the unit by which to divide this one
+     * @return this unit after it is divided by unit2
+     * @throws an error if either of the units is not on a ratio scale.
+     * */
+    divide(unit2) {
+      var retUnit = this.clone();
+      if (retUnit.cnv_ != null) throw new Error(`Attempt to divide non-ratio unit ${retUnit.name_}`);
+      if (unit2.cnv_ != null) throw new Error(`Attempt to divide by non-ratio unit ${unit2.name_}`);
+      if (retUnit.name_ && unit2.name_) retUnit.name_ = this._concatStrs(retUnit.name_, "/", unit2.name_, "[", "]");
+      else if (unit2.name_) retUnit.name_ = unit2.invertString(unit2.name_);
+      retUnit.csCode_ = this._concatStrs(retUnit.csCode_, "/", unit2.csCode_, "(", ")");
+      if (retUnit.ciCode_ && unit2.ciCode_) retUnit.ciCode_ = this._concatStrs(retUnit.ciCode_, "/", unit2.ciCode_, "(", ")");
+      else if (unit2.ciCode_) retUnit.ciCode_ = unit2.invertString(unit2.ciCode_);
+      retUnit.resetFieldsForDerivedUnit();
+      retUnit.magnitude_ /= unit2.magnitude_;
+      if (retUnit.printSymbol_ && unit2.printSymbol_) retUnit.printSymbol_ = this._concatStrs(retUnit.printSymbol_, "/", unit2.printSymbol_, "(", ")");
+      else if (unit2.printSymbol_) retUnit.printSymbol_ = unit2.invertString(unit2.printSymbol_);
+      if (unit2.dim_) {
+        if (retUnit.dim_) {
+          if (retUnit.dim_.isNull()) retUnit.dim_.assignZero();
+          retUnit.dim_ = retUnit.dim_.sub(unit2.dim_);
+        } else retUnit.dim_ = unit2.dim_.clone().minus();
+      }
+      retUnit.moleExp_ -= unit2.moleExp_;
+      retUnit.equivalentExp_ -= unit2.equivalentExp_;
+      if (!retUnit.isArbitrary_) retUnit.isArbitrary_ = unit2.isArbitrary_;
+      return retUnit;
+    }
+    // end divide
+    /**
+     * This function is not actually used by the other code, except for some test
+     * code, and might not be adequately tested.
+     *
+     * Invert this unit with respect to multiplication. If this unit is not
+     * on a ratio scale an exception is thrown. Mutating to a ratio scale unit
+     * is not possible for a unit, only for a measurement (the magnitude and
+     * dimension).
+     *
+     *  This unit is modified by this function.
+     * @return this unit after being inverted
+     * @throws and error if this unit is not on a ratio scale
+     */
+    invert() {
+      var retUnit = this.clone();
+      if (this.cnv_ != null) throw new Error(`Attempt to invert a non-ratio unit - ${this.name_}`);
+      retUnit.name_ = this.invertString(this.name_);
+      retUnit.magnitude_ = 1 / this.magnitude_;
+      retUnit.dim_.minus();
+      retUnit.equivalentExp_ = -this.equivalentExp_;
+      retUnit.moleExp_ = -this.moleExp_;
+      return retUnit;
+    }
+    // end invert
+    /**
+     * Inverts a string, where the string is assumed to be a code or a name
+     * of a division operation where the string is the divisor and the dividend
+     * is blank.
+     *
+     * @param the string to be inverted
+     * @return the inverted string
+     */
+    invertString(theString) {
+      if (theString.length > 0) {
+        let stringRep = theString.replace("/", "!").replace(".", "/").replace("<!", "</").replace("!", ".");
+        switch (stringRep.charAt(0)) {
+          case ".":
+            theString = stringRep.substr(1);
+            break;
+          case "/":
+            theString = stringRep;
+            break;
+          default:
+            theString = "/" + stringRep;
+        }
+      }
+      return theString;
+    }
+    // end invertString
+    /**
+     * This function handles concatenation of two strings and an operator.
+     * It's called to build unit data, e.g., unit name, unit code, etc., from
+     * two different units, joined by the specified operator.
+     *
+     * @param str1 the first string to appear in the result
+     * @param operator the operator ('*', '.' or '/') to appear between the strings
+     * @param str2 the second string to appear in the result
+     * @param startChar the starting character to be used, when needed, to
+     *  enclose a string
+     * @param endChar the ending character to be used, when needed, to enclose
+     *  a string
+     * @returns the built string
+     */
+    _concatStrs(str1, operator, str2, startChar, endChar) {
+      return this._buildOneString(str1, startChar, endChar) + operator + this._buildOneString(str2, startChar, endChar);
+    }
+    /**
+     * This function handles creation of one string to be included in a
+     * concatenated string.   Basically it checks to see if the string
+     * needs to be enclosed either in parentheses or square brackets.
+     *
+     * The string is enclosed if it is not a number, is not already enclosed in a pair of
+     * parentheses or square brackets, and includes a period, and asterisk,
+     * a slash or a blank space.
+     *
+     * @param str the string
+     * @param startChar starting enclosing character
+     * @param endChar ending enclosing character
+     * @returns the string
+     */
+    _buildOneString(str, startChar, endChar) {
+      let ret = "";
+      if (intUtils_.isNumericString(str)) {
+        ret = str;
+      } else {
+        if (str.charAt(0) === "(" && str.endsWith(")") || str.charAt(0) === "[" && str.endsWith("]")) {
+          ret = str;
+        } else if (/[./* ]/.test(str)) {
+          ret = startChar + str + endChar;
+        } else {
+          ret = str;
+        }
+      }
+      return ret;
+    }
+    /**
+     * This function is not actually used by the other code, except for some test
+     * code, and might not be adequately tested.
+     *
+     * Raises the unit to a power.  For example
+     *  kg.m/s2 raised to the -2 power would be kg-2.m-2/s-4
+     *
+     * If this unit is not on a ratio scale an error is thrown. Mutating
+     * to a ratio scale unit is not possible for a unit, only for a
+     * measurement (magnitude and dimension).
+     *
+     * This is based on the pow method in Gunter Schadow's java version,
+     * although it uses javascript capabilities to simplify the processing.
+     *
+     * This unit is modified by this function
+     *
+     * @param p the power to with this unit is to be raise
+     * @return this unit after it is raised
+     * @throws an error if this unit is not on a ratio scale.
+     */
+    power(p) {
+      if (this.cnv_ != null) throw new Error(`Attempt to raise a non-ratio unit, ${this.name_}, to a power.`);
+      var retUnit = this.clone();
+      let uStr = this.csCode_;
+      let uArray = uStr.match(/([./]|[^./]+)/g);
+      let arLen = uArray.length;
+      for (let i = 0; i < arLen; i++) {
+        let un2 = uArray[i];
+        if (un2 !== "/" && un2 !== ".") {
+          let nun = parseInt(un2);
+          if (isInteger2(nun)) uArray[i] = Math.pow(nun, p).toString();
+          else {
+            let uLen = un2.length;
+            for (let u = uLen - 1; u >= 0; u--) {
+              let uChar = parseInt(un2[u]);
+              if (!isInteger2(uChar)) {
+                if (un2[u] === "-" || un2[u] === "+") {
+                  u--;
+                }
+                if (u < uLen - 1) {
+                  let exp = parseInt(un2.substr(u));
+                  exp = Math.pow(exp, p);
+                  uArray[i] = un2.substr(0, u) + exp.toString();
+                  u = -1;
+                } else {
+                  uArray[i] += p.toString();
+                  u = -1;
+                }
+                u = -1;
+              }
+            }
+          }
+        }
+      }
+      retUnit.csCode_ = uArray.join("");
+      retUnit.magnitude_ = Math.pow(this.magnitude_, p);
+      if (retUnit.dim_) {
+        retUnit.dim_.mul(p);
+      }
+      retUnit.equivalentExp_ *= p;
+      retUnit.moleExp_ *= p;
+      return retUnit;
+    }
+    // end power
+    /*
+     * This function tests this unit against the unit passed in to see if the
+     * two are mole to mass commensurable.  It assumes that one of the units
+     * is a mole-based unit and the other is a mass-based unit.  It also assumes
+     * that the mole-based unit has a single mole unit in the numerator and that
+     * the mass-based unit has a single mass unit in the numerator.  It does NOT
+     * check to validate those assumptions.
+     *
+     * The check is made by setting the dimension vector element corresponding
+     * to the base mass unit (gram) in the mole unit, and then comparing the
+     * two dimension vectors.  If they match, the units are commensurable.
+     * Otherwise they are not.
+     *
+     * @param unit2 the unit to be compared to this one
+     * @returns boolean indicating commensurability
+     */
+    isMolMassCommensurable(unit2) {
+      let tabs = this._getUnitTables();
+      let d = tabs.getMassDimensionIndex();
+      const unit1Dim = this.dim_.clone();
+      unit1Dim.setElementAt(d, unit1Dim.getElementAt(d) + this.moleExp_);
+      const unit2Dim = unit2.dim_.clone();
+      unit2Dim.setElementAt(d, unit2Dim.getElementAt(d) + unit2.moleExp_);
+      return unit1Dim.equals(unit2Dim);
+    }
+    /**
+     * This function tests this unit against the unit passed in to see if the
+     * two are eq to mass commensurable.  It assumes that one of the units
+     * is a eq-based unit and the other is a mass-based unit.  It also assumes
+     * that the eq-based unit has a single eq unit in the numerator and that
+     * the mass-based unit has a single mass unit in the numerator.  It does NOT
+     * check to validate those assumptions.
+     *
+     * The check is made by setting the dimension vector element corresponding
+     * to the base mass unit (gram) in the eq unit, and then comparing the
+     * two dimension vectors.  If they match, the units are commensurable.
+     * Otherwise they are not.
+     *
+     * @param {Unit} unit2 the unit to be compared to this one
+     * @returns {boolean} boolean indicating commensurability
+     */
+    isEqMassCommensurable(unit2) {
+      let tabs = this._getUnitTables();
+      let d = tabs.getMassDimensionIndex();
+      const unit1Dim = this.dim_.clone();
+      unit1Dim.setElementAt(d, unit1Dim.getElementAt(d) + this.equivalentExp_);
+      const unit2Dim = unit2.dim_.clone();
+      unit2Dim.setElementAt(d, unit2Dim.getElementAt(d) + unit2.equivalentExp_);
+      return unit1Dim.equals(unit2Dim);
+    }
+    /**
+     * This function tests this unit against the unit passed in to see if the
+     * two are eq to mass commensurable-- that the equivalents could be converted
+     * to the mass or vice-versa, in a way that makes the units commensurable.
+     *
+     * The check is made by adding the mole dimension to the equivalent dimension
+     * and comparing that result for the two units, along with the units'
+     * dimension vectors.  If they match, the units are
+     * commensurable.  Otherwise they are not.
+     *
+     * @param {Unit} unit2 the unit to be compared to this one
+     * @returns {boolean} boolean indicating commensurability
+     */
+    isEqMolCommensurable(unit2) {
+      const unit1Sum = this.equivalentExp_ + this.moleExp_;
+      const unit2Sum = unit2.equivalentExp_ + unit2.moleExp_;
+      return unit1Sum == unit2Sum && this.dim_.equals(unit2.dim_);
+    }
+    /**
+     * This function tests this unit against the unit passed in to see if the
+     * two are commensurable if eq, mol, and mass units are converted in some
+     * direction.
+     *
+     * The check is made by adding the eq,  mol, and mass  dimensions
+     * and comparing that result for the two units, along with the units'
+     * dimension vectors.  If they match, the units are
+     * commensurable.  Otherwise they are not.
+     *
+     * @param {Unit} unit2 the unit to be compared to this one
+     * @returns {boolean} boolean indicating commensurability
+     */
+    isEqMolMassCommensurable(unit2) {
+      const d = this._getUnitTables().getMassDimensionIndex();
+      const unit1Dim = this.dim_.clone();
+      unit1Dim.setElementAt(d, unit1Dim.getElementAt(d) + this.equivalentExp_ + this.moleExp_);
+      const unit2Dim = unit2.dim_.clone();
+      unit2Dim.setElementAt(d, unit2Dim.getElementAt(d) + unit2.equivalentExp_ + unit2.moleExp_);
+      return unit1Dim.equals(unit2Dim);
+    }
+    /**
+     * This returns the UnitTables singleton object.  Including the require
+     * statement included here causes a circular dependency condition that
+     * resulted in the UnitTables object not being defined for the Unit object.
+     * sigh.  Thanks, Paul, for figuring this out.
+     *
+     * @private
+     */
+    _getUnitTables() {
+      if (!UnitTables) UnitTables = requireUnitTables().UnitTables;
+      return UnitTables.getInstance();
+    }
+  }
+  unit.Unit = Unit;
+  return unit;
+}
+var jsonArrayPack = {};
+var hasRequiredJsonArrayPack;
+function requireJsonArrayPack() {
+  if (hasRequiredJsonArrayPack) return jsonArrayPack;
+  hasRequiredJsonArrayPack = 1;
+  Object.defineProperty(jsonArrayPack, "__esModule", {
+    value: true
+  });
+  jsonArrayPack.packArray = packArray;
+  jsonArrayPack.unpackArray = unpackArray;
+  const pushFn = Array.prototype.push;
+  function isObject(value) {
+    return Object.prototype.toString.call(value) === "[object Object]";
+  }
+  function createConfig(refObj) {
+    return Object.keys(refObj).reduce((config2, key) => {
+      if (isObject(refObj[key])) {
+        pushFn.apply(config2, createConfig(refObj[key]).map((keyTail) => [key, ...[].concat(keyTail)]));
+      } else {
+        config2.push(key);
+      }
+      return config2;
+    }, []);
+  }
+  function prepareConfig(config2) {
+    return config2.map((key) => Array.isArray(key) ? key : [key]);
+  }
+  function packItem(config2, item) {
+    if (config2.join() !== prepareConfig(createConfig(item)).join()) {
+      throw new Error("Object of unusual structure");
+    }
+    return config2.map((keyArr) => {
+      let place = item;
+      keyArr.forEach((key) => {
+        place = place[key];
+        if (place === void 0) {
+          throw new Error("Object of unusual structure");
+        }
+      });
+      return place;
+    });
+  }
+  function unpackItem(config2, item) {
+    let result = {};
+    config2.forEach((keyArr, i) => {
+      let place = result;
+      for (let i2 = 0; i2 < keyArr.length - 1; i2++) {
+        place = place[keyArr[i2]] = place[keyArr[i2]] || {};
+      }
+      place[keyArr[keyArr.length - 1]] = item[i];
+    });
+    return result;
+  }
+  function packArray(arr) {
+    if (arr && arr.length) {
+      const config2 = createConfig(arr[0]), _config = prepareConfig(config2);
+      if (config2.length) {
+        return {
+          config: config2,
+          data: arr.map(packItem.bind(null, _config))
+        };
+      }
+    }
+    return {
+      config: [],
+      data: arr
+    };
+  }
+  function unpackArray(obj) {
+    const config2 = obj && obj.config;
+    if (config2) {
+      if (config2.length && obj.data) {
+        const _config = prepareConfig(config2);
+        return obj.data.map(unpackItem.bind(null, _config));
+      } else {
+        return obj.data;
+      }
+    }
+    return obj;
+  }
+  return jsonArrayPack;
+}
+const prefixes = { "config": ["code_", "ciCode_", "name_", "printSymbol_", "value_", "exp_"], "data": [["E", "EX", "exa", "E", 1e18, "18"], ["G", "GA", "giga", "G", 1e9, "9"], ["Gi", "GIB", "gibi", "Gi", 1073741824, null], ["Ki", "KIB", "kibi", "Ki", 1024, null], ["M", "MA", "mega", "M", 1e6, "6"], ["Mi", "MIB", "mebi", "Mi", 1048576, null], ["P", "PT", "peta", "P", 1e15, "15"], ["T", "TR", "tera", "T", 1e12, "12"], ["Ti", "TIB", "tebi", "Ti", 1099511627776, null], ["Y", "YA", "yotta", "Y", 1e24, "24"], ["Z", "ZA", "zetta", "Z", 1e21, "21"], ["a", "A", "atto", "a", 1e-18, "-18"], ["c", "C", "centi", "c", 0.01, "-2"], ["d", "D", "deci", "d", 0.1, "-1"], ["da", "DA", "deka", "da", 10, "1"], ["f", "F", "femto", "f", 1e-15, "-15"], ["h", "H", "hecto", "h", 100, "2"], ["k", "K", "kilo", "k", 1e3, "3"], ["m", "M", "milli", "m", 1e-3, "-3"], ["n", "N", "nano", "n", 1e-9, "-9"], ["p", "P", "pico", "p", 1e-12, "-12"], ["u", "U", "micro", "μ", 1e-6, "-6"], ["y", "YO", "yocto", "y", 1e-24, "-24"], ["z", "ZO", "zepto", "z", 1e-21, "-21"]] };
+const units = /* @__PURE__ */ JSON.parse(`{"config":["isBase_","name_","csCode_","ciCode_","property_","magnitude_",["dim_","dimVec_"],"printSymbol_","class_","isMetric_","variable_","cnv_","cnvPfx_","isSpecial_","isArbitrary_","moleExp_","equivalentExp_","synonyms_","source_","loincProperty_","category_","guidance_","csUnitString_","ciUnitString_","baseFactorStr_","baseFactor_","defError_"],"data":[[true,"meter","m","M","length",1,[1,0,0,0,0,0,0],"m",null,false,"L",null,1,false,false,0,0,"meters; metres; distance","UCUM","Len","Clinical","unit of length = 1.09361 yards",null,null,null,null,false],[true,"second - time","s","S","time",1,[0,1,0,0,0,0,0],"s",null,false,"T",null,1,false,false,0,0,"seconds","UCUM","Time","Clinical","",null,null,null,null,false],[true,"gram","g","G","mass",1,[0,0,1,0,0,0,0],"g",null,false,"M",null,1,false,false,0,0,"grams; gm","UCUM","Mass","Clinical","",null,null,null,null,false],[true,"radian","rad","RAD","plane angle",1,[0,0,0,1,0,0,0],"rad",null,false,"A",null,1,false,false,0,0,"radians","UCUM","Angle","Clinical","unit of angular measure where 1 radian = 1/2π turn =  57.296 degrees. ",null,null,null,null,false],[true,"degree Kelvin","K","K","temperature",1,[0,0,0,0,1,0,0],"K",null,false,"C",null,1,false,false,0,0,"Kelvin; degrees","UCUM","Temp","Clinical","absolute, thermodynamic temperature scale ",null,null,null,null,false],[true,"coulomb","C","C","electric charge",1,[0,0,0,0,0,1,0],"C",null,false,"Q",null,1,false,false,0,0,"coulombs","UCUM","","Clinical","defined as amount of 1 electron charge = 6.2415093×10^18 e, and equivalent to 1 Ampere-second",null,null,null,null,false],[true,"candela","cd","CD","luminous intensity",1,[0,0,0,0,0,0,1],"cd",null,false,"F",null,1,false,false,0,0,"candelas","UCUM","","Clinical","SI base unit of luminous intensity",null,null,null,null,false],[false,"the number ten for arbitrary powers","10*","10*","number",10,[0,0,0,0,0,0,0],"10","dimless",false,null,null,1,false,false,0,0,"10^; 10 to the arbitrary powers","UCUM","Num","Clinical","10* by itself is the same as 10, but users can add digits after the *. For example, 10*3 = 1000.","1","1","10",10,false],[false,"the number ten for arbitrary powers","10^","10^","number",10,[0,0,0,0,0,0,0],"10","dimless",false,null,null,1,false,false,0,0,"10*; 10 to the arbitrary power","UCUM","Num","Clinical","10* by itself is the same as 10, but users can add digits after the *. For example, 10*3 = 1000.","1","1","10",10,false],[false,"the number pi","[pi]","[PI]","number",3.141592653589793,[0,0,0,0,0,0,0],"π","dimless",false,null,null,1,false,false,0,0,"π","UCUM","","Constant","a mathematical constant; the ratio of a circle's circumference to its diameter ≈ 3.14159","1","1","3.1415926535897932384626433832795028841971693993751058209749445923",3.141592653589793,false],[false,"","%","%","fraction",0.01,[0,0,0,0,0,0,0],"%","dimless",false,null,null,1,false,false,0,0,"percents","UCUM","FR; NFR; MFR; CFR; SFR Rto; etc. ","Clinical","","10*-2","10*-2","1",1,false],[false,"parts per thousand","[ppth]","[PPTH]","fraction",0.001,[0,0,0,0,0,0,0],"ppth","dimless",false,null,null,1,false,false,0,0,"ppth; 10^-3","UCUM","MCnc; MCnt","Clinical","[ppth] is often used in solution concentrations as 1 g/L or 1 g/kg.\\n\\nCan be ambigous and would be better if the metric units was used directly. ","10*-3","10*-3","1",1,false],[false,"parts per million","[ppm]","[PPM]","fraction",0.000001,[0,0,0,0,0,0,0],"ppm","dimless",false,null,null,1,false,false,0,0,"ppm; 10^-6","UCUM","MCnt; MCnc; SFr","Clinical","[ppm] is often used in solution concentrations as 1 mg/L  or 1 mg/kg. Also used to express mole fractions as 1 mmol/mol.\\n\\n[ppm] is also used in nuclear magnetic resonance (NMR) to represent chemical shift - the difference of a measured frequency in parts per million from the reference frequency.\\n\\nCan be ambigous and would be better if the metric units was used directly. ","10*-6","10*-6","1",1,false],[false,"parts per billion","[ppb]","[PPB]","fraction",1e-9,[0,0,0,0,0,0,0],"ppb","dimless",false,null,null,1,false,false,0,0,"ppb; 10^-9","UCUM","MCnt; MCnc; SFr","Clinical","[ppb] is often used in solution concentrations as 1 ug/L  or 1 ug/kg. Also used to express mole fractions as 1 umol/mol.\\n\\nCan be ambigous and would be better if the metric units was used directly. ","10*-9","10*-9","1",1,false],[false,"parts per trillion","[pptr]","[PPTR]","fraction",1e-12,[0,0,0,0,0,0,0],"pptr","dimless",false,null,null,1,false,false,0,0,"pptr; 10^-12","UCUM","MCnt; MCnc; SFr","Clinical","[pptr] is often used in solution concentrations as 1 ng/L or 1 ng/kg. Also used to express mole fractions as 1 nmol/mol.\\n\\nCan be ambigous and would be better if the metric units was used directly. ","10*-12","10*-12","1",1,false],[false,"mole","mol","MOL","amount of substance",6.0221367e+23,[0,0,0,0,0,0,0],"mol","si",true,null,null,1,false,false,1,0,"moles","UCUM","Sub","Clinical","Measure the number of molecules ","10*23","10*23","6.0221367",6.0221367,false],[false,"steradian - solid angle","sr","SR","solid angle",1,[0,0,0,2,0,0,0],"sr","si",true,null,null,1,false,false,0,0,"square radian; rad2; rad^2","UCUM","Angle","Clinical","unit of solid angle in three-dimensional geometry analagous to radian; used in photometry which measures the perceived brightness of object by human eye (e.g. radiant intensity = watt/steradian)","rad2","RAD2","1",1,false],[false,"hertz","Hz","HZ","frequency",1,[0,-1,0,0,0,0,0],"Hz","si",true,null,null,1,false,false,0,0,"Herz; frequency; frequencies","UCUM","Freq; Num","Clinical","equal to one cycle per second","s-1","S-1","1",1,false],[false,"newton","N","N","force",1000,[1,-2,1,0,0,0,0],"N","si",true,null,null,1,false,false,0,0,"Newtons","UCUM","Force","Clinical","unit of force with base units kg.m/s2","kg.m/s2","KG.M/S2","1",1,false],[false,"pascal","Pa","PAL","pressure",1000,[-1,-2,1,0,0,0,0],"Pa","si",true,null,null,1,false,false,0,0,"pascals","UCUM","Pres","Clinical","standard unit of pressure equal to 1 newton per square meter (N/m2)","N/m2","N/M2","1",1,false],[false,"joule","J","J","energy",1000,[2,-2,1,0,0,0,0],"J","si",true,null,null,1,false,false,0,0,"joules","UCUM","Enrg","Clinical","unit of energy defined as the work required to move an object 1 m with a force of 1 N (N.m) or an electric charge of 1 C through 1 V (C.V), or to produce 1 W for 1 s (W.s) ","N.m","N.M","1",1,false],[false,"watt","W","W","power",1000,[2,-3,1,0,0,0,0],"W","si",true,null,null,1,false,false,0,0,"watts","UCUM","EngRat","Clinical","unit of power equal to 1 Joule per second (J/s) =  kg⋅m2⋅s−3","J/s","J/S","1",1,false],[false,"Ampere","A","A","electric current",1,[0,-1,0,0,0,1,0],"A","si",true,null,null,1,false,false,0,0,"Amperes","UCUM","ElpotRat","Clinical","unit of electric current equal to flow rate of electrons equal to 6.2415×10^18 elementary charges moving past a boundary in one second or 1 Coulomb/second","C/s","C/S","1",1,false],[false,"volt","V","V","electric potential",1000,[2,-2,1,0,0,-1,0],"V","si",true,null,null,1,false,false,0,0,"volts","UCUM","Elpot","Clinical","unit of electric potential (voltage) = 1 Joule per Coulomb (J/C)","J/C","J/C","1",1,false],[false,"farad","F","F","electric capacitance",0.001,[-2,2,-1,0,0,2,0],"F","si",true,null,null,1,false,false,0,0,"farads; electric capacitance","UCUM","","Clinical","CGS unit of electric capacitance with base units C/V (Coulomb per Volt)","C/V","C/V","1",1,false],[false,"ohm","Ohm","OHM","electric resistance",1000,[2,-1,1,0,0,-2,0],"Ω","si",true,null,null,1,false,false,0,0,"Ω; resistance; ohms","UCUM","","Clinical","unit of electrical resistance with units of Volt per Ampere","V/A","V/A","1",1,false],[false,"siemens","S","SIE","electric conductance",0.001,[-2,1,-1,0,0,2,0],"S","si",true,null,null,1,false,false,0,0,"Reciprocal ohm; mho; Ω−1; conductance","UCUM","","Clinical","unit of electric conductance (the inverse of electrical resistance) equal to ohm^-1","Ohm-1","OHM-1","1",1,false],[false,"weber","Wb","WB","magnetic flux",1000,[2,-1,1,0,0,-1,0],"Wb","si",true,null,null,1,false,false,0,0,"magnetic flux; webers","UCUM","","Clinical","unit of magnetic flux equal to Volt second","V.s","V.S","1",1,false],[false,"degree Celsius","Cel","CEL","temperature",1,[0,0,0,0,1,0,0],"°C","si",true,null,"Cel",1,true,false,0,0,"°C; degrees","UCUM","Temp","Clinical","","K",null,null,1,false],[false,"tesla","T","T","magnetic flux density",1000,[0,-1,1,0,0,-1,0],"T","si",true,null,null,1,false,false,0,0,"Teslas; magnetic field","UCUM","","Clinical","SI unit of magnetic field strength for magnetic field B equal to 1 Weber/square meter =  1 kg/(s2*A)","Wb/m2","WB/M2","1",1,false],[false,"henry","H","H","inductance",1000,[2,0,1,0,0,-2,0],"H","si",true,null,null,1,false,false,0,0,"henries; inductance","UCUM","","Clinical","unit of electrical inductance; usually expressed in millihenrys (mH) or microhenrys (uH).","Wb/A","WB/A","1",1,false],[false,"lumen","lm","LM","luminous flux",1,[0,0,0,2,0,0,1],"lm","si",true,null,null,1,false,false,0,0,"luminous flux; lumens","UCUM","","Clinical","unit of luminous flux defined as 1 lm = 1 cd⋅sr (candela times sphere)","cd.sr","CD.SR","1",1,false],[false,"lux","lx","LX","illuminance",1,[-2,0,0,2,0,0,1],"lx","si",true,null,null,1,false,false,0,0,"illuminance; luxes","UCUM","","Clinical","unit of illuminance equal to one lumen per square meter. ","lm/m2","LM/M2","1",1,false],[false,"becquerel","Bq","BQ","radioactivity",1,[0,-1,0,0,0,0,0],"Bq","si",true,null,null,1,false,false,0,0,"activity; radiation; becquerels","UCUM","","Clinical","measure of the atomic radiation rate with units s^-1","s-1","S-1","1",1,false],[false,"gray","Gy","GY","energy dose",1,[2,-2,0,0,0,0,0],"Gy","si",true,null,null,1,false,false,0,0,"absorbed doses; ionizing radiation doses; kerma; grays","UCUM","EngCnt","Clinical","unit of ionizing radiation dose with base units of 1 joule of radiation energy per kilogram of matter","J/kg","J/KG","1",1,false],[false,"sievert","Sv","SV","dose equivalent",1,[2,-2,0,0,0,0,0],"Sv","si",true,null,null,1,false,false,0,0,"sieverts; radiation dose quantities; equivalent doses; effective dose; operational dose; committed dose","UCUM","","Clinical","SI unit for radiation dose equivalent equal to 1 Joule/kilogram.","J/kg","J/KG","1",1,false],[false,"degree - plane angle","deg","DEG","plane angle",0.017453292519943295,[0,0,0,1,0,0,0],"°","iso1000",false,null,null,1,false,false,0,0,"°; degree of arc; arc degree; arcdegree; angle","UCUM","Angle","Clinical","one degree is equivalent to π/180 radians.","[pi].rad/360","[PI].RAD/360","2",2,false],[false,"gon","gon","GON","plane angle",0.015707963267948967,[0,0,0,1,0,0,0],"□<sup>g</sup>","iso1000",false,null,null,1,false,false,0,0,"gon (grade); gons","UCUM","Angle","Nonclinical","unit of plane angle measurement equal to 1/400 circle","deg","DEG","0.9",0.9,false],[false,"arc minute","'","'","plane angle",0.0002908882086657216,[0,0,0,1,0,0,0],"'","iso1000",false,null,null,1,false,false,0,0,"arcminutes; arcmin; arc minutes; arc mins","UCUM","Angle","Clinical","equal to 1/60 degree; used in optometry and opthamology (e.g. visual acuity tests)","deg/60","DEG/60","1",1,false],[false,"arc second","''","''","plane angle",0.00000484813681109536,[0,0,0,1,0,0,0],"''","iso1000",false,null,null,1,false,false,0,0,"arcseconds; arcsecs","UCUM","Angle","Clinical","equal to 1/60 arcminute = 1/3600 degree; used in optometry and opthamology (e.g. visual acuity tests)","'/60","'/60","1",1,false],[false,"Liters","l","L","volume",0.001,[3,0,0,0,0,0,0],"l","iso1000",true,null,null,1,false,false,0,0,"cubic decimeters; decimeters cubed; decimetres; dm3; dm^3; litres; liters, LT ","UCUM","Vol","Clinical","Because lower case \\"l\\" can be read as the number \\"1\\", though this is a valid UCUM units. UCUM strongly reccomends using  \\"L\\"","dm3","DM3","1",1,false],[false,"Liters","L","L","volume",0.001,[3,0,0,0,0,0,0],"L","iso1000",true,null,null,1,false,false,0,0,"cubic decimeters; decimeters cubed; decimetres; dm3; dm^3; litres; liters, LT ","UCUM","Vol","Clinical","Because lower case \\"l\\" can be read as the number \\"1\\", though this is a valid UCUM units. UCUM strongly reccomends using  \\"L\\"","l",null,"1",1,false],[false,"are","ar","AR","area",100,[2,0,0,0,0,0,0],"a","iso1000",true,null,null,1,false,false,0,0,"100 m2; 100 m^2; 100 square meter; meters squared; metres","UCUM","Area","Clinical","metric base unit for area defined as 100 m^2","m2","M2","100",100,false],[false,"minute","min","MIN","time",60,[0,1,0,0,0,0,0],"min","iso1000",false,null,null,1,false,false,0,0,"minutes","UCUM","Time","Clinical","","s","S","60",60,false],[false,"hour","h","HR","time",3600,[0,1,0,0,0,0,0],"h","iso1000",false,null,null,1,false,false,0,0,"hours; hrs; age","UCUM","Time","Clinical","","min","MIN","60",60,false],[false,"day","d","D","time",86400,[0,1,0,0,0,0,0],"d","iso1000",false,null,null,1,false,false,0,0,"days; age; dy; 24 hours; 24 hrs","UCUM","Time","Clinical","","h","HR","24",24,false],[false,"tropical year","a_t","ANN_T","time",31556925.216,[0,1,0,0,0,0,0],"a<sub>t</sub>","iso1000",false,null,null,1,false,false,0,0,"solar years; a tropical; years","UCUM","Time","Clinical","has an average of 365.242181 days but is constantly changing.","d","D","365.24219",365.24219,false],[false,"mean Julian year","a_j","ANN_J","time",31557600,[0,1,0,0,0,0,0],"a<sub>j</sub>","iso1000",false,null,null,1,false,false,0,0,"mean Julian yr; a julian; years","UCUM","Time","Clinical","has an average of 365.25 days, and in everyday use, has been replaced by the Gregorian year. However, this unit is used in astronomy to calculate light year. ","d","D","365.25",365.25,false],[false,"mean Gregorian year","a_g","ANN_G","time",31556952,[0,1,0,0,0,0,0],"a<sub>g</sub>","iso1000",false,null,null,1,false,false,0,0,"mean Gregorian yr; a gregorian; years","UCUM","Time","Clinical","has an average of 365.2425 days and is the most internationally used civil calendar.","d","D","365.2425",365.2425,false],[false,"year","a","ANN","time",31557600,[0,1,0,0,0,0,0],"a","iso1000",false,null,null,1,false,false,0,0,"years; a; yr, yrs; annum","UCUM","Time","Clinical","","a_j","ANN_J","1",1,false],[false,"week","wk","WK","time",604800,[0,1,0,0,0,0,0],"wk","iso1000",false,null,null,1,false,false,0,0,"weeks; wks","UCUM","Time","Clinical","","d","D","7",7,false],[false,"synodal month","mo_s","MO_S","time",2551442.976,[0,1,0,0,0,0,0],"mo<sub>s</sub>","iso1000",false,null,null,1,false,false,0,0,"Moon; synodic month; lunar month; mo-s; mo s; months; moons","UCUM","Time","Nonclinical","has an average of 29.53 days per month, unit used in astronomy","d","D","29.53059",29.53059,false],[false,"mean Julian month","mo_j","MO_J","time",2629800,[0,1,0,0,0,0,0],"mo<sub>j</sub>","iso1000",false,null,null,1,false,false,0,0,"mo-julian; mo Julian; months","UCUM","Time","Clinical","has an average of 30.435 days per month","a_j/12","ANN_J/12","1",1,false],[false,"mean Gregorian month","mo_g","MO_G","time",2629746,[0,1,0,0,0,0,0],"mo<sub>g</sub>","iso1000",false,null,null,1,false,false,0,0,"months; month-gregorian; mo-gregorian","UCUM","Time","Clinical","has an average 30.436875 days per month and is from the most internationally used civil calendar.","a_g/12","ANN_G/12","1",1,false],[false,"month","mo","MO","time",2629800,[0,1,0,0,0,0,0],"mo","iso1000",false,null,null,1,false,false,0,0,"months; duration","UCUM","Time","Clinical","based on Julian calendar which has an average of 30.435 days per month (this unit is used in astronomy but not in everyday life - see mo_g)","mo_j","MO_J","1",1,false],[false,"metric ton","t","TNE","mass",1000000,[0,0,1,0,0,0,0],"t","iso1000",true,null,null,1,false,false,0,0,"tonnes; megagrams; tons","UCUM","Mass","Nonclinical","equal to 1000 kg used in the US (recognized by NIST as metric ton), and internationally (recognized as tonne)","kg","KG","1e3",1000,false],[false,"bar","bar","BAR","pressure",100000000,[-1,-2,1,0,0,0,0],"bar","iso1000",true,null,null,1,false,false,0,0,"bars","UCUM","Pres","Nonclinical","unit of pressure equal to 10^5 Pascals, primarily used by meteorologists and in weather forecasting","Pa","PAL","1e5",100000,false],[false,"unified atomic mass unit","u","AMU","mass",1.6605402e-24,[0,0,1,0,0,0,0],"u","iso1000",true,null,null,1,false,false,0,0,"unified atomic mass units; amu; Dalton; Da","UCUM","Mass","Clinical","the mass of 1/12 of an unbound Carbon-12 atom nuclide equal to 1.6606x10^-27 kg ","g","G","1.6605402e-24",1.6605402e-24,false],[false,"astronomic unit","AU","ASU","length",149597870691,[1,0,0,0,0,0,0],"AU","iso1000",false,null,null,1,false,false,0,0,"AU; units","UCUM","Len","Clinical","unit of length used in astronomy for measuring distance in Solar system","Mm","MAM","149597.870691",149597.870691,false],[false,"parsec","pc","PRS","length",30856780000000000,[1,0,0,0,0,0,0],"pc","iso1000",true,null,null,1,false,false,0,0,"parsecs","UCUM","Len","Clinical","unit of length equal to 3.26 light years, and used to measure large distances to objects outside our Solar System","m","M","3.085678e16",30856780000000000,false],[false,"velocity of light in a vacuum","[c]","[C]","velocity",299792458,[1,-1,0,0,0,0,0],"<i>c</i>","const",true,null,null,1,false,false,0,0,"speed of light","UCUM","Vel","Constant","equal to 299792458 m/s (approximately 3 x 10^8 m/s)","m/s","M/S","299792458",299792458,false],[false,"Planck constant","[h]","[H]","action",6.6260755e-31,[2,-1,1,0,0,0,0],"<i>h</i>","const",true,null,null,1,false,false,0,0,"Planck's constant","UCUM","","Constant","constant = 6.62607004 × 10-34 m2.kg/s; defined as quantum of action","J.s","J.S","6.6260755e-34",6.6260755e-34,false],[false,"Boltzmann constant","[k]","[K]","(unclassified)",1.380658e-20,[2,-2,1,0,-1,0,0],"<i>k</i>","const",true,null,null,1,false,false,0,0,"k; kB","UCUM","","Constant","physical constant relating energy at the individual particle level with temperature = 1.38064852 ×10^−23 J/K","J/K","J/K","1.380658e-23",1.380658e-23,false],[false,"permittivity of vacuum - electric","[eps_0]","[EPS_0]","electric permittivity",8.854187817000001e-15,[-3,2,-1,0,0,2,0],"<i>ε<sub><r>0</r></sub></i>","const",true,null,null,1,false,false,0,0,"ε0; Electric Constant; vacuum permittivity; permittivity of free space ","UCUM","","Constant","approximately equal to 8.854 × 10^−12 F/m (farads per meter)","F/m","F/M","8.854187817e-12",8.854187817e-12,false],[false,"permeability of vacuum - magnetic","[mu_0]","[MU_0]","magnetic permeability",0.0012566370614359172,[1,0,1,0,0,-2,0],"<i>μ<sub><r>0</r></sub></i>","const",true,null,null,1,false,false,0,0,"μ0; vacuum permeability; permeability of free space; magnetic constant","UCUM","","Constant","equal to 4π×10^−7 N/A2 (Newtons per square ampere) ≈ 1.2566×10^−6 H/m (Henry per meter)","N/A2","4.[PI].10*-7.N/A2","1",0.0000012566370614359173,false],[false,"elementary charge","[e]","[E]","electric charge",1.60217733e-19,[0,0,0,0,0,1,0],"<i>e</i>","const",true,null,null,1,false,false,0,0,"e; q; electric charges","UCUM","","Constant","the magnitude of the electric charge carried by a single electron or proton ≈ 1.60217×10^-19 Coulombs","C","C","1.60217733e-19",1.60217733e-19,false],[false,"electronvolt","eV","EV","energy",1.60217733e-16,[2,-2,1,0,0,0,0],"eV","iso1000",true,null,null,1,false,false,0,0,"Electron Volts; electronvolts","UCUM","Eng","Clinical","unit of kinetic energy = 1 V * 1.602×10^−19 C = 1.6×10−19 Joules","[e].V","[E].V","1",1,false],[false,"electron mass","[m_e]","[M_E]","mass",9.1093897e-28,[0,0,1,0,0,0,0],"<i>m<sub><r>e</r></sub></i>","const",true,null,null,1,false,false,0,0,"electron rest mass; me","UCUM","Mass","Constant","approximately equal to 9.10938356 × 10-31 kg; defined as the mass of a stationary electron","g","g","9.1093897e-28",9.1093897e-28,false],[false,"proton mass","[m_p]","[M_P]","mass",1.6726231e-24,[0,0,1,0,0,0,0],"<i>m<sub><r>p</r></sub></i>","const",true,null,null,1,false,false,0,0,"mp; masses","UCUM","Mass","Constant","approximately equal to 1.672622×10−27 kg","g","g","1.6726231e-24",1.6726231e-24,false],[false,"Newtonian constant of gravitation","[G]","[GC]","(unclassified)",6.67259e-14,[3,-2,-1,0,0,0,0],"<i>G</i>","const",true,null,null,1,false,false,0,0,"G; gravitational constant; Newton's constant","UCUM","","Constant","gravitational constant = 6.674×10−11 N⋅m2/kg2","m3.kg-1.s-2","M3.KG-1.S-2","6.67259e-11",6.67259e-11,false],[false,"standard acceleration of free fall","[g]","[G]","acceleration",9.80665,[1,-2,0,0,0,0,0],"<i>g<sub>n</sub></i>","const",true,null,null,1,false,false,0,0,"standard gravity; g; ɡ0; ɡn","UCUM","Accel","Constant","defined by standard = 9.80665 m/s2","m/s2","M/S2","980665e-5",9.80665,false],[false,"Torr","Torr","Torr","pressure",133322,[-1,-2,1,0,0,0,0],"Torr","const",false,null,null,1,false,false,0,0,"torrs","UCUM","Pres","Clinical","1 torr = 1 mmHg; unit used to measure blood pressure","Pa","PAL","133.322",133.322,false],[false,"standard atmosphere","atm","ATM","pressure",101325000,[-1,-2,1,0,0,0,0],"atm","const",false,null,null,1,false,false,0,0,"reference pressure; atmos; std atmosphere","UCUM","Pres","Clinical","defined as being precisely equal to 101,325 Pa","Pa","PAL","101325",101325,false],[false,"light-year","[ly]","[LY]","length",9460730472580800,[1,0,0,0,0,0,0],"l.y.","const",true,null,null,1,false,false,0,0,"light years; ly","UCUM","Len","Constant","unit of astronomal distance = 5.88×10^12 mi","[c].a_j","[C].ANN_J","1",1,false],[false,"gram-force","gf","GF","force",9.80665,[1,-2,1,0,0,0,0],"gf","const",true,null,null,1,false,false,0,0,"Newtons; gram forces","UCUM","Force","Clinical","May be specific to unit related to cardiac output","g.[g]","G.[G]","1",1,false],[false,"Kayser","Ky","KY","lineic number",100,[-1,0,0,0,0,0,0],"K","cgs",true,null,null,1,false,false,0,0,"wavenumbers; kaysers","UCUM","InvLen","Clinical","unit of wavelength equal to cm^-1","cm-1","CM-1","1",1,false],[false,"Gal","Gal","GL","acceleration",0.01,[1,-2,0,0,0,0,0],"Gal","cgs",true,null,null,1,false,false,0,0,"galileos; Gals","UCUM","Accel","Clinical","unit of acceleration used in gravimetry; equivalent to cm/s2 ","cm/s2","CM/S2","1",1,false],[false,"dyne","dyn","DYN","force",0.01,[1,-2,1,0,0,0,0],"dyn","cgs",true,null,null,1,false,false,0,0,"dynes","UCUM","Force","Clinical","unit of force equal to 10^-5 Newtons","g.cm/s2","G.CM/S2","1",1,false],[false,"erg","erg","ERG","energy",0.0001,[2,-2,1,0,0,0,0],"erg","cgs",true,null,null,1,false,false,0,0,"10^-7 Joules, 10-7 Joules; 100 nJ; 100 nanoJoules; 1 dyne cm; 1 g.cm2/s2","UCUM","Eng","Clinical","unit of energy = 1 dyne centimeter = 10^-7 Joules","dyn.cm","DYN.CM","1",1,false],[false,"Poise","P","P","dynamic viscosity",100.00000000000001,[-1,-1,1,0,0,0,0],"P","cgs",true,null,null,1,false,false,0,0,"dynamic viscosity; poises","UCUM","Visc","Clinical","unit of dynamic viscosity where 1 Poise = 1/10 Pascal second","dyn.s/cm2","DYN.S/CM2","1",1,false],[false,"Biot","Bi","BI","electric current",10,[0,-1,0,0,0,1,0],"Bi","cgs",true,null,null,1,false,false,0,0,"Bi; abamperes; abA","UCUM","ElpotRat","Clinical","equal to 10 amperes","A","A","10",10,false],[false,"Stokes","St","ST","kinematic viscosity",0.00009999999999999999,[2,-1,0,0,0,0,0],"St","cgs",true,null,null,1,false,false,0,0,"kinematic viscosity","UCUM","Visc","Clinical","unit of kimematic viscosity with units cm2/s","cm2/s","CM2/S","1",1,false],[false,"Maxwell","Mx","MX","flux of magnetic induction",0.00001,[2,-1,1,0,0,-1,0],"Mx","cgs",true,null,null,1,false,false,0,0,"magnetix flux; Maxwells","UCUM","","Clinical","unit of magnetic flux","Wb","WB","1e-8",1e-8,false],[false,"Gauss","G","GS","magnetic flux density",0.1,[0,-1,1,0,0,-1,0],"Gs","cgs",true,null,null,1,false,false,0,0,"magnetic fields; magnetic flux density; induction; B","UCUM","magnetic","Clinical","CGS unit of magnetic flux density, known as magnetic field B; defined as one maxwell unit per square centimeter (see Oersted for CGS unit for H field)","T","T","1e-4",0.0001,false],[false,"Oersted","Oe","OE","magnetic field intensity",79.57747154594767,[-1,-1,0,0,0,1,0],"Oe","cgs",true,null,null,1,false,false,0,0,"H magnetic B field; Oersteds","UCUM","","Clinical","CGS unit of the auxiliary magnetic field H defined as 1 dyne per unit pole = 1000/4π amperes per meter (see Gauss for CGS unit for B field)","A/m","/[PI].A/M","250",79.57747154594767,false],[false,"Gilbert","Gb","GB","magnetic tension",0.7957747154594768,[0,-1,0,0,0,1,0],"Gb","cgs",true,null,null,1,false,false,0,0,"Gi; magnetomotive force; Gilberts","UCUM","","Clinical","unit of magnetomotive force (magnetic potential)","Oe.cm","OE.CM","1",1,false],[false,"stilb","sb","SB","lum. intensity density",10000,[-2,0,0,0,0,0,1],"sb","cgs",true,null,null,1,false,false,0,0,"stilbs","UCUM","","Obsolete","unit of luminance; equal to and replaced by unit candela per square centimeter (cd/cm2)","cd/cm2","CD/CM2","1",1,false],[false,"Lambert","Lmb","LMB","brightness",3183.098861837907,[-2,0,0,0,0,0,1],"L","cgs",true,null,null,1,false,false,0,0,"luminance; lamberts","UCUM","","Clinical","unit of luminance defined as 1 lambert = 1/ π candela per square meter","cd/cm2/[pi]","CD/CM2/[PI]","1",1,false],[false,"phot","ph","PHT","illuminance",0.0001,[-2,0,0,2,0,0,1],"ph","cgs",true,null,null,1,false,false,0,0,"phots","UCUM","","Clinical","CGS photometric unit of illuminance, or luminous flux through an area equal to 10000 lumens per square meter = 10000 lux","lx","LX","1e-4",0.0001,false],[false,"Curie","Ci","CI","radioactivity",37000000000,[0,-1,0,0,0,0,0],"Ci","cgs",true,null,null,1,false,false,0,0,"curies","UCUM","","Obsolete","unit for measuring atomic disintegration rate; replaced by the Bequerel (Bq) unit","Bq","BQ","37e9",37000000000,false],[false,"Roentgen","R","ROE","ion dose",2.58e-7,[0,0,-1,0,0,1,0],"R","cgs",true,null,null,1,false,false,0,0,"röntgen; Roentgens","UCUM","","Clinical","unit of exposure of X-rays and gamma rays in air; unit used primarily in the US but strongly discouraged by NIST","C/kg","C/KG","2.58e-4",0.000258,false],[false,"radiation absorbed dose","RAD","[RAD]","energy dose",0.01,[2,-2,0,0,0,0,0],"RAD","cgs",true,null,null,1,false,false,0,0,"doses","UCUM","","Clinical","unit of radiation absorbed dose used primarily in the US with base units 100 ergs per gram of material. Also see the SI unit Gray (Gy).","erg/g","ERG/G","100",100,false],[false,"radiation equivalent man","REM","[REM]","dose equivalent",0.01,[2,-2,0,0,0,0,0],"REM","cgs",true,null,null,1,false,false,0,0,"Roentgen Equivalent in Man; rems; dose equivalents","UCUM","","Clinical","unit of equivalent dose which measures the effect of radiation on humans equal to 0.01 sievert. Used primarily in the US. Also see SI unit Sievert (Sv)","RAD","[RAD]","1",1,false],[false,"inch","[in_i]","[IN_I]","length",0.025400000000000002,[1,0,0,0,0,0,0],"in","intcust",false,null,null,1,false,false,0,0,"inches; in; international inch; body height","UCUM","Len","Clinical","standard unit for inch in the US and internationally","cm","CM","254e-2",2.54,false],[false,"foot","[ft_i]","[FT_I]","length",0.3048,[1,0,0,0,0,0,0],"ft","intcust",false,null,null,1,false,false,0,0,"ft; fts; foot; international foot; feet; international feet; height","UCUM","Len","Clinical","unit used in the US and internationally","[in_i]","[IN_I]","12",12,false],[false,"yard","[yd_i]","[YD_I]","length",0.9144000000000001,[1,0,0,0,0,0,0],"yd","intcust",false,null,null,1,false,false,0,0,"international yards; yds; distance","UCUM","Len","Clinical","standard unit used in the US and internationally","[ft_i]","[FT_I]","3",3,false],[false,"mile","[mi_i]","[MI_I]","length",1609.344,[1,0,0,0,0,0,0],"mi","intcust",false,null,null,1,false,false,0,0,"international miles; mi I; statute mile","UCUM","Len","Clinical","standard unit used in the US and internationally","[ft_i]","[FT_I]","5280",5280,false],[false,"fathom","[fth_i]","[FTH_I]","depth of water",1.8288000000000002,[1,0,0,0,0,0,0],"fth","intcust",false,null,null,1,false,false,0,0,"international fathoms","UCUM","Len","Nonclinical","unit used in the US and internationally to measure depth of water; same length as the US fathom","[ft_i]","[FT_I]","6",6,false],[false,"nautical mile","[nmi_i]","[NMI_I]","length",1852,[1,0,0,0,0,0,0],"n.mi","intcust",false,null,null,1,false,false,0,0,"nautical mile; nautical miles; international nautical mile; international nautical miles; nm; n.m.; nmi","UCUM","Len","Nonclinical","standard unit used in the US and internationally","m","M","1852",1852,false],[false,"knot","[kn_i]","[KN_I]","velocity",0.5144444444444445,[1,-1,0,0,0,0,0],"knot","intcust",false,null,null,1,false,false,0,0,"kn; kt; international knots","UCUM","Vel","Nonclinical","defined as equal to one nautical mile (1.852 km) per hour","[nmi_i]/h","[NMI_I]/H","1",1,false],[false,"square inch","[sin_i]","[SIN_I]","area",0.0006451600000000001,[2,0,0,0,0,0,0],null,"intcust",false,null,null,1,false,false,0,0,"in2; in^2; inches squared; sq inch; inches squared; international","UCUM","Area","Clinical","standard unit used in the US and internationally","[in_i]2","[IN_I]2","1",1,false],[false,"square foot","[sft_i]","[SFT_I]","area",0.09290304,[2,0,0,0,0,0,0],null,"intcust",false,null,null,1,false,false,0,0,"ft2; ft^2; ft squared; sq ft; feet; international","UCUM","Area","Clinical","standard unit used in the US and internationally","[ft_i]2","[FT_I]2","1",1,false],[false,"square yard","[syd_i]","[SYD_I]","area",0.8361273600000002,[2,0,0,0,0,0,0],null,"intcust",false,null,null,1,false,false,0,0,"yd2; yd^2; sq. yds; yards squared; international","UCUM","Area","Clinical","standard unit used in the US and internationally","[yd_i]2","[YD_I]2","1",1,false],[false,"cubic inch","[cin_i]","[CIN_I]","volume",0.000016387064000000006,[3,0,0,0,0,0,0],null,"intcust",false,null,null,1,false,false,0,0,"in3; in^3; in*3; inches^3; inches*3; cu. in; cu in; cubic inches; inches cubed; cin","UCUM","Vol","Clinical","standard unit used in the US and internationally","[in_i]3","[IN_I]3","1",1,false],[false,"cubic foot","[cft_i]","[CFT_I]","volume",0.028316846592000004,[3,0,0,0,0,0,0],null,"intcust",false,null,null,1,false,false,0,0,"ft3; ft^3; ft*3; cu. ft; cubic feet; cubed; [ft_i]3; international","UCUM","Vol","Clinical","","[ft_i]3","[FT_I]3","1",1,false],[false,"cubic yard","[cyd_i]","[CYD_I]","volume",0.7645548579840002,[3,0,0,0,0,0,0],"cu.yd","intcust",false,null,null,1,false,false,0,0,"cubic yards; cubic yds; cu yards; CYs; yards^3; yd^3; yds^3; yd3; yds3","UCUM","Vol","Nonclinical","standard unit used in the US and internationally","[yd_i]3","[YD_I]3","1",1,false],[false,"board foot","[bf_i]","[BF_I]","volume",0.0023597372160000006,[3,0,0,0,0,0,0],null,"intcust",false,null,null,1,false,false,0,0,"BDFT; FBM; BF; board feet; international","UCUM","Vol","Nonclinical","unit of volume used to measure lumber","[in_i]3","[IN_I]3","144",144,false],[false,"cord","[cr_i]","[CR_I]","volume",3.6245563637760005,[3,0,0,0,0,0,0],null,"intcust",false,null,null,1,false,false,0,0,"crd I; international cords","UCUM","Vol","Nonclinical","unit of measure of dry volume used to measure firewood equal 128 ft3","[ft_i]3","[FT_I]3","128",128,false],[false,"mil","[mil_i]","[MIL_I]","length",0.000025400000000000004,[1,0,0,0,0,0,0],"mil","intcust",false,null,null,1,false,false,0,0,"thou, thousandth; mils; international","UCUM","Len","Clinical","equal to 0.001 international inch","[in_i]","[IN_I]","1e-3",0.001,false],[false,"circular mil","[cml_i]","[CML_I]","area",5.067074790974979e-10,[2,0,0,0,0,0,0],"circ.mil","intcust",false,null,null,1,false,false,0,0,"circular mils; cml I; international","UCUM","Area","Clinical","","[pi]/4.[mil_i]2","[PI]/4.[MIL_I]2","1",1,false],[false,"hand","[hd_i]","[HD_I]","height of horses",0.10160000000000001,[1,0,0,0,0,0,0],"hd","intcust",false,null,null,1,false,false,0,0,"hands; international","UCUM","Len","Nonclinical","used to measure horse height","[in_i]","[IN_I]","4",4,false],[false,"foot - US","[ft_us]","[FT_US]","length",0.3048006096012192,[1,0,0,0,0,0,0],"ft<sub>us</sub>","us-lengths",false,null,null,1,false,false,0,0,"US foot; foot US; us ft; ft us; height; visual distance; feet","UCUM","Len","Obsolete","Better to use [ft_i] which refers to the length used worldwide, including in the US;  [ft_us] may be confused with land survey units. ","m/3937","M/3937","1200",1200,false],[false,"yard - US","[yd_us]","[YD_US]","length",0.9144018288036575,[1,0,0,0,0,0,0],null,"us-lengths",false,null,null,1,false,false,0,0,"US yards; us yds; distance","UCUM","Len; Nrat","Obsolete","Better to use [yd_i] which refers to the length used worldwide, including in the US; [yd_us] refers to unit used in land surveys in the US","[ft_us]","[FT_US]","3",3,false],[false,"inch - US","[in_us]","[IN_US]","length",0.0254000508001016,[1,0,0,0,0,0,0],null,"us-lengths",false,null,null,1,false,false,0,0,"US inches; in us; us in; inch US","UCUM","Len","Obsolete","Better to use [in_i] which refers to the length used worldwide, including in the US","[ft_us]/12","[FT_US]/12","1",1,false],[false,"rod - US","[rd_us]","[RD_US]","length",5.029210058420117,[1,0,0,0,0,0,0],null,"us-lengths",false,null,null,1,false,false,0,0,"US rod; US rods; rd US; US rd","UCUM","Len","Obsolete","","[ft_us]","[FT_US]","16.5",16.5,false],[false,"Gunter's chain - US","[ch_us]","[CH_US]","length",20.116840233680467,[1,0,0,0,0,0,0],null,"us-lengths",false,null,null,1,false,false,0,0,"surveyor's chain; Surveyor's chain USA; Gunter’s measurement; surveyor’s measurement; Gunter's Chain USA","UCUM","Len","Obsolete","historical unit used for land survey used only in the US","[rd_us]","[RD_US]","4",4,false],[false,"link for Gunter's chain - US","[lk_us]","[LK_US]","length",0.20116840233680466,[1,0,0,0,0,0,0],null,"us-lengths",false,null,null,1,false,false,0,0,"Links for Gunter's Chain USA","UCUM","Len","Obsolete","","[ch_us]/100","[CH_US]/100","1",1,false],[false,"Ramden's chain - US","[rch_us]","[RCH_US]","length",30.480060960121918,[1,0,0,0,0,0,0],null,"us-lengths",false,null,null,1,false,false,0,0,"Ramsden's chain; engineer's chains","UCUM","Len","Obsolete","distance measuring device used for land survey","[ft_us]","[FT_US]","100",100,false],[false,"link for Ramden's chain - US","[rlk_us]","[RLK_US]","length",0.3048006096012192,[1,0,0,0,0,0,0],null,"us-lengths",false,null,null,1,false,false,0,0,"links for Ramsden's chain","UCUM","Len","Obsolete","","[rch_us]/100","[RCH_US]/100","1",1,false],[false,"fathom - US","[fth_us]","[FTH_US]","length",1.828803657607315,[1,0,0,0,0,0,0],null,"us-lengths",false,null,null,1,false,false,0,0,"US fathoms; fathom USA; fth us","UCUM","Len","Obsolete","same length as the international fathom - better to use international fathom ([fth_i])","[ft_us]","[FT_US]","6",6,false],[false,"furlong - US","[fur_us]","[FUR_US]","length",201.16840233680466,[1,0,0,0,0,0,0],null,"us-lengths",false,null,null,1,false,false,0,0,"US furlongs; fur us","UCUM","Len","Nonclinical","distance unit in horse racing","[rd_us]","[RD_US]","40",40,false],[false,"mile - US","[mi_us]","[MI_US]","length",1609.3472186944373,[1,0,0,0,0,0,0],null,"us-lengths",false,null,null,1,false,false,0,0,"U.S. Survey Miles; US statute miles; survey mi; US mi; distance","UCUM","Len","Nonclinical","Better to use [mi_i] which refers to the length used worldwide, including in the US","[fur_us]","[FUR_US]","8",8,false],[false,"acre - US","[acr_us]","[ACR_US]","area",4046.872609874252,[2,0,0,0,0,0,0],null,"us-lengths",false,null,null,1,false,false,0,0,"Acre USA Survey; Acre USA; survey acres","UCUM","Area","Nonclinical","an older unit based on pre 1959 US statute lengths that is still sometimes used in the US only for land survey purposes. ","[rd_us]2","[RD_US]2","160",160,false],[false,"square rod - US","[srd_us]","[SRD_US]","area",25.292953811714074,[2,0,0,0,0,0,0],null,"us-lengths",false,null,null,1,false,false,0,0,"rod2; rod^2; sq. rod; rods squared","UCUM","Area","Nonclinical","Used only in the US to measure land area, based on US statute land survey length units","[rd_us]2","[RD_US]2","1",1,false],[false,"square mile - US","[smi_us]","[SMI_US]","area",2589998.470319521,[2,0,0,0,0,0,0],null,"us-lengths",false,null,null,1,false,false,0,0,"mi2; mi^2; sq mi; miles squared","UCUM","Area","Nonclinical","historical unit used only in the US for land survey purposes (based on the US survey mile), not the internationally recognized [mi_i]","[mi_us]2","[MI_US]2","1",1,false],[false,"section","[sct]","[SCT]","area",2589998.470319521,[2,0,0,0,0,0,0],null,"us-lengths",false,null,null,1,false,false,0,0,"sct; sections","UCUM","Area","Nonclinical","tract of land approximately equal to 1 mile square containing 640 acres","[mi_us]2","[MI_US]2","1",1,false],[false,"township","[twp]","[TWP]","area",93239944.93150276,[2,0,0,0,0,0,0],null,"us-lengths",false,null,null,1,false,false,0,0,"twp; townships","UCUM","Area","Nonclinical","land measurement equal to 6 mile square","[sct]","[SCT]","36",36,false],[false,"mil - US","[mil_us]","[MIL_US]","length",0.0000254000508001016,[1,0,0,0,0,0,0],null,"us-lengths",false,null,null,1,false,false,0,0,"thou, thousandth; mils","UCUM","Len","Obsolete","better to use [mil_i] which is based on the internationally recognized inch","[in_us]","[IN_US]","1e-3",0.001,false],[false,"inch - British","[in_br]","[IN_BR]","length",0.025399980000000003,[1,0,0,0,0,0,0],null,"brit-length",false,null,null,1,false,false,0,0,"imperial inches; imp in; br in; british inches","UCUM","Len","Obsolete","","cm","CM","2.539998",2.539998,false],[false,"foot - British","[ft_br]","[FT_BR]","length",0.30479976000000003,[1,0,0,0,0,0,0],null,"brit-length",false,null,null,1,false,false,0,0,"British Foot; Imperial Foot; feet; imp fts; br fts","UCUM","Len","Obsolete","","[in_br]","[IN_BR]","12",12,false],[false,"rod - British","[rd_br]","[RD_BR]","length",5.02919604,[1,0,0,0,0,0,0],null,"brit-length",false,null,null,1,false,false,0,0,"British rods; br rd","UCUM","Len","Obsolete","","[ft_br]","[FT_BR]","16.5",16.5,false],[false,"Gunter's chain - British","[ch_br]","[CH_BR]","length",20.11678416,[1,0,0,0,0,0,0],null,"brit-length",false,null,null,1,false,false,0,0,"Gunter's Chain British; Gunters Chain British; Surveyor's Chain British","UCUM","Len","Obsolete","historical unit used for land survey used only in Great Britain","[rd_br]","[RD_BR]","4",4,false],[false,"link for Gunter's chain - British","[lk_br]","[LK_BR]","length",0.2011678416,[1,0,0,0,0,0,0],null,"brit-length",false,null,null,1,false,false,0,0,"Links for Gunter's Chain British","UCUM","Len","Obsolete","","[ch_br]/100","[CH_BR]/100","1",1,false],[false,"fathom - British","[fth_br]","[FTH_BR]","length",1.82879856,[1,0,0,0,0,0,0],null,"brit-length",false,null,null,1,false,false,0,0,"British fathoms; imperial fathoms; br fth; imp fth","UCUM","Len","Obsolete","","[ft_br]","[FT_BR]","6",6,false],[false,"pace - British","[pc_br]","[PC_BR]","length",0.7619994000000001,[1,0,0,0,0,0,0],null,"brit-length",false,null,null,1,false,false,0,0,"British paces; br pc","UCUM","Len","Nonclinical","traditional unit of length equal to 152.4 centimeters, or 1.52 meter. ","[ft_br]","[FT_BR]","2.5",2.5,false],[false,"yard - British","[yd_br]","[YD_BR]","length",0.91439928,[1,0,0,0,0,0,0],null,"brit-length",false,null,null,1,false,false,0,0,"British yards; Br yds; distance","UCUM","Len","Obsolete","","[ft_br]","[FT_BR]","3",3,false],[false,"mile - British","[mi_br]","[MI_BR]","length",1609.3427328000002,[1,0,0,0,0,0,0],null,"brit-length",false,null,null,1,false,false,0,0,"imperial miles; British miles; English statute miles; imp mi, br mi","UCUM","Len","Obsolete","","[ft_br]","[FT_BR]","5280",5280,false],[false,"nautical mile - British","[nmi_br]","[NMI_BR]","length",1853.1825408000002,[1,0,0,0,0,0,0],null,"brit-length",false,null,null,1,false,false,0,0,"British nautical miles; Imperial nautical miles; Admiralty miles; n.m. br; imp nm","UCUM","Len","Obsolete","","[ft_br]","[FT_BR]","6080",6080,false],[false,"knot - British","[kn_br]","[KN_BR]","velocity",0.5147729280000001,[1,-1,0,0,0,0,0],null,"brit-length",false,null,null,1,false,false,0,0,"British knots; kn br; kt","UCUM","Vel","Obsolete","based on obsolete British nautical mile ","[nmi_br]/h","[NMI_BR]/H","1",1,false],[false,"acre","[acr_br]","[ACR_BR]","area",4046.850049400269,[2,0,0,0,0,0,0],null,"brit-length",false,null,null,1,false,false,0,0,"Imperial acres; British; a; ac; ar; acr","UCUM","Area","Nonclinical","the standard unit for acre used in the US and internationally","[yd_br]2","[YD_BR]2","4840",4840,false],[false,"gallon - US","[gal_us]","[GAL_US]","fluid volume",0.0037854117840000014,[3,0,0,0,0,0,0],null,"us-volumes",false,null,null,1,false,false,0,0,"US gallons; US liquid gallon; gal us; Queen Anne's wine gallon","UCUM","Vol","Nonclinical","only gallon unit used in the US; [gal_us] is only used in some other countries in South American and Africa to measure gasoline volume","[in_i]3","[IN_I]3","231",231,false],[false,"barrel - US","[bbl_us]","[BBL_US]","fluid volume",0.15898729492800007,[3,0,0,0,0,0,0],null,"us-volumes",false,null,null,1,false,false,0,0,"bbl","UCUM","Vol","Nonclinical","[bbl_us] is the standard unit for oil barrel, which is a unit only used in the US to measure the volume oil. ","[gal_us]","[GAL_US]","42",42,false],[false,"quart - US","[qt_us]","[QT_US]","fluid volume",0.0009463529460000004,[3,0,0,0,0,0,0],null,"us-volumes",false,null,null,1,false,false,0,0,"US quarts; us qts","UCUM","Vol","Clinical","Used only in the US","[gal_us]/4","[GAL_US]/4","1",1,false],[false,"pint - US","[pt_us]","[PT_US]","fluid volume",0.0004731764730000002,[3,0,0,0,0,0,0],null,"us-volumes",false,null,null,1,false,false,0,0,"US pints; pint US; liquid pint; pt us; us pt","UCUM","Vol","Clinical","Used only in the US","[qt_us]/2","[QT_US]/2","1",1,false],[false,"gill - US","[gil_us]","[GIL_US]","fluid volume",0.00011829411825000005,[3,0,0,0,0,0,0],null,"us-volumes",false,null,null,1,false,false,0,0,"US gills; gil us","UCUM","Vol","Nonclinical","only used in the context of alcohol volume in the US","[pt_us]/4","[PT_US]/4","1",1,false],[false,"fluid ounce - US","[foz_us]","[FOZ_US]","fluid volume",0.00002957352956250001,[3,0,0,0,0,0,0],"oz fl","us-volumes",false,null,null,1,false,false,0,0,"US fluid ounces; fl ozs; FO; fl. oz.; foz us","UCUM","Vol","Clinical","unit used only in the US","[gil_us]/4","[GIL_US]/4","1",1,false],[false,"fluid dram - US","[fdr_us]","[FDR_US]","fluid volume",0.0000036966911953125014,[3,0,0,0,0,0,0],null,"us-volumes",false,null,null,1,false,false,0,0,"US fluid drams; fdr us","UCUM","Vol","Nonclinical","equal to 1/8 US fluid ounce = 3.69 mL; used informally to mean small amount of liquor, especially Scotch whiskey","[foz_us]/8","[FOZ_US]/8","1",1,false],[false,"minim - US","[min_us]","[MIN_US]","fluid volume",6.161151992187503e-8,[3,0,0,0,0,0,0],null,"us-volumes",false,null,null,1,false,false,0,0,"min US; US min; ♏ US","UCUM","Vol","Obsolete","","[fdr_us]/60","[FDR_US]/60","1",1,false],[false,"cord - US","[crd_us]","[CRD_US]","fluid volume",3.6245563637760005,[3,0,0,0,0,0,0],null,"us-volumes",false,null,null,1,false,false,0,0,"US cord; US cords; crd us; us crd","UCUM","Vol","Nonclinical","unit of measure of dry volume used to measure firewood equal 128 ft3 (the same as international cord [cr_i])","[ft_i]3","[FT_I]3","128",128,false],[false,"bushel - US","[bu_us]","[BU_US]","dry volume",0.035239070166880014,[3,0,0,0,0,0,0],null,"us-volumes",false,null,null,1,false,false,0,0,"US bushels; US bsh; US bu","UCUM","Vol","Obsolete","Historical unit of dry volume that is rarely used today","[in_i]3","[IN_I]3","2150.42",2150.42,false],[false,"gallon - historical","[gal_wi]","[GAL_WI]","dry volume",0.004404883770860002,[3,0,0,0,0,0,0],null,"us-volumes",false,null,null,1,false,false,0,0,"Corn Gallon British; Dry Gallon US; Gallons Historical; Grain Gallon British; Winchester Corn Gallon; historical winchester gallons; wi gal","UCUM","Vol","Obsolete","historical unit of dry volume no longer used","[bu_us]/8","[BU_US]/8","1",1,false],[false,"peck - US","[pk_us]","[PK_US]","dry volume",0.008809767541720004,[3,0,0,0,0,0,0],null,"us-volumes",false,null,null,1,false,false,0,0,"US pecks; US pk","UCUM","Vol","Nonclinical","unit of dry volume rarely used today (can be used to measure volume of apples)","[bu_us]/4","[BU_US]/4","1",1,false],[false,"dry quart - US","[dqt_us]","[DQT_US]","dry volume",0.0011012209427150004,[3,0,0,0,0,0,0],null,"us-volumes",false,null,null,1,false,false,0,0,"dry quarts; dry quart US; US dry quart; dry qt; us dry qt; dqt; dqt us","UCUM","Vol","Nonclinical","historical unit of dry volume only in the US, but is rarely used today","[pk_us]/8","[PK_US]/8","1",1,false],[false,"dry pint - US","[dpt_us]","[DPT_US]","dry volume",0.0005506104713575002,[3,0,0,0,0,0,0],null,"us-volumes",false,null,null,1,false,false,0,0,"dry pints; dry pint US; US dry pint; dry pt; dpt; dpt us","UCUM","Vol","Nonclinical","historical unit of dry volume only in the US, but is rarely used today","[dqt_us]/2","[DQT_US]/2","1",1,false],[false,"tablespoon - US","[tbs_us]","[TBS_US]","volume",0.000014786764781250006,[3,0,0,0,0,0,0],null,"us-volumes",false,null,null,1,false,false,0,0,"Tbs; tbsp; tbs us; US tablespoons","UCUM","Vol","Clinical","unit defined as 0.5 US fluid ounces or 3 teaspoons - used only in the US. See [tbs_m] for the unit used internationally and in the US for nutrional labelling. ","[foz_us]/2","[FOZ_US]/2","1",1,false],[false,"teaspoon - US","[tsp_us]","[TSP_US]","volume",0.000004928921593750002,[3,0,0,0,0,0,0],null,"us-volumes",false,null,null,1,false,false,0,0,"tsp; t; US teaspoons","UCUM","Vol","Nonclinical","unit defined as 1/6 US fluid ounces - used only in the US. See [tsp_m] for the unit used internationally and in the US for nutrional labelling. ","[tbs_us]/3","[TBS_US]/3","1",1,false],[false,"cup - US customary","[cup_us]","[CUP_US]","volume",0.0002365882365000001,[3,0,0,0,0,0,0],null,"us-volumes",false,null,null,1,false,false,0,0,"cup us; us cups","UCUM","Vol","Nonclinical","Unit defined as 1/2 US pint or 16 US tablespoons ≈ 236.59 mL, which is not the standard unit defined by the FDA of 240 mL - see [cup_m] (metric cup)","[tbs_us]","[TBS_US]","16",16,false],[false,"fluid ounce - metric","[foz_m]","[FOZ_M]","fluid volume",0.000029999999999999997,[3,0,0,0,0,0,0],"oz fl","us-volumes",false,null,null,1,false,false,0,0,"metric fluid ounces; fozs m; fl ozs m","UCUM","Vol","Clinical","unit used only in the US for nutritional labelling, as set by the FDA","mL","ML","30",30,false],[false,"cup - US legal","[cup_m]","[CUP_M]","volume",0.00023999999999999998,[3,0,0,0,0,0,0],null,"us-volumes",false,null,null,1,false,false,0,0,"cup m; metric cups","UCUM","Vol","Clinical","standard unit equal to 240 mL used in the US for nutritional labelling, as defined by the FDA. Note that this is different from the US customary cup (236.59 mL) and the metric cup used in Commonwealth nations (250 mL).","mL","ML","240",240,false],[false,"teaspoon - metric","[tsp_m]","[TSP_M]","volume",0.0000049999999999999996,[3,0,0,0,0,0,0],null,"us-volumes",false,null,null,1,false,false,0,0,"tsp; t; metric teaspoons","UCUM","Vol","Clinical","standard unit used in the US and internationally","mL","mL","5",5,false],[false,"tablespoon - metric","[tbs_m]","[TBS_M]","volume",0.000014999999999999999,[3,0,0,0,0,0,0],null,"us-volumes",false,null,null,1,false,false,0,0,"metric tablespoons; Tbs; tbsp; T; tbs m","UCUM","Vol","Clinical","standard unit used in the US and internationally","mL","mL","15",15,false],[false,"gallon- British","[gal_br]","[GAL_BR]","volume",0.004546090000000001,[3,0,0,0,0,0,0],null,"brit-volumes",false,null,null,1,false,false,0,0,"imperial gallons, UK gallons; British gallons; br gal; imp gal","UCUM","Vol","Nonclinical","Used only in Great Britain and other Commonwealth countries","l","L","4.54609",4.54609,false],[false,"peck - British","[pk_br]","[PK_BR]","volume",0.009092180000000002,[3,0,0,0,0,0,0],null,"brit-volumes",false,null,null,1,false,false,0,0,"imperial pecks; British pecks; br pk; imp pk","UCUM","Vol","Nonclinical","unit of dry volume rarely used today (can be used to measure volume of apples)","[gal_br]","[GAL_BR]","2",2,false],[false,"bushel - British","[bu_br]","[BU_BR]","volume",0.03636872000000001,[3,0,0,0,0,0,0],null,"brit-volumes",false,null,null,1,false,false,0,0,"British bushels; imperial; br bsh; br bu; imp","UCUM","Vol","Obsolete","Historical unit of dry volume that is rarely used today","[pk_br]","[PK_BR]","4",4,false],[false,"quart - British","[qt_br]","[QT_BR]","volume",0.0011365225000000002,[3,0,0,0,0,0,0],null,"brit-volumes",false,null,null,1,false,false,0,0,"British quarts; imperial quarts; br qts","UCUM","Vol","Clinical","Used only in Great Britain and other Commonwealth countries","[gal_br]/4","[GAL_BR]/4","1",1,false],[false,"pint - British","[pt_br]","[PT_BR]","volume",0.0005682612500000001,[3,0,0,0,0,0,0],null,"brit-volumes",false,null,null,1,false,false,0,0,"British pints; imperial pints; pt br; br pt; imp pt; pt imp","UCUM","Vol","Clinical","Used only in Great Britain and other Commonwealth countries","[qt_br]/2","[QT_BR]/2","1",1,false],[false,"gill - British","[gil_br]","[GIL_BR]","volume",0.00014206531250000003,[3,0,0,0,0,0,0],null,"brit-volumes",false,null,null,1,false,false,0,0,"imperial gills; British gills; imp gill, br gill","UCUM","Vol","Nonclinical","only used in the context of alcohol volume in Great Britain","[pt_br]/4","[PT_BR]/4","1",1,false],[false,"fluid ounce - British","[foz_br]","[FOZ_BR]","volume",0.000028413062500000005,[3,0,0,0,0,0,0],null,"brit-volumes",false,null,null,1,false,false,0,0,"British fluid ounces; Imperial fluid ounces; br fozs; imp fozs; br fl ozs","UCUM","Vol","Clinical","Used only in Great Britain and other Commonwealth countries","[gil_br]/5","[GIL_BR]/5","1",1,false],[false,"fluid dram - British","[fdr_br]","[FDR_BR]","volume",0.0000035516328125000006,[3,0,0,0,0,0,0],null,"brit-volumes",false,null,null,1,false,false,0,0,"British fluid drams; fdr br","UCUM","Vol","Nonclinical","equal to 1/8 Imperial fluid ounce = 3.55 mL; used informally to mean small amount of liquor, especially Scotch whiskey","[foz_br]/8","[FOZ_BR]/8","1",1,false],[false,"minim - British","[min_br]","[MIN_BR]","volume",5.919388020833334e-8,[3,0,0,0,0,0,0],null,"brit-volumes",false,null,null,1,false,false,0,0,"min br; br min; ♏ br","UCUM","Vol","Obsolete","","[fdr_br]/60","[FDR_BR]/60","1",1,false],[false,"grain","[gr]","[GR]","mass",0.06479891,[0,0,1,0,0,0,0],null,"avoirdupois",false,null,null,1,false,false,0,0,"gr; grains","UCUM","Mass","Nonclinical","an apothecary measure of mass rarely used today","mg","MG","64.79891",64.79891,false],[false,"pound","[lb_av]","[LB_AV]","mass",453.59237,[0,0,1,0,0,0,0],"lb","avoirdupois",false,null,null,1,false,false,0,0,"avoirdupois pounds, international pounds; av lbs; pounds","UCUM","Mass","Clinical","standard unit used in the US and internationally","[gr]","[GR]","7000",7000,false],[false,"pound force - US","[lbf_av]","[LBF_AV]","force",4448.2216152605,[1,-2,1,0,0,0,0],"lbf","const",false,null,null,1,false,false,0,0,"lbfs; US lbf; US pound forces","UCUM","Force","Clinical","only rarely needed in health care - see [lb_av] which is the more common unit to express weight","[lb_av].[g]","[LB_AV].[G]","1",1,false],[false,"ounce","[oz_av]","[OZ_AV]","mass",28.349523125,[0,0,1,0,0,0,0],"oz","avoirdupois",false,null,null,1,false,false,0,0,"ounces; international ounces; avoirdupois ounces; av ozs","UCUM","Mass","Clinical","standard unit used in the US and internationally","[lb_av]/16","[LB_AV]/16","1",1,false],[false,"Dram mass unit","[dr_av]","[DR_AV]","mass",1.7718451953125,[0,0,1,0,0,0,0],null,"avoirdupois",false,null,null,1,false,false,0,0,"Dram; drams avoirdupois; avoidupois dram; international dram","UCUM","Mass","Clinical","unit from the avoirdupois system, which is used in the US and internationally","[oz_av]/16","[OZ_AV]/16","1",1,false],[false,"short hundredweight","[scwt_av]","[SCWT_AV]","mass",45359.237,[0,0,1,0,0,0,0],null,"avoirdupois",false,null,null,1,false,false,0,0,"hundredweights; s cwt; scwt; avoirdupois","UCUM","Mass","Nonclinical","Used only in the US to equal 100 pounds","[lb_av]","[LB_AV]","100",100,false],[false,"long hundredweight","[lcwt_av]","[LCWT_AV]","mass",50802.345440000005,[0,0,1,0,0,0,0],null,"avoirdupois",false,null,null,1,false,false,0,0,"imperial hundredweights; imp cwt; lcwt; avoirdupois","UCUM","Mass","Obsolete","","[lb_av]","[LB_AV]","112",112,false],[false,"short ton - US","[ston_av]","[STON_AV]","mass",907184.74,[0,0,1,0,0,0,0],null,"avoirdupois",false,null,null,1,false,false,0,0,"ton; US tons; avoirdupois tons","UCUM","Mass","Clinical","Used only in the US","[scwt_av]","[SCWT_AV]","20",20,false],[false,"long ton - British","[lton_av]","[LTON_AV]","mass",1016046.9088000001,[0,0,1,0,0,0,0],null,"avoirdupois",false,null,null,1,false,false,0,0,"imperial tons; weight tons; British long tons; long ton avoirdupois","UCUM","Mass","Nonclinical","Used only in Great Britain and other Commonwealth countries","[lcwt_av]","[LCWT_AV]","20",20,false],[false,"stone - British","[stone_av]","[STONE_AV]","mass",6350.293180000001,[0,0,1,0,0,0,0],null,"avoirdupois",false,null,null,1,false,false,0,0,"British stones; avoirdupois","UCUM","Mass","Nonclinical","Used primarily in the UK and Ireland to measure body weight","[lb_av]","[LB_AV]","14",14,false],[false,"pennyweight - troy","[pwt_tr]","[PWT_TR]","mass",1.5551738400000001,[0,0,1,0,0,0,0],null,"troy",false,null,null,1,false,false,0,0,"dwt; denarius weights","UCUM","Mass","Obsolete","historical unit used to measure mass and cost of precious metals","[gr]","[GR]","24",24,false],[false,"ounce - troy","[oz_tr]","[OZ_TR]","mass",31.103476800000003,[0,0,1,0,0,0,0],null,"troy",false,null,null,1,false,false,0,0,"troy ounces; tr ozs","UCUM","Mass","Nonclinical","unit of mass for precious metals and gemstones only","[pwt_tr]","[PWT_TR]","20",20,false],[false,"pound - troy","[lb_tr]","[LB_TR]","mass",373.2417216,[0,0,1,0,0,0,0],null,"troy",false,null,null,1,false,false,0,0,"troy pounds; tr lbs","UCUM","Mass","Nonclinical","only used for weighing precious metals","[oz_tr]","[OZ_TR]","12",12,false],[false,"scruple","[sc_ap]","[SC_AP]","mass",1.2959782,[0,0,1,0,0,0,0],null,"apoth",false,null,null,1,false,false,0,0,"scruples; sc ap","UCUM","Mass","Obsolete","","[gr]","[GR]","20",20,false],[false,"dram - apothecary","[dr_ap]","[DR_AP]","mass",3.8879346,[0,0,1,0,0,0,0],null,"apoth",false,null,null,1,false,false,0,0,"ʒ; drachm; apothecaries drams; dr ap; dram ap","UCUM","Mass","Nonclinical","unit still used in the US occasionally to measure amount of drugs in pharmacies","[sc_ap]","[SC_AP]","3",3,false],[false,"ounce - apothecary","[oz_ap]","[OZ_AP]","mass",31.1034768,[0,0,1,0,0,0,0],null,"apoth",false,null,null,1,false,false,0,0,"apothecary ounces; oz ap; ap ozs; ozs ap","UCUM","Mass","Obsolete","","[dr_ap]","[DR_AP]","8",8,false],[false,"pound - apothecary","[lb_ap]","[LB_AP]","mass",373.2417216,[0,0,1,0,0,0,0],null,"apoth",false,null,null,1,false,false,0,0,"apothecary pounds; apothecaries pounds; ap lb; lb ap; ap lbs; lbs ap","UCUM","Mass","Obsolete","","[oz_ap]","[OZ_AP]","12",12,false],[false,"ounce - metric","[oz_m]","[OZ_M]","mass",28,[0,0,1,0,0,0,0],null,"apoth",false,null,null,1,false,false,0,0,"metric ounces; m ozs","UCUM","Mass","Clinical","see [oz_av] (the avoirdupois ounce) for the standard ounce used internationally; [oz_m] is equal to 28 grams and is based on the apothecaries' system of mass units which is used in some US pharmacies. ","g","g","28",28,false],[false,"line","[lne]","[LNE]","length",0.002116666666666667,[1,0,0,0,0,0,0],null,"typeset",false,null,null,1,false,false,0,0,"British lines; br L; L; l","UCUM","Len","Obsolete","","[in_i]/12","[IN_I]/12","1",1,false],[false,"point (typography)","[pnt]","[PNT]","length",0.0003527777777777778,[1,0,0,0,0,0,0],null,"typeset",false,null,null,1,false,false,0,0,"DTP points; desktop publishing point; pt; pnt","UCUM","Len","Nonclinical","typography unit for typesetter's length","[lne]/6","[LNE]/6","1",1,false],[false,"pica (typography)","[pca]","[PCA]","length",0.004233333333333334,[1,0,0,0,0,0,0],null,"typeset",false,null,null,1,false,false,0,0,"picas","UCUM","Len","Nonclinical","typography unit for typesetter's length","[pnt]","[PNT]","12",12,false],[false,"Printer's point (typography)","[pnt_pr]","[PNT_PR]","length",0.00035145980000000004,[1,0,0,0,0,0,0],null,"typeset",false,null,null,1,false,false,0,0,"pnt pr","UCUM","Len","Nonclinical","typography unit for typesetter's length","[in_i]","[IN_I]","0.013837",0.013837,false],[false,"Printer's pica  (typography)","[pca_pr]","[PCA_PR]","length",0.004217517600000001,[1,0,0,0,0,0,0],null,"typeset",false,null,null,1,false,false,0,0,"pca pr; Printer's picas","UCUM","Len","Nonclinical","typography unit for typesetter's length","[pnt_pr]","[PNT_PR]","12",12,false],[false,"pied","[pied]","[PIED]","length",0.3248,[1,0,0,0,0,0,0],null,"typeset",false,null,null,1,false,false,0,0,"pieds du roi; Paris foot; royal; French; feet","UCUM","Len","Obsolete","","cm","CM","32.48",32.48,false],[false,"pouce","[pouce]","[POUCE]","length",0.027066666666666666,[1,0,0,0,0,0,0],null,"typeset",false,null,null,1,false,false,0,0,"historical French inches; French royal inches","UCUM","Len","Obsolete","","[pied]/12","[PIED]/12","1",1,false],[false,"ligne","[ligne]","[LIGNE]","length",0.0022555555555555554,[1,0,0,0,0,0,0],null,"typeset",false,null,null,1,false,false,0,0,"Paris lines; lignes","UCUM","Len","Obsolete","","[pouce]/12","[POUCE]/12","1",1,false],[false,"didot","[didot]","[DIDOT]","length",0.0003759259259259259,[1,0,0,0,0,0,0],null,"typeset",false,null,null,1,false,false,0,0,"Didot point; dd; Didots Point; didots; points","UCUM","Len","Obsolete","typography unit for typesetter's length","[ligne]/6","[LIGNE]/6","1",1,false],[false,"cicero","[cicero]","[CICERO]","length",0.004511111111111111,[1,0,0,0,0,0,0],null,"typeset",false,null,null,1,false,false,0,0,"Didot's pica; ciceros; picas","UCUM","Len","Obsolete","typography unit for typesetter's length","[didot]","[DIDOT]","12",12,false],[false,"degrees Fahrenheit","[degF]","[DEGF]","temperature",0.5555555555555556,[0,0,0,0,1,0,0],"°F","heat",false,null,"degF",1,true,false,0,0,"°F; deg F","UCUM","Temp","Clinical","","K",null,null,0.5555555555555556,false],[false,"degrees Rankine","[degR]","[degR]","temperature",0.5555555555555556,[0,0,0,0,1,0,0],"°R","heat",false,null,null,1,false,false,0,0,"°R; °Ra; Rankine","UCUM","Temp","Obsolete","Replaced by Kelvin","K/9","K/9","5",5,false],[false,"degrees Réaumur","[degRe]","[degRe]","temperature",1.25,[0,0,0,0,1,0,0],"°Ré","heat",false,null,"degRe",1,true,false,0,0,"°Ré, °Re, °r; Réaumur; degree Reaumur; Reaumur","UCUM","Temp","Obsolete","replaced by Celsius","K",null,null,1.25,false],[false,"calorie at 15°C","cal_[15]","CAL_[15]","energy",4185.8,[2,-2,1,0,0,0,0],"cal<sub>15°C</sub>","heat",true,null,null,1,false,false,0,0,"calorie 15 C; cals 15 C; calories at 15 C","UCUM","Enrg","Nonclinical","equal to 4.1855 joules; calorie most often used in engineering","J","J","4.18580",4.1858,false],[false,"calorie at 20°C","cal_[20]","CAL_[20]","energy",4181.9,[2,-2,1,0,0,0,0],"cal<sub>20°C</sub>","heat",true,null,null,1,false,false,0,0,"calorie 20 C; cal 20 C; calories at 20 C","UCUM","Enrg","Clinical","equal to 4.18190  joules. ","J","J","4.18190",4.1819,false],[false,"mean calorie","cal_m","CAL_M","energy",4190.0199999999995,[2,-2,1,0,0,0,0],"cal<sub>m</sub>","heat",true,null,null,1,false,false,0,0,"mean cals; mean calories","UCUM","Enrg","Clinical","equal to 4.19002 joules. ","J","J","4.19002",4.19002,false],[false,"international table calorie","cal_IT","CAL_IT","energy",4186.8,[2,-2,1,0,0,0,0],"cal<sub>IT</sub>","heat",true,null,null,1,false,false,0,0,"calories IT; IT cals; international steam table calories","UCUM","Enrg","Nonclinical","used in engineering steam tables and defined as 1/860 international watt-hour; equal to 4.1868 joules","J","J","4.1868",4.1868,false],[false,"thermochemical calorie","cal_th","CAL_TH","energy",4184,[2,-2,1,0,0,0,0],"cal<sub>th</sub>","heat",true,null,null,1,false,false,0,0,"thermochemical calories; th cals","UCUM","Enrg","Clinical","equal to 4.184 joules; used as the unit in medicine and biochemistry (equal to cal)","J","J","4.184",4.184,false],[false,"calorie","cal","CAL","energy",4184,[2,-2,1,0,0,0,0],"cal","heat",true,null,null,1,false,false,0,0,"gram calories; small calories","UCUM","Enrg","Clinical","equal to 4.184 joules (the same value as the thermochemical calorie, which is the most common calorie used in medicine and biochemistry)","cal_th","CAL_TH","1",1,false],[false,"nutrition label Calories","[Cal]","[CAL]","energy",4184000,[2,-2,1,0,0,0,0],"Cal","heat",false,null,null,1,false,false,0,0,"food calories; Cal; kcal","UCUM","Eng","Clinical","","kcal_th","KCAL_TH","1",1,false],[false,"British thermal unit at 39°F","[Btu_39]","[BTU_39]","energy",1059670,[2,-2,1,0,0,0,0],"Btu<sub>39°F</sub>","heat",false,null,null,1,false,false,0,0,"BTU 39F; BTU 39 F; B.T.U. 39 F; B.Th.U. 39 F; BThU 39 F; British thermal units","UCUM","Eng","Nonclinical","equal to 1.05967 kJ; used as a measure of power in the electric power, steam generation, heating, and air conditioning industries","kJ","kJ","1.05967",1.05967,false],[false,"British thermal unit at 59°F","[Btu_59]","[BTU_59]","energy",1054800,[2,-2,1,0,0,0,0],"Btu<sub>59°F</sub>","heat",false,null,null,1,false,false,0,0,"BTU 59 F; BTU 59F; B.T.U. 59 F; B.Th.U. 59 F; BThU 59F; British thermal units","UCUM","Eng","Nonclinical","equal to  1.05480 kJ; used as a measure of power in the electric power, steam generation, heating, and air conditioning industries","kJ","kJ","1.05480",1.0548,false],[false,"British thermal unit at 60°F","[Btu_60]","[BTU_60]","energy",1054680,[2,-2,1,0,0,0,0],"Btu<sub>60°F</sub>","heat",false,null,null,1,false,false,0,0,"BTU 60 F; BTU 60F; B.T.U. 60 F; B.Th.U. 60 F; BThU 60 F; British thermal units 60 F","UCUM","Eng","Nonclinical","equal to 1.05468 kJ; used as a measure of power in the electric power, steam generation, heating, and air conditioning industries","kJ","kJ","1.05468",1.05468,false],[false,"mean British thermal unit","[Btu_m]","[BTU_M]","energy",1055870,[2,-2,1,0,0,0,0],"Btu<sub>m</sub>","heat",false,null,null,1,false,false,0,0,"BTU mean; B.T.U. mean; B.Th.U. mean; BThU mean; British thermal units mean; ","UCUM","Eng","Nonclinical","equal to 1.05587 kJ; used as a measure of power in the electric power, steam generation, heating, and air conditioning industries","kJ","kJ","1.05587",1.05587,false],[false,"international table British thermal unit","[Btu_IT]","[BTU_IT]","energy",1055055.85262,[2,-2,1,0,0,0,0],"Btu<sub>IT</sub>","heat",false,null,null,1,false,false,0,0,"BTU IT; B.T.U. IT; B.Th.U. IT; BThU IT; British thermal units IT","UCUM","Eng","Nonclinical","equal to 1.055 kJ; used as a measure of power in the electric power, steam generation, heating, and air conditioning industries","kJ","kJ","1.05505585262",1.05505585262,false],[false,"thermochemical British thermal unit","[Btu_th]","[BTU_TH]","energy",1054350,[2,-2,1,0,0,0,0],"Btu<sub>th</sub>","heat",false,null,null,1,false,false,0,0,"BTU Th; B.T.U. Th; B.Th.U. Th; BThU Th; thermochemical British thermal units","UCUM","Eng","Nonclinical","equal to 1.054350 kJ; used as a measure of power in the electric power, steam generation, heating, and air conditioning industries","kJ","kJ","1.054350",1.05435,false],[false,"British thermal unit","[Btu]","[BTU]","energy",1054350,[2,-2,1,0,0,0,0],"btu","heat",false,null,null,1,false,false,0,0,"BTU; B.T.U. ; B.Th.U.; BThU; British thermal units","UCUM","Eng","Nonclinical","equal to the thermochemical British thermal unit equal to 1.054350 kJ; used as a measure of power in the electric power, steam generation, heating, and air conditioning industries","[Btu_th]","[BTU_TH]","1",1,false],[false,"horsepower - mechanical","[HP]","[HP]","power",745699.8715822703,[2,-3,1,0,0,0,0],null,"heat",false,null,null,1,false,false,0,0,"imperial horsepowers","UCUM","EngRat","Nonclinical","refers to mechanical horsepower, which is unit used to measure engine power primarily in the US. ","[ft_i].[lbf_av]/s","[FT_I].[LBF_AV]/S","550",550,false],[false,"tex","tex","TEX","linear mass density (of textile thread)",0.001,[-1,0,1,0,0,0,0],"tex","heat",true,null,null,1,false,false,0,0,"linear mass density; texes","UCUM","","Clinical","unit of linear mass density for fibers equal to gram per 1000 meters","g/km","G/KM","1",1,false],[false,"Denier (linear mass density)","[den]","[DEN]","linear mass density (of textile thread)",0.0001111111111111111,[-1,0,1,0,0,0,0],"den","heat",false,null,null,1,false,false,0,0,"den; deniers","UCUM","","Nonclinical","equal to the mass in grams per 9000 meters of the fiber (1 denier = 1 strand of silk)","g/9/km","G/9/KM","1",1,false],[false,"meter of water column","m[H2O]","M[H2O]","pressure",9806650,[-1,-2,1,0,0,0,0],"m HO<sub><r>2</r></sub>","clinical",true,null,null,1,false,false,0,0,"mH2O; m H2O; meters of water column; metres; pressure","UCUM","Pres","Clinical","","kPa","KPAL","980665e-5",9.80665,false],[false,"meter of mercury column","m[Hg]","M[HG]","pressure",133322000,[-1,-2,1,0,0,0,0],"m Hg","clinical",true,null,null,1,false,false,0,0,"mHg; m Hg; meters of mercury column; metres; pressure","UCUM","Pres","Clinical","","kPa","KPAL","133.3220",133.322,false],[false,"inch of water column","[in_i'H2O]","[IN_I'H2O]","pressure",249088.91000000003,[-1,-2,1,0,0,0,0],"in HO<sub><r>2</r></sub>","clinical",false,null,null,1,false,false,0,0,"inches WC; inAq; in H2O; inch of water gauge; iwg; pressure","UCUM","Pres","Clinical","unit of pressure, especially in respiratory and ventilation care","m[H2O].[in_i]/m","M[H2O].[IN_I]/M","1",1,false],[false,"inch of mercury column","[in_i'Hg]","[IN_I'HG]","pressure",3386378.8000000003,[-1,-2,1,0,0,0,0],"in Hg","clinical",false,null,null,1,false,false,0,0,"inHg; in Hg; pressure; inches","UCUM","Pres","Clinical","unit of pressure used in US to measure barometric pressure and occasionally blood pressure (see mm[Hg] for unit used internationally)","m[Hg].[in_i]/m","M[HG].[IN_I]/M","1",1,false],[false,"peripheral vascular resistance unit","[PRU]","[PRU]","fluid resistance",133322000000,[-4,-1,1,0,0,0,0],"P.R.U.","clinical",false,null,null,1,false,false,0,0,"peripheral vascular resistance units; peripheral resistance unit; peripheral resistance units; PRU","UCUM","FldResist","Clinical","used to assess blood flow in the capillaries; equal to 1 mmH.min/mL = 133.3 Pa·min/mL","mm[Hg].s/ml","MM[HG].S/ML","1",1,false],[false,"Wood unit","[wood'U]","[WOOD'U]","fluid resistance",7999320000,[-4,-1,1,0,0,0,0],"Wood U.","clinical",false,null,null,1,false,false,0,0,"hybrid reference units; HRU; mmHg.min/L; vascular resistance","UCUM","Pres","Clinical","simplified unit of measurement for for measuring pulmonary vascular resistance that uses pressure; equal to mmHg.min/L","mm[Hg].min/L","MM[HG].MIN/L","1",1,false],[false,"diopter (lens)","[diop]","[DIOP]","refraction of a lens",1,[1,0,0,0,0,0,0],"dpt","clinical",false,null,"inv",1,false,false,0,0,"diopters; diop; dioptre; dpt; refractive power","UCUM","InvLen","Clinical","unit of optical power of lens represented by inverse meters (m^-1)","m","/M","1",1,false],[false,"prism diopter (magnifying power)","[p'diop]","[P'DIOP]","refraction of a prism",1,[0,0,0,1,0,0,0],"PD","clinical",false,null,"tanTimes100",1,true,false,0,0,"diopters; dioptres; p diops; pdiop; dpt; pdptr; Δ; cm/m; centimeter per meter; centimetre; metre","UCUM","Angle","Clinical","unit for prism correction in eyeglass prescriptions","rad",null,null,1,false],[false,"percent of slope","%[slope]","%[SLOPE]","slope",0.017453292519943295,[0,0,0,1,0,0,0],"%","clinical",false,null,"100tan",1,true,false,0,0,"% slope; %slope; percents slopes","UCUM","VelFr; ElpotRatFr; VelRtoFr; AccelFr","Clinical","","deg",null,null,1,false],[false,"mesh","[mesh_i]","[MESH_I]","lineic number",0.025400000000000002,[1,0,0,0,0,0,0],null,"clinical",false,null,"inv",1,false,false,0,0,"meshes","UCUM","NLen (lineic number)","Clinical","traditional unit of length defined as the number of strands or particles per inch","[in_i]","/[IN_I]","1",1,false],[false,"French (catheter gauge) ","[Ch]","[CH]","gauge of catheters",0.0003333333333333333,[1,0,0,0,0,0,0],"Ch","clinical",false,null,null,1,false,false,0,0,"Charrières, French scales; French gauges; Fr, Fg, Ga, FR, Ch","UCUM","Len; Circ; Diam","Clinical","","mm/3","MM/3","1",1,false],[false,"drop - metric (1/20 mL)","[drp]","[DRP]","volume",5e-8,[3,0,0,0,0,0,0],"drp","clinical",false,null,null,1,false,false,0,0,"drop dosing units; metric drops; gtt","UCUM","Vol","Clinical","standard unit used in the US and internationally for clinical medicine but note that although [drp] is defined as 1/20 milliliter, in practice, drop sizes will vary due to external factors","ml/20","ML/20","1",1,false],[false,"Hounsfield unit","[hnsf'U]","[HNSF'U]","x-ray attenuation",1,[0,0,0,0,0,0,0],"HF","clinical",false,null,null,1,false,false,0,0,"HU; units","UCUM","","Clinical","used to measure X-ray attenuation, especially in CT scans.","1","1","1",1,false],[false,"Metabolic Equivalent of Task ","[MET]","[MET]","metabolic cost of physical activity",5.833333333333334e-11,[3,-1,-1,0,0,0,0],"MET","clinical",false,null,null,1,false,false,0,0,"metabolic equivalents","UCUM","RelEngRat","Clinical","unit used to measure rate of energy expenditure per power in treadmill and other functional tests","mL/min/kg","ML/MIN/KG","3.5",3.5,false],[false,"homeopathic potency of decimal series (retired)","[hp'_X]","[HP'_X]","homeopathic potency (retired)",1,[0,0,0,0,0,0,0],"X","clinical",false,null,"hpX",1,true,false,0,0,null,"UCUM",null,null,null,"1",null,null,1,false],[false,"homeopathic potency of centesimal series (retired)","[hp'_C]","[HP'_C]","homeopathic potency (retired)",1,[0,0,0,0,0,0,0],"C","clinical",false,null,"hpC",1,true,false,0,0,null,"UCUM",null,null,null,"1",null,null,1,false],[false,"homeopathic potency of millesimal series (retired)","[hp'_M]","[HP'_M]","homeopathic potency (retired)",1,[0,0,0,0,0,0,0],"M","clinical",false,null,"hpM",1,true,false,0,0,null,"UCUM",null,null,null,"1",null,null,1,false],[false,"homeopathic potency of quintamillesimal series (retired)","[hp'_Q]","[HP'_Q]","homeopathic potency (retired)",1,[0,0,0,0,0,0,0],"Q","clinical",false,null,"hpQ",1,true,false,0,0,null,"UCUM",null,null,null,"1",null,null,1,false],[false,"homeopathic potency of decimal hahnemannian series","[hp_X]","[HP_X]","homeopathic potency (Hahnemann)",1,[0,0,0,0,0,0,0],"X","clinical",false,null,null,1,false,true,0,0,null,"UCUM",null,null,null,"1","1","1",1,false],[false,"homeopathic potency of centesimal hahnemannian series","[hp_C]","[HP_C]","homeopathic potency (Hahnemann)",1,[0,0,0,0,0,0,0],"C","clinical",false,null,null,1,false,true,0,0,null,"UCUM",null,null,null,"1","1","1",1,false],[false,"homeopathic potency of millesimal hahnemannian series","[hp_M]","[HP_M]","homeopathic potency (Hahnemann)",1,[0,0,0,0,0,0,0],"M","clinical",false,null,null,1,false,true,0,0,null,"UCUM",null,null,null,"1","1","1",1,false],[false,"homeopathic potency of quintamillesimal hahnemannian series","[hp_Q]","[HP_Q]","homeopathic potency (Hahnemann)",1,[0,0,0,0,0,0,0],"Q","clinical",false,null,null,1,false,true,0,0,null,"UCUM",null,null,null,"1","1","1",1,false],[false,"homeopathic potency of decimal korsakovian series","[kp_X]","[KP_X]","homeopathic potency (Korsakov)",1,[0,0,0,0,0,0,0],"X","clinical",false,null,null,1,false,true,0,0,null,"UCUM",null,null,null,"1","1","1",1,false],[false,"homeopathic potency of centesimal korsakovian series","[kp_C]","[KP_C]","homeopathic potency (Korsakov)",1,[0,0,0,0,0,0,0],"C","clinical",false,null,null,1,false,true,0,0,null,"UCUM",null,null,null,"1","1","1",1,false],[false,"homeopathic potency of millesimal korsakovian series","[kp_M]","[KP_M]","homeopathic potency (Korsakov)",1,[0,0,0,0,0,0,0],"M","clinical",false,null,null,1,false,true,0,0,null,"UCUM",null,null,null,"1","1","1",1,false],[false,"homeopathic potency of quintamillesimal korsakovian series","[kp_Q]","[KP_Q]","homeopathic potency (Korsakov)",1,[0,0,0,0,0,0,0],"Q","clinical",false,null,null,1,false,true,0,0,null,"UCUM",null,null,null,"1","1","1",1,false],[false,"equivalent","eq","EQ","amount of substance",6.0221367e+23,[0,0,0,0,0,0,0],"eq","chemical",true,null,null,1,false,false,0,1,"equivalents","UCUM","Sub","Clinical","equivalence equals moles per valence","mol","MOL","1",1,false],[false,"osmole","osm","OSM","amount of substance (dissolved particles)",6.0221367e+23,[0,0,0,0,0,0,0],"osm","chemical",true,null,null,1,false,false,1,0,"osmoles; osmols","UCUM","Osmol","Clinical","the number of moles of solute that contribute to the osmotic pressure of a solution","mol","MOL","1",1,false],[false,"pH","[pH]","[PH]","acidity",6.0221366999999994e+26,[-3,0,0,0,0,0,0],"pH","chemical",false,null,"pH",1,true,false,0,0,"pH scale","UCUM","LogCnc","Clinical","Log concentration of H+","mol/l",null,null,1,false],[false,"gram percent","g%","G%","mass concentration",10000,[-3,0,1,0,0,0,0],"g%","chemical",true,null,null,1,false,false,0,0,"gram %; gram%; grams per deciliter; g/dL; gm per dL; gram percents","UCUM","MCnc","Clinical","equivalent to unit gram per deciliter (g/dL), a unit often used in medical tests to represent solution concentrations","g/dl","G/DL","1",1,false],[false,"Svedberg unit","[S]","[S]","sedimentation coefficient",1e-13,[0,1,0,0,0,0,0],"S","chemical",false,null,null,1,false,false,0,0,"Sv; 10^-13 seconds; 100 fs; 100 femtoseconds","UCUM","Time","Clinical","unit of time used in measuring particle's sedimentation rate, usually after centrifugation. ","s","10*-13.S","1",1e-13,false],[false,"high power field (microscope)","[HPF]","[HPF]","view area in microscope",1,[0,0,0,0,0,0,0],"HPF","chemical",false,null,null,1,false,false,0,0,"HPF","UCUM","Area","Clinical","area visible under the maximum magnification power of the objective in microscopy (usually 400x)\\n","1","1","1",1,false],[false,"low power field (microscope)","[LPF]","[LPF]","view area in microscope",1,[0,0,0,0,0,0,0],"LPF","chemical",false,null,null,1,false,false,0,0,"LPF; fields","UCUM","Area","Clinical","area visible under the low magnification of the objective in microscopy (usually 100 x)\\n","1","1","100",100,false],[false,"katal","kat","KAT","catalytic activity",6.0221367e+23,[0,-1,0,0,0,0,0],"kat","chemical",true,null,null,1,false,false,1,0,"mol/secs; moles per second; mol*sec-1; mol*s-1; mol.s-1; katals; catalytic activity; enzymatic; enzyme units; activities","UCUM","CAct","Clinical","kat is a unit of catalytic activity with base units = mol/s. Rarely used because its units are too large to practically express catalytic activity. See enzyme unit [U] which is the standard unit for catalytic activity.","mol/s","MOL/S","1",1,false],[false,"enzyme unit","U","U","catalytic activity",10036894500000000,[0,-1,0,0,0,0,0],"U","chemical",true,null,null,1,false,false,1,0,"micromoles per minute; umol/min; umol per minute; umol min-1; enzymatic activity; enzyme activity","UCUM","CAct","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min)","umol/min","UMOL/MIN","1",1,false],[false,"international unit - arbitrary","[iU]","[IU]","arbitrary",1,[0,0,0,0,0,0,0],"IU","chemical",true,null,null,1,false,true,0,0,"international units; IE; F2","UCUM","Arb","Clinical","International units (IU) are analyte and reference specimen  specific arbitrary units (held at WHO)","1","1","1",1,false],[false,"international unit - arbitrary","[IU]","[IU]","arbitrary",1,[0,0,0,0,0,0,0],"i.U.","chemical",true,null,null,1,false,true,0,0,"international units; IE; F2","UCUM","Arb","Clinical","International units (IU) are analyte and reference specimen  specific arbitrary units (held at WHO)","[iU]","[IU]","1",1,false],[false,"arbitary unit","[arb'U]","[ARB'U]","arbitrary",1,[0,0,0,0,0,0,0],"arb. U","chemical",false,null,null,1,false,true,0,0,"arbitary units; arb units; arbU","UCUM","Arb","Clinical","relative unit of measurement to show the ratio of test measurement to reference measurement","1","1","1",1,false],[false,"United States Pharmacopeia unit","[USP'U]","[USP'U]","arbitrary",1,[0,0,0,0,0,0,0],"U.S.P.","chemical",false,null,null,1,false,true,0,0,"USP U; USP'U","UCUM","Arb","Clinical","a dose unit to express potency of drugs and vitamins defined by the United States Pharmacopoeia; usually 1 USP = 1 IU","1","1","1",1,false],[false,"GPL unit","[GPL'U]","[GPL'U]","biologic activity of anticardiolipin IgG",1,[0,0,0,0,0,0,0],null,"chemical",false,null,null,1,false,true,0,0,"GPL Units; GPL U; IgG anticardiolipin units; IgG Phospholipid","UCUM","ACnc; AMass","Clinical","Units for an antiphospholipid test","1","1","1",1,false],[false,"MPL unit","[MPL'U]","[MPL'U]","biologic activity of anticardiolipin IgM",1,[0,0,0,0,0,0,0],null,"chemical",false,null,null,1,false,true,0,0,"MPL units; MPL U; MPL'U; IgM anticardiolipin units; IgM Phospholipid Units ","UCUM","ACnc","Clinical","units for antiphospholipid test","1","1","1",1,false],[false,"APL unit","[APL'U]","[APL'U]","biologic activity of anticardiolipin IgA",1,[0,0,0,0,0,0,0],null,"chemical",false,null,null,1,false,true,0,0,"APL units; APL U; IgA anticardiolipin; IgA Phospholipid; biologic activity of","UCUM","AMass; ACnc","Clinical","Units for an anti phospholipid syndrome test","1","1","1",1,false],[false,"Bethesda unit","[beth'U]","[BETH'U]","biologic activity of factor VIII inhibitor",1,[0,0,0,0,0,0,0],null,"chemical",false,null,null,1,false,true,0,0,"BU","UCUM","ACnc","Clinical","measures of blood coagulation inhibitior for many blood factors","1","1","1",1,false],[false,"anti factor Xa unit","[anti'Xa'U]","[ANTI'XA'U]","biologic activity of factor Xa inhibitor (heparin)",1,[0,0,0,0,0,0,0],null,"chemical",false,null,null,1,false,true,0,0,"units","UCUM","ACnc","Clinical","[anti'Xa'U] unit is equivalent to and can be converted to IU/mL. ","1","1","1",1,false],[false,"Todd unit","[todd'U]","[TODD'U]","biologic activity antistreptolysin O",1,[0,0,0,0,0,0,0],null,"chemical",false,null,null,1,false,true,0,0,"units","UCUM","InvThres; RtoThres","Clinical","the unit for the results of the testing for antistreptolysin O (ASO)","1","1","1",1,false],[false,"Dye unit","[dye'U]","[DYE'U]","biologic activity of amylase",1,[0,0,0,0,0,0,0],null,"chemical",false,null,null,1,false,true,0,0,"units","UCUM","CCnc","Obsolete","equivalent to the Somogyi unit, which is an enzyme unit for amylase but better to use U, the standard enzyme unit for measuring catalytic activity","1","1","1",1,false],[false,"Somogyi unit","[smgy'U]","[SMGY'U]","biologic activity of amylase",1,[0,0,0,0,0,0,0],null,"chemical",false,null,null,1,false,true,0,0,"Somogyi units; smgy U","UCUM","CAct","Clinical","measures the enzymatic activity of amylase in blood serum - better to use base units mg/mL ","1","1","1",1,false],[false,"Bodansky unit","[bdsk'U]","[BDSK'U]","biologic activity of phosphatase",1,[0,0,0,0,0,0,0],null,"chemical",false,null,null,1,false,true,0,0,"","UCUM","ACnc","Obsolete","Enzyme unit specific to alkaline phosphatase - better to use standard enzyme unit of U","1","1","1",1,false],[false,"King-Armstrong unit","[ka'U]","[KA'U]","biologic activity of phosphatase",1,[0,0,0,0,0,0,0],null,"chemical",false,null,null,1,false,true,0,0,"King-Armstrong Units; King units","UCUM","AMass","Obsolete","enzyme units for acid phosphatase - better to use enzyme unit [U]","1","1","1",1,false],[false,"Kunkel unit","[knk'U]","[KNK'U]","arbitrary biologic activity",1,[0,0,0,0,0,0,0],null,"chemical",false,null,null,1,false,true,0,0,null,"UCUM",null,null,null,"1","1","1",1,false],[false,"Mac Lagan unit","[mclg'U]","[MCLG'U]","arbitrary biologic activity",1,[0,0,0,0,0,0,0],null,"chemical",false,null,null,1,false,true,0,0,"galactose index; galactose tolerance test; thymol turbidity test unit; mclg U; units; indexes","UCUM","ACnc","Obsolete","unit for liver tests - previously used in thymol turbidity tests for liver disease diagnoses, and now is sometimes referred to in the oral galactose tolerance test","1","1","1",1,false],[false,"tuberculin unit","[tb'U]","[TB'U]","biologic activity of tuberculin",1,[0,0,0,0,0,0,0],null,"chemical",false,null,null,1,false,true,0,0,"TU; units","UCUM","Arb","Clinical","amount of tuberculin antigen -usually in reference to a TB skin test ","1","1","1",1,false],[false,"50% cell culture infectious dose","[CCID_50]","[CCID_50]","biologic activity (infectivity) of an infectious agent preparation",1,[0,0,0,0,0,0,0],"CCID<sub>50</sub>","chemical",false,null,null,1,false,true,0,0,"CCID50; 50% cell culture infective doses","UCUM","NumThres","Clinical","","1","1","1",1,false],[false,"50% tissue culture infectious dose","[TCID_50]","[TCID_50]","biologic activity (infectivity) of an infectious agent preparation",1,[0,0,0,0,0,0,0],"TCID<sub>50</sub>","chemical",false,null,null,1,false,true,0,0,"TCID50; 50% tissue culture infective dose","UCUM","NumThres","Clinical","","1","1","1",1,false],[false,"50% embryo infectious dose","[EID_50]","[EID_50]","biologic activity (infectivity) of an infectious agent preparation",1,[0,0,0,0,0,0,0],"EID<sub>50</sub>","chemical",false,null,null,1,false,true,0,0,"EID50; 50% embryo infective doses; EID50 Egg Infective Dosage","UCUM","thresNum","Clinical","","1","1","1",1,false],[false,"plaque forming units","[PFU]","[PFU]","amount of an infectious agent",1,[0,0,0,0,0,0,0],"PFU","chemical",false,null,null,1,false,true,0,0,"PFU","UCUM","ACnc","Clinical","tests usually report unit as number of PFU per unit volume","1","1","1",1,false],[false,"focus forming units (cells)","[FFU]","[FFU]","amount of an infectious agent",1,[0,0,0,0,0,0,0],"FFU","chemical",false,null,null,1,false,true,0,0,"FFU","UCUM","EntNum","Clinical","","1","1","1",1,false],[false,"colony forming units","[CFU]","[CFU]","amount of a proliferating organism",1,[0,0,0,0,0,0,0],"CFU","chemical",false,null,null,1,false,true,0,0,"CFU","UCUM","Num","Clinical","","1","1","1",1,false],[false,"index of reactivity (allergen)","[IR]","[IR]","amount of an allergen callibrated through in-vivo testing using the Stallergenes® method.",1,[0,0,0,0,0,0,0],"IR","chemical",false,null,null,1,false,true,0,0,"IR; indexes","UCUM","Acnc","Clinical","amount of an allergen callibrated through in-vivo testing using the Stallergenes method. Usually reported in tests as IR/mL","1","1","1",1,false],[false,"bioequivalent allergen unit","[BAU]","[BAU]","amount of an allergen callibrated through in-vivo testing based on the ID50EAL method of (intradermal dilution for 50mm sum of erythema diameters",1,[0,0,0,0,0,0,0],"BAU","chemical",false,null,null,1,false,true,0,0,"BAU; Bioequivalent Allergy Units; bioequivalent allergen units","UCUM","Arb","Clinical","","1","1","1",1,false],[false,"allergy unit","[AU]","[AU]","procedure defined amount of an allergen using some reference standard",1,[0,0,0,0,0,0,0],"AU","chemical",false,null,null,1,false,true,0,0,"allergy units; allergen units; AU","UCUM","Arb","Clinical","Most standard test allergy units are reported as [IU] or as %. ","1","1","1",1,false],[false,"allergen unit for Ambrosia artemisiifolia","[Amb'a'1'U]","[AMB'A'1'U]","procedure defined amount of the major allergen of ragweed.",1,[0,0,0,0,0,0,0],"Amb a 1 U","chemical",false,null,null,1,false,true,0,0,"Amb a 1 unit; Antigen E; AgE U; allergen units","UCUM","Arb","Clinical","Amb a 1 is the major allergen in short ragweed, and can be converted Bioequivalent allergen units (BAU) where 350 Amb a 1 U/mL = 100,000 BAU/mL","1","1","1",1,false],[false,"protein nitrogen unit (allergen testing)","[PNU]","[PNU]","procedure defined amount of a protein substance",1,[0,0,0,0,0,0,0],"PNU","chemical",false,null,null,1,false,true,0,0,"protein nitrogen units; PNU","UCUM","Mass","Clinical","defined as 0.01 ug of phosphotungstic acid-precipitable protein nitrogen. Being replaced by bioequivalent allergy units (BAU).","1","1","1",1,false],[false,"Limit of flocculation","[Lf]","[LF]","procedure defined amount of an antigen substance",1,[0,0,0,0,0,0,0],"Lf","chemical",false,null,null,1,false,true,0,0,"Lf doses","UCUM","Arb","Clinical","the antigen content  forming 1:1 ratio against 1 unit of antitoxin","1","1","1",1,false],[false,"D-antigen unit (polio)","[D'ag'U]","[D'AG'U]","procedure defined amount of a poliomyelitis d-antigen substance",1,[0,0,0,0,0,0,0],null,"chemical",false,null,null,1,false,true,0,0,"DAgU; units","UCUM","Acnc","Clinical","unit of potency of poliovirus vaccine used for poliomyelitis prevention reported as D antigen units/mL. The unit is poliovirus type-specific.","1","1","1",1,false],[false,"fibrinogen equivalent units","[FEU]","[FEU]","amount of fibrinogen broken down into the measured d-dimers",1,[0,0,0,0,0,0,0],null,"chemical",false,null,null,1,false,true,0,0,"FEU","UCUM","MCnc","Clinical","Note both the FEU and DDU units are used to report D-dimer measurements. 1 DDU = 1/2 FFU","1","1","1",1,false],[false,"ELISA unit","[ELU]","[ELU]","arbitrary ELISA unit",1,[0,0,0,0,0,0,0],null,"chemical",false,null,null,1,false,true,0,0,"Enzyme-Linked Immunosorbent Assay Units; ELU; EL. U","UCUM","ACnc","Clinical","","1","1","1",1,false],[false,"Ehrlich units (urobilinogen)","[EU]","[EU]","Ehrlich unit",1,[0,0,0,0,0,0,0],null,"chemical",false,null,null,1,false,true,0,0,"EU/dL; mg{urobilinogen}/dL","UCUM","ACnc","Clinical","","1","1","1",1,false],[false,"neper","Np","NEP","level",1,[0,0,0,0,0,0,0],"Np","levels",true,null,"ln",1,true,false,0,0,"nepers","UCUM","LogRto","Clinical","logarithmic unit for ratios of measurements of physical field and power quantities, such as gain and loss of electronic signals","1",null,null,1,false],[false,"bel","B","B","level",1,[0,0,0,0,0,0,0],"B","levels",true,null,"lg",1,true,false,0,0,"bels","UCUM","LogRto","Clinical","Logarithm of the ratio of power- or field-type quantities; usually expressed in decibels ","1",null,null,1,false],[false,"bel sound pressure","B[SPL]","B[SPL]","pressure level",0.019999999999999997,[-1,-2,1,0,0,0,0],"B(SPL)","levels",true,null,"lgTimes2",1,true,false,0,0,"bel SPL; B SPL; sound pressure bels","UCUM","LogRto","Clinical","used to measure sound level in acoustics","Pa",null,null,0.000019999999999999998,false],[false,"bel volt","B[V]","B[V]","electric potential level",1000,[2,-2,1,0,0,-1,0],"B(V)","levels",true,null,"lgTimes2",1,true,false,0,0,"bel V; B V; volts bels","UCUM","LogRtoElp","Clinical","used to express power gain in electrical circuits","V",null,null,1,false],[false,"bel millivolt","B[mV]","B[MV]","electric potential level",1,[2,-2,1,0,0,-1,0],"B(mV)","levels",true,null,"lgTimes2",1,true,false,0,0,"bel mV; B mV; millivolt bels; 10^-3V bels; 10*-3V ","UCUM","LogRtoElp","Clinical","used to express power gain in electrical circuits","mV",null,null,1,false],[false,"bel microvolt","B[uV]","B[UV]","electric potential level",0.001,[2,-2,1,0,0,-1,0],"B(μV)","levels",true,null,"lgTimes2",1,true,false,0,0,"bel uV; B uV; microvolts bels; 10^-6V bel; 10*-6V bel","UCUM","LogRto","Clinical","used to express power gain in electrical circuits","uV",null,null,1,false],[false,"bel 10 nanovolt","B[10.nV]","B[10.NV]","electric potential level",0.000010000000000000003,[2,-2,1,0,0,-1,0],"B(10 nV)","levels",true,null,"lgTimes2",1,true,false,0,0,"bel 10 nV; B 10 nV; 10 nanovolts bels","UCUM","LogRtoElp","Clinical","used to express power gain in electrical circuits","nV",null,null,10,false],[false,"bel watt","B[W]","B[W]","power level",1000,[2,-3,1,0,0,0,0],"B(W)","levels",true,null,"lg",1,true,false,0,0,"bel W; b W; b Watt; Watts bels","UCUM","LogRto","Clinical","used to express power","W",null,null,1,false],[false,"bel kilowatt","B[kW]","B[KW]","power level",1000000,[2,-3,1,0,0,0,0],"B(kW)","levels",true,null,"lg",1,true,false,0,0,"bel kW; B kW; kilowatt bel; kW bel; kW B","UCUM","LogRto","Clinical","used to express power","kW",null,null,1,false],[false,"stere","st","STR","volume",1,[3,0,0,0,0,0,0],"st","misc",true,null,null,1,false,false,0,0,"stère; m3; cubic meter; m^3; meters cubed; metre","UCUM","Vol","Nonclinical","equal to one cubic meter, usually used for measuring firewood","m3","M3","1",1,false],[false,"Ångström","Ao","AO","length",1.0000000000000002e-10,[1,0,0,0,0,0,0],"Å","misc",false,null,null,1,false,false,0,0,"Å; Angstroms; Ao; Ångströms","UCUM","Len","Clinical","equal to 10^-10 meters; used to express wave lengths and atom scaled differences ","nm","NM","0.1",0.1,false],[false,"barn","b","BRN","action area",1.0000000000000001e-28,[2,0,0,0,0,0,0],"b","misc",false,null,null,1,false,false,0,0,"barns","UCUM","Area","Clinical","used in high-energy physics to express cross-sectional areas","fm2","FM2","100",100,false],[false,"technical atmosphere","att","ATT","pressure",98066500,[-1,-2,1,0,0,0,0],"at","misc",false,null,null,1,false,false,0,0,"at; tech atm; tech atmosphere; kgf/cm2; atms; atmospheres","UCUM","Pres","Obsolete","non-SI unit of pressure equal to one kilogram-force per square centimeter","kgf/cm2","KGF/CM2","1",1,false],[false,"mho","mho","MHO","electric conductance",0.001,[-2,1,-1,0,0,2,0],"mho","misc",true,null,null,1,false,false,0,0,"siemens; ohm reciprocals; Ω^−1; Ω-1 ","UCUM","","Obsolete","unit of electric conductance (the inverse of electrical resistance) equal to ohm^-1","S","S","1",1,false],[false,"pound per square inch","[psi]","[PSI]","pressure",6894757.293168359,[-1,-2,1,0,0,0,0],"psi","misc",false,null,null,1,false,false,0,0,"psi; lb/in2; lb per in2","UCUM","Pres","Clinical","","[lbf_av]/[in_i]2","[LBF_AV]/[IN_I]2","1",1,false],[false,"circle - plane angle","circ","CIRC","plane angle",6.283185307179586,[0,0,0,1,0,0,0],"circ","misc",false,null,null,1,false,false,0,0,"angles; circles","UCUM","Angle","Clinical","","[pi].rad","[PI].RAD","2",2,false],[false,"spere - solid angle","sph","SPH","solid angle",12.566370614359172,[0,0,0,2,0,0,0],"sph","misc",false,null,null,1,false,false,0,0,"speres","UCUM","Angle","Clinical","equal to the solid angle of an entire sphere = 4πsr (sr = steradian) ","[pi].sr","[PI].SR","4",4,false],[false,"metric carat","[car_m]","[CAR_M]","mass",0.2,[0,0,1,0,0,0,0],"ct<sub>m</sub>","misc",false,null,null,1,false,false,0,0,"carats; ct; car m","UCUM","Mass","Nonclinical","unit of mass for gemstones","g","G","2e-1",0.2,false],[false,"carat of gold alloys","[car_Au]","[CAR_AU]","mass fraction",0.041666666666666664,[0,0,0,0,0,0,0],"ct<sub><r>Au</r></sub>","misc",false,null,null,1,false,false,0,0,"karats; k; kt; car au; carats","UCUM","MFr","Nonclinical","unit of purity for gold alloys","/24","/24","1",1,false],[false,"Smoot","[smoot]","[SMOOT]","length",1.7018000000000002,[1,0,0,0,0,0,0],null,"misc",false,null,null,1,false,false,0,0,"","UCUM","Len","Nonclinical","prank unit of length from MIT","[in_i]","[IN_I]","67",67,false],[false,"meter per square seconds per square root of hertz","[m/s2/Hz^(1/2)]","[M/S2/HZ^(1/2)]","amplitude spectral density",1,[2,-3,0,0,0,0,0],null,"misc",false,null,"sqrt",1,true,false,0,0,"m/s2/(Hz^.5); m/s2/(Hz^(1/2)); m per s2 per Hz^1/2","UCUM","","Constant","measures amplitude spectral density, and is equal to the square root of power spectral density\\n ","m2/s4/Hz",null,null,1,false],[false,"bit - logarithmic","bit_s","BIT_S","amount of information",1,[0,0,0,0,0,0,0],"bit<sub>s</sub>","infotech",false,null,"ld",1,true,false,0,0,"bit-s; bit s; bit logarithmic","UCUM","LogA","Nonclinical","defined as the log base 2 of the number of distinct signals; cannot practically be used to express more than 1000 bits\\n\\nIn information theory, the definition of the amount of self-information and information entropy is often expressed with the binary logarithm (log base 2)","1",null,null,1,false],[false,"bit","bit","BIT","amount of information",1,[0,0,0,0,0,0,0],"bit","infotech",true,null,null,1,false,false,0,0,"bits","UCUM","","Nonclinical","dimensionless information unit of 1 used in computing and digital communications","1","1","1",1,false],[false,"byte","By","BY","amount of information",8,[0,0,0,0,0,0,0],"B","infotech",true,null,null,1,false,false,0,0,"bytes","UCUM","","Nonclinical","equal to 8 bits","bit","bit","8",8,false],[false,"baud","Bd","BD","signal transmission rate",1,[0,1,0,0,0,0,0],"Bd","infotech",true,null,"inv",1,false,false,0,0,"Bd; bauds","UCUM","Freq","Nonclinical","unit to express rate in symbols per second or pulses per second. ","s","/s","1",1,false],[false,"per twelve hour","/(12.h)","1/(12.HR)","",0.000023148148148148147,[0,-1,0,0,0,0,0],"/h",null,false,null,null,1,false,false,0,0,"per 12 hours; 12hrs; 12 hrs; /12hrs","LOINC","Rat","Clinical","",null,null,null,null,false],[false,"per arbitrary unit","/[arb'U]","1/[ARB'U]","",1,[0,0,0,0,0,0,0],"/arb/ U",null,false,null,null,1,false,true,0,0,"/arbU","LOINC","InvA ","Clinical","",null,null,null,null,false],[false,"per high power field","/[HPF]","1/[HPF]","",1,[0,0,0,0,0,0,0],"/HPF",null,false,null,null,1,false,false,0,0,"/HPF; per HPF","LOINC","Naric","Clinical","",null,null,null,null,false],[false,"per international unit","/[IU]","1/[IU]","",1,[0,0,0,0,0,0,0],"/i/U.",null,false,null,null,1,false,true,0,0,"international units; /IU; per IU","LOINC","InvA","Clinical","International units (IU) are analyte and reference specimen  specific arbitrary units (held at WHO)",null,null,null,null,false],[false,"per low power field","/[LPF]","1/[LPF]","",1,[0,0,0,0,0,0,0],"/LPF",null,false,null,null,1,false,false,0,0,"/LPF; per LPF","LOINC","Naric","Clinical","",null,null,null,null,false],[false,"per 10 billion  ","/10*10","1/(10*10)","",1e-10,[0,0,0,0,0,0,0],"/10<sup>10</sup>",null,false,null,null,1,false,false,0,0,"/10^10; per 10*10","LOINC","NFr","Clinical","used for counting entities, e.g. blood cells; usually these kinds of terms have numerators such as moles or milligrams, and counting that amount per the number in the denominator",null,null,null,null,false],[false,"per trillion ","/10*12","1/(10*12)","",1e-12,[0,0,0,0,0,0,0],"/10<sup>12</sup>",null,false,null,null,1,false,false,0,0,"/10^12; per 10*12","LOINC","NFr","Clinical","used for counting entities, e.g. blood cells; usually these kinds of terms have numerators such as moles or milligrams, and counting that amount per the number in the denominator",null,null,null,null,false],[false,"per thousand","/10*3","1/(10*3)","",0.001,[0,0,0,0,0,0,0],"/10<sup>3</sup>",null,false,null,null,1,false,false,0,0,"/10^3; per 10*3","LOINC","NFr","Clinical","used for counting entities, e.g. blood cells; usually these kinds of terms have numerators such as moles or milligrams, and counting that amount per the number in the denominator",null,null,null,null,false],[false,"per million","/10*6","1/(10*6)","",0.000001,[0,0,0,0,0,0,0],"/10<sup>6</sup>",null,false,null,null,1,false,false,0,0,"/10^6; per 10*6;","LOINC","NFr","Clinical","used for counting entities, e.g. blood cells; usually these kinds of terms have numerators such as moles or milligrams, and counting that amount per the number in the denominator",null,null,null,null,false],[false,"per billion","/10*9","1/(10*9)","",1e-9,[0,0,0,0,0,0,0],"/10<sup>9</sup>",null,false,null,null,1,false,false,0,0,"/10^9; per 10*9","LOINC","NFr","Clinical","used for counting entities, e.g. blood cells; usually these kinds of terms have numerators such as moles or milligrams, and counting that amount per the number in the denominator",null,null,null,null,false],[false,"per 100","/100","1/100","",0.01,[0,0,0,0,0,0,0],null,null,false,null,null,1,false,false,0,0,"per hundred; 10^2; 10*2","LOINC","NFr","Clinical","used for counting entities, e.g. blood cells; usually these kinds of terms have numerators such as moles or milligrams, and counting that amount per the number in the denominator",null,null,null,null,false],[false,"per 100 cells","/100{cells}","/100{CELLS}","",0.01,[0,0,0,0,0,0,0],null,null,false,null,null,1,false,false,0,0,"/100 cells; /100cells; per hundred","LOINC","EntMass; EntNum; NFr","Clinical","",null,null,null,null,false],[false,"per 100 neutrophils","/100{neutrophils}","/100{NEUTROPHILS}","",0.01,[0,0,0,0,0,0,0],null,null,false,null,null,1,false,false,0,0,"/100 neutrophils; /100neutrophils; per hundred","LOINC","EntMass; EntNum; NFr","Clinical","",null,null,null,null,false],[false,"per 100 spermatozoa","/100{spermatozoa}","/100{SPERMATOZOA}","",0.01,[0,0,0,0,0,0,0],null,null,false,null,null,1,false,false,0,0,"/100 spermatozoa; /100spermatozoa; per hundred","LOINC","NFr","Clinical","",null,null,null,null,false],[false,"per 100 white blood cells","/100{WBCs}","/100{WBCS}","",0.01,[0,0,0,0,0,0,0],null,null,false,null,null,1,false,false,0,0,"/100 WBCs; /100WBCs; per hundred","LOINC","Ratio; NFr","Clinical","",null,null,null,null,false],[false,"per year","/a","1/ANN","",3.168808781402895e-8,[0,-1,0,0,0,0,0],"/a",null,false,null,null,1,false,false,0,0,"/Years; /yrs; yearly","LOINC","NRat","Clinical","",null,null,null,null,false],[false,"per centimeter of water","/cm[H2O]","1/CM[H2O]","",0.000010197162129779282,[1,2,-1,0,0,0,0],"/cm HO<sub><r>2</r></sub>",null,false,null,null,1,false,false,0,0,"/cmH2O; /cm H2O; centimeters; centimetres","LOINC","InvPress","Clinical","",null,null,null,null,false],[false,"per day","/d","1/D","",0.000011574074074074073,[0,-1,0,0,0,0,0],"/d",null,false,null,null,1,false,false,0,0,"/dy; per day","LOINC","NRat","Clinical","",null,null,null,null,false],[false,"per deciliter","/dL","1/DL","",10000,[-3,0,0,0,0,0,0],"/dL",null,false,null,null,1,false,false,0,0,"per dL; /deciliter; decilitre","LOINC","NCnc","Clinical","",null,null,null,null,false],[false,"per gram","/g","1/G","",1,[0,0,-1,0,0,0,0],"/g",null,false,null,null,1,false,false,0,0,"/gm; /gram; per g","LOINC","NCnt","Clinical","",null,null,null,null,false],[false,"per hour","/h","1/HR","",0.0002777777777777778,[0,-1,0,0,0,0,0],"/h",null,false,null,null,1,false,false,0,0,"/hr; /hour; per hr","LOINC","NRat","Clinical","",null,null,null,null,false],[false,"per kilogram","/kg","1/KG","",0.001,[0,0,-1,0,0,0,0],"/kg",null,false,null,null,1,false,false,0,0,"per kg; per kilogram","LOINC","NCnt","Clinical","",null,null,null,null,false],[false,"per liter","/L","1/L","",1000,[-3,0,0,0,0,0,0],"/L",null,false,null,null,1,false,false,0,0,"/liter; litre","LOINC","NCnc","Clinical","",null,null,null,null,false],[false,"per square meter","/m2","1/M2","",1,[-2,0,0,0,0,0,0],"/m<sup>2</sup>",null,false,null,null,1,false,false,0,0,"/m^2; /m*2; /sq. m; per square meter; meter squared; metre","LOINC","Naric","Clinical","",null,null,null,null,false],[false,"per cubic meter","/m3","1/M3","",1,[-3,0,0,0,0,0,0],"/m<sup>3</sup>",null,false,null,null,1,false,false,0,0,"/m^3; /m*3; /cu. m; per cubic meter; meter cubed; per m3; metre","LOINC","NCncn","Clinical","",null,null,null,null,false],[false,"per milligram","/mg","1/MG","",1000,[0,0,-1,0,0,0,0],"/mg",null,false,null,null,1,false,false,0,0,"/milligram; per mg","LOINC","NCnt","Clinical","",null,null,null,null,false],[false,"per minute","/min","1/MIN","",0.016666666666666666,[0,-1,0,0,0,0,0],"/min",null,false,null,null,1,false,false,0,0,"/minute; per mins; breaths beats per minute","LOINC","NRat","Clinical","",null,null,null,null,false],[false,"per milliliter","/mL","1/ML","",1000000,[-3,0,0,0,0,0,0],"/mL",null,false,null,null,1,false,false,0,0,"/milliliter; per mL; millilitre","LOINC","NCncn","Clinical","",null,null,null,null,false],[false,"per millimeter","/mm","1/MM","",1000,[-1,0,0,0,0,0,0],"/mm",null,false,null,null,1,false,false,0,0,"/millimeter; per mm; millimetre","LOINC","InvLen","Clinical","",null,null,null,null,false],[false,"per month","/mo","1/MO","",3.802570537683474e-7,[0,-1,0,0,0,0,0],"/mo",null,false,null,null,1,false,false,0,0,"/month; per mo; monthly; month","LOINC","NRat","Clinical","",null,null,null,null,false],[false,"per second","/s","1/S","",1,[0,-1,0,0,0,0,0],"/s",null,false,null,null,1,false,false,0,0,"/second; /sec; per sec; frequency; Hertz; Herz; Hz; becquerels; Bq; s-1; s^-1","LOINC","NRat","Clinical","",null,null,null,null,false],[false,"per enzyme unit","/U","1/U","",9.963241120049633e-17,[0,1,0,0,0,0,0],"/U",null,false,null,null,1,false,false,-1,0,"/enzyme units; per U","LOINC","InvC; NCat","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min)",null,null,null,null,false],[false,"per microliter","/uL","1/UL","",999999999.9999999,[-3,0,0,0,0,0,0],"/μL",null,false,null,null,1,false,false,0,0,"/microliter; microlitre; /mcl; per uL","LOINC","ACnc","Clinical","",null,null,null,null,false],[false,"per week","/wk","1/WK","",0.0000016534391534391535,[0,-1,0,0,0,0,0],"/wk",null,false,null,null,1,false,false,0,0,"/week; per wk; weekly, weeks","LOINC","NRat","Clinical","",null,null,null,null,false],[false,"APL unit per milliliter","[APL'U]/mL","[APL'U]/ML","biologic activity of anticardiolipin IgA",1000000,[-3,0,0,0,0,0,0],"/mL","chemical",false,null,null,1,false,true,0,0,"APL/mL; APL'U/mL; APL U/mL; APL/milliliter; IgA anticardiolipin units per milliliter; IgA Phospholipid Units; millilitre; biologic activity of","LOINC","ACnc","Clinical","Units for an anti phospholipid syndrome test","1","1","1",1,false],[false,"arbitrary unit per milliliter","[arb'U]/mL","[ARB'U]/ML","arbitrary",1000000,[-3,0,0,0,0,0,0],"(arb. U)/mL","chemical",false,null,null,1,false,true,0,0,"arb'U/mL; arbU/mL; arb U/mL; arbitrary units per milliliter; millilitre","LOINC","ACnc","Clinical","relative unit of measurement to show the ratio of test measurement to reference measurement","1","1","1",1,false],[false,"colony forming units per liter","[CFU]/L","[CFU]/L","amount of a proliferating organism",1000,[-3,0,0,0,0,0,0],"CFU/L","chemical",false,null,null,1,false,true,0,0,"CFU per Liter; CFU/L","LOINC","NCnc","Clinical","","1","1","1",1,false],[false,"colony forming units per milliliter","[CFU]/mL","[CFU]/ML","amount of a proliferating organism",1000000,[-3,0,0,0,0,0,0],"CFU/mL","chemical",false,null,null,1,false,true,0,0,"CFU per mL; CFU/mL","LOINC","NCnc","Clinical","","1","1","1",1,false],[false,"foot per foot - US","[ft_us]/[ft_us]","[FT_US]/[FT_US]","length",1,[0,0,0,0,0,0,0],"(ft<sub>us</sub>)/(ft<sub>us</sub>)","us-lengths",false,null,null,1,false,false,0,0,"ft/ft; ft per ft; feet per feet; visual acuity","","LenRto","Clinical","distance ratio to measure 20:20 vision","m/3937","M/3937","1200",1200,false],[false,"GPL unit per milliliter","[GPL'U]/mL","[GPL'U]/ML","biologic activity of anticardiolipin IgG",1000000,[-3,0,0,0,0,0,0],"/mL","chemical",false,null,null,1,false,true,0,0,"GPL U/mL; GPL'U/mL; GPL/mL; GPL U per mL; IgG Phospholipid Units per milliliters; IgG anticardiolipin units; millilitres ","LOINC","ACnc; AMass","Clinical","Units for an antiphospholipid test","1","1","1",1,false],[false,"international unit per 2 hour","[IU]/(2.h)","[IU]/(2.HR)","arbitrary",0.0001388888888888889,[0,-1,0,0,0,0,0],"(i.U.)/h","chemical",true,null,null,1,false,true,0,0,"IU/2hrs; IU/2 hours; IU per 2 hrs; international units per 2 hours","LOINC","ARat","Clinical","International units (IU) are analyte and reference specimen  specific arbitrary units (held at WHO)","[iU]","[IU]","1",1,false],[false,"international unit per 24 hour","[IU]/(24.h)","[IU]/(24.HR)","arbitrary",0.000011574074074074073,[0,-1,0,0,0,0,0],"(i.U.)/h","chemical",true,null,null,1,false,true,0,0,"IU/24hr; IU/24 hours; IU per 24 hrs; international units per 24 hours","LOINC","ARat","Clinical","International units (IU) are analyte and reference specimen  specific arbitrary units (held at WHO)","[iU]","[IU]","1",1,false],[false,"international unit per day","[IU]/d","[IU]/D","arbitrary",0.000011574074074074073,[0,-1,0,0,0,0,0],"(i.U.)/d","chemical",true,null,null,1,false,true,0,0,"IU/dy; IU/days; IU per dys; international units per day","LOINC","ARat","Clinical","International units (IU) are analyte and reference specimen  specific arbitrary units (held at WHO)","[iU]","[IU]","1",1,false],[false,"international unit per deciliter","[IU]/dL","[IU]/DL","arbitrary",10000,[-3,0,0,0,0,0,0],"(i.U.)/dL","chemical",true,null,null,1,false,true,0,0,"IU/dL; IU per dL; international units per deciliters; decilitres","LOINC","ACnc","Clinical","International units (IU) are analyte and reference specimen  specific arbitrary units (held at WHO)","[iU]","[IU]","1",1,false],[false,"international unit per gram","[IU]/g","[IU]/G","arbitrary",1,[0,0,-1,0,0,0,0],"(i.U.)/g","chemical",true,null,null,1,false,true,0,0,"IU/gm; IU/gram; IU per gm; IU per g; international units per gram","LOINC","ACnt","Clinical","International units (IU) are analyte and reference specimen  specific arbitrary units (held at WHO)","[iU]","[IU]","1",1,false],[false,"international unit per hour","[IU]/h","[IU]/HR","arbitrary",0.0002777777777777778,[0,-1,0,0,0,0,0],"(i.U.)/h","chemical",true,null,null,1,false,true,0,0,"IU/hrs; IU per hours; international units per hour","LOINC","ARat","Clinical","International units (IU) are analyte and reference specimen  specific arbitrary units (held at WHO)","[iU]","[IU]","1",1,false],[false,"international unit per kilogram","[IU]/kg","[IU]/KG","arbitrary",0.001,[0,0,-1,0,0,0,0],"(i.U.)/kg","chemical",true,null,null,1,false,true,0,0,"IU/kg; IU/kilogram; IU per kg; units","LOINC","ACnt","Clinical","International units (IU) are analyte and reference specimen  specific arbitrary units (held at WHO)","[iU]","[IU]","1",1,false],[false,"international unit per kilogram per day","[IU]/kg/d","([IU]/KG)/D","arbitrary",1.1574074074074074e-8,[0,-1,-1,0,0,0,0],"((i.U.)/kg)/d","chemical",true,null,null,1,false,true,0,0,"IU/kg/dy; IU/kg/day; IU/kilogram/day; IU per kg per day; units","LOINC","ACntRat","Clinical","International units (IU) are analyte and reference specimen  specific arbitrary units (held at WHO)","[iU]","[IU]","1",1,false],[false,"international unit per liter","[IU]/L","[IU]/L","arbitrary",1000,[-3,0,0,0,0,0,0],"(i.U.)/L","chemical",true,null,null,1,false,true,0,0,"IU/L; IU/liter; IU per liter; units; litre","LOINC","ACnc","Clinical","International units (IU) are analyte and reference specimen  specific arbitrary units (held at WHO)","[iU]","[IU]","1",1,false],[false,"international unit per minute","[IU]/min","[IU]/MIN","arbitrary",0.016666666666666666,[0,-1,0,0,0,0,0],"(i.U.)/min","chemical",true,null,null,1,false,true,0,0,"IU/min; IU/minute; IU per minute; international units","LOINC","ARat","Clinical","International units (IU) are analyte and reference specimen  specific arbitrary units (held at WHO)","[iU]","[IU]","1",1,false],[false,"international unit per milliliter","[IU]/mL","[IU]/ML","arbitrary",1000000,[-3,0,0,0,0,0,0],"(i.U.)/mL","chemical",true,null,null,1,false,true,0,0,"IU/mL; IU per mL; international units per milliliter; millilitre","LOINC","ACnc","Clinical","International units (IU) are analyte and reference specimen  specific arbitrary units (held at WHO)","[iU]","[IU]","1",1,false],[false,"MPL unit per milliliter","[MPL'U]/mL","[MPL'U]/ML","biologic activity of anticardiolipin IgM",1000000,[-3,0,0,0,0,0,0],"/mL","chemical",false,null,null,1,false,true,0,0,"MPL/mL; MPL U/mL; MPL'U/mL; IgM anticardiolipin units; IgM Phospholipid Units; millilitre ","LOINC","ACnc","Clinical","units for antiphospholipid test\\n","1","1","1",1,false],[false,"number per high power field","{#}/[HPF]","{#}/[HPF]","",1,[0,0,0,0,0,0,0],"/HPF",null,false,null,null,1,false,false,0,0,"#/HPF; # per HPF; number/HPF; numbers per high power field","LOINC","Naric","Clinical","",null,null,null,null,false],[false,"number per low power field","{#}/[LPF]","{#}/[LPF]","",1,[0,0,0,0,0,0,0],"/LPF",null,false,null,null,1,false,false,0,0,"#/LPF; # per LPF; number/LPF; numbers per low power field","LOINC","Naric","Clinical","",null,null,null,null,false],[false,"IgA antiphosphatidylserine unit ","{APS'U}","{APS'U}","",1,[0,0,0,0,0,0,0],null,null,false,null,null,1,false,false,0,0,"APS Unit; Phosphatidylserine Antibody IgA Units","LOINC","ACnc","Clinical","unit for antiphospholipid test",null,null,null,null,false],[false,"EIA index","{EIA_index}","{EIA_index}","",1,[0,0,0,0,0,0,0],null,null,false,null,null,1,false,false,0,0,"enzyme immunoassay index","LOINC","ACnc","Clinical","",null,null,null,null,false],[false,"kaolin clotting time","{KCT'U}","{KCT'U}","",1,[0,0,0,0,0,0,0],null,null,false,null,null,1,false,false,0,0,"KCT","LOINC","Time","Clinical","sensitive test to detect lupus anticoagulants; measured in seconds",null,null,null,null,false],[false,"IgM antiphosphatidylserine unit","{MPS'U}","{MPS'U}","",1,[0,0,0,0,0,0,0],null,null,false,null,null,1,false,false,0,0,"Phosphatidylserine Antibody IgM Measurement ","LOINC","ACnc","Clinical","",null,null,null,null,false],[false,"trillion per liter","10*12/L","(10*12)/L","number",1000000000000000,[-3,0,0,0,0,0,0],"(10<sup>12</sup>)/L","dimless",false,null,null,1,false,false,0,0,"10^12/L; 10*12 per Liter; trillion per liter; litre","LOINC","NCncn","Clinical","","1","1","10",10,false],[false,"10^3 (used for cell count)","10*3","10*3","number",1000,[0,0,0,0,0,0,0],"10<sup>3</sup>","dimless",false,null,null,1,false,false,0,0,"10^3; thousand","LOINC","Num","Clinical","usually used for counting entities (e.g. blood cells) per volume","1","1","10",10,false],[false,"thousand per liter","10*3/L","(10*3)/L","number",1000000,[-3,0,0,0,0,0,0],"(10<sup>3</sup>)/L","dimless",false,null,null,1,false,false,0,0,"10^3/L; 10*3 per liter; litre","LOINC","NCncn","Clinical","","1","1","10",10,false],[false,"thousand per milliliter","10*3/mL","(10*3)/ML","number",1000000000,[-3,0,0,0,0,0,0],"(10<sup>3</sup>)/mL","dimless",false,null,null,1,false,false,0,0,"10^3/mL; 10*3 per mL; thousand per milliliter; millilitre","LOINC","NCncn","Clinical","","1","1","10",10,false],[false,"thousand per microliter","10*3/uL","(10*3)/UL","number",999999999999.9999,[-3,0,0,0,0,0,0],"(10<sup>3</sup>)/μL","dimless",false,null,null,1,false,false,0,0,"10^3/uL; 10*3 per uL; thousand per microliter; microlitre","LOINC","NCncn","Clinical","","1","1","10",10,false],[false,"10 thousand per microliter","10*4/uL","(10*4)/UL","number",10000000000000,[-3,0,0,0,0,0,0],"(10<sup>4</sup>)/μL","dimless",false,null,null,1,false,false,0,0,"10^4/uL; 10*4 per uL; microlitre","LOINC","NCncn","Clinical","","1","1","10",10,false],[false,"10^5 ","10*5","10*5","number",100000,[0,0,0,0,0,0,0],"10<sup>5</sup>","dimless",false,null,null,1,false,false,0,0,"one hundred thousand","LOINC","Num","Clinical","","1","1","10",10,false],[false,"10^6","10*6","10*6","number",1000000,[0,0,0,0,0,0,0],"10<sup>6</sup>","dimless",false,null,null,1,false,false,0,0,"","LOINC","Num","Clinical","","1","1","10",10,false],[false,"million colony forming unit per liter","10*6.[CFU]/L","((10*6).[CFU])/L","number",1000000000,[-3,0,0,0,0,0,0],"((10<sup>6</sup>).CFU)/L","dimless",false,null,null,1,false,true,0,0,"10*6 CFU/L; 10^6 CFU/L; 10^6CFU; 10^6 CFU per liter; million colony forming units; litre","LOINC","ACnc","Clinical","","1","1","10",10,false],[false,"million international unit","10*6.[IU]","(10*6).[IU]","number",1000000,[0,0,0,0,0,0,0],"(10<sup>6</sup>).(i.U.)","dimless",false,null,null,1,false,true,0,0,"10*6 IU; 10^6 IU; international units","LOINC","arb","Clinical","International units (IU) are analyte and reference specimen  specific arbitrary units (held at WHO)","1","1","10",10,false],[false,"million per 24 hour","10*6/(24.h)","(10*6)/(24.HR)","number",11.574074074074074,[0,-1,0,0,0,0,0],"(10<sup>6</sup>)/h","dimless",false,null,null,1,false,false,0,0,"10*6/24hrs; 10^6/24 hrs; 10*6 per 24 hrs; 10^6 per 24 hours","LOINC","NRat","Clinical","","1","1","10",10,false],[false,"million per kilogram","10*6/kg","(10*6)/KG","number",1000,[0,0,-1,0,0,0,0],"(10<sup>6</sup>)/kg","dimless",false,null,null,1,false,false,0,0,"10^6/kg; 10*6 per kg; 10*6 per kilogram; millions","LOINC","NCnt","Clinical","","1","1","10",10,false],[false,"million per liter","10*6/L","(10*6)/L","number",1000000000,[-3,0,0,0,0,0,0],"(10<sup>6</sup>)/L","dimless",false,null,null,1,false,false,0,0,"10^6/L; 10*6 per Liter; 10^6 per Liter; litre","LOINC","NCncn","Clinical","","1","1","10",10,false],[false,"million per milliliter","10*6/mL","(10*6)/ML","number",1000000000000,[-3,0,0,0,0,0,0],"(10<sup>6</sup>)/mL","dimless",false,null,null,1,false,false,0,0,"10^6/mL; 10*6 per mL; 10*6 per milliliter; millilitre","LOINC","NCncn","Clinical","","1","1","10",10,false],[false,"million per microliter","10*6/uL","(10*6)/UL","number",1000000000000000,[-3,0,0,0,0,0,0],"(10<sup>6</sup>)/μL","dimless",false,null,null,1,false,false,0,0,"10^6/uL; 10^6 per uL; 10^6/mcl; 10^6 per mcl; 10^6 per microliter; microlitre","LOINC","NCncn","Clinical","","1","1","10",10,false],[false,"10^8","10*8","10*8","number",100000000,[0,0,0,0,0,0,0],"10<sup>8</sup>","dimless",false,null,null,1,false,false,0,0,"100 million; one hundred million; 10^8","LOINC","Num","Clinical","","1","1","10",10,false],[false,"billion per liter","10*9/L","(10*9)/L","number",1000000000000,[-3,0,0,0,0,0,0],"(10<sup>9</sup>)/L","dimless",false,null,null,1,false,false,0,0,"10^9/L; 10*9 per Liter; litre","LOINC","NCncn","Clinical","","1","1","10",10,false],[false,"billion per milliliter","10*9/mL","(10*9)/ML","number",1000000000000000,[-3,0,0,0,0,0,0],"(10<sup>9</sup>)/mL","dimless",false,null,null,1,false,false,0,0,"10^9/mL; 10*9 per mL; 10^9 per mL; 10*9 per milliliter; millilitre","LOINC","NCncn","Clinical","","1","1","10",10,false],[false,"billion per microliter","10*9/uL","(10*9)/UL","number",1000000000000000000,[-3,0,0,0,0,0,0],"(10<sup>9</sup>)/μL","dimless",false,null,null,1,false,false,0,0,"10^9/uL; 10^9 per uL; 10^9/mcl; 10^9 per mcl; 10*9 per uL; 10*9 per mcl; 10*9/mcl; 10^9 per microliter; microlitre","LOINC","NCncn","Clinical","","1","1","10",10,false],[false,"10 liter per minute per square meter","10.L/(min.m2)","(10.L)/(MIN.M2)","",0.00016666666666666666,[1,-1,0,0,0,0,0],"L/(min.(m<sup>2</sup>))",null,false,null,null,1,false,false,0,0,"10 liters per minutes per square meter; 10 L per min per m2; m^2; 10 L/(min*m2); 10L/(min*m^2); litres; sq. meter; metre; meters squared","LOINC","ArVRat","Clinical","",null,null,null,null,false],[false,"10 liter per minute","10.L/min","(10.L)/MIN","",0.00016666666666666666,[3,-1,0,0,0,0,0],"L/min",null,false,null,null,1,false,false,0,0,"10 liters per minute; 10 L per min; 10L; 10 L/min; litre","LOINC","VRat","Clinical","",null,null,null,null,false],[false,"10 micronewton second per centimeter to the fifth power per square meter","10.uN.s/(cm5.m2)","((10.UN).S)/(CM5.M2)","",100000000,[-6,-1,1,0,0,0,0],"(μN.s)/(cm<sup>5</sup>).(m<sup>2</sup>)",null,false,null,null,1,false,false,0,0,"dyne seconds per centimeter5 and square meter; dyn.s/(cm5.m2); dyn.s/cm5/m2; cm^5; m^2","LOINC","","Clinical","unit to measure systemic vascular resistance per body surface area",null,null,null,null,false],[false,"24 hour","24.h","24.HR","",86400,[0,1,0,0,0,0,0],"h",null,false,null,null,1,false,false,0,0,"24hrs; 24 hrs; 24 hours; days; dy","LOINC","Time","Clinical","",null,null,null,null,false],[false,"ampere per meter","A/m","A/M","electric current",1,[-1,-1,0,0,0,1,0],"A/m","si",true,null,null,1,false,false,0,0,"A/m; amp/meter; magnetic field strength; H; B; amperes per meter; metre","LOINC","","Clinical","unit of magnetic field strength","C/s","C/S","1",1,false],[false,"centigram","cg","CG","mass",0.01,[0,0,1,0,0,0,0],"cg",null,false,"M",null,1,false,false,0,0,"centigrams; cg; cgm","LOINC","Mass","Clinical","",null,null,null,null,false],[false,"centiliter","cL","CL","volume",0.00001,[3,0,0,0,0,0,0],"cL","iso1000",true,null,null,1,false,false,0,0,"centiliters; centilitres","LOINC","Vol","Clinical","","l",null,"1",1,false],[false,"centimeter","cm","CM","length",0.01,[1,0,0,0,0,0,0],"cm",null,false,"L",null,1,false,false,0,0,"centimeters; centimetres","LOINC","Len","Clinical","",null,null,null,null,false],[false,"centimeter of water","cm[H2O]","CM[H2O]","pressure",98066.5,[-1,-2,1,0,0,0,0],"cm HO<sub><r>2</r></sub>","clinical",true,null,null,1,false,false,0,0,"cm H2O; cmH2O; centimetres; pressure","LOINC","Pres","Clinical","unit of pressure mostly applies to blood pressure","kPa","KPAL","980665e-5",9.80665,false],[false,"centimeter of water per liter per second","cm[H2O]/L/s","(CM[H2O]/L)/S","pressure",98066500,[-4,-3,1,0,0,0,0],"((cm HO<sub><r>2</r></sub>)/L)/s","clinical",true,null,null,1,false,false,0,0,"cm[H2O]/(L/s); cm[H2O].s/L; cm H2O/L/sec; cmH2O/L/sec; cmH2O/Liter; cmH2O per L per secs; centimeters of water per liters per second; centimetres; litres; cm[H2O]/(L/s)","LOINC","PresRat","Clinical","unit used to measure mean pulmonary resistance","kPa","KPAL","980665e-5",9.80665,false],[false,"centimeter of water per second per meter","cm[H2O]/s/m","(CM[H2O]/S)/M","pressure",98066.5,[-2,-3,1,0,0,0,0],"((cm HO<sub><r>2</r></sub>)/s)/m","clinical",true,null,null,1,false,false,0,0,"cm[H2O]/(s.m); cm H2O/s/m; cmH2O; cmH2O/sec/m; cmH2O per secs per meters; centimeters of water per seconds per meter; centimetres; metre","LOINC","PresRat","Clinical","unit used to measure pulmonary pressure time product","kPa","KPAL","980665e-5",9.80665,false],[false,"centimeter of mercury","cm[Hg]","CM[HG]","pressure",1333220,[-1,-2,1,0,0,0,0],"cm Hg","clinical",true,null,null,1,false,false,0,0,"centimeters of mercury; centimetres; cmHg; cm Hg","LOINC","Pres","Clinical","unit of pressure where 1 cmHg = 10 torr","kPa","KPAL","133.3220",133.322,false],[false,"square centimeter","cm2","CM2","length",0.0001,[2,0,0,0,0,0,0],"cm<sup>2</sup>",null,false,"L",null,1,false,false,0,0,"cm^2; sq cm; centimeters squared; square centimeters; centimetre; area","LOINC","Area","Clinical","",null,null,null,null,false],[false,"square centimeter per second","cm2/s","CM2/S","length",0.0001,[2,-1,0,0,0,0,0],"(cm<sup>2</sup>)/s",null,false,"L",null,1,false,false,0,0,"cm^2/sec; square centimeters per second; sq cm per sec; cm2; centimeters squared; centimetres","LOINC","AreaRat","Clinical","",null,null,null,null,false],[false,"centipoise","cP","CP","dynamic viscosity",1.0000000000000002,[-1,-1,1,0,0,0,0],"cP","cgs",true,null,null,1,false,false,0,0,"cps; centiposes","LOINC","Visc","Clinical","unit of dynamic viscosity in the CGS system with base units: 10^−3 Pa.s = 1 mPa·.s (1 millipascal second)","dyn.s/cm2","DYN.S/CM2","1",1,false],[false,"centistoke","cSt","CST","kinematic viscosity",0.000001,[2,-1,0,0,0,0,0],"cSt","cgs",true,null,null,1,false,false,0,0,"centistokes","LOINC","Visc","Clinical","unit for kinematic viscosity with base units of mm^2/s (square millimeter per second)","cm2/s","CM2/S","1",1,false],[false,"dekaliter per minute","daL/min","DAL/MIN","volume",0.00016666666666666666,[3,-1,0,0,0,0,0],"daL/min","iso1000",true,null,null,1,false,false,0,0,"dekalitres; dekaliters per minute; per min","LOINC","VRat","Clinical","","l",null,"1",1,false],[false,"dekaliter per minute per square meter","daL/min/m2","(DAL/MIN)/M2","volume",0.00016666666666666666,[1,-1,0,0,0,0,0],"(daL/min)/(m<sup>2</sup>)","iso1000",true,null,null,1,false,false,0,0,"daL/min/m^2; daL/minute/m2; sq. meter; dekaliters per minutes per square meter; meter squared; dekalitres; metre","LOINC","ArVRat","Clinical","The area usually is the body surface area used to normalize cardiovascular measures for patient's size","l",null,"1",1,false],[false,"decibel","dB","DB","level",1,[0,0,0,0,0,0,0],"dB","levels",true,null,"lg",0.1,true,false,0,0,"decibels","LOINC","LogRto","Clinical","unit most commonly used in acoustics as unit of sound pressure level. (also see B[SPL] or bel sound pressure level). ","1",null,null,1,false],[false,"degree per second","deg/s","DEG/S","plane angle",0.017453292519943295,[0,-1,0,1,0,0,0],"°/s","iso1000",false,null,null,1,false,false,0,0,"deg/sec; deg per sec; °/sec; twist rate; angular speed; rotational speed","LOINC","ARat","Clinical","unit of angular (rotational) speed used to express turning rate","[pi].rad/360","[PI].RAD/360","2",2,false],[false,"decigram","dg","DG","mass",0.1,[0,0,1,0,0,0,0],"dg",null,false,"M",null,1,false,false,0,0,"decigrams; dgm; 0.1 grams; 1/10 gm","LOINC","Mass","Clinical","equal to 1/10 gram",null,null,null,null,false],[false,"deciliter","dL","DL","volume",0.0001,[3,0,0,0,0,0,0],"dL","iso1000",true,null,null,1,false,false,0,0,"deciliters; decilitres; 0.1 liters; 1/10 L","LOINC","Vol","Clinical","equal to 1/10 liter","l",null,"1",1,false],[false,"decimeter","dm","DM","length",0.1,[1,0,0,0,0,0,0],"dm",null,false,"L",null,1,false,false,0,0,"decimeters; decimetres; 0.1 meters; 1/10 m; 10 cm; centimeters","LOINC","Len","Clinical","equal to 1/10 meter or 10 centimeters",null,null,null,null,false],[false,"square decimeter per square second","dm2/s2","DM2/S2","length",0.010000000000000002,[2,-2,0,0,0,0,0],"(dm<sup>2</sup>)/(s<sup>2</sup>)",null,false,"L",null,1,false,false,0,0,"dm2 per s2; dm^2/s^2; decimeters squared per second squared; sq dm; sq sec","LOINC","EngMass (massic energy)","Clinical","units for energy per unit mass or Joules per kilogram (J/kg = kg.m2/s2/kg = m2/s2) ",null,null,null,null,false],[false,"dyne second per centimeter per square meter","dyn.s/(cm.m2)","(DYN.S)/(CM.M2)","force",1,[-2,-1,1,0,0,0,0],"(dyn.s)/(cm.(m<sup>2</sup>))","cgs",true,null,null,1,false,false,0,0,"(dyn*s)/(cm*m2); (dyn*s)/(cm*m^2); dyn s per cm per m2; m^2; dyne seconds per centimeters per square meter; centimetres; sq. meter; squared","LOINC","","Clinical","","g.cm/s2","G.CM/S2","1",1,false],[false,"dyne second per centimeter","dyn.s/cm","(DYN.S)/CM","force",1,[0,-1,1,0,0,0,0],"(dyn.s)/cm","cgs",true,null,null,1,false,false,0,0,"(dyn*s)/cm; dyn sec per cm; seconds; centimetre; dyne seconds","LOINC","","Clinical","","g.cm/s2","G.CM/S2","1",1,false],[false,"equivalent per liter","eq/L","EQ/L","amount of substance",6.0221366999999994e+26,[-3,0,0,0,0,0,0],"eq/L","chemical",true,null,null,1,false,false,0,1,"eq/liter; eq/litre; eqs; equivalents per liter; litre","LOINC","SCnc","Clinical","equivalence equals moles per valence","mol","MOL","1",1,false],[false,"equivalent per milliliter","eq/mL","EQ/ML","amount of substance",6.0221367e+29,[-3,0,0,0,0,0,0],"eq/mL","chemical",true,null,null,1,false,false,0,1,"equivalent/milliliter; equivalents per milliliter; eq per mL; millilitre","LOINC","SCnc","Clinical","equivalence equals moles per valence","mol","MOL","1",1,false],[false,"equivalent per millimole","eq/mmol","EQ/MMOL","amount of substance",1000,[0,0,0,0,0,0,0],"eq/mmol","chemical",true,null,null,1,false,false,-1,1,"equivalent/millimole; equivalents per millimole; eq per mmol","LOINC","SRto","Clinical","equivalence equals moles per valence","mol","MOL","1",1,false],[false,"equivalent per micromole","eq/umol","EQ/UMOL","amount of substance",1000000,[0,0,0,0,0,0,0],"eq/μmol","chemical",true,null,null,1,false,false,-1,1,"equivalent/micromole; equivalents per micromole; eq per umol","LOINC","SRto","Clinical","equivalence equals moles per valence","mol","MOL","1",1,false],[false,"femtogram","fg","FG","mass",1e-15,[0,0,1,0,0,0,0],"fg",null,false,"M",null,1,false,false,0,0,"fg; fgm; femtograms; weight","LOINC","Mass","Clinical","equal to 10^-15 grams",null,null,null,null,false],[false,"femtoliter","fL","FL","volume",1e-18,[3,0,0,0,0,0,0],"fL","iso1000",true,null,null,1,false,false,0,0,"femtolitres; femtoliters","LOINC","Vol; EntVol","Clinical","equal to 10^-15 liters","l",null,"1",1,false],[false,"femtometer","fm","FM","length",1e-15,[1,0,0,0,0,0,0],"fm",null,false,"L",null,1,false,false,0,0,"femtometres; femtometers","LOINC","Len","Clinical","equal to 10^-15 meters",null,null,null,null,false],[false,"femtomole","fmol","FMOL","amount of substance",602213670,[0,0,0,0,0,0,0],"fmol","si",true,null,null,1,false,false,1,0,"femtomoles","LOINC","EntSub","Clinical","equal to 10^-15 moles","10*23","10*23","6.0221367",6.0221367,false],[false,"femtomole per gram","fmol/g","FMOL/G","amount of substance",602213670,[0,0,-1,0,0,0,0],"fmol/g","si",true,null,null,1,false,false,1,0,"femtomoles; fmol/gm; fmol per gm","LOINC","SCnt","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"femtomole per liter","fmol/L","FMOL/L","amount of substance",602213670000,[-3,0,0,0,0,0,0],"fmol/L","si",true,null,null,1,false,false,1,0,"femtomoles; fmol per liter; litre","LOINC","SCnc","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"femtomole per milligram","fmol/mg","FMOL/MG","amount of substance",602213670000,[0,0,-1,0,0,0,0],"fmol/mg","si",true,null,null,1,false,false,1,0,"fmol per mg; femtomoles","LOINC","SCnt","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"femtomole per milliliter","fmol/mL","FMOL/ML","amount of substance",602213670000000,[-3,0,0,0,0,0,0],"fmol/mL","si",true,null,null,1,false,false,1,0,"femtomoles; millilitre; fmol per mL; fmol per milliliter","LOINC","SCnc","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"gram meter","g.m","G.M","mass",1,[1,0,1,0,0,0,0],"g.m",null,false,"M",null,1,false,false,0,0,"g*m; gxm; meters; metres","LOINC","Enrg","Clinical","Unit for measuring stroke work (heart work)",null,null,null,null,false],[false,"gram per 100 gram","g/(100.g)","G/(100.G)","mass",0.01,[0,0,0,0,0,0,0],"g/g",null,false,"M",null,1,false,false,0,0,"g/100 gm; 100gm; grams per 100 grams; gm per 100 gm","LOINC","MCnt","Clinical","",null,null,null,null,false],[false,"gram per 12 hour","g/(12.h)","G/(12.HR)","mass",0.000023148148148148147,[0,-1,1,0,0,0,0],"g/h",null,false,"M",null,1,false,false,0,0,"gm/12hrs; 12 hrs; gm per 12 hrs; 12hrs; grams per 12 hours","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"gram per 24 hour","g/(24.h)","G/(24.HR)","mass",0.000011574074074074073,[0,-1,1,0,0,0,0],"g/h",null,false,"M",null,1,false,false,0,0,"gm/24hrs; gm/24 hrs; gm per 24 hrs; 24hrs; grams per 24 hours; gm/dy; gm per dy; grams per day","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"gram per 3 days","g/(3.d)","G/(3.D)","mass",0.000003858024691358025,[0,-1,1,0,0,0,0],"g/d",null,false,"M",null,1,false,false,0,0,"gm/3dy; gm/3 dy; gm per 3 days; grams","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"gram per 4 hour","g/(4.h)","G/(4.HR)","mass",0.00006944444444444444,[0,-1,1,0,0,0,0],"g/h",null,false,"M",null,1,false,false,0,0,"gm/4hrs; gm/4 hrs; gm per 4 hrs; 4hrs; grams per 4 hours","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"gram per 48 hour","g/(48.h)","G/(48.HR)","mass",0.000005787037037037037,[0,-1,1,0,0,0,0],"g/h",null,false,"M",null,1,false,false,0,0,"gm/48hrs; gm/48 hrs; gm per 48 hrs; 48hrs; grams per 48 hours","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"gram per 5 hour","g/(5.h)","G/(5.HR)","mass",0.00005555555555555556,[0,-1,1,0,0,0,0],"g/h",null,false,"M",null,1,false,false,0,0,"gm/5hrs; gm/5 hrs; gm per 5 hrs; 5hrs; grams per 5 hours","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"gram per 6 hour","g/(6.h)","G/(6.HR)","mass",0.000046296296296296294,[0,-1,1,0,0,0,0],"g/h",null,false,"M",null,1,false,false,0,0,"gm/6hrs; gm/6 hrs; gm per 6 hrs; 6hrs; grams per 6 hours","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"gram per 72 hour","g/(72.h)","G/(72.HR)","mass",0.000003858024691358025,[0,-1,1,0,0,0,0],"g/h",null,false,"M",null,1,false,false,0,0,"gm/72hrs; gm/72 hrs; gm per 72 hrs; 72hrs; grams per 72 hours","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"gram per cubic centimeter","g/cm3","G/CM3","mass",999999.9999999999,[-3,0,1,0,0,0,0],"g/(cm<sup>3</sup>)",null,false,"M",null,1,false,false,0,0,"g/cm^3; gm per cm3; g per cm^3; grams per centimeter cubed; cu. cm; centimetre; g/mL; gram per milliliter; millilitre","LOINC","MCnc","Clinical","g/cm3 = g/mL",null,null,null,null,false],[false,"gram per day","g/d","G/D","mass",0.000011574074074074073,[0,-1,1,0,0,0,0],"g/d",null,false,"M",null,1,false,false,0,0,"gm/dy; gm per dy; grams per day; gm/24hrs; gm/24 hrs; gm per 24 hrs; 24hrs; grams per 24 hours; serving","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"gram per deciliter","g/dL","G/DL","mass",10000,[-3,0,1,0,0,0,0],"g/dL",null,false,"M",null,1,false,false,0,0,"gm/dL; gm per dL; grams per deciliter; decilitre","LOINC","MCnc","Clinical","",null,null,null,null,false],[false,"gram per gram","g/g","G/G","mass",1,[0,0,0,0,0,0,0],"g/g",null,false,"M",null,1,false,false,0,0,"gm; grams","LOINC","MRto ","Clinical","",null,null,null,null,false],[false,"gram per hour","g/h","G/HR","mass",0.0002777777777777778,[0,-1,1,0,0,0,0],"g/h",null,false,"M",null,1,false,false,0,0,"gm/hr; gm per hr; grams; intake; output","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"gram per hour per square meter","g/h/m2","(G/HR)/M2","mass",0.0002777777777777778,[-2,-1,1,0,0,0,0],"(g/h)/(m<sup>2</sup>)",null,false,"M",null,1,false,false,0,0,"gm/hr/m2; gm/h/m2; /m^2; sq. m; g per hr per m2; grams per hours per square meter; meter squared; metre","LOINC","ArMRat","Clinical","",null,null,null,null,false],[false,"gram per kilogram","g/kg ","G/KG","mass",0.001,[0,0,0,0,0,0,0],"g/kg",null,false,"M",null,1,false,false,0,0,"g per kg; gram per kilograms","LOINC","MCnt","Clinical","",null,null,null,null,false],[false,"gram per kilogram per 8 hour ","g/kg/(8.h)","(G/KG)/(8.HR)","mass",3.472222222222222e-8,[0,-1,0,0,0,0,0],"(g/kg)/h",null,false,"M",null,1,false,false,0,0,"g/(8.kg.h); gm/kg/8hrs; 8 hrs; g per kg per 8 hrs; 8hrs; grams per kilograms per 8 hours; shift","LOINC","MCntRat; RelMRat","Clinical","unit often used to describe mass in grams of protein consumed in a 8 hours, divided by the subject's body weight in kilograms. Also used to measure mass dose rate per body mass",null,null,null,null,false],[false,"gram per kilogram per day","g/kg/d","(G/KG)/D","mass",1.1574074074074074e-8,[0,-1,0,0,0,0,0],"(g/kg)/d",null,false,"M",null,1,false,false,0,0,"g/(kg.d); gm/kg/dy; gm per kg per dy; grams per kilograms per day","LOINC","RelMRat","Clinical","unit often used to describe mass in grams of protein consumed in a day, divided by the subject's body weight in kilograms. Also used to measure mass dose rate per body mass",null,null,null,null,false],[false,"gram per kilogram per hour","g/kg/h","(G/KG)/HR","mass",2.7777777777777776e-7,[0,-1,0,0,0,0,0],"(g/kg)/h",null,false,"M",null,1,false,false,0,0,"g/(kg.h); g/kg/hr; g per kg per hrs; grams per kilograms per hour","LOINC","MCntRat; RelMRat","Clinical","unit used to measure mass dose rate per body mass",null,null,null,null,false],[false,"gram per kilogram per minute","g/kg/min","(G/KG)/MIN","mass",0.000016666666666666667,[0,-1,0,0,0,0,0],"(g/kg)/min",null,false,"M",null,1,false,false,0,0,"g/(kg.min); g/kg/min; g per kg per min; grams per kilograms per minute","LOINC","MCntRat; RelMRat","Clinical","unit used to measure mass dose rate per body mass",null,null,null,null,false],[false,"gram per liter","g/L","G/L","mass",1000,[-3,0,1,0,0,0,0],"g/L",null,false,"M",null,1,false,false,0,0,"gm per liter; g/liter; grams per liter; litre","LOINC","MCnc","Clinical","",null,null,null,null,false],[false,"gram per square meter","g/m2","G/M2","mass",1,[-2,0,1,0,0,0,0],"g/(m<sup>2</sup>)",null,false,"M",null,1,false,false,0,0,"g/m^2; gram/square meter; g/sq m; g per m2; g per m^2; grams per square meter; meters squared; metre","LOINC","ArMass","Clinical","Tests measure myocardial mass (heart ventricle system) per body surface area; unit used to measure mass dose per body surface area",null,null,null,null,false],[false,"gram per milligram","g/mg","G/MG","mass",1000,[0,0,0,0,0,0,0],"g/mg",null,false,"M",null,1,false,false,0,0,"g per mg; grams per milligram","LOINC","MCnt; MRto","Clinical","",null,null,null,null,false],[false,"gram per minute","g/min","G/MIN","mass",0.016666666666666666,[0,-1,1,0,0,0,0],"g/min",null,false,"M",null,1,false,false,0,0,"g per min; grams per minute; gram/minute","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"gram per milliliter","g/mL","G/ML","mass",1000000,[-3,0,1,0,0,0,0],"g/mL",null,false,"M",null,1,false,false,0,0,"g per mL; grams per milliliter; millilitre","LOINC","MCnc","Clinical","",null,null,null,null,false],[false,"gram per millimole","g/mmol","G/MMOL","mass",1.6605401866749388e-21,[0,0,1,0,0,0,0],"g/mmol",null,false,"M",null,1,false,false,-1,0,"grams per millimole; g per mmol","LOINC","Ratio","Clinical","",null,null,null,null,false],[false,"joule per liter","J/L","J/L","energy",1000000,[-1,-2,1,0,0,0,0],"J/L","si",true,null,null,1,false,false,0,0,"joules per liter; litre; J per L","LOINC","EngCnc","Clinical","","N.m","N.M","1",1,false],[false,"degree Kelvin per Watt","K/W","K/W","temperature",0.001,[-2,3,-1,0,1,0,0],"K/W",null,false,"C",null,1,false,false,0,0,"degree Kelvin/Watt; K per W; thermal ohm; thermal resistance; degrees","LOINC","TempEngRat","Clinical","unit for absolute thermal resistance equal to the reciprocal of thermal conductance. Unit used for tests to measure work of breathing",null,null,null,null,false],[false,"kilo international unit per liter","k[IU]/L","K[IU]/L","arbitrary",1000000,[-3,0,0,0,0,0,0],"(ki.U.)/L","chemical",true,null,null,1,false,true,0,0,"kIU/L; kIU per L; kIU per liter; kilo international units; litre; allergens; allergy units","LOINC","ACnc","Clinical","IgE has an WHO reference standard so IgE allergen testing can be reported as k[IU]/L","[iU]","[IU]","1",1,false],[false,"kilo international unit per milliliter","k[IU]/mL","K[IU]/ML","arbitrary",1000000000,[-3,0,0,0,0,0,0],"(ki.U.)/mL","chemical",true,null,null,1,false,true,0,0,"kIU/mL; kIU per mL; kIU per milliliter; kilo international units; millilitre; allergens; allergy units","LOINC","ACnc","Clinical","IgE has an WHO reference standard so IgE allergen testing can be reported as k[IU]/mL","[iU]","[IU]","1",1,false],[false,"katal per kilogram","kat/kg","KAT/KG","catalytic activity",602213670000000000000,[0,-1,-1,0,0,0,0],"kat/kg","chemical",true,null,null,1,false,false,1,0,"kat per kg; katals per kilogram; mol/s/kg; moles per seconds per kilogram","LOINC","CCnt","Clinical","kat is a unit of catalytic activity with base units = mol/s. Rarely used because its units are too large to practically express catalytic activity. See enzyme unit [U] which is the standard unit for catalytic activity.","mol/s","MOL/S","1",1,false],[false,"katal per liter","kat/L","KAT/L","catalytic activity",6.0221366999999994e+26,[-3,-1,0,0,0,0,0],"kat/L","chemical",true,null,null,1,false,false,1,0,"kat per L; katals per liter; litre; mol/s/L; moles per seconds per liter","LOINC","CCnc","Clinical","kat is a unit of catalytic activity with base units = mol/s. Rarely used because its units are too large to practically express catalytic activity. See enzyme unit [U] which is the standard unit for catalytic activity.","mol/s","MOL/S","1",1,false],[false,"kilocalorie","kcal","KCAL","energy",4184000,[2,-2,1,0,0,0,0],"kcal","heat",true,null,null,1,false,false,0,0,"kilogram calories; large calories; food calories; kcals","LOINC","EngRat","Clinical","It is equal to 1000 calories (equal to 4.184 kJ). But in practical usage, kcal refers to food calories which excludes caloric content in fiber and other constitutes that is not digestible by humans. Also see nutrition label Calories ([Cal])","cal_th","CAL_TH","1",1,false],[false,"kilocalorie per 24 hour","kcal/(24.h)","KCAL/(24.HR)","energy",48.425925925925924,[2,-3,1,0,0,0,0],"kcal/h","heat",true,null,null,1,false,false,0,0,"kcal/24hrs; kcal/24 hrs; kcal per 24hrs; kilocalories per 24 hours; kilojoules; kJ/24hr; kJ/(24.h); kJ/dy; kilojoules per days; intake; calories burned; metabolic rate; food calories","","EngRat","Clinical","","cal_th","CAL_TH","1",1,false],[false,"kilocalorie per ounce","kcal/[oz_av]","KCAL/[OZ_AV]","energy",147586.25679704445,[2,-2,0,0,0,0,0],"kcal/oz","heat",true,null,null,1,false,false,0,0,"kcal/oz; kcal per ozs; large calories per ounces; food calories; servings; international","LOINC","EngCnt","Clinical","used in nutrition to represent calorie of food","cal_th","CAL_TH","1",1,false],[false,"kilocalorie per day","kcal/d","KCAL/D","energy",48.425925925925924,[2,-3,1,0,0,0,0],"kcal/d","heat",true,null,null,1,false,false,0,0,"kcal/dy; kcal per day; kilocalories per days; kilojoules; kJ/dy; kilojoules per days; intake; calories burned; metabolic rate; food calories","LOINC","EngRat","Clinical","unit in nutrition for food intake (measured in calories) in a day","cal_th","CAL_TH","1",1,false],[false,"kilocalorie per hour","kcal/h","KCAL/HR","energy",1162.2222222222222,[2,-3,1,0,0,0,0],"kcal/h","heat",true,null,null,1,false,false,0,0,"kcal/hrs; kcals per hr; intake; kilocalories per hours; kilojoules","LOINC","EngRat","Clinical","used in nutrition to represent caloric requirement or consumption","cal_th","CAL_TH","1",1,false],[false,"kilocalorie per kilogram per 24 hour","kcal/kg/(24.h)","(KCAL/KG)/(24.HR)","energy",0.04842592592592593,[2,-3,0,0,0,0,0],"(kcal/kg)/h","heat",true,null,null,1,false,false,0,0,"kcal/kg/24hrs; 24 hrs; kcal per kg per 24hrs; kilocalories per kilograms per 24 hours; kilojoules","LOINC","EngCntRat","Clinical","used in nutrition to represent caloric requirement per day based on subject's body weight in kilograms","cal_th","CAL_TH","1",1,false],[false,"kilogram","kg","KG","mass",1000,[0,0,1,0,0,0,0],"kg",null,false,"M",null,1,false,false,0,0,"kilograms; kgs","LOINC","Mass","Clinical","",null,null,null,null,false],[false,"kilogram meter per second","kg.m/s","(KG.M)/S","mass",1000,[1,-1,1,0,0,0,0],"(kg.m)/s",null,false,"M",null,1,false,false,0,0,"kg*m/s; kg.m per sec; kg*m per sec; p; momentum","LOINC","","Clinical","unit for momentum =  mass times velocity",null,null,null,null,false],[false,"kilogram per second per square meter","kg/(s.m2)","KG/(S.M2)","mass",1000,[-2,-1,1,0,0,0,0],"kg/(s.(m<sup>2</sup>))",null,false,"M",null,1,false,false,0,0,"kg/(s*m2); kg/(s*m^2); kg per s per m2; per sec; per m^2; kilograms per seconds per square meter; meter squared; metre","LOINC","ArMRat","Clinical","",null,null,null,null,false],[false,"kilogram per hour","kg/h","KG/HR","mass",0.2777777777777778,[0,-1,1,0,0,0,0],"kg/h",null,false,"M",null,1,false,false,0,0,"kg/hr; kg per hr; kilograms per hour","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"kilogram per liter","kg/L","KG/L","mass",1000000,[-3,0,1,0,0,0,0],"kg/L",null,false,"M",null,1,false,false,0,0,"kg per liter; litre; kilograms","LOINC","MCnc","Clinical","",null,null,null,null,false],[false,"kilogram per square meter","kg/m2","KG/M2","mass",1000,[-2,0,1,0,0,0,0],"kg/(m<sup>2</sup>)",null,false,"M",null,1,false,false,0,0,"kg/m^2; kg/sq. m; kg per m2; per m^2; per sq. m; kilograms; meter squared; metre; BMI","LOINC","Ratio","Clinical","units for body mass index (BMI)",null,null,null,null,false],[false,"kilogram per cubic meter","kg/m3","KG/M3","mass",1000,[-3,0,1,0,0,0,0],"kg/(m<sup>3</sup>)",null,false,"M",null,1,false,false,0,0,"kg/m^3; kg/cu. m; kg per m3; per m^3; per cu. m; kilograms; meters cubed; metre","LOINC","MCnc","Clinical","",null,null,null,null,false],[false,"kilogram per minute","kg/min","KG/MIN","mass",16.666666666666668,[0,-1,1,0,0,0,0],"kg/min",null,false,"M",null,1,false,false,0,0,"kilogram/minute; kg per min; kilograms per minute","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"kilogram per mole","kg/mol","KG/MOL","mass",1.6605401866749388e-21,[0,0,1,0,0,0,0],"kg/mol",null,false,"M",null,1,false,false,-1,0,"kilogram/mole; kg per mol; kilograms per mole","LOINC","SCnt","Clinical","",null,null,null,null,false],[false,"kilogram per second","kg/s","KG/S","mass",1000,[0,-1,1,0,0,0,0],"kg/s",null,false,"M",null,1,false,false,0,0,"kg/sec; kilogram/second; kg per sec; kilograms; second","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"kiloliter","kL","KL","volume",1,[3,0,0,0,0,0,0],"kL","iso1000",true,null,null,1,false,false,0,0,"kiloliters; kilolitres; m3; m^3; meters cubed; metre","LOINC","Vol","Clinical","","l",null,"1",1,false],[false,"kilometer","km","KM","length",1000,[1,0,0,0,0,0,0],"km",null,false,"L",null,1,false,false,0,0,"kilometers; kilometres; distance","LOINC","Len","Clinical","",null,null,null,null,false],[false,"kilopascal","kPa","KPAL","pressure",1000000,[-1,-2,1,0,0,0,0],"kPa","si",true,null,null,1,false,false,0,0,"kilopascals; pressure","LOINC","Pres; PPresDiff","Clinical","","N/m2","N/M2","1",1,false],[false,"kilosecond","ks","KS","time",1000,[0,1,0,0,0,0,0],"ks",null,false,"T",null,1,false,false,0,0,"kiloseconds; ksec","LOINC","Time","Clinical","",null,null,null,null,false],[false,"kilo enzyme unit","kU","KU","catalytic activity",10036894500000000000,[0,-1,0,0,0,0,0],"kU","chemical",true,null,null,1,false,false,1,0,"units; mmol/min; millimoles per minute","LOINC","CAct","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min); 1 kU = 1 mmol/min","umol/min","UMOL/MIN","1",1,false],[false,"kilo enzyme unit per gram","kU/g","KU/G","catalytic activity",10036894500000000000,[0,-1,-1,0,0,0,0],"kU/g","chemical",true,null,null,1,false,false,1,0,"units per grams; kU per gm","LOINC","CCnt","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min); 1 kU = 1 mmol/min","umol/min","UMOL/MIN","1",1,false],[false,"kilo enzyme unit per liter","kU/L","KU/L","catalytic activity",1.00368945e+22,[-3,-1,0,0,0,0,0],"kU/L","chemical",true,null,null,1,false,false,1,0,"units per liter; litre; enzymatic activity; enzyme activity per volume; activities","LOINC","ACnc; CCnc","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min); 1 kU = 1 mmol/min","umol/min","UMOL/MIN","1",1,false],[false,"kilo enzyme unit per milliliter","kU/mL","KU/ML","catalytic activity",1.00368945e+25,[-3,-1,0,0,0,0,0],"kU/mL","chemical",true,null,null,1,false,false,1,0,"kU per mL; units per milliliter; millilitre; enzymatic activity per volume; enzyme activities","LOINC","CCnc","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min); 1 kU = 1 mmol/min","umol/min","UMOL/MIN","1",1,false],[false,"Liters per 24 hour","L/(24.h)","L/(24.HR)","volume",1.1574074074074074e-8,[3,-1,0,0,0,0,0],"L/h","iso1000",true,null,null,1,false,false,0,0,"L/24hrs; L/24 hrs; L per 24hrs; liters per 24 hours; day; dy; litres; volume flow rate","LOINC","VRat","Clinical","","l",null,"1",1,false],[false,"Liters per 8 hour","L/(8.h)","L/(8.HR)","volume",3.472222222222222e-8,[3,-1,0,0,0,0,0],"L/h","iso1000",true,null,null,1,false,false,0,0,"L/8hrs; L/8 hrs; L per 8hrs; liters per 8 hours; litres; volume flow rate; shift","LOINC","VRat","Clinical","","l",null,"1",1,false],[false,"Liters per minute per square meter","L/(min.m2) ","L/(MIN.M2)","volume",0.000016666666666666667,[1,-1,0,0,0,0,0],"L/(min.(m<sup>2</sup>))","iso1000",true,null,null,1,false,false,0,0,"L/(min.m2); L/min/m^2; L/min/sq. meter; L per min per m2; m^2; liters per minutes per square meter; meter squared; litres; metre ","LOINC","ArVRat","Clinical","unit for tests that measure cardiac output per body surface area (cardiac index)","l",null,"1",1,false],[false,"Liters per day","L/d","L/D","volume",1.1574074074074074e-8,[3,-1,0,0,0,0,0],"L/d","iso1000",true,null,null,1,false,false,0,0,"L/dy; L per day; 24hrs; 24 hrs; 24 hours; liters; litres","LOINC","VRat","Clinical","","l",null,"1",1,false],[false,"Liters per hour","L/h","L/HR","volume",2.7777777777777776e-7,[3,-1,0,0,0,0,0],"L/h","iso1000",true,null,null,1,false,false,0,0,"L/hr; L per hr; litres","LOINC","VRat","Clinical","","l",null,"1",1,false],[false,"Liters per kilogram","L/kg","L/KG","volume",0.000001,[3,0,-1,0,0,0,0],"L/kg","iso1000",true,null,null,1,false,false,0,0,"L per kg; litre","LOINC","VCnt","Clinical","","l",null,"1",1,false],[false,"Liters per liter","L/L","L/L","volume",1,[0,0,0,0,0,0,0],"L/L","iso1000",true,null,null,1,false,false,0,0,"L per L; liter/liter; litre","LOINC","VFr","Clinical","","l",null,"1",1,false],[false,"Liters per minute","L/min","L/MIN","volume",0.000016666666666666667,[3,-1,0,0,0,0,0],"L/min","iso1000",true,null,null,1,false,false,0,0,"liters per minute; litre","LOINC","VRat","Clinical","","l",null,"1",1,false],[false,"Liters per minute per square meter","L/min/m2","(L/MIN)/M2","volume",0.000016666666666666667,[1,-1,0,0,0,0,0],"(L/min)/(m<sup>2</sup>)","iso1000",true,null,null,1,false,false,0,0,"L/(min.m2); L/min/m^2; L/min/sq. meter; L per min per m2; m^2; liters per minutes per square meter; meter squared; litres; metre ","","ArVRat","Clinical","unit for tests that measure cardiac output per body surface area (cardiac index)","l",null,"1",1,false],[false,"Liters per second","L/s","L/S","volume",0.001,[3,-1,0,0,0,0,0],"L/s","iso1000",true,null,null,1,false,false,0,0,"L per sec; litres","LOINC","VRat","Clinical","unit used often to measure gas flow and peak expiratory flow","l",null,"1",1,false],[false,"Liters per second per square second","L/s/s2","(L/S)/S2","volume",0.001,[3,-3,0,0,0,0,0],"(L/s)/(s<sup>2</sup>)","iso1000",true,null,null,1,false,false,0,0,"L/s/s^2; L/sec/sec2; L/sec/sec^2; L/sec/sq. sec; L per s per s2; L per sec per sec2; s^2; sec^2; liters per seconds per square second; second squared; litres ","LOINC","ArVRat","Clinical","unit for tests that measure cardiac output/body surface area","l",null,"1",1,false],[false,"lumen square meter","lm.m2","LM.M2","luminous flux",1,[2,0,0,2,0,0,1],"lm.(m<sup>2</sup>)","si",true,null,null,1,false,false,0,0,"lm*m2; lm*m^2; lumen meters squared; lumen sq. meters; metres","LOINC","","Clinical","","cd.sr","CD.SR","1",1,false],[false,"meter per second","m/s","M/S","length",1,[1,-1,0,0,0,0,0],"m/s",null,false,"L",null,1,false,false,0,0,"meter/second; m per sec; meters per second; metres; velocity; speed","LOINC","Vel","Clinical","unit of velocity",null,null,null,null,false],[false,"meter per square second","m/s2","M/S2","length",1,[1,-2,0,0,0,0,0],"m/(s<sup>2</sup>)",null,false,"L",null,1,false,false,0,0,"m/s^2; m/sq. sec; m per s2; per s^2; meters per square second; second squared; sq second; metres; acceleration","LOINC","Accel","Clinical","unit of acceleration",null,null,null,null,false],[false,"milli international unit per liter","m[IU]/L","M[IU]/L","arbitrary",1,[-3,0,0,0,0,0,0],"(mi.U.)/L","chemical",true,null,null,1,false,true,0,0,"mIU/L; m IU/L; mIU per liter; units; litre","LOINC","ACnc","Clinical","International units (IU) are analyte and reference specimen  specific arbitrary units (held at WHO)","[iU]","[IU]","1",1,false],[false,"milli  international unit per milliliter","m[IU]/mL","M[IU]/ML","arbitrary",1000.0000000000001,[-3,0,0,0,0,0,0],"(mi.U.)/mL","chemical",true,null,null,1,false,true,0,0,"mIU/mL; m IU/mL; mIU per mL; milli international units per milliliter; millilitre","LOINC","ACnc","Clinical","International units (IU) are analyte and reference specimen  specific arbitrary units (held at WHO)","[iU]","[IU]","1",1,false],[false,"square meter","m2","M2","length",1,[2,0,0,0,0,0,0],"m<sup>2</sup>",null,false,"L",null,1,false,false,0,0,"m^2; sq m; square meters; meters squared; metres","LOINC","Area","Clinical","unit often used to represent body surface area",null,null,null,null,false],[false,"square meter per second","m2/s","M2/S","length",1,[2,-1,0,0,0,0,0],"(m<sup>2</sup>)/s",null,false,"L",null,1,false,false,0,0,"m^2/sec; m2 per sec; m^2 per sec; sq m/sec; meters squared/seconds; sq m per sec; meters squared; metres","LOINC","ArRat","Clinical","",null,null,null,null,false],[false,"cubic meter per second","m3/s","M3/S","length",1,[3,-1,0,0,0,0,0],"(m<sup>3</sup>)/s",null,false,"L",null,1,false,false,0,0,"m^3/sec; m3 per sec; m^3 per sec; cu m/sec; cubic meters per seconds; meters cubed; metres","LOINC","VRat","Clinical","",null,null,null,null,false],[false,"milliampere","mA","MA","electric current",0.001,[0,-1,0,0,0,1,0],"mA","si",true,null,null,1,false,false,0,0,"mamp; milliamperes","LOINC","ElpotRat","Clinical","unit of electric current","C/s","C/S","1",1,false],[false,"millibar","mbar","MBAR","pressure",100000,[-1,-2,1,0,0,0,0],"mbar","iso1000",true,null,null,1,false,false,0,0,"millibars","LOINC","Pres","Clinical","unit of pressure","Pa","PAL","1e5",100000,false],[false,"millibar second per liter","mbar.s/L","(MBAR.S)/L","pressure",100000000,[-4,-1,1,0,0,0,0],"(mbar.s)/L","iso1000",true,null,null,1,false,false,0,0,"mbar*s/L; mbar.s per L; mbar*s per L; millibar seconds per liter; millibar second per litre","LOINC","","Clinical","unit to measure expiratory resistance","Pa","PAL","1e5",100000,false],[false,"millibar per liter per second","mbar/L/s","(MBAR/L)/S","pressure",100000000,[-4,-3,1,0,0,0,0],"(mbar/L)/s","iso1000",true,null,null,1,false,false,0,0,"mbar/(L.s); mbar/L/sec; mbar/liter/second; mbar per L per sec; mbar per liter per second; millibars per liters per seconds; litres","LOINC","PresCncRat","Clinical","unit to measure expiratory resistance","Pa","PAL","1e5",100000,false],[false,"milliequivalent","meq","MEQ","amount of substance",602213670000000000000,[0,0,0,0,0,0,0],"meq","chemical",true,null,null,1,false,false,0,1,"milliequivalents; meqs","LOINC","Sub","Clinical","equivalence equals moles per valence","mol","MOL","1",1,false],[false,"milliequivalent per 2 hour","meq/(2.h)","MEQ/(2.HR)","amount of substance",83640787500000000,[0,-1,0,0,0,0,0],"meq/h","chemical",true,null,null,1,false,false,0,1,"meq/2hrs; meq/2 hrs; meq per 2 hrs; milliequivalents per 2 hours","LOINC","SRat","Clinical","equivalence equals moles per valence","mol","MOL","1",1,false],[false,"milliequivalent per 24 hour","meq/(24.h)","MEQ/(24.HR)","amount of substance",6970065625000000,[0,-1,0,0,0,0,0],"meq/h","chemical",true,null,null,1,false,false,0,1,"meq/24hrs; meq/24 hrs; meq per 24 hrs; milliequivalents per 24 hours","LOINC","SRat","Clinical","equivalence equals moles per valence","mol","MOL","1",1,false],[false,"milliequivalent per 8 hour","meq/(8.h)","MEQ/(8.HR)","amount of substance",20910196875000000,[0,-1,0,0,0,0,0],"meq/h","chemical",true,null,null,1,false,false,0,1,"meq/8hrs; meq/8 hrs; meq per 8 hrs; milliequivalents per 8 hours; shift","LOINC","SRat","Clinical","equivalence equals moles per valence","mol","MOL","1",1,false],[false,"milliequivalent per day","meq/d","MEQ/D","amount of substance",6970065625000000,[0,-1,0,0,0,0,0],"meq/d","chemical",true,null,null,1,false,false,0,1,"meq/dy; meq per day; milliquivalents per days; meq/24hrs; meq/24 hrs; meq per 24 hrs; milliequivalents per 24 hours","LOINC","SRat","Clinical","equivalence equals moles per valence","mol","MOL","1",1,false],[false,"milliequivalent per deciliter","meq/dL","MEQ/DL","amount of substance",6.022136699999999e+24,[-3,0,0,0,0,0,0],"meq/dL","chemical",true,null,null,1,false,false,0,1,"meq per dL; milliequivalents per deciliter; decilitre","LOINC","SCnc","Clinical","equivalence equals moles per valence","mol","MOL","1",1,false],[false,"milliequivalent per gram","meq/g","MEQ/G","amount of substance",602213670000000000000,[0,0,-1,0,0,0,0],"meq/g","chemical",true,null,null,1,false,false,0,1,"mgq/gm; meq per gm; milliequivalents per gram","LOINC","MCnt","Clinical","equivalence equals moles per valence","mol","MOL","1",1,false],[false,"milliequivalent per hour","meq/h","MEQ/HR","amount of substance",167281575000000000,[0,-1,0,0,0,0,0],"meq/h","chemical",true,null,null,1,false,false,0,1,"meq/hrs; meq per hrs; milliequivalents per hour","LOINC","SRat","Clinical","equivalence equals moles per valence","mol","MOL","1",1,false],[false,"milliequivalent per kilogram","meq/kg","MEQ/KG","amount of substance",602213670000000000,[0,0,-1,0,0,0,0],"meq/kg","chemical",true,null,null,1,false,false,0,1,"meq per kg; milliequivalents per kilogram","LOINC","SCnt","Clinical","equivalence equals moles per valence; used to measure dose per patient body mass","mol","MOL","1",1,false],[false,"milliequivalent per kilogram per hour","meq/kg/h","(MEQ/KG)/HR","amount of substance",167281575000000,[0,-1,-1,0,0,0,0],"(meq/kg)/h","chemical",true,null,null,1,false,false,0,1,"meq/(kg.h); meq/kg/hr; meq per kg per hr; milliequivalents per kilograms per hour","LOINC","SCntRat","Clinical","equivalence equals moles per valence; unit used to measure dose rate per patient body mass","mol","MOL","1",1,false],[false,"milliequivalent per liter","meq/L","MEQ/L","amount of substance",6.0221367e+23,[-3,0,0,0,0,0,0],"meq/L","chemical",true,null,null,1,false,false,0,1,"milliequivalents per liter; litre; meq per l; acidity","LOINC","SCnc","Clinical","equivalence equals moles per valence","mol","MOL","1",1,false],[false,"milliequivalent per square meter","meq/m2","MEQ/M2","amount of substance",602213670000000000000,[-2,0,0,0,0,0,0],"meq/(m<sup>2</sup>)","chemical",true,null,null,1,false,false,0,1,"meq/m^2; meq/sq. m; milliequivalents per square meter; meter squared; metre","LOINC","ArSub","Clinical","equivalence equals moles per valence; note that the use of m2 in clinical units ofter refers to body surface area","mol","MOL","1",1,false],[false,"milliequivalent per minute","meq/min","MEQ/MIN","amount of substance",10036894500000000000,[0,-1,0,0,0,0,0],"meq/min","chemical",true,null,null,1,false,false,0,1,"meq per min; milliequivalents per minute","LOINC","SRat","Clinical","equivalence equals moles per valence","mol","MOL","1",1,false],[false,"milliequivalent per milliliter","meq/mL","MEQ/ML","amount of substance",6.0221367e+26,[-3,0,0,0,0,0,0],"meq/mL","chemical",true,null,null,1,false,false,0,1,"meq per mL; milliequivalents per milliliter; millilitre","LOINC","SCnc","Clinical","equivalence equals moles per valence","mol","MOL","1",1,false],[false,"milligram","mg","MG","mass",0.001,[0,0,1,0,0,0,0],"mg",null,false,"M",null,1,false,false,0,0,"milligrams","LOINC","Mass","Clinical","",null,null,null,null,false],[false,"milligram per 10 hour","mg/(10.h)","MG/(10.HR)","mass",2.7777777777777777e-8,[0,-1,1,0,0,0,0],"mg/h",null,false,"M",null,1,false,false,0,0,"mg/10hrs; mg/10 hrs; mg per 10 hrs; milligrams per 10 hours","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"milligram per 12 hour","mg/(12.h)","MG/(12.HR)","mass",2.3148148148148148e-8,[0,-1,1,0,0,0,0],"mg/h",null,false,"M",null,1,false,false,0,0,"mg/12hrs; mg/12 hrs; per 12 hrs; 12hrs; milligrams per 12 hours","LOINC","MRat","Clinical","units used for tests in urine",null,null,null,null,false],[false,"milligram per 2 hour","mg/(2.h)","MG/(2.HR)","mass",1.3888888888888888e-7,[0,-1,1,0,0,0,0],"mg/h",null,false,"M",null,1,false,false,0,0,"mg/2hrs; mg/2 hrs; mg per 2 hrs; 2hrs; milligrams per 2 hours","LOINC","MRat","Clinical","units used for tests in urine",null,null,null,null,false],[false,"milligram per 24 hour","mg/(24.h)","MG/(24.HR)","mass",1.1574074074074074e-8,[0,-1,1,0,0,0,0],"mg/h",null,false,"M",null,1,false,false,0,0,"mg/24hrs; mg/24 hrs; milligrams per 24 hours; mg/kg/dy; mg per kg per day; milligrams per kilograms per days","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"milligram per 6 hour","mg/(6.h)","MG/(6.HR)","mass",4.6296296296296295e-8,[0,-1,1,0,0,0,0],"mg/h",null,false,"M",null,1,false,false,0,0,"mg/6hrs; mg/6 hrs; mg per 6 hrs; 6hrs; milligrams per 6 hours","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"milligram per 72 hour","mg/(72.h)","MG/(72.HR)","mass",3.858024691358025e-9,[0,-1,1,0,0,0,0],"mg/h",null,false,"M",null,1,false,false,0,0,"mg/72hrs; mg/72 hrs; 72 hrs; 72hrs; milligrams per 72 hours","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"milligram per 8 hour","mg/(8.h)","MG/(8.HR)","mass",3.472222222222222e-8,[0,-1,1,0,0,0,0],"mg/h",null,false,"M",null,1,false,false,0,0,"mg/8hrs; mg/8 hrs; milligrams per 8 hours; shift","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"milligram per day","mg/d","MG/D","mass",1.1574074074074074e-8,[0,-1,1,0,0,0,0],"mg/d",null,false,"M",null,1,false,false,0,0,"mg/24hrs; mg/24 hrs; milligrams per 24 hours; mg/dy; mg per day; milligrams","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"milligram per deciliter","mg/dL","MG/DL","mass",10,[-3,0,1,0,0,0,0],"mg/dL",null,false,"M",null,1,false,false,0,0,"mg per dL; milligrams per deciliter; decilitre","LOINC","MCnc","Clinical","",null,null,null,null,false],[false,"milligram per gram","mg/g","MG/G","mass",0.001,[0,0,0,0,0,0,0],"mg/g",null,false,"M",null,1,false,false,0,0,"mg per gm; milligrams per gram","LOINC","MCnt; MRto","Clinical","",null,null,null,null,false],[false,"milligram per hour","mg/h","MG/HR","mass",2.7777777777777776e-7,[0,-1,1,0,0,0,0],"mg/h",null,false,"M",null,1,false,false,0,0,"mg/hr; mg per hr; milligrams","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"milligram per kilogram","mg/kg","MG/KG","mass",0.000001,[0,0,0,0,0,0,0],"mg/kg",null,false,"M",null,1,false,false,0,0,"mg per kg; milligrams per kilograms","LOINC","MCnt","Clinical","",null,null,null,null,false],[false,"milligram per kilogram per 8 hour","mg/kg/(8.h)","(MG/KG)/(8.HR)","mass",3.472222222222222e-11,[0,-1,0,0,0,0,0],"(mg/kg)/h",null,false,"M",null,1,false,false,0,0,"mg/(8.h.kg); mg/kg/8hrs; mg/kg/8 hrs; mg per kg per 8hrs; 8 hrs; milligrams per kilograms per 8 hours; shift","LOINC","RelMRat; MCntRat","Clinical","unit used to measure mass dose rate per patient body mass",null,null,null,null,false],[false,"milligram per kilogram per day","mg/kg/d","(MG/KG)/D","mass",1.1574074074074074e-11,[0,-1,0,0,0,0,0],"(mg/kg)/d",null,false,"M",null,1,false,false,0,0,"mg/(kg.d); mg/(kg.24.h)mg/kg/dy; mg per kg per day; milligrams per kilograms per days; mg/kg/(24.h); mg/kg/24hrs; 24 hrs; 24 hours","LOINC","RelMRat ","Clinical","unit used to measure mass dose rate per patient body mass",null,null,null,null,false],[false,"milligram per kilogram per hour","mg/kg/h","(MG/KG)/HR","mass",2.7777777777777777e-10,[0,-1,0,0,0,0,0],"(mg/kg)/h",null,false,"M",null,1,false,false,0,0,"mg/(kg.h); mg/kg/hr; mg per kg per hr; milligrams per kilograms per hour","LOINC","RelMRat; MCntRat","Clinical","unit used to measure mass dose rate per patient body mass",null,null,null,null,false],[false,"milligram per kilogram per minute","mg/kg/min","(MG/KG)/MIN","mass",1.6666666666666667e-8,[0,-1,0,0,0,0,0],"(mg/kg)/min",null,false,"M",null,1,false,false,0,0,"mg/(kg.min); mg per kg per min; milligrams per kilograms per minute","LOINC","RelMRat; MCntRat","Clinical","unit used to measure mass dose rate per patient body mass",null,null,null,null,false],[false,"milligram per liter","mg/L","MG/L","mass",1,[-3,0,1,0,0,0,0],"mg/L",null,false,"M",null,1,false,false,0,0,"mg per l; milligrams per liter; litre","LOINC","MCnc","Clinical","",null,null,null,null,false],[false,"milligram per square meter","mg/m2","MG/M2","mass",0.001,[-2,0,1,0,0,0,0],"mg/(m<sup>2</sup>)",null,false,"M",null,1,false,false,0,0,"mg/m^2; mg/sq. m; mg per m2; mg per m^2; mg per sq. milligrams; meter squared; metre","LOINC","ArMass","Clinical","",null,null,null,null,false],[false,"milligram per cubic meter","mg/m3","MG/M3","mass",0.001,[-3,0,1,0,0,0,0],"mg/(m<sup>3</sup>)",null,false,"M",null,1,false,false,0,0,"mg/m^3; mg/cu. m; mg per m3; milligrams per cubic meter; meter cubed; metre","LOINC","MCnc","Clinical","",null,null,null,null,false],[false,"milligram per milligram","mg/mg","MG/MG","mass",1,[0,0,0,0,0,0,0],"mg/mg",null,false,"M",null,1,false,false,0,0,"mg per mg; milligrams; milligram/milligram","LOINC","MRto","Clinical","",null,null,null,null,false],[false,"milligram per minute","mg/min","MG/MIN","mass",0.000016666666666666667,[0,-1,1,0,0,0,0],"mg/min",null,false,"M",null,1,false,false,0,0,"mg per min; milligrams per minutes; milligram/minute","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"milligram per milliliter","mg/mL","MG/ML","mass",1000.0000000000001,[-3,0,1,0,0,0,0],"mg/mL",null,false,"M",null,1,false,false,0,0,"mg per mL; milligrams per milliliters; millilitre","LOINC","MCnc","Clinical","",null,null,null,null,false],[false,"milligram per millimole","mg/mmol","MG/MMOL","mass",1.660540186674939e-24,[0,0,1,0,0,0,0],"mg/mmol",null,false,"M",null,1,false,false,-1,0,"mg per mmol; milligrams per millimole; ","LOINC","Ratio","Clinical","",null,null,null,null,false],[false,"milligram per week","mg/wk","MG/WK","mass",1.6534391534391535e-9,[0,-1,1,0,0,0,0],"mg/wk",null,false,"M",null,1,false,false,0,0,"mg/week; mg per wk; milligrams per weeks; milligram/week","LOINC","Mrat","Clinical","",null,null,null,null,false],[false,"milliliter","mL","ML","volume",0.000001,[3,0,0,0,0,0,0],"mL","iso1000",true,null,null,1,false,false,0,0,"milliliters; millilitres","LOINC","Vol","Clinical","","l",null,"1",1,false],[false,"milliliter per 10 hour","mL/(10.h)","ML/(10.HR)","volume",2.7777777777777777e-11,[3,-1,0,0,0,0,0],"mL/h","iso1000",true,null,null,1,false,false,0,0,"ml/10hrs; ml/10 hrs; mL per 10hrs; 10 hrs; milliliters per 10 hours; millilitres","LOINC","VRat","Clinical","","l",null,"1",1,false],[false,"milliliter per 12 hour","mL/(12.h)","ML/(12.HR)","volume",2.3148148148148147e-11,[3,-1,0,0,0,0,0],"mL/h","iso1000",true,null,null,1,false,false,0,0,"ml/12hrs; ml/12 hrs; mL per 12hrs; 12 hrs; milliliters per 12 hours; millilitres","LOINC","VRat","Clinical","","l",null,"1",1,false],[false,"milliliter per 2 hour","mL/(2.h)","ML/(2.HR)","volume",1.3888888888888888e-10,[3,-1,0,0,0,0,0],"mL/h","iso1000",true,null,null,1,false,false,0,0,"ml/2hrs; ml/2 hrs; mL per 2hrs; 2 hrs; milliliters per 2 hours; millilitres ","LOINC","VRat","Clinical","","l",null,"1",1,false],[false,"milliliter per 24 hour","mL/(24.h)","ML/(24.HR)","volume",1.1574074074074074e-11,[3,-1,0,0,0,0,0],"mL/h","iso1000",true,null,null,1,false,false,0,0,"ml/24hrs; ml/24 hrs; mL per 24hrs; 24 hrs; milliliters per 24 hours; millilitres; ml/dy; /day; ml per dy; days; fluid outputs; fluid inputs; flow rate","LOINC","VRat","Clinical","","l",null,"1",1,false],[false,"milliliter per 4 hour","mL/(4.h)","ML/(4.HR)","volume",6.944444444444444e-11,[3,-1,0,0,0,0,0],"mL/h","iso1000",true,null,null,1,false,false,0,0,"ml/4hrs; ml/4 hrs; mL per 4hrs; 4 hrs; milliliters per 4 hours; millilitres","LOINC","VRat","Clinical","","l",null,"1",1,false],[false,"milliliter per 5 hour","mL/(5.h)","ML/(5.HR)","volume",5.5555555555555553e-11,[3,-1,0,0,0,0,0],"mL/h","iso1000",true,null,null,1,false,false,0,0,"ml/5hrs; ml/5 hrs; mL per 5hrs; 5 hrs; milliliters per 5 hours; millilitres","LOINC","VRat","Clinical","","l",null,"1",1,false],[false,"milliliter per 6 hour","mL/(6.h)","ML/(6.HR)","volume",4.6296296296296294e-11,[3,-1,0,0,0,0,0],"mL/h","iso1000",true,null,null,1,false,false,0,0,"ml/6hrs; ml/6 hrs; mL per 6hrs; 6 hrs; milliliters per 6 hours; millilitres","LOINC","VRat","Clinical","","l",null,"1",1,false],[false,"milliliter per 72 hour","mL/(72.h)","ML/(72.HR)","volume",3.8580246913580245e-12,[3,-1,0,0,0,0,0],"mL/h","iso1000",true,null,null,1,false,false,0,0,"ml/72hrs; ml/72 hrs; mL per 72hrs; 72 hrs; milliliters per 72 hours; millilitres","LOINC","VRat","Clinical","","l",null,"1",1,false],[false,"milliliter per 8 hour","mL/(8.h)","ML/(8.HR)","volume",3.472222222222222e-11,[3,-1,0,0,0,0,0],"mL/h","iso1000",true,null,null,1,false,false,0,0,"ml/8hrs; ml/8 hrs; mL per 8hrs; 8 hrs; milliliters per 8 hours; millilitres; shift","LOINC","VRat","Clinical","","l",null,"1",1,false],[false,"milliliter per 8 hour per kilogram","mL/(8.h)/kg","(ML/(8.HR))/KG","volume",3.472222222222222e-14,[3,-1,-1,0,0,0,0],"(mL/h)/kg","iso1000",true,null,null,1,false,false,0,0,"mL/kg/(8.h); ml/8h/kg; ml/8 h/kg; ml/8hr/kg; ml/8 hr/kgr; mL per 8h per kg; 8 h; 8hr; 8 hr; milliliters per 8 hours per kilogram; millilitres; shift","LOINC","VRatCnt","Clinical","unit used to measure renal excretion volume rate per body mass","l",null,"1",1,false],[false,"milliliter per square inch (international)","mL/[sin_i]","ML/[SIN_I]","volume",0.0015500031000061998,[1,0,0,0,0,0,0],"mL","iso1000",true,null,null,1,false,false,0,0,"mL/sin; mL/in2; mL/in^2; mL per sin; in2; in^2; sq. in; milliliters per square inch; inch squared","LOINC","ArVol","Clinical","","l",null,"1",1,false],[false,"milliliter per centimeter of water","mL/cm[H2O]","ML/CM[H2O]","volume",1.0197162129779282e-11,[4,2,-1,0,0,0,0],"mL/(cm HO<sub><r>2</r></sub>)","iso1000",true,null,null,1,false,false,0,0,"milliliters per centimeter of water; millilitre per centimetre of water; millilitres per centimetre of water; mL/cmH2O; mL/cm H2O; mL per cmH2O; mL per cm H2O","LOINC","Compli","Clinical","unit used to measure dynamic lung compliance","l",null,"1",1,false],[false,"milliliter per day","mL/d","ML/D","volume",1.1574074074074074e-11,[3,-1,0,0,0,0,0],"mL/d","iso1000",true,null,null,1,false,false,0,0,"ml/day; ml per day; milliliters per day; 24 hours; 24hrs; millilitre;","LOINC","VRat","Clinical","usually used to measure fluid output or input; flow rate","l",null,"1",1,false],[false,"milliliter per deciliter","mL/dL","ML/DL","volume",0.009999999999999998,[0,0,0,0,0,0,0],"mL/dL","iso1000",true,null,null,1,false,false,0,0,"mL per dL; millilitres; decilitre; milliliters","LOINC","VFr; VFrDiff","Clinical","","l",null,"1",1,false],[false,"milliliter per hour","mL/h","ML/HR","volume",2.7777777777777777e-10,[3,-1,0,0,0,0,0],"mL/h","iso1000",true,null,null,1,false,false,0,0,"mL/hr; mL per hr; milliliters per hour; millilitres; fluid intake; fluid output","LOINC","VRat","Clinical","","l",null,"1",1,false],[false,"milliliter per kilogram","mL/kg","ML/KG","volume",9.999999999999999e-10,[3,0,-1,0,0,0,0],"mL/kg","iso1000",true,null,null,1,false,false,0,0,"mL per kg; milliliters per kilogram; millilitres","LOINC","VCnt","Clinical","","l",null,"1",1,false],[false,"milliliter per kilogram per 8 hour","mL/kg/(8.h)","(ML/KG)/(8.HR)","volume",3.472222222222222e-14,[3,-1,-1,0,0,0,0],"(mL/kg)/h","iso1000",true,null,null,1,false,false,0,0,"mL/(8.h.kg); mL/kg/8hrs; mL/kg/8 hrs; mL per kg per 8hrs; 8 hrs; milliliters per kilograms per 8 hours; millilitres; shift","LOINC","VCntRat; RelEngRat","Clinical","unit used to measure renal excretion volume rate per body mass","l",null,"1",1,false],[false,"milliliter per kilogram per day","mL/kg/d","(ML/KG)/D","volume",1.1574074074074072e-14,[3,-1,-1,0,0,0,0],"(mL/kg)/d","iso1000",true,null,null,1,false,false,0,0,"mL/(kg.d); mL/kg/dy; mL per kg per day; milliliters per kilograms per day; mg/kg/24hrs; 24 hrs; per 24 hours millilitres","LOINC","VCntRat; RelEngRat","Clinical","unit used to measure renal excretion volume rate per body mass","l",null,"1",1,false],[false,"milliliter per kilogram per hour","mL/kg/h","(ML/KG)/HR","volume",2.7777777777777774e-13,[3,-1,-1,0,0,0,0],"(mL/kg)/h","iso1000",true,null,null,1,false,false,0,0,"mL/(kg.h); mL/kg/hr; mL per kg per hr; milliliters per kilograms per hour; millilitres","LOINC","VCntRat; RelEngRat","Clinical","unit used to measure renal excretion volume rate per body mass","l",null,"1",1,false],[false,"milliliter per kilogram per minute","mL/kg/min","(ML/KG)/MIN","volume",1.6666666666666664e-11,[3,-1,-1,0,0,0,0],"(mL/kg)/min","iso1000",true,null,null,1,false,false,0,0,"mL/(kg.min); mL/kg/dy; mL per kg per day; milliliters per kilograms per day; millilitres","LOINC","RelEngRat","Clinical","used for tests that measure activity metabolic rate compared to standard resting metabolic rate ","l",null,"1",1,false],[false,"milliliter per square meter","mL/m2","ML/M2","volume",0.000001,[1,0,0,0,0,0,0],"mL/(m<sup>2</sup>)","iso1000",true,null,null,1,false,false,0,0,"mL/m^2; mL/sq. meter; mL per m2; m^2; sq. meter; milliliters per square meter; millilitres; meter squared","LOINC","ArVol","Clinical","used for tests that relate to heart work - e.g. ventricular stroke volume; atrial volume per body surface area","l",null,"1",1,false],[false,"milliliter per millibar","mL/mbar","ML/MBAR","volume",1e-11,[4,2,-1,0,0,0,0],"mL/mbar","iso1000",true,null,null,1,false,false,0,0,"mL per mbar; milliliters per millibar; millilitres","LOINC","","Clinical","unit used to measure dynamic lung compliance","l",null,"1",1,false],[false,"milliliter per minute","mL/min","ML/MIN","volume",1.6666666666666667e-8,[3,-1,0,0,0,0,0],"mL/min","iso1000",true,null,null,1,false,false,0,0,"mL per min; milliliters; millilitres","LOINC","VRat","Clinical","","l",null,"1",1,false],[false,"milliliter per minute per square meter","mL/min/m2","(ML/MIN)/M2","volume",1.6666666666666667e-8,[1,-1,0,0,0,0,0],"(mL/min)/(m<sup>2</sup>)","iso1000",true,null,null,1,false,false,0,0,"ml/min/m^2; ml/min/sq. meter; mL per min per m2; m^2; sq. meter; milliliters per minutes per square meter; millilitres; metre; meter squared","LOINC","ArVRat","Clinical","unit used to measure volume per body surface area; oxygen consumption index","l",null,"1",1,false],[false,"milliliter per millimeter","mL/mm","ML/MM","volume",0.001,[2,0,0,0,0,0,0],"mL/mm","iso1000",true,null,null,1,false,false,0,0,"mL per mm; milliliters per millimeter; millilitres; millimetre","LOINC","Lineic Volume","Clinical","","l",null,"1",1,false],[false,"milliliter per second","mL/s","ML/S","volume",0.000001,[3,-1,0,0,0,0,0],"mL/s","iso1000",true,null,null,1,false,false,0,0,"ml/sec; mL per sec; milliliters per second; millilitres","LOINC","Vel; VelRat; VRat","Clinical","","l",null,"1",1,false],[false,"millimeter","mm","MM","length",0.001,[1,0,0,0,0,0,0],"mm",null,false,"L",null,1,false,false,0,0,"millimeters; millimetres; height; length; diameter; thickness; axis; curvature; size","LOINC","Len","Clinical","",null,null,null,null,false],[false,"millimeter per hour","mm/h","MM/HR","length",2.7777777777777776e-7,[1,-1,0,0,0,0,0],"mm/h",null,false,"L",null,1,false,false,0,0,"mm/hr; mm per hr; millimeters per hour; millimetres","LOINC","Vel","Clinical","unit to measure sedimentation rate",null,null,null,null,false],[false,"millimeter per minute","mm/min","MM/MIN","length",0.000016666666666666667,[1,-1,0,0,0,0,0],"mm/min",null,false,"L",null,1,false,false,0,0,"mm per min; millimeters per minute; millimetres","LOINC","Vel","Clinical","",null,null,null,null,false],[false,"millimeter of water","mm[H2O]","MM[H2O]","pressure",9806.65,[-1,-2,1,0,0,0,0],"mm HO<sub><r>2</r></sub>","clinical",true,null,null,1,false,false,0,0,"mmH2O; mm H2O; millimeters of water; millimetres","LOINC","Pres","Clinical","","kPa","KPAL","980665e-5",9.80665,false],[false,"millimeter of mercury","mm[Hg]","MM[HG]","pressure",133322,[-1,-2,1,0,0,0,0],"mm Hg","clinical",true,null,null,1,false,false,0,0,"mmHg; mm Hg; millimeters of mercury; millimetres","LOINC","Pres; PPres; Ratio","Clinical","1 mm[Hg] = 1 torr; unit to measure blood pressure","kPa","KPAL","133.3220",133.322,false],[false,"square millimeter","mm2","MM2","length",0.000001,[2,0,0,0,0,0,0],"mm<sup>2</sup>",null,false,"L",null,1,false,false,0,0,"mm^2; sq. mm.; sq. millimeters; millimeters squared; millimetres","LOINC","Area","Clinical","",null,null,null,null,false],[false,"millimole","mmol","MMOL","amount of substance",602213670000000000000,[0,0,0,0,0,0,0],"mmol","si",true,null,null,1,false,false,1,0,"millimoles","LOINC","Sub","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"millimole per 12 hour","mmol/(12.h)","MMOL/(12.HR)","amount of substance",13940131250000000,[0,-1,0,0,0,0,0],"mmol/h","si",true,null,null,1,false,false,1,0,"mmol/12hrs; mmol/12 hrs; mmol per 12 hrs; 12hrs; millimoles per 12 hours","LOINC","SRat","Clinical","unit for tests related to urine","10*23","10*23","6.0221367",6.0221367,false],[false,"millimole per 2 hour","mmol/(2.h)","MMOL/(2.HR)","amount of substance",83640787500000000,[0,-1,0,0,0,0,0],"mmol/h","si",true,null,null,1,false,false,1,0,"mmol/2hrs; mmol/2 hrs; mmol per 2 hrs; 2hrs; millimoles per 2 hours","LOINC","SRat","Clinical","unit for tests related to urine","10*23","10*23","6.0221367",6.0221367,false],[false,"millimole per 24 hour","mmol/(24.h)","MMOL/(24.HR)","amount of substance",6970065625000000,[0,-1,0,0,0,0,0],"mmol/h","si",true,null,null,1,false,false,1,0,"mmol/24hrs; mmol/24 hrs; mmol per 24 hrs; 24hrs; millimoles per 24 hours","LOINC","SRat","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"millimole per 5 hour","mmol/(5.h)","MMOL/(5.HR)","amount of substance",33456315000000000,[0,-1,0,0,0,0,0],"mmol/h","si",true,null,null,1,false,false,1,0,"mmol/5hrs; mmol/5 hrs; mmol per 5 hrs; 5hrs; millimoles per 5 hours","LOINC","SRat","Clinical","unit for tests related to doses","10*23","10*23","6.0221367",6.0221367,false],[false,"millimole per 6 hour","mmol/(6.h)","MMOL/(6.HR)","amount of substance",27880262500000000,[0,-1,0,0,0,0,0],"mmol/h","si",true,null,null,1,false,false,1,0,"mmol/6hrs; mmol/6 hrs; mmol per 6 hrs; 6hrs; millimoles per 6 hours","LOINC","SRat","Clinical","unit for tests related to urine","10*23","10*23","6.0221367",6.0221367,false],[false,"millimole per 8 hour","mmol/(8.h)","MMOL/(8.HR)","amount of substance",20910196875000000,[0,-1,0,0,0,0,0],"mmol/h","si",true,null,null,1,false,false,1,0,"mmol/8hrs; mmol/8 hrs; mmol per 8 hrs; 8hrs; millimoles per 8 hours; shift","LOINC","SRat","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"millimole per day","mmol/d","MMOL/D","amount of substance",6970065625000000,[0,-1,0,0,0,0,0],"mmol/d","si",true,null,null,1,false,false,1,0,"mmol/24hrs; mmol/24 hrs; mmol per 24 hrs; 24hrs; millimoles per 24 hours","LOINC","SRat","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"millimole per deciliter","mmol/dL","MMOL/DL","amount of substance",6.022136699999999e+24,[-3,0,0,0,0,0,0],"mmol/dL","si",true,null,null,1,false,false,1,0,"mmol per dL; millimoles; decilitre","LOINC","SCnc","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"millimole per gram","mmol/g","MMOL/G","amount of substance",602213670000000000000,[0,0,-1,0,0,0,0],"mmol/g","si",true,null,null,1,false,false,1,0,"mmol per gram; millimoles","LOINC","SCnt","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"millimole per hour","mmol/h","MMOL/HR","amount of substance",167281575000000000,[0,-1,0,0,0,0,0],"mmol/h","si",true,null,null,1,false,false,1,0,"mmol/hr; mmol per hr; millimoles per hour","LOINC","SRat","Clinical","unit for tests related to urine","10*23","10*23","6.0221367",6.0221367,false],[false,"millimole per kilogram","mmol/kg","MMOL/KG","amount of substance",602213670000000000,[0,0,-1,0,0,0,0],"mmol/kg","si",true,null,null,1,false,false,1,0,"mmol per kg; millimoles per kilogram","LOINC","SCnt","Clinical","unit for tests related to stool","10*23","10*23","6.0221367",6.0221367,false],[false,"millimole per kilogram per 8 hour","mmol/kg/(8.h)","(MMOL/KG)/(8.HR)","amount of substance",20910196875000,[0,-1,-1,0,0,0,0],"(mmol/kg)/h","si",true,null,null,1,false,false,1,0,"mmol/(8.h.kg); mmol/kg/8hrs; mmol/kg/8 hrs; mmol per kg per 8hrs; 8 hrs; millimoles per kilograms per 8 hours; shift","LOINC","CCnt","Clinical","unit used to measure molar dose rate per patient body mass","10*23","10*23","6.0221367",6.0221367,false],[false,"millimole per kilogram per day","mmol/kg/d","(MMOL/KG)/D","amount of substance",6970065625000,[0,-1,-1,0,0,0,0],"(mmol/kg)/d","si",true,null,null,1,false,false,1,0,"mmol/kg/dy; mmol/kg/day; mmol per kg per dy; millimoles per kilograms per day","LOINC","RelSRat","Clinical","unit used to measure molar dose rate per patient body mass","10*23","10*23","6.0221367",6.0221367,false],[false,"millimole per kilogram per hour","mmol/kg/h","(MMOL/KG)/HR","amount of substance",167281575000000,[0,-1,-1,0,0,0,0],"(mmol/kg)/h","si",true,null,null,1,false,false,1,0,"mmol/kg/hr; mmol per kg per hr; millimoles per kilograms per hour","LOINC","CCnt","Clinical","unit used to measure molar dose rate per patient body mass","10*23","10*23","6.0221367",6.0221367,false],[false,"millimole per kilogram per minute","mmol/kg/min","(MMOL/KG)/MIN","amount of substance",10036894500000000,[0,-1,-1,0,0,0,0],"(mmol/kg)/min","si",true,null,null,1,false,false,1,0,"mmol/(kg.min); mmol/kg/min; mmol per kg per min; millimoles per kilograms per minute","LOINC","CCnt","Clinical","unit used to measure molar dose rate per patient body mass; note that the unit for the enzyme unit U = umol/min. mmol/kg/min = kU/kg; ","10*23","10*23","6.0221367",6.0221367,false],[false,"millimole per liter","mmol/L","MMOL/L","amount of substance",6.0221367e+23,[-3,0,0,0,0,0,0],"mmol/L","si",true,null,null,1,false,false,1,0,"mmol per L; millimoles per liter; litre","LOINC","SCnc","Clinical","unit for tests related to doses","10*23","10*23","6.0221367",6.0221367,false],[false,"millimole per square meter","mmol/m2","MMOL/M2","amount of substance",602213670000000000000,[-2,0,0,0,0,0,0],"mmol/(m<sup>2</sup>)","si",true,null,null,1,false,false,1,0,"mmol/m^2; mmol/sq. meter; mmol per m2; m^2; sq. meter; millimoles; meter squared; metre","LOINC","ArSub","Clinical","unit used to measure molar dose per patient body surface area","10*23","10*23","6.0221367",6.0221367,false],[false,"millimole per minute","mmol/min","MMOL/MIN","amount of substance",10036894500000000000,[0,-1,0,0,0,0,0],"mmol/min","si",true,null,null,1,false,false,1,0,"mmol per min; millimoles per minute","LOINC","Srat; CAct","Clinical","unit for the enzyme unit U = umol/min. mmol/min = kU","10*23","10*23","6.0221367",6.0221367,false],[false,"millimole per millimole","mmol/mmol","MMOL/MMOL","amount of substance",1,[0,0,0,0,0,0,0],"mmol/mmol","si",true,null,null,1,false,false,0,0,"mmol per mmol; millimoles per millimole","LOINC","SRto","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"millimole per mole","mmol/mol","MMOL/MOL","amount of substance",0.001,[0,0,0,0,0,0,0],"mmol/mol","si",true,null,null,1,false,false,0,0,"mmol per mol; millimoles per mole","LOINC","SRto","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"millimole per second per liter","mmol/s/L","(MMOL/S)/L","amount of substance",6.0221367e+23,[-3,-1,0,0,0,0,0],"(mmol/s)/L","si",true,null,null,1,false,false,1,0,"mmol/sec/L; mmol per s per L; per sec; millimoles per seconds per liter; litre","LOINC","CCnc ","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"mole per kilogram","mol/kg","MOL/KG","amount of substance",602213670000000000000,[0,0,-1,0,0,0,0],"mol/kg","si",true,null,null,1,false,false,1,0,"mol per kg; moles; mols","LOINC","SCnt","Clinical","unit for tests related to stool","10*23","10*23","6.0221367",6.0221367,false],[false,"mole per kilogram per second","mol/kg/s","(MOL/KG)/S","amount of substance",602213670000000000000,[0,-1,-1,0,0,0,0],"(mol/kg)/s","si",true,null,null,1,false,false,1,0,"mol/kg/sec; mol per kg per sec; moles per kilograms per second; mols","LOINC","CCnt","Clinical","unit of catalytic activity (mol/s) per mass (kg)","10*23","10*23","6.0221367",6.0221367,false],[false,"mole per liter","mol/L","MOL/L","amount of substance",6.0221366999999994e+26,[-3,0,0,0,0,0,0],"mol/L","si",true,null,null,1,false,false,1,0,"mol per L; moles per liter; litre; moles; mols","LOINC","SCnc","Clinical","unit often used in tests measuring oxygen content","10*23","10*23","6.0221367",6.0221367,false],[false,"mole per cubic meter","mol/m3","MOL/M3","amount of substance",6.0221367e+23,[-3,0,0,0,0,0,0],"mol/(m<sup>3</sup>)","si",true,null,null,1,false,false,1,0,"mol/m^3; mol/cu. m; mol per m3; m^3; cu. meter; mols; moles; meters cubed; metre; mole per kiloliter; kilolitre; mol/kL","LOINC","SCnc","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"mole per milliliter","mol/mL","MOL/ML","amount of substance",6.0221367e+29,[-3,0,0,0,0,0,0],"mol/mL","si",true,null,null,1,false,false,1,0,"mol per mL; moles; millilitre; mols","LOINC","SCnc","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"mole per mole","mol/mol","MOL/MOL","amount of substance",1,[0,0,0,0,0,0,0],"mol/mol","si",true,null,null,1,false,false,0,0,"mol per mol; moles per mol; mols","LOINC","SRto","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"mole per second","mol/s","MOL/S","amount of substance",6.0221367e+23,[0,-1,0,0,0,0,0],"mol/s","si",true,null,null,1,false,false,1,0,"mol per sec; moles per second; mols","LOINC","SRat","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"milliosmole","mosm","MOSM","amount of substance (dissolved particles)",602213670000000000000,[0,0,0,0,0,0,0],"mosm","chemical",true,null,null,1,false,false,1,0,"milliosmoles","LOINC","Osmol","Clinical","equal to 1/1000 of an osmole","mol","MOL","1",1,false],[false,"milliosmole per kilogram","mosm/kg","MOSM/KG","amount of substance (dissolved particles)",602213670000000000,[0,0,-1,0,0,0,0],"mosm/kg","chemical",true,null,null,1,false,false,1,0,"mosm per kg; milliosmoles per kilogram","LOINC","Osmol","Clinical","","mol","MOL","1",1,false],[false,"milliosmole per liter","mosm/L","MOSM/L","amount of substance (dissolved particles)",6.0221367e+23,[-3,0,0,0,0,0,0],"mosm/L","chemical",true,null,null,1,false,false,1,0,"mosm per liter; litre; milliosmoles","LOINC","Osmol","Clinical","","mol","MOL","1",1,false],[false,"millipascal","mPa","MPAL","pressure",1,[-1,-2,1,0,0,0,0],"mPa","si",true,null,null,1,false,false,0,0,"millipascals","LOINC","Pres","Clinical","unit of pressure","N/m2","N/M2","1",1,false],[false,"millipascal second","mPa.s","MPAL.S","pressure",1,[-1,-1,1,0,0,0,0],"mPa.s","si",true,null,null,1,false,false,0,0,"mPa*s; millipoise; mP; dynamic viscosity","LOINC","Visc","Clinical","base units for millipoise, a measurement of dynamic viscosity","N/m2","N/M2","1",1,false],[false,"megasecond","Ms","MAS","time",1000000,[0,1,0,0,0,0,0],"Ms",null,false,"T",null,1,false,false,0,0,"megaseconds","LOINC","Time","Clinical","",null,null,null,null,false],[false,"millisecond","ms","MS","time",0.001,[0,1,0,0,0,0,0],"ms",null,false,"T",null,1,false,false,0,0,"milliseconds; duration","LOINC","Time","Clinical","",null,null,null,null,false],[false,"milli enzyme unit per gram","mU/g","MU/G","catalytic activity",10036894500000,[0,-1,-1,0,0,0,0],"mU/g","chemical",true,null,null,1,false,false,1,0,"mU per gm; milli enzyme units per gram; enzyme activity; enzymatic activity per mass","LOINC","CCnt","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min); 1 mU = 1 nmol/min","umol/min","UMOL/MIN","1",1,false],[false,"milli enzyme unit per liter","mU/L","MU/L","catalytic activity",10036894500000000,[-3,-1,0,0,0,0,0],"mU/L","chemical",true,null,null,1,false,false,1,0,"mU per liter; litre; milli enzyme units enzymatic activity per volume; enzyme activity","LOINC","CCnc","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min); 1 mU = 1 nmol/min","umol/min","UMOL/MIN","1",1,false],[false,"milli enzyme unit per milligram","mU/mg","MU/MG","catalytic activity",10036894500000000,[0,-1,-1,0,0,0,0],"mU/mg","chemical",true,null,null,1,false,false,1,0,"mU per mg; milli enzyme units per milligram","LOINC","CCnt","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min); 1 mU = 1 nmol/min","umol/min","UMOL/MIN","1",1,false],[false,"milli enzyme unit per milliliter","mU/mL","MU/ML","catalytic activity",10036894500000000000,[-3,-1,0,0,0,0,0],"mU/mL","chemical",true,null,null,1,false,false,1,0,"mU per mL; milli enzyme units per milliliter; millilitre; enzymatic activity per volume; enzyme activity","LOINC","CCnc","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min); 1 mU = 1 nmol/min","umol/min","UMOL/MIN","1",1,false],[false,"milli enzyme unit per milliliter per minute","mU/mL/min","(MU/ML)/MIN","catalytic activity",167281575000000000,[-3,-2,0,0,0,0,0],"(mU/mL)/min","chemical",true,null,null,1,false,false,1,0,"mU per mL per min; mU per milliliters per minute; millilitres; milli enzyme units; enzymatic activity; enzyme activity","LOINC","CCncRat","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min); 1 mU = 1 nmol/min","umol/min","UMOL/MIN","1",1,false],[false,"millivolt","mV","MV","electric potential",1,[2,-2,1,0,0,-1,0],"mV","si",true,null,null,1,false,false,0,0,"millivolts","LOINC","Elpot","Clinical","unit of electric potential (voltage)","J/C","J/C","1",1,false],[false,"Newton centimeter","N.cm","N.CM","force",10,[2,-2,1,0,0,0,0],"N.cm","si",true,null,null,1,false,false,0,0,"N*cm; Ncm; N cm; Newton*centimeters; Newton* centimetres; torque; work","LOINC","","Clinical","as a measurement of work, N.cm = 1/100 Joules;\\nnote that N.m is the standard unit of measurement for torque (although dimensionally equivalent to Joule), and N.cm can also be thought of as a torqe unit","kg.m/s2","KG.M/S2","1",1,false],[false,"Newton second","N.s","N.S","force",1000,[1,-1,1,0,0,0,0],"N.s","si",true,null,null,1,false,false,0,0,"Newton*seconds; N*s; N s; Ns; impulse; imp","LOINC","","Clinical","standard unit of impulse","kg.m/s2","KG.M/S2","1",1,false],[false,"nanogram","ng","NG","mass",1e-9,[0,0,1,0,0,0,0],"ng",null,false,"M",null,1,false,false,0,0,"nanograms","LOINC","Mass","Clinical","",null,null,null,null,false],[false,"nanogram per 24 hour","ng/(24.h)","NG/(24.HR)","mass",1.1574074074074075e-14,[0,-1,1,0,0,0,0],"ng/h",null,false,"M",null,1,false,false,0,0,"ng/24hrs; ng/24 hrs; nanograms per 24 hours","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"nanogram per 8 hour","ng/(8.h)","NG/(8.HR)","mass",3.4722222222222224e-14,[0,-1,1,0,0,0,0],"ng/h",null,false,"M",null,1,false,false,0,0,"ng/8hrs; ng/8 hrs; nanograms per 8 hours","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"nanogram per million","ng/10*6","NG/(10*6)","mass",1e-15,[0,0,1,0,0,0,0],"ng/(10<sup>6</sup>)",null,false,"M",null,1,false,false,0,0,"ng/10^6; ng per 10*6; 10^6; nanograms","LOINC","MNum","Clinical","",null,null,null,null,false],[false,"nanogram per day","ng/d","NG/D","mass",1.1574074074074075e-14,[0,-1,1,0,0,0,0],"ng/d",null,false,"M",null,1,false,false,0,0,"ng/dy; ng per day; nanograms ","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"nanogram per deciliter","ng/dL","NG/DL","mass",0.00001,[-3,0,1,0,0,0,0],"ng/dL",null,false,"M",null,1,false,false,0,0,"ng per dL; nanograms per deciliter; decilitre","LOINC","MCnc","Clinical","",null,null,null,null,false],[false,"nanogram per gram","ng/g","NG/G","mass",1e-9,[0,0,0,0,0,0,0],"ng/g",null,false,"M",null,1,false,false,0,0,"ng/gm; ng per gm; nanograms per gram","LOINC","MCnt","Clinical","",null,null,null,null,false],[false,"nanogram per hour","ng/h","NG/HR","mass",2.777777777777778e-13,[0,-1,1,0,0,0,0],"ng/h",null,false,"M",null,1,false,false,0,0,"ng/hr; ng per hr; nanograms per hour","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"nanogram per kilogram","ng/kg","NG/KG","mass",1e-12,[0,0,0,0,0,0,0],"ng/kg",null,false,"M",null,1,false,false,0,0,"ng per kg; nanograms per kilogram","LOINC","MCnt","Clinical","",null,null,null,null,false],[false,"nanogram per kilogram per 8 hour","ng/kg/(8.h)","(NG/KG)/(8.HR)","mass",3.472222222222222e-17,[0,-1,0,0,0,0,0],"(ng/kg)/h",null,false,"M",null,1,false,false,0,0,"ng/(8.h.kg); ng/kg/8hrs; ng/kg/8 hrs; ng per kg per 8hrs; 8 hrs; nanograms per kilograms per 8 hours; shift","LOINC","MRtoRat ","Clinical","unit used to measure mass dose rate per patient body mass",null,null,null,null,false],[false,"nanogram per kilogram per hour","ng/kg/h","(NG/KG)/HR","mass",2.7777777777777775e-16,[0,-1,0,0,0,0,0],"(ng/kg)/h",null,false,"M",null,1,false,false,0,0,"ng/(kg.h); ng/kg/hr; ng per kg per hr; nanograms per kilograms per hour","LOINC","MRtoRat ","Clinical","unit used to measure mass dose rate per patient body mass",null,null,null,null,false],[false,"nanogram per kilogram per minute","ng/kg/min","(NG/KG)/MIN","mass",1.6666666666666667e-14,[0,-1,0,0,0,0,0],"(ng/kg)/min",null,false,"M",null,1,false,false,0,0,"ng/(kg.min); ng per kg per min; nanograms per kilograms per minute","LOINC","MRtoRat ","Clinical","unit used to measure mass dose rate per patient body mass",null,null,null,null,false],[false,"nanogram per liter","ng/L","NG/L","mass",0.000001,[-3,0,1,0,0,0,0],"ng/L",null,false,"M",null,1,false,false,0,0,"ng per L; nanograms per liter; litre","LOINC","MCnc","Clinical","",null,null,null,null,false],[false,"nanogram per square meter","ng/m2","NG/M2","mass",1e-9,[-2,0,1,0,0,0,0],"ng/(m<sup>2</sup>)",null,false,"M",null,1,false,false,0,0,"ng/m^2; ng/sq. m; ng per m2; m^2; sq. meter; nanograms; meter squared; metre","LOINC","ArMass","Clinical","unit used to measure mass dose per patient body surface area",null,null,null,null,false],[false,"nanogram per milligram","ng/mg","NG/MG","mass",0.000001,[0,0,0,0,0,0,0],"ng/mg",null,false,"M",null,1,false,false,0,0,"ng per mg; nanograms","LOINC","MCnt","Clinical","",null,null,null,null,false],[false,"nanogram per milligram per hour","ng/mg/h","(NG/MG)/HR","mass",2.7777777777777777e-10,[0,-1,0,0,0,0,0],"(ng/mg)/h",null,false,"M",null,1,false,false,0,0,"ng/mg/hr; ng per mg per hr; nanograms per milligrams per hour","LOINC","MRtoRat ","Clinical","",null,null,null,null,false],[false,"nanogram per minute","ng/min","NG/MIN","mass",1.6666666666666667e-11,[0,-1,1,0,0,0,0],"ng/min",null,false,"M",null,1,false,false,0,0,"ng per min; nanograms","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"nanogram per millliiter","ng/mL","NG/ML","mass",0.001,[-3,0,1,0,0,0,0],"ng/mL",null,false,"M",null,1,false,false,0,0,"ng per mL; nanograms; millilitre","LOINC","MCnc","Clinical","",null,null,null,null,false],[false,"nanogram per milliliter per hour","ng/mL/h","(NG/ML)/HR","mass",2.7777777777777776e-7,[-3,-1,1,0,0,0,0],"(ng/mL)/h",null,false,"M",null,1,false,false,0,0,"ng/mL/hr; ng per mL per mL; nanograms per milliliter per hour; nanogram per millilitre per hour; nanograms per millilitre per hour; enzymatic activity per volume; enzyme activity per milliliters","LOINC","CCnc","Clinical","tests that measure enzymatic activity",null,null,null,null,false],[false,"nanogram per second","ng/s","NG/S","mass",1e-9,[0,-1,1,0,0,0,0],"ng/s",null,false,"M",null,1,false,false,0,0,"ng/sec; ng per sec; nanograms per second","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"nanogram per enzyme unit","ng/U","NG/U","mass",9.963241120049634e-26,[0,1,1,0,0,0,0],"ng/U",null,false,"M",null,1,false,false,-1,0,"ng per U; nanograms per enzyme unit","LOINC","CMass","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min)",null,null,null,null,false],[false,"nanokatal","nkat","NKAT","catalytic activity",602213670000000,[0,-1,0,0,0,0,0],"nkat","chemical",true,null,null,1,false,false,1,0,"nanokatals","LOINC","CAct","Clinical","kat is a unit of catalytic activity with base units = mol/s. Rarely used because its units are too large to practically express catalytic activity. See enzyme unit [U] which is the standard unit for catalytic activity.","mol/s","MOL/S","1",1,false],[false,"nanoliter","nL","NL","volume",1.0000000000000002e-12,[3,0,0,0,0,0,0],"nL","iso1000",true,null,null,1,false,false,0,0,"nanoliters; nanolitres","LOINC","Vol","Clinical","","l",null,"1",1,false],[false,"nanometer","nm","NM","length",1e-9,[1,0,0,0,0,0,0],"nm",null,false,"L",null,1,false,false,0,0,"nanometers; nanometres","LOINC","Len","Clinical","",null,null,null,null,false],[false,"nanometer per second per liter","nm/s/L","(NM/S)/L","length",0.000001,[-2,-1,0,0,0,0,0],"(nm/s)/L",null,false,"L",null,1,false,false,0,0,"nm/sec/liter; nm/sec/litre; nm per s per l; nm per sec per l; nanometers per second per liter; nanometre per second per litre; nanometres per second per litre","LOINC","VelCnc","Clinical","",null,null,null,null,false],[false,"nanomole","nmol","NMOL","amount of substance",602213670000000,[0,0,0,0,0,0,0],"nmol","si",true,null,null,1,false,false,1,0,"nanomoles","LOINC","Sub","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"nanomole per 24 hour","nmol/(24.h)","NMOL/(24.HR)","amount of substance",6970065625,[0,-1,0,0,0,0,0],"nmol/h","si",true,null,null,1,false,false,1,0,"nmol/24hr; nmol/24 hr; nanomoles per 24 hours; nmol/day; nanomoles per day; nmol per day; nanomole/day; nanomol/day","LOINC","SRat","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"nanomole per day","nmol/d","NMOL/D","amount of substance",6970065625,[0,-1,0,0,0,0,0],"nmol/d","si",true,null,null,1,false,false,1,0,"nmol/day; nanomoles per day; nmol per day; nanomole/day; nanomol/day; nmol/24hr; nmol/24 hr; nanomoles per 24 hours; ","LOINC","SRat","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"nanomole per deciliter","nmol/dL","NMOL/DL","amount of substance",6022136700000000000,[-3,0,0,0,0,0,0],"nmol/dL","si",true,null,null,1,false,false,1,0,"nmol per dL; nanomoles per deciliter; nanomole per decilitre; nanomoles per decilitre; nanomole/deciliter; nanomole/decilitre; nanomol/deciliter; nanomol/decilitre","LOINC","SCnc","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"nanomole per gram","nmol/g","NMOL/G","amount of substance",602213670000000,[0,0,-1,0,0,0,0],"nmol/g","si",true,null,null,1,false,false,1,0,"nmol per gram; nanomoles per gram; nanomole/gram","LOINC","SCnt","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"nanomole per hour per liter","nmol/h/L","(NMOL/HR)/L","amount of substance",167281575000000,[-3,-1,0,0,0,0,0],"(nmol/h)/L","si",true,null,null,1,false,false,1,0,"nmol/hrs/L; nmol per hrs per L; nanomoles per hours per liter; litre; enzymatic activity per volume; enzyme activities","LOINC","CCnc","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"nanomole per liter","nmol/L","NMOL/L","amount of substance",602213670000000000,[-3,0,0,0,0,0,0],"nmol/L","si",true,null,null,1,false,false,1,0,"nmol per L; nanomoles per liter; litre","LOINC","SCnc","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"nanomole per milligram","nmol/mg","NMOL/MG","amount of substance",602213670000000000,[0,0,-1,0,0,0,0],"nmol/mg","si",true,null,null,1,false,false,1,0,"nmol per mg; nanomoles per milligram","LOINC","SCnt","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"nanomole per milligram per hour","nmol/mg/h","(NMOL/MG)/HR","amount of substance",167281575000000,[0,-1,-1,0,0,0,0],"(nmol/mg)/h","si",true,null,null,1,false,false,1,0,"nmol/mg/hr; nmol per mg per hr; nanomoles per milligrams per hour","LOINC","SCntRat","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"nanomole per milligram of protein","nmol/mg{prot}","NMOL/MG","amount of substance",602213670000000000,[0,0,-1,0,0,0,0],"nmol/mg","si",true,null,null,1,false,false,1,0,"nanomoles; nmol/mg prot; nmol per mg prot","LOINC","Ratio; CCnt","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"nanomole per minute","nmol/min","NMOL/MIN","amount of substance",10036894500000,[0,-1,0,0,0,0,0],"nmol/min","si",true,null,null,1,false,false,1,0,"nmol per min; nanomoles per minute; milli enzyme units; enzyme activity per volume; enzymatic activity","LOINC","CCnc","Clinical","unit for the enzyme unit U = umol/min. nmol/min = mU (milli enzyme unit)","10*23","10*23","6.0221367",6.0221367,false],[false,"nanomole per minute per milliliter","nmol/min/mL","(NMOL/MIN)/ML","amount of substance",10036894500000000000,[-3,-1,0,0,0,0,0],"(nmol/min)/mL","si",true,null,null,1,false,false,1,0,"nmol per min per mL; nanomoles per minutes per milliliter; millilitre; milli enzyme units per volume; enzyme activity; enzymatic activity","LOINC","CCnc","Clinical","unit for the enzyme unit U = umol/min. nmol/mL/min = mU/mL","10*23","10*23","6.0221367",6.0221367,false],[false,"nanomole per milliliter","nmol/mL","NMOL/ML","amount of substance",602213670000000000000,[-3,0,0,0,0,0,0],"nmol/mL","si",true,null,null,1,false,false,1,0,"nmol per mL; nanomoles per milliliter; millilitre","LOINC","SCnc","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"nanomole per milliliter per hour","nmol/mL/h","(NMOL/ML)/HR","amount of substance",167281575000000000,[-3,-1,0,0,0,0,0],"(nmol/mL)/h","si",true,null,null,1,false,false,1,0,"nmol/mL/hr; nmol per mL per hr; nanomoles per milliliters per hour; millilitres; milli enzyme units per volume; enzyme activity; enzymatic activity","LOINC","CCnc","Clinical","unit for the enzyme unit U = umol/min.","10*23","10*23","6.0221367",6.0221367,false],[false,"nanomole per milliliter per minute","nmol/mL/min","(NMOL/ML)/MIN","amount of substance",10036894500000000000,[-3,-1,0,0,0,0,0],"(nmol/mL)/min","si",true,null,null,1,false,false,1,0,"nmol per mL per min; nanomoles per milliliters per min; millilitres; milli enzyme units per volume; enzyme activity; enzymatic activity","LOINC","CCnc","Clinical","unit for the enzyme unit U = umol/min. nmol/mL/min = mU/mL","10*23","10*23","6.0221367",6.0221367,false],[false,"nanomole per millimole","nmol/mmol","NMOL/MMOL","amount of substance",0.000001,[0,0,0,0,0,0,0],"nmol/mmol","si",true,null,null,1,false,false,0,0,"nmol per mmol; nanomoles per millimole","LOINC","SRto","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"nanomole per millimole of creatinine","nmol/mmol{creat}","NMOL/MMOL","amount of substance",0.000001,[0,0,0,0,0,0,0],"nmol/mmol","si",true,null,null,1,false,false,0,0,"nanomoles","LOINC","SRto","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"nanomole per mole","nmol/mol","NMOL/MOL","amount of substance",1e-9,[0,0,0,0,0,0,0],"nmol/mol","si",true,null,null,1,false,false,0,0,"nmol per mole; nanomoles","LOINC","SRto","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"nanomole per nanomole","nmol/nmol","NMOL/NMOL","amount of substance",1,[0,0,0,0,0,0,0],"nmol/nmol","si",true,null,null,1,false,false,0,0,"nmol per nmol; nanomoles","LOINC","SRto","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"nanomole per second","nmol/s","NMOL/S","amount of substance",602213670000000,[0,-1,0,0,0,0,0],"nmol/s","si",true,null,null,1,false,false,1,0,"nmol/sec; nmol per sec; nanomoles per sercond; milli enzyme units; enzyme activity; enzymatic activity","LOINC","CCnc","Clinical","unit for the enzyme unit U = umol/min.","10*23","10*23","6.0221367",6.0221367,false],[false,"nanomole per second per liter","nmol/s/L","(NMOL/S)/L","amount of substance",602213670000000000,[-3,-1,0,0,0,0,0],"(nmol/s)/L","si",true,null,null,1,false,false,1,0,"nmol/sec/L; nmol per s per L; nmol per sec per L; nanomoles per seconds per liter; litre; milli enzyme units per volume; enzyme activity; enzymatic activity","LOINC","CCnc","Clinical","unit for the enzyme unit U = umol/min.","10*23","10*23","6.0221367",6.0221367,false],[false,"nanosecond","ns","NS","time",1e-9,[0,1,0,0,0,0,0],"ns",null,false,"T",null,1,false,false,0,0,"nanoseconds","LOINC","Time","Clinical","",null,null,null,null,false],[false,"nanoenzyme unit per milliliter","nU/mL","NU/ML","catalytic activity",10036894500000,[-3,-1,0,0,0,0,0],"nU/mL","chemical",true,null,null,1,false,false,1,0,"nU per mL; nanoenzyme units per milliliter; millilitre; enzymatic activity per volume; enzyme activity","LOINC","CCnc","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min); 1 fU = pmol/min","umol/min","UMOL/MIN","1",1,false],[false,"Ohm meter","Ohm.m","OHM.M","electric resistance",1000,[3,-1,1,0,0,-2,0],"Ω.m","si",true,null,null,1,false,false,0,0,"electric resistivity; meters; metres","LOINC","","Clinical","unit of electric resistivity","V/A","V/A","1",1,false],[false,"osmole per kilogram","osm/kg","OSM/KG","amount of substance (dissolved particles)",602213670000000000000,[0,0,-1,0,0,0,0],"osm/kg","chemical",true,null,null,1,false,false,1,0,"osm per kg; osmoles per kilogram; osmols","LOINC","Osmol","Clinical","","mol","MOL","1",1,false],[false,"osmole per liter","osm/L","OSM/L","amount of substance (dissolved particles)",6.0221366999999994e+26,[-3,0,0,0,0,0,0],"osm/L","chemical",true,null,null,1,false,false,1,0,"osm per L; osmoles per liter; litre; osmols","LOINC","Osmol","Clinical","","mol","MOL","1",1,false],[false,"picoampere","pA","PA","electric current",1e-12,[0,-1,0,0,0,1,0],"pA","si",true,null,null,1,false,false,0,0,"picoamperes","LOINC","","Clinical","equal to 10^-12 amperes","C/s","C/S","1",1,false],[false,"picogram","pg","PG","mass",1e-12,[0,0,1,0,0,0,0],"pg",null,false,"M",null,1,false,false,0,0,"picograms","LOINC","Mass; EntMass","Clinical","",null,null,null,null,false],[false,"picogram per deciliter","pg/dL","PG/DL","mass",9.999999999999999e-9,[-3,0,1,0,0,0,0],"pg/dL",null,false,"M",null,1,false,false,0,0,"pg per dL; picograms; decilitre","LOINC","MCnc","Clinical","",null,null,null,null,false],[false,"picogram per liter","pg/L","PG/L","mass",1e-9,[-3,0,1,0,0,0,0],"pg/L",null,false,"M",null,1,false,false,0,0,"pg per L; picograms; litre","LOINC","MCnc","Clinical","",null,null,null,null,false],[false,"picogram per milligram","pg/mg","PG/MG","mass",1e-9,[0,0,0,0,0,0,0],"pg/mg",null,false,"M",null,1,false,false,0,0,"pg per mg; picograms","LOINC","MCnt","Clinical","",null,null,null,null,false],[false,"picogram per milliliter","pg/mL","PG/ML","mass",0.000001,[-3,0,1,0,0,0,0],"pg/mL",null,false,"M",null,1,false,false,0,0,"pg per mL; picograms per milliliter; millilitre","LOINC","MCnc","Clinical","",null,null,null,null,false],[false,"picogram per millimeter","pg/mm","PG/MM","mass",1e-9,[-1,0,1,0,0,0,0],"pg/mm",null,false,"M",null,1,false,false,0,0,"pg per mm; picogram/millimeter; picogram/millimetre; picograms per millimeter; millimetre","LOINC","Lineic Mass","Clinical","",null,null,null,null,false],[false,"picokatal","pkat","PKAT","catalytic activity",602213670000,[0,-1,0,0,0,0,0],"pkat","chemical",true,null,null,1,false,false,1,0,"pkats; picokatals","LOINC","CAct","Clinical","kat is a unit of catalytic activity with base units = mol/s. Rarely used because its units are too large to practically express catalytic activity. See enzyme unit [U] which is the standard unit for catalytic activity.","mol/s","MOL/S","1",1,false],[false,"picoliter","pL","PL","volume",1e-15,[3,0,0,0,0,0,0],"pL","iso1000",true,null,null,1,false,false,0,0,"picoliters; picolitres","LOINC","Vol","Clinical","","l",null,"1",1,false],[false,"picometer","pm","PM","length",1e-12,[1,0,0,0,0,0,0],"pm",null,false,"L",null,1,false,false,0,0,"picometers; picometres","LOINC","Len","Clinical","",null,null,null,null,false],[false,"picomole","pmol","PMOL","amount of substance",602213670000,[0,0,0,0,0,0,0],"pmol","si",true,null,null,1,false,false,1,0,"picomoles; pmols","LOINC","Sub","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"picomole per 24 hour","pmol/(24.h)","PMOL/(24.HR)","amount of substance",6970065.625,[0,-1,0,0,0,0,0],"pmol/h","si",true,null,null,1,false,false,1,0,"pmol/24hrs; pmol/24 hrs; pmol per 24 hrs; 24hrs; days; dy; picomoles per 24 hours","LOINC","SRat","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"picomole per day","pmol/d","PMOL/D","amount of substance",6970065.625,[0,-1,0,0,0,0,0],"pmol/d","si",true,null,null,1,false,false,1,0,"pmol/dy; pmol per day; 24 hours; 24hrs; 24 hrs; picomoles","LOINC","SRat","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"picomole per deciliter","pmol/dL","PMOL/DL","amount of substance",6022136700000000,[-3,0,0,0,0,0,0],"pmol/dL","si",true,null,null,1,false,false,1,0,"pmol per dL; picomoles per deciliter; decilitre","LOINC","SCnc","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"picomole per gram","pmol/g","PMOL/G","amount of substance",602213670000,[0,0,-1,0,0,0,0],"pmol/g","si",true,null,null,1,false,false,1,0,"pmol per gm; picomoles per gram; picomole/gram","LOINC","SCnt","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"picomole per hour per milliliter ","pmol/h/mL","(PMOL/HR)/ML","amount of substance",167281575000000,[-3,-1,0,0,0,0,0],"(pmol/h)/mL","si",true,null,null,1,false,false,1,0,"pmol/hrs/mL; pmol per hrs per mL; picomoles per hour per milliliter; millilitre; micro enzyme units per volume; enzymatic activity; enzyme activity","LOINC","CCnc","Clinical","unit for the enzyme unit U = umol/min. ","10*23","10*23","6.0221367",6.0221367,false],[false,"picomole per liter","pmol/L","PMOL/L","amount of substance",602213670000000,[-3,0,0,0,0,0,0],"pmol/L","si",true,null,null,1,false,false,1,0,"picomole/liter; pmol per L; picomoles; litre","LOINC","SCnc","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"picomole per minute","pmol/min","PMOL/MIN","amount of substance",10036894500,[0,-1,0,0,0,0,0],"pmol/min","si",true,null,null,1,false,false,1,0,"picomole/minute; pmol per min; picomoles per minute; micro enzyme units; enzymatic activity; enzyme activity","LOINC","CCnc","Clinical","unit for the enzyme unit U = umol/min. pmol/min = uU (micro enzyme unit)","10*23","10*23","6.0221367",6.0221367,false],[false,"picomole per milliliter","pmol/mL","PMOL/ML","amount of substance",602213670000000000,[-3,0,0,0,0,0,0],"pmol/mL","si",true,null,null,1,false,false,1,0,"picomole/milliliter; picomole/millilitre; pmol per mL; picomoles; millilitre; picomols; pmols","LOINC","SCnc","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"picomole per micromole","pmol/umol","PMOL/UMOL","amount of substance",0.000001,[0,0,0,0,0,0,0],"pmol/μmol","si",true,null,null,1,false,false,0,0,"pmol/mcgmol; picomole/micromole; pmol per umol; pmol per mcgmol; picomoles ","LOINC","SRto","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"picosecond","ps","PS","time",1e-12,[0,1,0,0,0,0,0],"ps",null,false,"T",null,1,false,false,0,0,"picoseconds; psec","LOINC","Time","Clinical","",null,null,null,null,false],[false,"picotesla","pT","PT","magnetic flux density",1e-9,[0,-1,1,0,0,-1,0],"pT","si",true,null,null,1,false,false,0,0,"picoteslas","LOINC","","Clinical","SI unit of magnetic field strength for magnetic field B","Wb/m2","WB/M2","1",1,false],[false,"enzyme unit per 12 hour","U/(12.h)","U/(12.HR)","catalytic activity",232335520833.33334,[0,-2,0,0,0,0,0],"U/h","chemical",true,null,null,1,false,false,1,0,"U/12hrs; U/ 12hrs; U per 12 hrs; 12hrs; enzyme units per 12 hours; enzyme activity; enzymatic activity per time; umol per min per 12 hours; micromoles per minute per 12 hours; umol/min/12hr","LOINC","CRat","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min)","umol/min","UMOL/MIN","1",1,false],[false,"enzyme unit per 2 hour","U/(2.h)","U/(2.HR)","catalytic activity",1394013125000,[0,-2,0,0,0,0,0],"U/h","chemical",true,null,null,1,false,false,1,0,"U/2hrs; U/ 2hrs; U per 2 hrs; 2hrs; enzyme units per 2 hours; enzyme activity; enzymatic activity per time; umol per minute per 2 hours; micromoles per minute; umol/min/2hr; umol per min per 2hr","LOINC","CRat","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min)","umol/min","UMOL/MIN","1",1,false],[false,"enzyme unit per 24 hour","U/(24.h)","U/(24.HR)","catalytic activity",116167760416.66667,[0,-2,0,0,0,0,0],"U/h","chemical",true,null,null,1,false,false,1,0,"U/24hrs; U/ 24hrs; U per 24 hrs; 24hrs; enzyme units per 24 hours; enzyme activity; enzymatic activity per time; micromoles per minute per 24 hours; umol/min/24hr; umol per min per 24hr","LOINC","CRat","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min)","umol/min","UMOL/MIN","1",1,false],[false,"enzyme unit per 10","U/10","U/10","catalytic activity",1003689450000000,[0,-1,0,0,0,0,0],"U","chemical",true,null,null,1,false,false,1,0,"enzyme unit/10; U per 10; enzyme units per 10; enzymatic activity; enzyme activity; micromoles per minute; umol/min/10","LOINC","CCnc","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min)","umol/min","UMOL/MIN","1",1,false],[false,"enzyme unit per 10 billion","U/10*10","U/(10*10)","catalytic activity",1003689.45,[0,-1,0,0,0,0,0],"U/(10<sup>10</sup>)","chemical",true,null,null,1,false,false,1,0,"U per 10*10; enzyme units per 10*10; U per 10 billion; enzyme units; enzymatic activity; micromoles per minute per 10 billion; umol/min/10*10","LOINC","CCnc","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min)","umol/min","UMOL/MIN","1",1,false],[false,"enzyme unit per trillion","U/10*12","U/(10*12)","catalytic activity",10036.8945,[0,-1,0,0,0,0,0],"U/(10<sup>12</sup>)","chemical",true,null,null,1,false,false,1,0,"enzyme unit/10*12; U per 10*12; enzyme units per 10*12; enzyme units per trillion; enzymatic activity; micromoles per minute per trillion; umol/min/10*12; umol per min per 10*12","LOINC","CCnc","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min)","umol/min","UMOL/MIN","1",1,false],[false,"enzyme unit per million","U/10*6","U/(10*6)","catalytic activity",10036894500,[0,-1,0,0,0,0,0],"U/(10<sup>6</sup>)","chemical",true,null,null,1,false,false,1,0,"enzyme unit/10*6; U per 10*6; enzyme units per 10*6; enzyme units; enzymatic activity per volume; micromoles per minute per million; umol/min/10*6; umol per min per 10*6","LOINC","CCnc","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min)","umol/min","UMOL/MIN","1",1,false],[false,"enzyme unit per billion","U/10*9","U/(10*9)","catalytic activity",10036894.5,[0,-1,0,0,0,0,0],"U/(10<sup>9</sup>)","chemical",true,null,null,1,false,false,1,0,"enzyme unit/10*9; U per 10*9; enzyme units per 10*9; enzymatic activity per volume; micromoles per minute per billion; umol/min/10*9; umol per min per 10*9","LOINC","CCnc","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min)","umol/min","UMOL/MIN","1",1,false],[false,"enzyme unit per day","U/d","U/D","catalytic activity",116167760416.66667,[0,-2,0,0,0,0,0],"U/d","chemical",true,null,null,1,false,false,1,0,"U/dy; enzyme units per day; enzyme units; enzyme activity; enzymatic activity per time; micromoles per minute per day; umol/min/day; umol per min per day","LOINC","CRat","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min)","umol/min","UMOL/MIN","1",1,false],[false,"enzyme unit per deciliter","U/dL","U/DL","catalytic activity",100368945000000000000,[-3,-1,0,0,0,0,0],"U/dL","chemical",true,null,null,1,false,false,1,0,"U per dL; enzyme units per deciliter; decilitre; micromoles per minute per deciliter; umol/min/dL; umol per min per dL","LOINC","CCnc","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min)","umol/min","UMOL/MIN","1",1,false],[false,"enzyme unit per gram","U/g","U/G","catalytic activity",10036894500000000,[0,-1,-1,0,0,0,0],"U/g","chemical",true,null,null,1,false,false,1,0,"U/gm; U per gm; enzyme units per gram; micromoles per minute per gram; umol/min/g; umol per min per g","LOINC","CCnt","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min)","umol/min","UMOL/MIN","1",1,false],[false,"enzyme unit per hour","U/h","U/HR","catalytic activity",2788026250000,[0,-2,0,0,0,0,0],"U/h","chemical",true,null,null,1,false,false,1,0,"U/hr; U per hr; enzyme units per hour; micromoles per minute per hour; umol/min/hr; umol per min per hr","LOINC","CRat","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min)","umol/min","UMOL/MIN","1",1,false],[false,"enzyme unit per liter","U/L","U/L","catalytic activity",10036894500000000000,[-3,-1,0,0,0,0,0],"U/L","chemical",true,null,null,1,false,false,1,0,"enzyme unit/liter; enzyme unit/litre; U per L; enzyme units per liter; enzyme unit per litre; micromoles per minute per liter; umol/min/L; umol per min per L","LOINC","CCnc","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min)","umol/min","UMOL/MIN","1",1,false],[false,"enzyme unit per minute","U/min","U/MIN","catalytic activity",167281575000000,[0,-2,0,0,0,0,0],"U/min","chemical",true,null,null,1,false,false,1,0,"enzyme unit/minute; U per min; enzyme units; umol/min/min; micromoles per minute per minute; micromoles per min per min; umol","LOINC","CRat","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min)","umol/min","UMOL/MIN","1",1,false],[false,"enzyme unit per milliliter","U/mL","U/ML","catalytic activity",1.00368945e+22,[-3,-1,0,0,0,0,0],"U/mL","chemical",true,null,null,1,false,false,1,0,"U per mL; enzyme units per milliliter; millilitre; micromoles per minute per milliliter; umol/min/mL; umol per min per mL","LOINC","CCnc","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min)","umol/min","UMOL/MIN","1",1,false],[false,"enzyme unit per second","U/s","U/S","catalytic activity",10036894500000000,[0,-2,0,0,0,0,0],"U/s","chemical",true,null,null,1,false,false,1,0,"U/sec; U per second; enzyme units per second; micromoles per minute per second; umol/min/sec; umol per min per sec","LOINC","CRat","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min)","umol/min","UMOL/MIN","1",1,false],[false,"micro international unit","u[IU]","U[IU]","arbitrary",0.000001,[0,0,0,0,0,0,0],"μi.U.","chemical",true,null,null,1,false,true,0,0,"uIU; u IU; microinternational units","LOINC","Arb","Clinical","International units (IU) are analyte and reference specimen  specific arbitrary units (held at WHO)","[iU]","[IU]","1",1,false],[false,"micro international unit per liter","u[IU]/L","U[IU]/L","arbitrary",0.001,[-3,0,0,0,0,0,0],"(μi.U.)/L","chemical",true,null,null,1,false,true,0,0,"uIU/L; u IU/L; uIU per L; microinternational units per liter; litre; ","LOINC","ACnc","Clinical","International units (IU) are analyte and reference specimen  specific arbitrary units (held at WHO)","[iU]","[IU]","1",1,false],[false,"micro international unit per milliliter","u[IU]/mL","U[IU]/ML","arbitrary",1,[-3,0,0,0,0,0,0],"(μi.U.)/mL","chemical",true,null,null,1,false,true,0,0,"uIU/mL; u IU/mL; uIU per mL; microinternational units per milliliter; millilitre","LOINC","ACnc","Clinical","International units (IU) are analyte and reference specimen  specific arbitrary units (held at WHO)","[iU]","[IU]","1",1,false],[false,"microequivalent","ueq","UEQ","amount of substance",602213670000000000,[0,0,0,0,0,0,0],"μeq","chemical",true,null,null,1,false,false,0,1,"microequivalents; 10^-6 equivalents; 10-6 equivalents","LOINC","Sub","Clinical","","mol","MOL","1",1,false],[false,"microequivalent per liter","ueq/L","UEQ/L","amount of substance",602213670000000000000,[-3,0,0,0,0,0,0],"μeq/L","chemical",true,null,null,1,false,false,0,1,"ueq per liter; litre; microequivalents","LOINC","MCnc","Clinical","","mol","MOL","1",1,false],[false,"microequivalent per milliliter","ueq/mL","UEQ/ML","amount of substance",6.0221367000000003e+23,[-3,0,0,0,0,0,0],"μeq/mL","chemical",true,null,null,1,false,false,0,1,"ueq per milliliter; millilitre; microequivalents","LOINC","MCnc","Clinical","","mol","MOL","1",1,false],[false,"microgram","ug","UG","mass",0.000001,[0,0,1,0,0,0,0],"μg",null,false,"M",null,1,false,false,0,0,"mcg; micrograms; 10^-6 grams; 10-6 grams","LOINC","Mass","Clinical","",null,null,null,null,false],[false,"microgram per 100 gram","ug/(100.g)","UG/(100.G)","mass",1e-8,[0,0,0,0,0,0,0],"μg/g",null,false,"M",null,1,false,false,0,0,"ug/100gm; ug/100 gm; mcg; ug per 100g; 100 gm; mcg per 100g; micrograms per 100 grams","LOINC","MCnt","Clinical","",null,null,null,null,false],[false,"microgram per 24 hour","ug/(24.h)","UG/(24.HR)","mass",1.1574074074074074e-11,[0,-1,1,0,0,0,0],"μg/h",null,false,"M",null,1,false,false,0,0,"ug/24hrs; ug/24 hrs; mcg/24hrs; ug per 24hrs; mcg per 24hrs; 24 hrs; micrograms per 24 hours","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"microgram per 8 hour","ug/(8.h)","UG/(8.HR)","mass",3.472222222222222e-11,[0,-1,1,0,0,0,0],"μg/h",null,false,"M",null,1,false,false,0,0,"ug/8hrs; ug/8 hrs; mcg/8hrs; ug per 8hrs; mcg per 8hrs; 8 hrs; micrograms per 8 hours; shift","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"microgram per square foot (international)","ug/[sft_i]","UG/[SFT_I]","mass",0.000010763910416709721,[-2,0,1,0,0,0,0],"μg",null,false,"M",null,1,false,false,0,0,"ug/sft; ug/ft2; ug/ft^2; ug/sq. ft; micrograms; sq. foot; foot squared","LOINC","ArMass","Clinical","",null,null,null,null,false],[false,"microgram per day","ug/d","UG/D","mass",1.1574074074074074e-11,[0,-1,1,0,0,0,0],"μg/d",null,false,"M",null,1,false,false,0,0,"ug/dy; mcg/dy; ug per day; mcg; micrograms per day","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"microgram per deciliter","ug/dL","UG/DL","mass",0.009999999999999998,[-3,0,1,0,0,0,0],"μg/dL",null,false,"M",null,1,false,false,0,0,"ug per dL; mcg/dl; mcg per dl; micrograms per deciliter; decilitre","LOINC","MCnc","Clinical","",null,null,null,null,false],[false,"microgram per gram","ug/g","UG/G","mass",0.000001,[0,0,0,0,0,0,0],"μg/g",null,false,"M",null,1,false,false,0,0,"ug per gm; mcg/gm; mcg per g; micrograms per gram","LOINC","MCnt","Clinical","",null,null,null,null,false],[false,"microgram per hour","ug/h","UG/HR","mass",2.7777777777777777e-10,[0,-1,1,0,0,0,0],"μg/h",null,false,"M",null,1,false,false,0,0,"ug/hr; mcg/hr; mcg per hr; ug per hr; ug per hour; micrograms","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"microgram per kilogram","ug/kg","UG/KG","mass",9.999999999999999e-10,[0,0,0,0,0,0,0],"μg/kg",null,false,"M",null,1,false,false,0,0,"ug per kg; mcg/kg; mcg per kg; micrograms per kilogram","LOINC","MCnt","Clinical","",null,null,null,null,false],[false,"microgram per kilogram per 8 hour","ug/kg/(8.h)","(UG/KG)/(8.HR)","mass",3.472222222222222e-14,[0,-1,0,0,0,0,0],"(μg/kg)/h",null,false,"M",null,1,false,false,0,0,"ug/kg/8hrs; mcg/kg/8hrs; ug/kg/8 hrs; mcg/kg/8 hrs; ug per kg per 8hrs; 8 hrs; mcg per kg per 8hrs; micrograms per kilograms per 8 hours; shift","LOINC","","Clinical","unit used to measure mass dose rate per patient body mass",null,null,null,null,false],[false,"microgram per kilogram per day","ug/kg/d","(UG/KG)/D","mass",1.1574074074074072e-14,[0,-1,0,0,0,0,0],"(μg/kg)/d",null,false,"M",null,1,false,false,0,0,"ug/(kg.d); ug/kg/dy; mcg/kg/day; ug per kg per dy; 24 hours; 24hrs; mcg; kilograms; microgram per kilogram and day","LOINC","","Clinical","unit used to measure mass dose rate per patient body mass",null,null,null,null,false],[false,"microgram per kilogram per hour","ug/kg/h","(UG/KG)/HR","mass",2.7777777777777774e-13,[0,-1,0,0,0,0,0],"(μg/kg)/h",null,false,"M",null,1,false,false,0,0,"ug/(kg.h); ug/kg/hr; mcg/kg/hr; ug per kg per hr; mcg per kg per hr; kilograms","LOINC","","Clinical","unit used to measure mass dose rate per patient body mass",null,null,null,null,false],[false,"microgram per kilogram per minute","ug/kg/min","(UG/KG)/MIN","mass",1.6666666666666664e-11,[0,-1,0,0,0,0,0],"(μg/kg)/min",null,false,"M",null,1,false,false,0,0,"ug/kg/min; ug/kg/min; mcg/kg/min; ug per kg per min; mcg; micrograms per kilograms per minute ","LOINC","","Clinical","unit used to measure mass dose rate per patient body mass",null,null,null,null,false],[false,"microgram per liter","ug/L","UG/L","mass",0.001,[-3,0,1,0,0,0,0],"μg/L",null,false,"M",null,1,false,false,0,0,"mcg/L; ug per L; mcg; micrograms per liter; litre ","LOINC","MCnc","Clinical","",null,null,null,null,false],[false,"microgram per liter per 24 hour","ug/L/(24.h)","(UG/L)/(24.HR)","mass",1.1574074074074074e-8,[-3,-1,1,0,0,0,0],"(μg/L)/h",null,false,"M",null,1,false,false,0,0,"ug/L/24hrs; ug/L/24 hrs; mcg/L/24hrs; ug per L per 24hrs; 24 hrs; day; dy mcg; micrograms per liters per 24 hours; litres","LOINC","","Clinical","unit used to measure mass dose rate per patient body mass",null,null,null,null,false],[false,"microgram per square meter","ug/m2","UG/M2","mass",0.000001,[-2,0,1,0,0,0,0],"μg/(m<sup>2</sup>)",null,false,"M",null,1,false,false,0,0,"ug/m^2; ug/sq. m; mcg/m2; mcg/m^2; mcg/sq. m; ug per m2; m^2; sq. meter; mcg; micrograms per square meter; meter squared; metre","LOINC","ArMass","Clinical","unit used to measure mass dose per patient body surface area",null,null,null,null,false],[false,"microgram per cubic meter","ug/m3","UG/M3","mass",0.000001,[-3,0,1,0,0,0,0],"μg/(m<sup>3</sup>)",null,false,"M",null,1,false,false,0,0,"ug/m^3; ug/cu. m; mcg/m3; mcg/m^3; mcg/cu. m; ug per m3; ug per m^3; ug per cu. m; mcg; micrograms per cubic meter; meter cubed; metre","LOINC","MCnc","Clinical","",null,null,null,null,false],[false,"microgram per milligram","ug/mg","UG/MG","mass",0.001,[0,0,0,0,0,0,0],"μg/mg",null,false,"M",null,1,false,false,0,0,"ug per mg; mcg/mg; mcg per mg; micromilligrams per milligram","LOINC","MCnt","Clinical","",null,null,null,null,false],[false,"microgram per minute","ug/min","UG/MIN","mass",1.6666666666666667e-8,[0,-1,1,0,0,0,0],"μg/min",null,false,"M",null,1,false,false,0,0,"ug per min; mcg/min; mcg per min; microminutes per minute","LOINC","MRat","Clinical","",null,null,null,null,false],[false,"microgram per milliliter","ug/mL","UG/ML","mass",1,[-3,0,1,0,0,0,0],"μg/mL",null,false,"M",null,1,false,false,0,0,"ug per mL; mcg/mL; mcg per mL; micrograms per milliliter; millilitre","LOINC","MCnc","Clinical","",null,null,null,null,false],[false,"microgram per millimole","ug/mmol","UG/MMOL","mass",1.660540186674939e-27,[0,0,1,0,0,0,0],"μg/mmol",null,false,"M",null,1,false,false,-1,0,"ug per mmol; mcg/mmol; mcg per mmol; micrograms per millimole","LOINC","Ratio","Clinical","",null,null,null,null,false],[false,"microgram per nanogram","ug/ng","UG/NG","mass",999.9999999999999,[0,0,0,0,0,0,0],"μg/ng",null,false,"M",null,1,false,false,0,0,"ug per ng; mcg/ng; mcg per ng; micrograms per nanogram","LOINC","MCnt","Clinical","",null,null,null,null,false],[false,"microkatal","ukat","UKAT","catalytic activity",602213670000000000,[0,-1,0,0,0,0,0],"μkat","chemical",true,null,null,1,false,false,1,0,"microkatals; ukats","LOINC","CAct","Clinical","kat is a unit of catalytic activity with base units = mol/s. Rarely used because its units are too large to practically express catalytic activity. See enzyme unit [U] which is the standard unit for catalytic activity.","mol/s","MOL/S","1",1,false],[false,"microliter","uL","UL","volume",1e-9,[3,0,0,0,0,0,0],"μL","iso1000",true,null,null,1,false,false,0,0,"microliters; microlitres; mcl","LOINC","Vol","Clinical","","l",null,"1",1,false],[false,"microliter per 2 hour","uL/(2.h)","UL/(2.HR)","volume",1.388888888888889e-13,[3,-1,0,0,0,0,0],"μL/h","iso1000",true,null,null,1,false,false,0,0,"uL/2hrs; uL/2 hrs; mcg/2hr; mcg per 2hr; uL per 2hr; uL per 2 hrs; microliters per 2 hours; microlitres ","LOINC","VRat","Clinical","","l",null,"1",1,false],[false,"microliter per hour","uL/h","UL/HR","volume",2.777777777777778e-13,[3,-1,0,0,0,0,0],"μL/h","iso1000",true,null,null,1,false,false,0,0,"uL/hr; mcg/hr; mcg per hr; uL per hr; microliters per hour; microlitres","LOINC","VRat","Clinical","","l",null,"1",1,false],[false,"micrometer","um","UM","length",0.000001,[1,0,0,0,0,0,0],"μm",null,false,"L",null,1,false,false,0,0,"micrometers; micrometres; μm; microns","LOINC","Len","Clinical","Unit of length that is usually used in tests related to the eye",null,null,null,null,false],[false,"microns per second","um/s","UM/S","length",0.000001,[1,-1,0,0,0,0,0],"μm/s",null,false,"L",null,1,false,false,0,0,"um/sec; micron/second; microns/second; um per sec; micrometers per second; micrometres","LOINC","Vel","Clinical","",null,null,null,null,false],[false,"micromole","umol","UMOL","amount of substance",602213670000000000,[0,0,0,0,0,0,0],"μmol","si",true,null,null,1,false,false,1,0,"micromoles; umols","LOINC","Sub","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"micromole per 2 hour","umol/(2.h)","UMOL/(2.HR)","amount of substance",83640787500000,[0,-1,0,0,0,0,0],"μmol/h","si",true,null,null,1,false,false,1,0,"umol/2hrs; umol/2 hrs; umol per 2 hrs; 2hrs; micromoles per 2 hours","LOINC","SRat","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"micromole per 24 hour","umol/(24.h)","UMOL/(24.HR)","amount of substance",6970065625000,[0,-1,0,0,0,0,0],"μmol/h","si",true,null,null,1,false,false,1,0,"umol/24hrs; umol/24 hrs; umol per 24 hrs; per 24hrs; micromoles per 24 hours","LOINC","SRat","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"micromole per 8 hour","umol/(8.h)","UMOL/(8.HR)","amount of substance",20910196875000,[0,-1,0,0,0,0,0],"μmol/h","si",true,null,null,1,false,false,1,0,"umol/8hr; umol/8 hr; umol per 8 hr; umol per 8hr; umols per 8hr; umol per 8 hours; micromoles per 8 hours; shift","LOINC","SRat","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"micromole per day","umol/d","UMOL/D","amount of substance",6970065625000,[0,-1,0,0,0,0,0],"μmol/d","si",true,null,null,1,false,false,1,0,"umol/day; umol per day; umols per day; umol per days; micromoles per days; umol/24hr; umol/24 hr; umol per 24 hr; umol per 24hr; umols per 24hr; umol per 24 hours; micromoles per 24 hours","LOINC","SRat","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"micromole per deciliter","umol/dL","UMOL/DL","amount of substance",6.0221367e+21,[-3,0,0,0,0,0,0],"μmol/dL","si",true,null,null,1,false,false,1,0,"micromole/deciliter; micromole/decilitre; umol per dL; micromoles per deciliters; micromole per decilitres","LOINC","SCnc","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"micromole per gram","umol/g","UMOL/G","amount of substance",602213670000000000,[0,0,-1,0,0,0,0],"μmol/g","si",true,null,null,1,false,false,1,0,"micromole/gram; umol per g; micromoles per gram","LOINC","SCnt; Ratio","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"micromole per hour","umol/h","UMOL/HR","amount of substance",167281575000000,[0,-1,0,0,0,0,0],"μmol/h","si",true,null,null,1,false,false,1,0,"umol/hr; umol per hr; umol per hour; micromoles per hours","LOINC","SRat","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"micromole per kilogram","umol/kg","UMOL/KG","amount of substance",602213670000000,[0,0,-1,0,0,0,0],"μmol/kg","si",true,null,null,1,false,false,1,0,"umol per kg; micromoles per kilogram","LOINC","SCnt","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"micromole per liter","umol/L","UMOL/L","amount of substance",602213670000000000000,[-3,0,0,0,0,0,0],"μmol/L","si",true,null,null,1,false,false,1,0,"micromole/liter; micromole/litre; umol per liter; micromoles per liter; litre","LOINC","SCnc","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"micromole per liter per hour","umol/L/h","(UMOL/L)/HR","amount of substance",167281575000000000,[-3,-1,0,0,0,0,0],"(μmol/L)/h","si",true,null,null,1,false,false,1,0,"umol/liter/hr; umol/litre/hr; umol per L per hr; umol per liter per hour; micromoles per liters per hour; litre","LOINC","CCnc","Clinical","unit for the enzyme unit U = umol/min; umol/L/h is a derived unit of enzyme units","10*23","10*23","6.0221367",6.0221367,false],[false,"micromole per milligram","umol/mg","UMOL/MG","amount of substance",602213670000000000000,[0,0,-1,0,0,0,0],"μmol/mg","si",true,null,null,1,false,false,1,0,"micromole/milligram; umol per mg; micromoles per milligram","LOINC","SCnt","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"micromole per minute","umol/min","UMOL/MIN","amount of substance",10036894500000000,[0,-1,0,0,0,0,0],"μmol/min","si",true,null,null,1,false,false,1,0,"micromole/minute; umol per min; micromoles per minute; enzyme units","LOINC","CAct","Clinical","unit for the enzyme unit U = umol/min","10*23","10*23","6.0221367",6.0221367,false],[false,"micromole per minute per gram","umol/min/g","(UMOL/MIN)/G","amount of substance",10036894500000000,[0,-1,-1,0,0,0,0],"(μmol/min)/g","si",true,null,null,1,false,false,1,0,"umol/min/gm; umol per min per gm; micromoles per minutes per gram; U/g; enzyme units","LOINC","CCnt","Clinical","unit for the enzyme unit U = umol/min. umol/min/g = U/g","10*23","10*23","6.0221367",6.0221367,false],[false,"micromole per minute per liter","umol/min/L","(UMOL/MIN)/L","amount of substance",10036894500000000000,[-3,-1,0,0,0,0,0],"(μmol/min)/L","si",true,null,null,1,false,false,1,0,"umol/min/liter; umol/minute/liter; micromoles per minutes per liter; litre; enzyme units; U/L","LOINC","CCnc","Clinical","unit for the enzyme unit U = umol/min. umol/min/L = U/L","10*23","10*23","6.0221367",6.0221367,false],[false,"micromole per milliliter","umol/mL","UMOL/ML","amount of substance",6.0221367000000003e+23,[-3,0,0,0,0,0,0],"μmol/mL","si",true,null,null,1,false,false,1,0,"umol per mL; micromoles per milliliter; millilitre","LOINC","SCnc","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"micromole per milliliter per minute","umol/mL/min","(UMOL/ML)/MIN","amount of substance",1.00368945e+22,[-3,-1,0,0,0,0,0],"(μmol/mL)/min","si",true,null,null,1,false,false,1,0,"umol per mL per min; micromoles per milliliters per minute; millilitres","LOINC","CCnc","Clinical","unit for the enzyme unit U = umol/min. umol/mL/min = U/mL","10*23","10*23","6.0221367",6.0221367,false],[false,"micromole per millimole","umol/mmol","UMOL/MMOL","amount of substance",0.001,[0,0,0,0,0,0,0],"μmol/mmol","si",true,null,null,1,false,false,0,0,"umol per mmol; micromoles per millimole","LOINC","SRto","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"micromole per mole","umol/mol","UMOL/MOL","amount of substance",0.000001,[0,0,0,0,0,0,0],"μmol/mol","si",true,null,null,1,false,false,0,0,"umol per mol; micromoles per mole","LOINC","SRto","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"micromole per micromole","umol/umol","UMOL/UMOL","amount of substance",1,[0,0,0,0,0,0,0],"μmol/μmol","si",true,null,null,1,false,false,0,0,"umol per umol; micromoles per micromole","LOINC","Srto; SFr; EntSRto","Clinical","","10*23","10*23","6.0221367",6.0221367,false],[false,"microOhm","uOhm","UOHM","electric resistance",0.001,[2,-1,1,0,0,-2,0],"μΩ","si",true,null,null,1,false,false,0,0,"microOhms; µΩ","LOINC","","Clinical","unit of electric resistance","V/A","V/A","1",1,false],[false,"microsecond","us","US","time",0.000001,[0,1,0,0,0,0,0],"μs",null,false,"T",null,1,false,false,0,0,"microseconds","LOINC","Time","Clinical","",null,null,null,null,false],[false,"micro enzyme unit per gram","uU/g","UU/G","catalytic activity",10036894500,[0,-1,-1,0,0,0,0],"μU/g","chemical",true,null,null,1,false,false,1,0,"uU per gm; micro enzyme units per gram; micro enzymatic activity per mass; enzyme activity","LOINC","CCnt","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min); 1 uU = 1pmol/min","umol/min","UMOL/MIN","1",1,false],[false,"micro enzyme unit per liter","uU/L","UU/L","catalytic activity",10036894500000,[-3,-1,0,0,0,0,0],"μU/L","chemical",true,null,null,1,false,false,1,0,"uU per L; micro enzyme units per liter; litre; enzymatic activity per volume; enzyme activity ","LOINC","CCnc","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min); 1 uU = 1pmol/min","umol/min","UMOL/MIN","1",1,false],[false,"micro enzyme unit per milliliter","uU/mL","UU/ML","catalytic activity",10036894500000000,[-3,-1,0,0,0,0,0],"μU/mL","chemical",true,null,null,1,false,false,1,0,"uU per mL; micro enzyme units per milliliter; millilitre; enzymatic activity per volume; enzyme activity","LOINC","CCnc","Clinical","1 U is the standard enzyme unit which equals 1 micromole substrate catalyzed per minute (1 umol/min); 1 uU = 1pmol/min","umol/min","UMOL/MIN","1",1,false],[false,"microvolt","uV","UV","electric potential",0.001,[2,-2,1,0,0,-1,0],"μV","si",true,null,null,1,false,false,0,0,"microvolts","LOINC","Elpot","Clinical","unit of electric potential (voltage)","J/C","J/C","1",1,false]]}`);
+const require$$5 = {
+  prefixes,
+  units
+};
+var hasRequiredUcumJsonDefs;
+function requireUcumJsonDefs() {
+  if (hasRequiredUcumJsonDefs) return ucumJsonDefs;
+  hasRequiredUcumJsonDefs = 1;
+  Object.defineProperty(ucumJsonDefs, "__esModule", {
+    value: true
+  });
+  ucumJsonDefs.ucumJsonDefs = ucumJsonDefs.UcumJsonDefs = void 0;
+  var Pfx = requirePrefix();
+  var PfxT = requirePrefixTables();
+  var Un2 = requireUnit();
+  var Utab = requireUnitTables();
+  var unpackArray = requireJsonArrayPack().unpackArray;
+  class UcumJsonDefs {
+    /**
+     * This method loads the JSON prefix and unit objects into the prefix and
+     * unit tables.
+     *
+     * @returns nothing
+     */
+    loadJsonDefs() {
+      const jsonDefs = require$$5;
+      jsonDefs.prefixes = unpackArray(jsonDefs.prefixes);
+      jsonDefs.units = unpackArray(jsonDefs.units);
+      if (Utab.UnitTables.getInstance().unitsCount() === 0) {
+        let pTab = PfxT.PrefixTables.getInstance();
+        let prefixes2 = jsonDefs["prefixes"];
+        let plen = prefixes2.length;
+        for (let p = 0; p < plen; p++) {
+          let newPref = new Pfx.Prefix(prefixes2[p]);
+          pTab.add(newPref);
+        }
+        let uTab = Utab.UnitTables.getInstance();
+        let units2 = jsonDefs["units"];
+        let ulen = units2.length;
+        for (let u = 0; u < ulen; u++) {
+          let newUnit = new Un2.Unit(units2[u]);
+          uTab.addUnit(newUnit);
+        }
+      }
+    }
+    // end loadJsonDefs
+  }
+  ucumJsonDefs.UcumJsonDefs = UcumJsonDefs;
+  var ucumJsonDefs$1 = new UcumJsonDefs();
+  ucumJsonDefs.ucumJsonDefs = ucumJsonDefs$1;
+  return ucumJsonDefs;
+}
+var unitString = {};
+var hasRequiredUnitString;
+function requireUnitString() {
+  if (hasRequiredUnitString) return unitString;
+  hasRequiredUnitString = 1;
+  Object.defineProperty(unitString, "__esModule", {
+    value: true
+  });
+  unitString.UnitString = void 0;
+  var intUtils_ = _interopRequireWildcard(requireUcumInternalUtils());
+  function _interopRequireWildcard(e, t) {
+    if ("function" == typeof WeakMap) var r = /* @__PURE__ */ new WeakMap(), n = /* @__PURE__ */ new WeakMap();
+    return (_interopRequireWildcard = function(e2, t2) {
+      if (!t2 && e2 && e2.__esModule) return e2;
+      var o, i, f2 = { __proto__: null, default: e2 };
+      if (null === e2 || "object" != typeof e2 && "function" != typeof e2) return f2;
+      if (o = t2 ? n : r) {
+        if (o.has(e2)) return o.get(e2);
+        o.set(e2, f2);
+      }
+      for (const t3 in e2) "default" !== t3 && {}.hasOwnProperty.call(e2, t3) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e2, t3)) && (i.get || i.set) ? o(f2, t3, i) : f2[t3] = e2[t3]);
+      return f2;
+    })(e, t);
+  }
+  function _defineProperty(e, r, t) {
+    return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: true, configurable: true, writable: true }) : e[r] = t, e;
+  }
+  function _toPropertyKey(t) {
+    var i = _toPrimitive(t, "string");
+    return "symbol" == typeof i ? i : i + "";
+  }
+  function _toPrimitive(t, r) {
+    if ("object" != typeof t || !t) return t;
+    var e = t[Symbol.toPrimitive];
+    if (void 0 !== e) {
+      var i = e.call(t, r);
+      if ("object" != typeof i) return i;
+      throw new TypeError("@@toPrimitive must return a primitive value.");
+    }
+    return ("string" === r ? String : Number)(t);
+  }
+  var Ucum = requireConfig().Ucum;
+  var Unit = requireUnit().Unit;
+  var UnitTables = requireUnitTables().UnitTables;
+  var PrefixTables = requirePrefixTables().PrefixTables;
+  class UnitString {
+    /**
+     * Constructor
+     */
+    constructor() {
+      this.utabs_ = UnitTables.getInstance();
+      this.pfxTabs_ = PrefixTables.getInstance();
+      this.openEmph_ = Ucum.openEmph_;
+      this.closeEmph_ = Ucum.closeEmph_;
+      this.bracesMsg_ = "";
+      this.parensFlag_ = "parens_placeholder";
+      this.pFlagLen_ = this.parensFlag_.length;
+      this.braceFlag_ = "braces_placeholder";
+      this.bFlagLen_ = this.braceFlag_.length;
+      this.vcMsgStart_ = null;
+      this.vcMsgEnd_ = null;
+      this.retMsg_ = [];
+      this.parensUnits_ = [];
+      this.annotations_ = [];
+      this.suggestions = [];
+    }
+    // end constructor
+    // The start of an error message about an invalid annotation character.
+    // A regular expression for validating annotation strings.
+    /**
+     * Sets the emphasis strings to the HTML used in the webpage display - or
+     * blanks them out, depending on the use parameter.
+     *
+     * @param use flag indicating whether or not to use the html message format;
+     *  defaults to true
+     */
+    useHTMLInMessages(use) {
+      if (use === void 0 || use) {
+        this.openEmph_ = Ucum.openEmphHTML_;
+        this.closeEmph_ = Ucum.closeEmphHTML_;
+      } else {
+        this.openEmph_ = Ucum.openEmph_;
+        this.closeEmph_ = Ucum.closeEmph_;
+      }
+    }
+    // end useHTMLInMessages
+    /**
+     * Sets the braces message to be displayed for each unit string validation
+     * requested, as appropriate.
+     *
+     * @param use flag indicating whether or not to use the braces message;
+     *  defaults to true
+     */
+    useBraceMsgForEachString(use) {
+      if (use === void 0 || use) this.bracesMsg_ = Ucum.bracesMsg_;
+      else this.bracesMsg_ = "";
+    }
+    /**
+     * Parses a unit string, returns a unit, a possibly updated version of
+     * the string passed in, and messages and suggestions where appropriate.
+     *
+     * The string returned may be updated if the input string contained unit
+     * names, e.g., "pound".  The unit code ([lb_av] for pound) is placed in
+     * the string returned, a the returned messages array includes a note
+     * explaining the substitution.
+     *
+     * @param uStr the string defining the unit
+     * @param valConv indicates what type of request this is for - a request to
+     *  validate (pass in 'validate') or a request to convert (pass in 'convert');
+     *  optional, defaults to 'validate'
+     * @param suggest a boolean to indicate whether or not suggestions are
+     *  requested for a string that cannot be resolved to a valid unit;
+     *  true indicates suggestions are wanted; false indicates they are not,
+     *  and is the default if the parameter is not specified;
+     * @returns an array containing:
+     *   the unit object or null if a unit could not be created.  In cases where
+     *     a fix was found for a problem string, .e.g., 2.mg for 2mg, a unit will
+     *     be returned but an error message will also be returned, describing
+     *     the substitution;
+     *   the possibly updated unit string passed in;
+     *   an array of any user messages (informational, error or warning)
+     *     generated (or an empty array); and
+     *   a suggestions array of hash objects (1 or more).  Each hash contains
+     *   three elements:
+     *     'msg' which is a message indicating what unit expression the
+     *       suggestions are for;
+     *     'invalidUnit' which is the unit expression the suggestions are
+     *       for; and
+     *     'units' which is an array of data for each suggested unit found.
+     *        Each array will contain the unit code, the unit name and the
+     *        unit guidance (if any).
+     *   The return array will not contain a suggestions array if a valid unit
+     *   was found or if suggestions were not requested.
+     * @throws an error if nothing was specified.
+     */
+    parseString(uStr, valConv, suggest) {
+      uStr = uStr.trim();
+      if (uStr === "" || uStr === null) {
+        throw new Error("Please specify a unit expression to be validated.");
+      }
+      if (valConv === "validate") {
+        this.vcMsgStart_ = Ucum.valMsgStart_;
+        this.vcMsgEnd_ = Ucum.valMsgEnd_;
+      } else {
+        this.vcMsgStart_ = Ucum.cnvMsgStart_;
+        this.vcMsgEnd_ = Ucum.cnvMsgEnd_;
+      }
+      if (suggest === void 0 || suggest === false) {
+        this.suggestions_ = null;
+      } else {
+        this.suggestions_ = [];
+      }
+      this.retMsg_ = [];
+      this.parensUnits_ = [];
+      this.annotations_ = [];
+      let origString = uStr;
+      let retObj = [];
+      uStr = this._getAnnotations(uStr);
+      if (this.retMsg_.length > 0) {
+        retObj[0] = null;
+        retObj[1] = null;
+      } else {
+        this.retMsg_.length > 0;
+        let sUnit = null;
+        for (sUnit in Ucum.specUnits_) {
+          while (uStr.indexOf(sUnit) !== -1) uStr = uStr.replace(sUnit, Ucum.specUnits_[sUnit]);
+        }
+        if (uStr.indexOf(" ") > -1) {
+          throw new Error("Blank spaces are not allowed in unit expressions.");
+        }
+        retObj = this._parseTheString(uStr, origString);
+        let finalUnit = retObj[0];
+        if (intUtils_.isIntegerUnit(finalUnit) || typeof finalUnit === "number") {
+          finalUnit = new Unit({
+            "csCode_": origString,
+            "ciCode_": origString,
+            "magnitude_": finalUnit,
+            "name_": origString
+          });
+          retObj[0] = finalUnit;
+        }
+      }
+      retObj[2] = this.retMsg_;
+      if (this.suggestions_ && this.suggestions_.length > 0) retObj[3] = this.suggestions_;
+      return retObj;
+    }
+    // end parseString
+    /**
+     * Parses a unit string, returns a unit, a possibly updated version of
+     * the string passed in, and messages where appropriate.  This should
+     * only be called from within this class (or by test code).
+     *
+     * The string returned may be updated if the input string contained unit
+     * names, e.g., "pound".  The unit code ([lb_av] for pound) is placed in
+     * the string returned, a the returned messages array includes a note
+     * explaining the substitution.
+     *
+     * @param uStr the string defining the unit
+     * @param origString the original unit string passed in
+     *
+     * @returns
+     *  an array containing:
+     *    the unit object (or null if there were problems creating the unit); and
+     *    the possibly updated unit string passed in.
+     *
+     * the this.retMsg_ array will be updated with any user messages
+     *   (informational, error or warning) generated by this or called methods
+     * the this.parensUnits_ array is referenced and possibly populated by
+     *   methods called within this one
+     * the this.annotations_ array is referenced by methods called within
+     *   this one
+     * the this.suggestions_ array may be populated by methods called within
+     *   this one
+     */
+    _parseTheString(uStr, origString) {
+      let finalUnit = null;
+      let endProcessing = this.retMsg_.length > 0;
+      let parensResp = this._processParens(uStr, origString);
+      endProcessing = parensResp[2];
+      let uArray = [];
+      if (!endProcessing) {
+        uStr = parensResp[0];
+        origString = parensResp[1];
+        let mkUArray = this._makeUnitsArray(uStr, origString);
+        endProcessing = mkUArray[2];
+        if (!endProcessing) {
+          uArray = mkUArray[0];
+          origString = mkUArray[1];
+          let uLen = uArray.length;
+          for (let u1 = 0; u1 < uLen; u1++) {
+            let curCode = uArray[u1]["un"];
+            if (intUtils_.isIntegerUnit(curCode)) {
+              uArray[u1]["un"] = Number(curCode);
+            } else {
+              if (curCode.indexOf(this.parensFlag_) >= 0) {
+                let parenUnit = this._getParensUnit(curCode, origString);
+                if (!endProcessing) endProcessing = parenUnit[1];
+                if (!endProcessing) {
+                  uArray[u1]["un"] = parenUnit[0];
+                }
+              } else {
+                let uRet = this._makeUnit(curCode, origString);
+                if (uRet[0] === null) {
+                  endProcessing = true;
+                } else {
+                  uArray[u1]["un"] = uRet[0];
+                  origString = uRet[1];
+                }
+              }
+            }
+          }
+        }
+      }
+      if (!endProcessing) {
+        if ((uArray[0] === null || uArray[0] === " " || uArray[0]["un"] === void 0 || uArray[0]["un"] === null) && this.retMsg_.length === 0) {
+          this.retMsg_.push(`Unit string (${origString}) did not contain anything that could be used to create a unit, or else something that is not handled yet by this package.  Sorry`);
+          endProcessing = true;
+        }
+      }
+      if (!endProcessing) {
+        finalUnit = this._performUnitArithmetic(uArray, origString);
+      }
+      return [finalUnit, origString];
+    }
+    // end _parseTheString
+    /**
+     * Extracts all annotations from a unit string, replacing them with
+     * placeholders for later evaluation.  The annotations are stored in the
+     * this.annotations_ array.  This should only be called from within this
+     * class (or by test code).
+     *
+     * @param uString the unit string being parsed
+     * @returns the string after the annotations are replaced with placeholders
+     *
+     * the this.retMsg_ array will be updated with any user messages
+     *   (informational, error or warning) generated by this or called methods
+     * the this.annotations_ array is populated by this method
+     */
+    _getAnnotations(uString) {
+      let openBrace = uString.indexOf("{");
+      while (openBrace >= 0) {
+        let closeBrace = uString.indexOf("}");
+        if (closeBrace < 0) {
+          this.retMsg_.push("Missing closing brace for annotation starting at " + this.openEmph_ + uString.substr(openBrace) + this.closeEmph_);
+          openBrace = -1;
+        } else {
+          let braceStr = uString.substring(openBrace, closeBrace + 1);
+          if (!UnitString.VALID_ANNOTATION_REGEX.test(braceStr)) {
+            this.retMsg_.push(UnitString.INVALID_ANNOTATION_CHAR_MSG + this.openEmph_ + braceStr + this.closeEmph_);
+            openBrace = -1;
+          } else {
+            let aIdx = this.annotations_.length.toString();
+            uString = uString.replace(braceStr, this.braceFlag_ + aIdx + this.braceFlag_);
+            this.annotations_.push(braceStr);
+            openBrace = uString.indexOf("{");
+          }
+        }
+      }
+      if (this.retMsg_.length == 0) {
+        let closeBrace = uString.indexOf("}");
+        if (closeBrace >= 0) this.retMsg_.push("Missing opening brace for closing brace found at " + this.openEmph_ + uString.substring(0, closeBrace + 1) + this.closeEmph_);
+      }
+      return uString;
+    }
+    // end _getAnnotations
+    /**
+     * Finds and processes any/all parenthesized unit strings. This should only
+     * be called from within this class (or by test code).
+     *
+     * Nested parenthesized strings are processed from the inside out.  The
+     * parseString function is called from within this one for each parenthesized
+     * unit string, and the resulting unit object is stored in this.parensUnits_,
+     * to be processed after all strings are translated to units.
+     *
+     * A placeholder is placed in the unit string returned to indicate that the
+     * unit object should be obtained from the this.parensUnits_ array.  The
+     * placeholder consists of the parenthesis flag (this.parensFlag_) followed
+     * by the index of the unit in this.parensUnits_ followed by this.parensFlag_.
+     *
+     * @param uString the unit string being parsed, where this will be the full
+     *  string the first time this is called and parenthesized strings on any
+     *  subsequent calls
+     * @param origString the original string first passed in to parseString
+     * @returns
+     *  an array containing:
+     *   the string after the parentheses are replaced;
+     *   the original string; and
+     *   a boolean flag indicating whether or not an error occurred that
+     *     should stop processing.
+     *
+     * the this.retMsg_ array will be updated with any user messages
+     *   (informational, error or warning) generated by this or called methods
+     * this this.parensUnits_ array will be populated with units found for
+     *   parenthetical unit strings
+     */
+    _processParens(uString, origString) {
+      let uStrArray = [];
+      let uStrAryPos = 0;
+      let stopProcessing = false;
+      let pu = this.parensUnits_.length;
+      let trimmedCt = 0;
+      while (uString !== "" && !stopProcessing) {
+        let openCt = 0;
+        let closeCt = 0;
+        let openPos = uString.indexOf("(");
+        if (openPos < 0) {
+          let closePos = uString.indexOf(")");
+          if (closePos >= 0) {
+            let theMsg = `Missing open parenthesis for close parenthesis at ${uString.substring(0, closePos + trimmedCt)}${this.openEmph_}${uString.substr(closePos, 1)}${this.closeEmph_}`;
+            if (closePos < uString.length - 1) {
+              theMsg += `${uString.substr(closePos + 1)}`;
+            }
+            this.retMsg_.push(theMsg);
+            uStrArray[uStrAryPos] = uString;
+            stopProcessing = true;
+          } else {
+            uStrArray[uStrAryPos] = uString;
+            uString = "";
+          }
+        } else {
+          openCt += 1;
+          let uLen = uString.length;
+          if (openPos > 0) {
+            uStrArray[uStrAryPos++] = uString.substr(0, openPos);
+          }
+          let closePos = 0;
+          let c = openPos + 1;
+          for (; c < uLen && openCt != closeCt; c++) {
+            if (uString[c] === "(") openCt += 1;
+            else if (uString[c] === ")") closeCt += 1;
+          }
+          if (openCt === closeCt) {
+            closePos = c;
+            uStrArray[uStrAryPos++] = this.parensFlag_ + pu.toString() + this.parensFlag_;
+            let parseResp = this._parseTheString(uString.substring(openPos + 1, closePos - 1), origString);
+            if (parseResp[0] === null) stopProcessing = true;
+            else if (uString[openPos + 1] === "/") {
+              this.retMsg_.push("Unary operator '/' is only allowed at the beginning of the main term, not inside a parenthesis.");
+              stopProcessing = true;
+            } else {
+              origString = parseResp[1];
+              this.parensUnits_[pu++] = parseResp[0];
+              uString = uString.substr(closePos);
+              trimmedCt = closePos;
+            }
+          } else {
+            uStrArray.push(origString.substr(openPos));
+            this.retMsg_.push(`Missing close parenthesis for open parenthesis at ${origString.substring(0, openPos + trimmedCt)}${this.openEmph_}${origString.substr(openPos, 1)}${this.closeEmph_}${origString.substr(openPos + 1)}`);
+            stopProcessing = true;
+          }
+        }
+      }
+      if (stopProcessing) this.parensUnits_ = [];
+      return [uStrArray.join(""), origString, stopProcessing];
+    }
+    // end _processParens
+    /**
+     * Breaks the unit string into an array of unit descriptors and operators.
+     * If a unit descriptor consists of a number preceding a unit code, with
+     * no multiplication operator, e.g., 2mg instead of 2.mg, it is handled
+     * as if it were a parenthetical expression.
+     *
+     * This should only be called from within this class (or by test code).
+     *
+     * @param uStr the unit string being parsed
+     * @param origString the original string passed to parseString
+     * @returns
+     *  an array containing:
+     *    the array representing the unit string;
+     *    the original string passed in, possibly updated with corrections; and
+     *    and a flag indicating whether or not processing can continue.
+     *
+     * the this.retMsg_ array will be updated with any user messages
+     *   (informational, error or warning) generated by this or called methods
+     */
+    _makeUnitsArray(uStr, origString) {
+      let uArray1 = uStr.match(/([./]|[^./]+)/g);
+      let endProcessing = false;
+      let uArray = [];
+      let startNumCheck = /(^[0-9]+)(\[?[a-zA-Z\_0-9a-zA-Z\_]+\]?$)/;
+      if (uArray1[0] === "/") {
+        uArray1.unshift("1");
+      } else if (uArray1[0] === ".") {
+        this.retMsg_.push(`${origString} is not a valid UCUM code. The multiplication operator at the beginning of the expression is not valid. A multiplication operator must appear only between two codes.`);
+        endProcessing = true;
+      }
+      if (!endProcessing) {
+        if (!intUtils_.isNumericString(uArray1[0])) {
+          let numRes = uArray1[0].match(startNumCheck);
+          if (numRes && numRes.length === 3 && numRes[1] !== "" && numRes[2] !== "" && numRes[2].indexOf(this.braceFlag_) !== 0) {
+            let dispVal = numRes[2];
+            if (!endProcessing && numRes[2].indexOf(this.parensFlag_) !== -1) {
+              let parensback = this._getParensUnit(numRes[2], origString);
+              numRes[2] = parensback[0]["csCode_"];
+              dispVal = `(${numRes[2]})`;
+              endProcessing = parensback[1];
+            }
+            if (!endProcessing) {
+              this.retMsg_.push(`${numRes[1]}${dispVal} is not a valid UCUM code.  ${this.vcMsgStart_}${numRes[1]}.${dispVal}${this.vcMsgEnd_}`);
+              origString = origString.replace(`${numRes[1]}${dispVal}`, `${numRes[1]}.${dispVal}`);
+              uArray1[0] = numRes[2];
+              uArray1.unshift(numRes[1], ".");
+            }
+          }
+        }
+        if (!endProcessing) {
+          let u1 = uArray1.length;
+          uArray = [{
+            op: "",
+            un: uArray1[0]
+          }];
+          for (let n = 1; n < u1; n++) {
+            let theOp = uArray1[n++];
+            if (!uArray1[n]) {
+              this.retMsg_.push(`${origString} is not a valid UCUM code. It is terminated with the operator ${this.openEmph_}${theOp}${this.closeEmph_}.`);
+              n = u1;
+              endProcessing = true;
+            } else if (Ucum.validOps_.indexOf(uArray1[n]) !== -1) {
+              this.retMsg_.push(`${origString} is not a valid UCUM code. A unit code is missing between${this.openEmph_}${theOp}${this.closeEmph_}and${this.openEmph_}${uArray1[n]}${this.closeEmph_}in${this.openEmph_}${theOp}${uArray1[n]}${this.closeEmph_}.`);
+              n = u1;
+              endProcessing = true;
+            } else {
+              if (!intUtils_.isNumericString(uArray1[n])) {
+                let numRes2 = uArray1[n].match(startNumCheck);
+                if (numRes2 && numRes2.length === 3 && numRes2[1] !== "" && numRes2[2] !== "" && numRes2[2].indexOf(this.braceFlag_) !== 0) {
+                  let invalidString = numRes2[0];
+                  if (!endProcessing && numRes2[2].indexOf(this.parensFlag_) !== -1) {
+                    let parensback = this._getParensUnit(numRes2[2], origString);
+                    numRes2[2] = parensback[0]["csCode_"];
+                    invalidString = `(${numRes2[2]})`;
+                    endProcessing = parensback[1];
+                    if (!endProcessing) {
+                      this.retMsg_.push(`${numRes2[1]}${invalidString} is not a valid UCUM code.  ${this.vcMsgStart_}${numRes2[1]}.${invalidString}${this.vcMsgEnd_}`);
+                      let parensString = `(${numRes2[1]}.${invalidString})`;
+                      origString = origString.replace(`${numRes2[1]}${invalidString}`, parensString);
+                      let nextParens = this._processParens(parensString, origString);
+                      endProcessing = nextParens[2];
+                      if (!endProcessing) {
+                        uArray.push({
+                          op: theOp,
+                          un: nextParens[0]
+                        });
+                      }
+                    }
+                  } else {
+                    let parensStr = "(" + numRes2[1] + "." + numRes2[2] + ")";
+                    let parensResp = this._processParens(parensStr, origString);
+                    if (parensResp[2]) {
+                      n = u1;
+                      endProcessing = true;
+                    } else {
+                      this.retMsg_.push(`${numRes2[0]} is not a valid UCUM code.  ${this.vcMsgStart_}${numRes2[1]}.${numRes2[2]}${this.vcMsgEnd_}`);
+                      origString = origString.replace(numRes2[0], parensStr);
+                      uArray.push({
+                        op: theOp,
+                        un: parensResp[0]
+                      });
+                    }
+                  }
+                } else {
+                  uArray.push({
+                    op: theOp,
+                    un: uArray1[n]
+                  });
+                }
+              } else {
+                uArray.push({
+                  op: theOp,
+                  un: uArray1[n]
+                });
+              }
+            }
+          }
+        }
+      }
+      return [uArray, origString, endProcessing];
+    }
+    // end _makeUnitsArray
+    /**
+     * Takes a unit string containing parentheses flags and returns the unit they
+     * represent.  Any text found before and/or after the parenthetical
+     * expression is checked to see if we can tell what the user meant and
+     * let them know what it should have been.  For example, 2(mg), which
+     * would resolve to 2mg, should be 2.mg.
+     *
+     * This should only be called from within this class (or by test code).
+     *
+     * @param pStr the string being parsed
+     * @param origString the original unit string passed in; passed through
+     *  to _getAnnonText if annotation flags are found in any text preceding
+     *  or following the parenthetical unit
+     * @returns
+     *   an array containing
+     *     the unit object; and
+     *     a flag indicating whether or not processing should be ended.
+     *       True indicates that the string was invalid and no corrections
+     *         (substitutions or suggestions) could be found;
+     *       False indicates that it was either valid or substitutions/suggestions
+     *          were made.
+     *   the this.retMsg_ array will be updated with any user messages
+     *     (informational, error or warning) generated by this or called methods
+     *   this this.parensUnits_ array contains the units that are acquired by
+     *     this method
+     * @throws an error if an invalid parensUnit index was found.  This is
+     *    a processing error.
+     */
+    _getParensUnit(pStr, origString) {
+      let endProcessing = false;
+      let retUnit = null;
+      let psIdx = pStr.indexOf(this.parensFlag_);
+      let befText = null;
+      if (psIdx > 0) {
+        befText = pStr.substring(0, psIdx);
+      }
+      let peIdx = pStr.lastIndexOf(this.parensFlag_);
+      let aftText = null;
+      if (peIdx + this.pFlagLen_ < pStr.length) {
+        aftText = pStr.substr(peIdx + this.pFlagLen_);
+      }
+      let pNumText = pStr.substring(psIdx + this.pFlagLen_, peIdx);
+      if (intUtils_.isNumericString(pNumText)) {
+        retUnit = this.parensUnits_[Number(pNumText)];
+        if (!intUtils_.isIntegerUnit(retUnit)) {
+          pStr = retUnit.csCode_;
+        } else {
+          pStr = retUnit;
+        }
+      } else {
+        throw new Error(`Processing error - invalid parens number ${pNumText} found in ${pStr}.`);
+      }
+      if (befText) {
+        if (intUtils_.isNumericString(befText)) {
+          let nMag = retUnit.getProperty("magnitude_");
+          nMag *= Number(befText);
+          retUnit.assignVals({
+            "magnitude_": nMag
+          });
+          pStr = `${befText}.${pStr}`;
+          this.retMsg_.push(`${befText}${pStr} is not a valid UCUM code.
+` + this.vcMsgStart_ + pStr + this.vcMsgEnd_);
+        } else {
+          if (befText.indexOf(this.braceFlag_) >= 0) {
+            let annoRet = this._getAnnoText(befText, origString);
+            if (annoRet[1] || annoRet[2]) {
+              throw new Error(`Text found before the parentheses (${befText}) included an annotation along with other text for parenthetical unit ${retUnit.csCode_}`);
+            }
+            pStr += annoRet[0];
+            this.retMsg_.push(`The annotation ${annoRet[0]} before the unit code is invalid.
+` + this.vcMsgStart_ + pStr + this.vcMsgEnd_);
+          } else {
+            this.retMsg_.push(`${befText} preceding the unit code ${pStr} is invalid.  Unable to make a substitution.`);
+            endProcessing = true;
+          }
+        }
+      }
+      if (aftText) {
+        if (aftText.indexOf(this.braceFlag_) >= 0) {
+          let annoRet = this._getAnnoText(aftText, origString);
+          if (annoRet[1] || annoRet[2]) {
+            throw new Error(`Text found after the parentheses (${aftText}) included an annotation along with other text for parenthetical unit ${retUnit.csCode_}`);
+          }
+          pStr += annoRet[0];
+        } else {
+          if (intUtils_.isNumericString(aftText)) {
+            retUnit = null;
+            let msg = `An exponent (${aftText}) following a parenthesis is invalid as of revision 1.9 of the UCUM Specification.`;
+            if (!pStr.match(/\d$/)) {
+              pStr += aftText;
+              msg += "\n  " + this.vcMsgStart_ + pStr + this.vcMsgEnd_;
+            }
+            this.retMsg_.push(msg);
+            endProcessing = true;
+          } else {
+            this.retMsg_.push(`Text ${aftText} following the unit code ${pStr} is invalid.  Unable to make a substitution.`);
+            endProcessing = true;
+          }
+        }
+      }
+      if (!endProcessing) {
+        if (!retUnit) {
+          retUnit = new Unit({
+            "csCode_": pStr,
+            "magnitude_": 1,
+            "name_": pStr
+          });
+        } else if (intUtils_.isIntegerUnit(retUnit)) {
+          retUnit = new Unit({
+            "csCode_": retUnit,
+            "magnitude_": retUnit,
+            "name_": retUnit
+          });
+        } else {
+          retUnit.csCode_ = pStr;
+        }
+      }
+      return [retUnit, endProcessing];
+    }
+    // end _getParensUnit
+    /**
+     * Takes a unit string containing annotation flags and returns the
+     * annotation they represent.  This also returns any text found before
+     * the annotation and any found after the annotation.
+     *
+     * This should only be called from within this class (or by test code).
+     * NEEDS FIX in next branch to handle string with multiple annotations.
+     *
+     * @param pStr the string being parsed
+     * @param origString the original string being parsed; used in error msg
+     *  thrown for an invalid index to the annotations array
+     * @returns
+     *  an array containing
+     *    the annotation for the pStr;
+     *    any text found before the annotation; and
+     *    any text found after the annotation.
+     *
+     * the this.retMsg_ array will be updated with any user messages
+     *   (informational, error or warning) generated by this or called methods
+     * the this.annotations_ array is used as the source for the annotations text
+     * @throws an error if for a processing error - an invalid annotation index.
+     */
+    _getAnnoText(pStr, origString) {
+      let asIdx = pStr.indexOf(this.braceFlag_);
+      let startText = asIdx > 0 ? pStr.substring(0, asIdx) : null;
+      if (asIdx !== 0) {
+        pStr = pStr.substr(asIdx);
+      }
+      let aeIdx = pStr.indexOf(this.braceFlag_, 1);
+      let endText = aeIdx + this.bFlagLen_ < pStr.length ? pStr.substr(aeIdx + this.bFlagLen_) : null;
+      let idx = pStr.substring(this.bFlagLen_, aeIdx);
+      let idxNum = Number(idx);
+      if (!intUtils_.isNumericString(idx) || idxNum >= this.annotations_.length) {
+        throw new Error(`Processing Error - invalid annotation index ${idx} found in ${pStr} that was created from ${origString}`);
+      }
+      pStr = this.annotations_[idxNum];
+      return [pStr, startText, endText];
+    }
+    // end _getAnnoText
+    /**
+     * Takes a unit string and looks for suggested units.  This should be
+     * called for unit strings that cannot be resolved to unit codes.  The
+     * string is searched for in the synonyms table found in the UnitTables
+     * class.  That table includes all synonyms and unit names for the units
+     * in the unit data table.
+     *
+     * @param pStr the string being parsed
+     * @returns an object that contains an element named 'status', whose
+     *  value indicates the status of the request:
+     *   'succeeded' indicates that synonyms were found;
+     *   'failed' indicates that no synonyms were found; or
+     *   'error' which indicates that an error occurred
+     *
+     * the this.retMsg_ array will be updated with a message indicating whether
+     *  or not synonyms/suggestions  were found
+     * the this.suggestions_ array will be updated with a hash (added to the
+     *   array if it already contains others) that contains three elements:
+     *   'msg' which is a message indicating what unit expression the
+     *      suggestions are for;
+     *   'invalidUnit' which is the unit expression the suggestions are for; and
+     *   'units' which is an array of data for each suggested unit found.
+     *       Each array will contain the unit code, the unit name and the
+     *       unit guidance (if any).
+     */
+    _getSuggestions(pStr) {
+      let retObj = intUtils_.getSynonyms(pStr);
+      if (retObj["status"] === "succeeded") {
+        let suggSet = {};
+        suggSet["msg"] = `${pStr} is not a valid UCUM code.  We found possible units that might be what was meant:`;
+        suggSet["invalidUnit"] = pStr;
+        let synLen = retObj["units"].length;
+        suggSet["units"] = [];
+        for (let s2 = 0; s2 < synLen; s2++) {
+          let unit2 = retObj["units"][s2];
+          let unitArray = [unit2["code"], unit2["name"], unit2["guidance"]];
+          suggSet["units"].push(unitArray);
+        }
+        this.suggestions_.push(suggSet);
+      } else {
+        this.retMsg_.push(`${pStr} is not a valid UCUM code.  No alternatives were found.`);
+      }
+      return retObj["status"];
+    }
+    // end getSuggestions
+    /**
+     * Creates a unit object from a string defining one unit.  The string
+     * should consist of a unit code for a unit already defined (base or
+     * otherwise).  It may include a prefix and an exponent, e.g., cm2
+     * (centimeter squared).  This should only be called from within this
+     * class (or by test code).
+     *
+     * @params uCode the string defining the unit
+     * @param origString the original string to be parsed; used to provide
+     *  context for messages
+     * @returns
+     *  an array containing:
+     *    a unit object, or null if there were problems creating the unit; and
+     *    the origString passed in, which may be updated if a unit name was
+     *    translated to a unit code.
+     *
+     *  the this.retMsg_ array will be updated with any user messages
+     *    (informational, error or warning) generated by this or called methods
+     *  the this.suggestions_ array will be populated if no unit (with or without
+     *    substitutions) could be found and suggestions were requested
+     */
+    _makeUnit(uCode, origString) {
+      let retUnit = this.utabs_.getUnitByCode(uCode);
+      if (retUnit) {
+        retUnit = retUnit.clone();
+      } else if (uCode.indexOf(this.braceFlag_) >= 0) {
+        let getAnnoRet = this._getUnitWithAnnotation(uCode, origString);
+        retUnit = getAnnoRet[0];
+        if (retUnit) {
+          origString = getAnnoRet[1];
+        }
+      } else {
+        if (uCode.indexOf("^") > -1) {
+          let tryCode = uCode.replace("^", "*");
+          retUnit = this.utabs_.getUnitByCode(tryCode);
+          if (retUnit) {
+            retUnit = retUnit.clone();
+            retUnit.csCode_ = retUnit.csCode_.replace("*", "^");
+            retUnit.ciCode_ = retUnit.ciCode_.replace("*", "^");
+          }
+        }
+        if (!retUnit) {
+          let addBrackets = "[" + uCode + "]";
+          retUnit = this.utabs_.getUnitByCode(addBrackets);
+          if (retUnit) {
+            retUnit = retUnit.clone();
+            origString = origString.replace(uCode, addBrackets);
+            this.retMsg_.push(`${uCode} is not a valid unit expression, but ${addBrackets} is.
+` + this.vcMsgStart_ + `${addBrackets} (${retUnit.name_})${this.vcMsgEnd_}`);
+          }
+        }
+        if (!retUnit) {
+          let retUnitAry = this.utabs_.getUnitByName(uCode);
+          if (retUnitAry && retUnitAry.length > 0) {
+            retUnit = retUnitAry[0].clone();
+            let mString = "The UCUM code for " + uCode + " is " + retUnit.csCode_ + ".\n" + this.vcMsgStart_ + retUnit.csCode_ + this.vcMsgEnd_;
+            let dupMsg = false;
+            for (let r = 0; r < this.retMsg_.length && !dupMsg; r++) dupMsg = this.retMsg_[r] === mString;
+            if (!dupMsg) this.retMsg_.push(mString);
+            let rStr = new RegExp("(^|[./({])(" + uCode + ")($|[./)}])");
+            let res = origString.match(rStr);
+            origString = origString.replace(rStr, res[1] + retUnit.csCode_ + res[3]);
+            uCode = retUnit.csCode_;
+          }
+        }
+        if (!retUnit) {
+          let sUnit = null;
+          for (sUnit in Ucum.specUnits_) {
+            if (uCode.indexOf(Ucum.specUnits_[sUnit]) !== -1) uCode = uCode.replace(Ucum.specUnits_[sUnit], sUnit);
+          }
+          retUnit = this.utabs_.getUnitByCode(uCode);
+          if (retUnit) retUnit = retUnit.clone();
+        }
+        if (!retUnit) {
+          let origCode = uCode;
+          let origUnit = null;
+          let exp = null;
+          let pfxCode = null;
+          let pfxObj = null;
+          let pfxVal = null;
+          let pfxExp = null;
+          let codeAndExp = this._isCodeWithExponent(uCode);
+          let isIntegerUnitWithExp = false;
+          if (codeAndExp) {
+            uCode = codeAndExp[0];
+            exp = codeAndExp[1];
+            isIntegerUnitWithExp = intUtils_.isIntegerUnit(uCode);
+            origUnit = isIntegerUnitWithExp ? new Unit({
+              "csCode_": uCode,
+              "ciCode_": uCode,
+              "magnitude_": Number(uCode),
+              "name_": uCode
+            }) : this.utabs_.getUnitByCode(uCode);
+          }
+          if (exp && isNaN(exp)) {
+            retUnit = null;
+            this.retMsg_.push(`${origCode} is not a valid UCUM code.`);
+          } else {
+            if (!origUnit) {
+              pfxCode = uCode.charAt(0);
+              pfxObj = this.pfxTabs_.getPrefixByCode(pfxCode);
+              if (pfxObj) {
+                pfxVal = pfxObj.getValue();
+                pfxExp = pfxObj.getExp();
+                let pCodeLen = pfxCode.length;
+                uCode = uCode.substr(pCodeLen);
+                origUnit = this.utabs_.getUnitByCode(uCode);
+                if (!origUnit && pfxCode == "d" && uCode.substr(0, 1) == "a") {
+                  pfxCode = "da";
+                  pfxObj = this.pfxTabs_.getPrefixByCode(pfxCode);
+                  pfxVal = pfxObj.getValue();
+                  uCode = uCode.substr(1);
+                  origUnit = this.utabs_.getUnitByCode(uCode);
+                }
+                if (origUnit && origUnit.source_ == "LOINC") origUnit = null;
+              }
+            }
+            if (!origUnit) {
+              retUnit = null;
+              if (this.suggestions_) {
+                this._getSuggestions(origCode);
+              } else {
+                this.retMsg_.push(`${origCode} is not a valid UCUM code.`);
+              }
+            } else {
+              retUnit = origUnit.clone();
+              retUnit.resetFieldsForDerivedUnit();
+              let theDim = retUnit.getProperty("dim_");
+              let theMag = retUnit.getProperty("magnitude_");
+              let theName = retUnit.getProperty("name_");
+              let theCiCode = retUnit.getProperty("ciCode_");
+              let thePrintSymbol = retUnit.getProperty("printSymbol_");
+              if (exp) {
+                exp = parseInt(exp);
+                let expMul = exp;
+                if (theDim) theDim = theDim.mul(exp);
+                retUnit.equivalentExp_ *= exp;
+                retUnit.moleExp_ *= exp;
+                theMag = Math.pow(theMag, exp);
+                retUnit.assignVals({
+                  "magnitude_": theMag
+                });
+                if (pfxObj) {
+                  if (pfxExp) {
+                    expMul *= pfxObj.getExp();
+                    pfxVal = Math.pow(10, expMul);
+                  }
+                }
+              }
+              if (pfxObj) {
+                if (retUnit.cnv_) {
+                  retUnit.assignVals({
+                    "cnvPfx_": pfxVal
+                  });
+                } else {
+                  theMag *= pfxVal;
+                  retUnit.assignVals({
+                    "magnitude_": theMag
+                  });
+                }
+              }
+              let theCode = retUnit.csCode_;
+              if (pfxObj) {
+                theName = pfxObj.getName() + theName;
+                theCode = pfxCode + theCode;
+                theCiCode = pfxObj.getCiCode() + theCiCode;
+                thePrintSymbol = pfxObj.getPrintSymbol() + thePrintSymbol;
+                retUnit.assignVals({
+                  "name_": theName,
+                  "csCode_": theCode,
+                  "ciCode_": theCiCode,
+                  "printSymbol_": thePrintSymbol
+                });
+              }
+              if (exp) {
+                let expStr = exp.toString();
+                const intergerUnitExpSign = isIntegerUnitWithExp && exp > 0 ? "+" : "";
+                retUnit.assignVals({
+                  "name_": theName + "<sup>" + expStr + "</sup>",
+                  "csCode_": theCode + intergerUnitExpSign + expStr,
+                  "ciCode_": theCiCode + intergerUnitExpSign + expStr,
+                  "printSymbol_": thePrintSymbol + "<sup>" + expStr + "</sup>"
+                });
+              }
+            }
+          }
+        }
+      }
+      return [retUnit, origString];
+    }
+    // end _makeUnit
+    /**
+     * This method handles unit creation when an annotation is included
+     * in the unit string.  This basically isolates and retrieves the
+     * annotation and then calls _makeUnit to try to get a unit from
+     * any text that precedes or follows the annotation.
+     *
+     * @param uCode the string defining the unit
+     * @param origString the original full string submitted to parseString
+     * @returns the unit object found, or null if one could not be found
+     *
+     * the this.retMsg_ array will be updated with any user messages
+     *   (informational, error or warning) generated by this or called methods
+     */
+    _getUnitWithAnnotation(uCode, origString) {
+      let retUnit = null;
+      let annoRet = this._getAnnoText(uCode, origString);
+      let annoText = annoRet[0];
+      let befAnnoText = annoRet[1];
+      let aftAnnoText = annoRet[2];
+      if (this.bracesMsg_ && this.retMsg_.indexOf(this.bracesMsg_) === -1) this.retMsg_.push(this.bracesMsg_);
+      let msgLen = this.retMsg_.length;
+      if (!befAnnoText && !aftAnnoText) {
+        let tryBrackets = "[" + annoText.substring(1, annoText.length - 1) + "]";
+        let mkUnitRet = this._makeUnit(tryBrackets, origString);
+        if (mkUnitRet[0]) {
+          retUnit = uCode;
+          this.retMsg_.push(`${annoText} is a valid unit expression, but did you mean ${tryBrackets} (${mkUnitRet[0].name_})?`);
+        } else {
+          if (this.retMsg_.length > msgLen) {
+            this.retMsg_.pop();
+          }
+        }
+        retUnit = new Unit({
+          "csCode_": annoText,
+          "ciCode_": annoText,
+          "magnitude_": 1,
+          "name_": annoText
+        });
+      } else {
+        if (befAnnoText && !aftAnnoText) {
+          if (intUtils_.isIntegerUnit(befAnnoText)) {
+            retUnit = new Unit({
+              "csCode_": befAnnoText + annoText,
+              "ciCode_": befAnnoText + annoText.toUpperCase(),
+              "magnitude_": Number(befAnnoText),
+              "name_": befAnnoText + annoText
+            });
+          } else {
+            let mkUnitRet = this._makeUnit(befAnnoText, origString);
+            if (mkUnitRet[0]) {
+              retUnit = mkUnitRet[0];
+              retUnit.csCode_ += annoText;
+              origString = mkUnitRet[1];
+            } else {
+              this.retMsg_.push(`Unable to find a unit for ${befAnnoText} that precedes the annotation ${annoText}.`);
+            }
+          }
+        } else if (!befAnnoText && aftAnnoText) {
+          if (intUtils_.isIntegerUnit(aftAnnoText)) {
+            retUnit = aftAnnoText + annoText;
+            this.retMsg_.push(`The annotation ${annoText} before the ``${aftAnnoText} is invalid.\n` + this.vcMsgStart_ + retUnit + this.vcMsgEnd_);
+          } else {
+            let mkUnitRet = this._makeUnit(aftAnnoText, origString);
+            if (mkUnitRet[0]) {
+              retUnit = mkUnitRet[0];
+              retUnit.csCode_ += annoText;
+              origString = retUnit.csCode_;
+              this.retMsg_.push(`The annotation ${annoText} before the unit code is invalid.
+` + this.vcMsgStart_ + retUnit.csCode_ + this.vcMsgEnd_);
+            } else {
+              this.retMsg_.push(`Unable to find a unit for ${befAnnoText} that follows the annotation ${annoText}.`);
+            }
+          }
+        } else {
+          this.retMsg_.push(`Unable to find a unit for ${befAnnoText}${annoText}${aftAnnoText}.
+We are not sure how to interpret text both before and after the annotation.  Sorry`);
+        }
+      }
+      return [retUnit, origString];
+    }
+    // end _getUnitWithAnnotations
+    /**
+     * Performs unit arithmetic for the units in the units array.  That array
+     * contains units/numbers and the operators (division or multiplication) to
+     * be performed on each unit/unit or unit/number pair in the array.  This
+     * should only be called from within this class (or by test code).
+     *
+     * @params uArray the array that contains the units, numbers and operators
+     *  derived from the unit string passed in to parseString
+     * @param origString the original string to be parsed; used to provide
+     *  context for messages
+     *
+     * @returns a single unit object that is the result of the unit arithmetic
+     *
+     * the this.retMsg_ array will be updated with any user messages
+     *   (informational, error or warning) generated by this or called methods
+     */
+    _performUnitArithmetic(uArray, origString) {
+      let finalUnit = uArray[0]["un"];
+      if (intUtils_.isIntegerUnit(finalUnit)) {
+        finalUnit = new Unit({
+          "csCode_": finalUnit,
+          "ciCode_": finalUnit,
+          "magnitude_": Number(finalUnit),
+          "name_": finalUnit
+        });
+      }
+      let uLen = uArray.length;
+      let endProcessing = false;
+      for (let u2 = 1; u2 < uLen && !endProcessing; u2++) {
+        let nextUnit = uArray[u2]["un"];
+        if (intUtils_.isIntegerUnit(nextUnit)) {
+          nextUnit = new Unit({
+            "csCode_": nextUnit,
+            "ciCode_": nextUnit,
+            "magnitude_": Number(nextUnit),
+            "name_": nextUnit
+          });
+        }
+        if (nextUnit === null || typeof nextUnit !== "number" && !nextUnit.getProperty) {
+          let msgString = `Unit string (${origString}) contains unrecognized element`;
+          if (nextUnit) {
+            msgString += ` (${this.openEmph_}${nextUnit.toString()}${this.closeEmph_})`;
+          }
+          msgString += "; could not parse full string.  Sorry";
+          this.retMsg_.push(msgString);
+          endProcessing = true;
+        } else {
+          try {
+            let thisOp = uArray[u2]["op"];
+            let isDiv = thisOp === "/";
+            isDiv ? finalUnit = finalUnit.divide(nextUnit) : finalUnit = finalUnit.multiplyThese(nextUnit);
+          } catch (err) {
+            this.retMsg_.unshift(err.message);
+            endProcessing = true;
+            finalUnit = null;
+          }
+        }
+      }
+      return finalUnit;
+    }
+    // end _performUnitArithmetic
+    /**
+     * This tests a string to see if it starts with characters and ends with
+     * digits.  This is used to test for an exponent on a UCUM code (or what
+     * we think might be a UCUM code).  This is broken out to a separate
+     * function so that the regular expression can be verified to provide the
+     * results we expect, in case someone changes it.  (Per Paul Lynch)
+     * See "Test _isCodeWithExponent method" in testUnitString.spec.js
+     *
+     * This particular regex has been tweaked several times.  This one
+     * works with the following test strings:
+     * "m[H2O]-21 gives ["m[H2O]-21", "m[H2O]", "-21"]
+     * "m[H2O]+21 gives ["m[H2O]+21", "m[H2O]", "+21"]
+     * "m[H2O]21 gives ["m[H2O]-21", "m[H2O]", "21"]
+     * "s2" gives ["s2", "s, "2"]
+     * "kg" gives null
+     * "m[H2O]" gives null
+     * "m[H2O]23X" gives null
+     *
+     * @params uCode the code being tested
+     * @returns an array containing: (1) the code without the exponent (or
+     *  trailing number); and (2) the exponent/trailing number.  Returns null
+     *  if there is no trailing number or something follows the trailing
+     *  number, or if the first part is not characters.
+     */
+    _isCodeWithExponent(uCode) {
+      let ret = [];
+      let res = uCode.match(/(^[^\-\+]+?)([\-\+\d]+)$/);
+      if (res && res[2] && res[2] !== "") {
+        ret.push(res[1]);
+        ret.push(res[2]);
+      } else {
+        ret = null;
+      }
+      return ret;
+    }
+    // end _isCodeWithExponent
+  }
+  unitString.UnitString = UnitString;
+  _defineProperty(UnitString, "INVALID_ANNOTATION_CHAR_MSG", "An invalid character was found in the annotation ");
+  _defineProperty(UnitString, "VALID_ANNOTATION_REGEX", /^\{[!-z|~]*\}$/);
+  UnitString.getInstance = function() {
+    return new UnitString();
+  };
+  return unitString;
+}
+var hasRequiredUcumLhcUtils;
+function requireUcumLhcUtils() {
+  if (hasRequiredUcumLhcUtils) return ucumLhcUtils;
+  hasRequiredUcumLhcUtils = 1;
+  Object.defineProperty(ucumLhcUtils, "__esModule", {
+    value: true
+  });
+  ucumLhcUtils.UcumLhcUtils = void 0;
+  var _ucumJsonDefs = requireUcumJsonDefs();
+  var intUtils_ = _interopRequireWildcard(requireUcumInternalUtils());
+  function _interopRequireWildcard(e, t) {
+    if ("function" == typeof WeakMap) var r = /* @__PURE__ */ new WeakMap(), n = /* @__PURE__ */ new WeakMap();
+    return (_interopRequireWildcard = function(e2, t2) {
+      if (!t2 && e2 && e2.__esModule) return e2;
+      var o, i, f2 = { __proto__: null, default: e2 };
+      if (null === e2 || "object" != typeof e2 && "function" != typeof e2) return f2;
+      if (o = t2 ? n : r) {
+        if (o.has(e2)) return o.get(e2);
+        o.set(e2, f2);
+      }
+      for (const t3 in e2) "default" !== t3 && {}.hasOwnProperty.call(e2, t3) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e2, t3)) && (i.get || i.set) ? o(f2, t3, i) : f2[t3] = e2[t3]);
+      return f2;
+    })(e, t);
+  }
+  var Ucum = requireConfig().Ucum;
+  var UnitTables = requireUnitTables().UnitTables;
+  var UnitString = requireUnitString().UnitString;
+  class UcumLhcUtils {
+    /**
+     * Constructor.  This loads the json prefix and unit definitions if
+     * they haven't been loaded already and creates itself as a singleton object.
+     *
+     */
+    constructor() {
+      if (UnitTables.getInstance().unitsCount() === 0) {
+        _ucumJsonDefs.ucumJsonDefs.loadJsonDefs();
+      }
+      this.uStrParser_ = UnitString.getInstance();
+      this.massDimIndex_ = UnitTables.getInstance().getMassDimensionIndex();
+    }
+    // end constructor
+    /**
+     * This method calls the useHTMLInMessages method on the UnitString
+     * object.  It should be called by web applications that use
+     * these utilities.
+     *
+     * @param use flag indicating whether or not to use the braces message;
+     *  defaults to true
+     */
+    useHTMLInMessages(use) {
+      if (use === void 0) use = true;
+      this.uStrParser_.useHTMLInMessages(use);
+    }
+    /**
+     * This method calls the useBraceMsgForEachString method on the UnitString
+     * object.  It should be called by web applications where unit
+     * strings are validated individually (as opposed to validating a whole
+     * file of unit strings).
+     *
+     * @param use flag indicating whether or not to use the braces message;
+     *  defaults to true
+     */
+    useBraceMsgForEachString(use) {
+      if (use === void 0) use = true;
+      this.uStrParser_.useBraceMsgForEachString(use);
+    }
+    /**
+     * This method validates a unit string.  It first checks to see if the
+     * string passed in is a unit code that is found in the unit codes table.
+     * If it is not found it parses the string to see if it resolves to a
+     * valid unit string.
+     *
+     * If a valid unit cannot be found, the string is tested for some common
+     * errors, such as missing brackets or a missing multiplication operator.
+     * If found, the error is reported in the messages array that is returned.
+     *
+     * If a valid unit cannot be found and an error cannot be discerned, this
+     * may return, if requested, a list of suggested units in the messages
+     * array that is returned.  Suggestions are based on matching the expression
+     * with unit names and synonyms.
+     *
+     * @param uStr the string to be validated
+     * @param suggest a boolean to indicate whether or not suggestions are
+     *  requested for a string that cannot be resolved to a valid unit;
+     *  true indicates suggestions are wanted; false indicates they are not,
+     *  and is the default if the parameter is not specified;
+     * @param valConv a string indicating if this validation request was initiated
+     *  by a validation task ('validate') or a conversion task ('convert'),
+     *  used only for the demo code, and the default is 'Validator' if the
+     *  parameter is not specified;
+     * @returns an object with five properties:
+     *  'status' will be 'valid' (the uStr is a valid UCUM code), 'invalid'
+     *     (the uStr is not a valid UCUM code, and substitutions or
+     *     suggestions may or may not be returned, depending on what was
+     *     requested and found); or 'error' (an input or programming error
+     *     occurred);
+     *  'ucumCode' the valid ucum code, which may differ from what was passed
+     *    in (e.g., if 'Gauss' is passed in, this will contain 'G') OR null if
+     *    the string was flagged as invalid or an error occurred;
+     *  'msg' is an array of one or more messages, if the string is invalid or
+     *        an error occurred, indicating the problem, or an explanation of a
+     *        substitution such as the substitution of 'G' for 'Gauss', or
+     *        an empty array if no messages were generated;
+     *  'unit' which is null if no unit is found, or a hash for a unit found:
+     *    'code' is the unit's ucum code (G in the above example;
+     *    'name' is the unit's name (Gauss in the above example); and
+     *    'guidance' is the unit's guidance/description data; and
+     *  'suggestions' if suggestions were requested and found, this is an array
+     *     of one or more hash objects.  Each hash contains three elements:
+     *     'msg' which is a message indicating what part of the uStr input
+     *        parameter the suggestions are for;
+     *     'invalidUnit' which is the unit expression the suggestions are
+     *        for; and
+     *     'units' which is an array of data for each suggested unit found.
+     *        Each array will contain the unit code, the unit name and the
+     *        unit guidance (if any).
+     *     If no suggestions were requested and found, this property is not
+     *     returned.
+     */
+    validateUnitString(uStr, suggest, valConv) {
+      if (suggest === void 0) suggest = false;
+      if (valConv === void 0) valConv = "validate";
+      let resp = this.getSpecifiedUnit(uStr, valConv, suggest);
+      let theUnit = resp["unit"];
+      let retObj = !theUnit ? {
+        "ucumCode": null
+      } : {
+        "ucumCode": resp["origString"],
+        "unit": {
+          "code": theUnit.csCode_,
+          "name": theUnit.name_,
+          "guidance": theUnit.guidance_
+        }
+      };
+      retObj.status = resp.status;
+      if (resp["suggestions"]) {
+        retObj["suggestions"] = resp["suggestions"];
+      }
+      retObj["msg"] = resp["retMsg"];
+      return retObj;
+    }
+    // end validateUnitString
+    // Note that below when the value of ConversionType is mol|mass, it refers to
+    // either a conversion from mol to mass or from mass to mol.
+    /**
+     * @typedef {
+     *   'normal',
+     *   'mol|mass',
+     *   'eq|mass',
+     *   'eq|mol',
+     *   'eq|mol|mass'
+     * } ConversionType
+     */
+    /**
+     * Detects the type of conversion between two units.
+     *
+     * @param {Object} fromUnit - The unit to convert from.
+     * @param {Object} toUnit - The unit to convert to.
+     * @returns {ConversionType} conversionType - The type of conversion as a string.
+     */
+    detectConversionType(fromUnit, toUnit) {
+      let conversionType;
+      if (fromUnit.moleExp_ == toUnit.moleExp_ && fromUnit.equivalentExp_ == toUnit.equivalentExp_) {
+        conversionType = "normal";
+      } else if (fromUnit.equivalentExp_ == toUnit.equivalentExp_) {
+        conversionType = "mol|mass";
+      } else if (fromUnit.moleExp_ == toUnit.moleExp_) {
+        conversionType = "eq|mass";
+      } else if (fromUnit.dim_.getElementAt(this.massDimIndex_) == toUnit.dim_.getElementAt(this.massDimIndex_)) {
+        conversionType = "eq|mol";
+      } else {
+        conversionType = "eq|mol|mass";
+      }
+      return conversionType;
+    }
+    // end detectConversionType
+    /**
+     * @typedef {{
+     *   status: 'succeeded' | 'failed' | 'error',
+     *   toVal: number | null,
+     *   msg: string[],
+     *   suggestions: {
+     *     from: {
+     *       msg: string,
+     *       invalidUnit: string,
+     *       units: string[]
+     *     },
+     *     to: {
+     *       msg: string,
+     *       invalidUnit: string,
+     *       units: string[]
+     *     }
+     *   },
+     *  fromUnit: string,
+     *  toUnit: string
+     * }} ConvertUnitResult
+     */
+    /**
+     * This method converts one unit to another
+     *
+     * @param {string} fromUnitCode - the unit code/expression/string of the unit to be converted
+     * @param {number | string} fromVal - the number of "from" units to be converted to "to" units
+     * @param {string} toUnitCode - the unit code/expression/string of the unit that the from field is to be converted to
+     * @param {{
+     *   suggest?: boolean,
+     *   molecularWeight?: number
+     *   charge?: number
+     * }} options
+     *  - suggest: a boolean to indicate whether or not suggestions are requested for a string that cannot be resolved to a valid unit;
+     *    true indicates suggestions are wanted; false indicates they are not, and is the default if the parameter is not specified;
+     *  - molecularWeight: the molecular weight of the substance in question when a conversion is being requested from mass to moles and vice versa.
+     *    This is required when one of the units represents a value in moles.  It is ignored if neither unit includes a measurement in moles.
+     *  - charge: the absolute value of the charge of the substance in question when a conversion is being requested from mass/moles to
+     *    equivalents and vice versa. It is required when one of the units represents a value in equivalents and the other in mass or moles.
+     *    It is ignored if neither unit includes an equivalent unit.
+     * @returns {ConvertUnitResult}
+     * - a hash with six elements:
+     *   - 'status' that will be: 'succeeded' if the conversion was successfully
+     *     calculated; 'failed' if the conversion could not be made, e.g., if
+     *     the units are not commensurable; or 'error' if an error occurred;
+     *   - 'toVal' the numeric value indicating the conversion amount, or null
+     *     if the conversion failed (e.g., if the units are not commensurable);
+     *   - 'msg' is an array message, if the string is invalid or an error occurred,
+     *     indicating the problem, or an explanation of a substitution such as
+     *     the substitution of 'G' for 'Gauss', or an empty array if no
+     *     messages were generated;
+     *   - 'suggestions' if suggestions were requested and found, this is a hash
+     *     that contains at most two elements:
+     *     - 'from' which, if the fromUnitCode input parameter or one or more of
+     *       its components could not be found, is an array one or more hash
+     *       objects.  Each hash contains three elements:
+     *       - 'msg' which is a message indicating what unit expression the
+     *          suggestions are for;
+     *       - 'invalidUnit' which is the unit expression the suggestions
+     *          are for; and
+     *       - 'units' which is an array of data for each suggested unit found.
+     *          Each array will contain the unit code, the unit name and the
+     *          unit guidance (if any).
+     *       If no suggestions were found for the fromUnitCode this element
+     *       will not be included.
+     *     - 'to' which, if the "to" unit expression or one or more of its
+     *       components could not be found, is an array one or more hash objects.  Each hash
+     *       contains three elements:
+     *       - 'msg' which is a message indicating what toUnitCode input
+     *          parameter the suggestions are for;
+     *       - 'invalidUnit' which is the unit expression the suggestions
+     *          are for; and
+     *       - 'units' which is an array of data for each suggested unit found.
+     *          Each array will contain the unit code, the unit name and the
+     *          unit guidance (if any).
+     *       If no suggestions were found for the toUnitCode this element
+     *       will not be included.
+     *       No 'suggestions' element will be included in the returned hash
+     *       object if none were found, whether or not they were requested.
+     *   - 'fromUnit' the unit object for the fromUnitCode passed in; returned
+     *     in case it's needed for additional data from the object; and
+     *   - 'toUnit' the unit object for the toUnitCode passed in; returned
+     *     in case it's needed for additional data from the object.
+     */
+    convertUnitTo(fromUnitCode, fromVal, toUnitCode, options = {}) {
+      let {
+        suggest = false,
+        molecularWeight = null,
+        charge = null
+      } = options;
+      let returnObj = {
+        "status": "failed",
+        "toVal": null,
+        "msg": []
+      };
+      if (fromUnitCode) {
+        fromUnitCode = fromUnitCode.trim();
+      }
+      if (!fromUnitCode || fromUnitCode == "") {
+        returnObj["status"] = "error";
+        returnObj["msg"].push('No "from" unit expression specified.');
+      }
+      this._checkFromVal(fromVal, returnObj);
+      if (toUnitCode) {
+        toUnitCode = toUnitCode.trim();
+      }
+      if (!toUnitCode || toUnitCode == "") {
+        returnObj["status"] = "error";
+        returnObj["msg"].push('No "to" unit expression specified.');
+      }
+      if (returnObj["status"] !== "error") {
+        let fromUnit = null;
+        let parseResp = this.getSpecifiedUnit(fromUnitCode, "convert", suggest);
+        fromUnit = parseResp["unit"];
+        if (parseResp["retMsg"]) returnObj["msg"] = returnObj["msg"].concat(parseResp["retMsg"]);
+        if (parseResp["suggestions"]) {
+          returnObj["suggestions"] = {};
+          returnObj["suggestions"]["from"] = parseResp["suggestions"];
+        }
+        if (!fromUnit) {
+          returnObj["msg"].push(`Unable to find a unit for ${fromUnitCode}, so no conversion could be performed.`);
+        }
+        let toUnit = null;
+        parseResp = this.getSpecifiedUnit(toUnitCode, "convert", suggest);
+        toUnit = parseResp["unit"];
+        if (parseResp["retMsg"]) returnObj["msg"] = returnObj["msg"].concat(parseResp["retMsg"]);
+        if (parseResp["suggestions"]) {
+          if (!returnObj["suggestions"]) returnObj["suggestions"] = {};
+          returnObj["suggestions"]["to"] = parseResp["suggestions"];
+        }
+        if (!toUnit) {
+          returnObj["msg"].push(`Unable to find a unit for ${toUnitCode}, so no conversion could be performed.`);
+        }
+        if (fromUnit && toUnit) {
+          const convertType = this.detectConversionType(fromUnit, toUnit);
+          const msgCountBeforeConvert = returnObj["msg"].length;
+          switch (convertType) {
+            case "normal":
+              try {
+                returnObj["toVal"] = toUnit.convertFrom(fromVal, fromUnit);
+              } catch (err) {
+                returnObj["msg"].push(err.message);
+              }
+              break;
+            case "mol|mass":
+              if (!fromUnit.isMolMassCommensurable(toUnit)) {
+                returnObj["msg"].push(`Sorry.  ${fromUnitCode} cannot be converted to ${toUnitCode}.`);
+                break;
+              }
+              if (!molecularWeight) {
+                returnObj["msg"].push(Ucum.needMoleWeightMsg_);
+                break;
+              }
+              returnObj["toVal"] = fromUnit.convertMolMass(fromVal, toUnit, molecularWeight);
+              break;
+            case "eq|mass":
+              if (!fromUnit.isEqMassCommensurable(toUnit)) {
+                returnObj["msg"].push(`Sorry.  ${fromUnitCode} cannot be converted to ${toUnitCode}.`);
+                break;
+              }
+              if (!molecularWeight) {
+                returnObj["msg"].push(Ucum.needEqWeightMsg_);
+              }
+              if (!charge) {
+                returnObj["msg"].push(Ucum.needEqChargeMsg_);
+              }
+              if (!returnObj["msg"].length) {
+                returnObj["toVal"] = fromUnit.convertEqMass(fromVal, toUnit, molecularWeight, charge);
+              }
+              break;
+            case "eq|mol":
+              if (!fromUnit.isEqMolCommensurable(toUnit)) {
+                returnObj["msg"].push(`Sorry.  ${fromUnitCode} cannot be converted to ${toUnitCode}.`);
+                break;
+              }
+              if (!charge) {
+                returnObj["msg"].push(Ucum.needEqChargeMsg_);
+                break;
+              }
+              returnObj["toVal"] = fromUnit.convertEqMol(fromVal, toUnit, charge);
+              break;
+            case "eq|mol|mass":
+              if (!fromUnit.isEqMolMassCommensurable(toUnit)) {
+                returnObj["msg"].push(`Sorry.  ${fromUnitCode} cannot be converted to ${toUnitCode}.`);
+                break;
+              }
+              if (!molecularWeight) {
+                returnObj["msg"].push(Ucum.needEqWeightMsg_);
+              }
+              if (!charge) {
+                returnObj["msg"].push(Ucum.needEqChargeMsg_);
+              }
+              if (!returnObj["msg"].length) {
+                returnObj["toVal"] = fromUnit.convertEqMolMass(fromVal, toUnit, molecularWeight, charge);
+              }
+              break;
+            default:
+              returnObj["msg"].push("Unknown conversion type.  No conversion was attempted.");
+          }
+          if (returnObj["msg"].length > msgCountBeforeConvert) {
+            returnObj["status"] = "failed";
+          } else {
+            returnObj["status"] = "succeeded";
+            returnObj["fromUnit"] = fromUnit;
+            returnObj["toUnit"] = toUnit;
+          }
+        }
+      }
+      return returnObj;
+    }
+    // end convertUnitTo
+    /**
+     *  Converts the given unit string into its base units, their exponents, and
+     *  a magnitude, and returns that data.
+     * @param fromUnit the unit string to be converted to base units information
+     * @param fromVal the number of "from" units to be converted
+     * @returns an object with the properties:
+     *  'status' indicates whether the result succeeded.  The value will be one of:
+     *    'succeeded':  the conversion was successfully calculated (which can be
+     *      true even if it was already in base units);
+     *    'invalid':  fromUnit is not a valid UCUM code;
+     *    'failed':  the conversion could not be made (e.g., if it is an "arbitrary" unit);
+     *    'error':  if an error occurred (an input or programming error)
+     *  'msg': an array of messages (possibly empty) if the string is invalid or
+     *        an error occurred, indicating the problem, or a suggestion of a
+     *        substitution such as the substitution of 'G' for 'Gauss', or
+     *        an empty array if no messages were generated.  There can also be a
+     *        message that is just informational or warning.
+     *  'magnitude': the new value when fromVal units of fromUnits is expressed in the base units.
+     *  'fromUnitIsSpecial': whether the input unit fromUnit is a "special unit"
+     *         as defined in UCUM.  This means there is some function applied to convert
+     *         between fromUnit and the base units, so the returned magnitude is likely not
+     *         useful as a scale factor for other conversions (i.e., it only has validity
+     *         and usefulness for the input values that produced it).
+     *  'unitToExp': a map of base units in fromUnit to their exponent
+     */
+    convertToBaseUnits(fromUnit, fromVal) {
+      let retObj = {};
+      this._checkFromVal(fromVal, retObj);
+      if (!retObj.status) {
+        let inputUnitLookup = this.getSpecifiedUnit(fromUnit, "validate");
+        retObj = {
+          status: inputUnitLookup.status == "valid" ? "succeeded" : inputUnitLookup.status
+        };
+        let unit2 = inputUnitLookup.unit;
+        retObj.msg = inputUnitLookup.retMsg || [];
+        if (!unit2) {
+          if (inputUnitLookup.retMsg?.length == 0) retObj.msg.push("Could not find unit information for " + fromUnit);
+        } else if (unit2.isArbitrary_) {
+          retObj.msg.push("Arbitrary units cannot be converted to base units or other units.");
+          retObj.status = "failed";
+        } else if (retObj.status == "succeeded") {
+          let unitToExp = {};
+          let dimVec = unit2.dim_?.dimVec_;
+          let baseUnitString = "1";
+          if (dimVec) {
+            let dimVecIndexToBaseUnit = UnitTables.getInstance().dimVecIndexToBaseUnit_;
+            for (let i = 0, len = dimVec.length; i < len; ++i) {
+              let exp = dimVec[i];
+              if (exp) {
+                unitToExp[dimVecIndexToBaseUnit[i]] = exp;
+                baseUnitString += "." + dimVecIndexToBaseUnit[i] + exp;
+              }
+            }
+          }
+          let retUnitLookup = this.getSpecifiedUnit(baseUnitString, "validate");
+          let retUnit = retUnitLookup.unit;
+          if (retUnitLookup.status !== "valid") {
+            retObj.msg.push("Unable construct base unit string; tried " + baseUnitString);
+            retObj.status = "error";
+          } else {
+            try {
+              retObj.magnitude = retUnit.convertFrom(fromVal, unit2);
+            } catch (e) {
+              retObj.msg.push(e.toString());
+              retObj.status = "error";
+            }
+            if (retObj.status == "succeeded") {
+              retObj.unitToExp = unitToExp;
+              retObj.fromUnitIsSpecial = unit2.isSpecial_;
+            }
+          }
+        }
+      }
+      return retObj;
+    }
+    /**
+     *  Checks the given value as to whether it is suitable as a "from" value in a
+     *  unit conversion.  If it is not, the responseObj will have its status set
+     *  to 'error' and a message added.
+     * @param fromVal The value to check
+     * @param responseObj the object that will be updated if the value is not
+     *  usable.
+     */
+    _checkFromVal(fromVal, responseObj) {
+      if (fromVal === null || isNaN(fromVal) || typeof fromVal !== "number" && !intUtils_.isNumericString(fromVal)) {
+        responseObj.status = "error";
+        if (!responseObj.msg) responseObj.msg = [];
+        responseObj.msg.push('No "from" value, or an invalid "from" value, was specified.');
+      }
+    }
+    /**
+     * This method accepts a term and looks for units that include it as
+     * a synonym - or that include the term in its name.
+     *
+     * @param theSyn the term to search for
+     * @returns a hash with up to three elements:
+     *  'status' contains the status of the request, which can be 'error',
+     *    'failed' or succeeded';
+     *  'msg' which contains a message for an error or if no units were found; and
+     *  'units' which is an array that contains one hash for each unit found:
+     *    'code' is the unit's csCode_
+     *    'name' is the unit's name_
+     *    'guidance' is the unit's guidance_
+     *
+     */
+    checkSynonyms(theSyn) {
+      let retObj = {};
+      if (theSyn === void 0 || theSyn === null) {
+        retObj["status"] = "error";
+        retObj["msg"] = "No term specified for synonym search.";
+      } else {
+        retObj = intUtils_.getSynonyms(theSyn);
+      }
+      return retObj;
+    }
+    // end checkSynonyms
+    /**
+     * This method parses a unit string to get (or try to get) the unit
+     * represented by the string.  It returns an error message if no string was specified
+     * or if any errors were encountered trying to get the unit.
+     *
+     * @param uName the expression/string representing the unit
+     * @param valConv indicates what type of request this is for - a request to
+     *  validate (pass in 'validate') or a request to convert (pass in 'convert')
+     * @param suggest a boolean to indicate whether or not suggestions are
+     *  requested for a string that cannot be resolved to a valid unit;
+     *  true indicates suggestions are wanted; false indicates they are not,
+     *  and is the default if the parameter is not specified;
+     * @returns a hash containing:
+     *   'status' will be 'valid' (uName is a valid UCUM code), 'invalid'
+     *     (the uStr is not a valid UCUM code, and substitutions or
+     *     suggestions may or may not be returned, depending on what was
+     *     requested and found); or 'error' (an input or programming error
+     *     occurred);
+     *   'unit' the unit object (or null if there were problems creating the
+     *     unit);
+     *   'origString' the possibly updated unit string passed in;
+     *   'retMsg' an array of user messages (informational, error or warning) if
+     *     any were generated (IF any were generated, otherwise will be an
+     *     empty array); and
+     *   'suggestions' is an array of 1 or more hash objects.  Each hash
+     *     contains three elements:
+     *       'msg' which is a message indicating what unit expression the
+     *          suggestions are for;
+     *       'invalidUnit' which is the unit expression the suggestions are
+     *          for; and
+     *       'units' which is an array of data for each suggested unit found.
+     *          Each array will contain the unit code, the unit name and the
+     *          unit guidance (if any).
+     *   The return hash will not contain a suggestions array if a valid unit
+     *   was found or if suggestions were not requested and found.
+     */
+    getSpecifiedUnit(uName, valConv, suggest) {
+      if (suggest === void 0) suggest = false;
+      let retObj = {};
+      retObj["retMsg"] = [];
+      if (!uName) {
+        retObj["retMsg"].push("No unit string specified.");
+      } else {
+        let utab = UnitTables.getInstance();
+        uName = uName.trim();
+        let theUnit = utab.getUnitByCode(uName);
+        if (theUnit) {
+          retObj["unit"] = theUnit;
+          retObj["origString"] = uName;
+        } else {
+          try {
+            let resp = this.uStrParser_.parseString(uName, valConv, suggest);
+            retObj["unit"] = resp[0];
+            retObj["origString"] = resp[1];
+            if (resp[2]) retObj["retMsg"] = resp[2];
+            retObj["suggestions"] = resp[3];
+          } catch (err) {
+            console.log(`Unit requested for unit string ${uName}.request unsuccessful; error thrown = ` + err.message);
+            retObj["retMsg"].unshift(`${uName} is not a valid unit.  ${err.message}`);
+          }
+        }
+      }
+      if (!retObj.unit) {
+        retObj.status = !retObj.origString ? "error" : "invalid";
+      } else {
+        retObj.status = retObj.origString === uName ? "valid" : "invalid";
+      }
+      return retObj;
+    }
+    // end getSpecifiedUnit
+    /**
+     * This method retrieves a list of units commensurable, i.e., that can be
+     * converted from and to, a specified unit.  Returns an error if the "from"
+     * unit cannot be found. If necessary, you can filter the list of units by
+     * specifying a list of unit categories that should be in the resulting list.
+     *
+     * @param {string} fromName - the name/unit string of the "from" unit
+     * @param {string[] | null} [categoryList] - the list of unit categories;
+     *   this parameter is optional, defaults to null if not specified;
+     *   possible list values: 'Clinical', 'Nonclinical', 'Obsolete', 'Constant'
+     * @returns an array containing two elements;
+     *   first element is the list of commensurable units if any were found;
+     *   second element is an error message if the "from" unit is not found
+     */
+    commensurablesList(fromName, categoryList = null) {
+      let retMsg = [];
+      let commUnits = null;
+      let parseResp = this.getSpecifiedUnit(fromName, "validate", false);
+      let fromUnit = parseResp["unit"];
+      if (parseResp["retMsg"].length > 0) retMsg = parseResp["retMsg"];
+      if (!fromUnit) {
+        retMsg.push(`Could not find unit ${fromName}.`);
+      } else {
+        let dimVec = null;
+        let fromDim = fromUnit.getProperty("dim_");
+        if (!fromDim) {
+          retMsg.push("No commensurable units were found for " + fromName);
+        } else {
+          try {
+            dimVec = fromDim.getProperty("dimVec_");
+          } catch (err) {
+            retMsg.push(err.message);
+            if (err.message === "Dimension does not have requested property(dimVec_)") dimVec = null;
+          }
+          if (dimVec) {
+            let utab = UnitTables.getInstance();
+            commUnits = utab.getUnitsByDimension(dimVec);
+            if (categoryList) {
+              commUnits = commUnits.filter((item) => {
+                return categoryList.indexOf(item.category_) !== -1;
+              });
+            }
+          }
+        }
+      }
+      return [commUnits, retMsg];
+    }
+    // end commensurablesList
+  }
+  ucumLhcUtils.UcumLhcUtils = UcumLhcUtils;
+  UcumLhcUtils.getInstance = function() {
+    return new UcumLhcUtils();
+  };
+  return ucumLhcUtils;
+}
+var hasRequiredUcumPkg;
+function requireUcumPkg() {
+  if (hasRequiredUcumPkg) return ucumPkg;
+  hasRequiredUcumPkg = 1;
+  Object.defineProperty(ucumPkg, "__esModule", {
+    value: true
+  });
+  ucumPkg.UnitTables = ucumPkg.UcumLhcUtils = ucumPkg.Ucum = void 0;
+  var Ucum = requireConfig().Ucum;
+  ucumPkg.Ucum = Ucum;
+  var UcumLhcUtils = requireUcumLhcUtils().UcumLhcUtils;
+  ucumPkg.UcumLhcUtils = UcumLhcUtils;
+  var UnitTables = requireUnitTables().UnitTables;
+  ucumPkg.UnitTables = UnitTables;
+  return ucumPkg;
+}
+var ucumPkgExports = requireUcumPkg();
+function fail(message) {
+  throw new Error("[mobx-utils] " + message);
+}
+function invariant(cond, message) {
+  if (message === void 0) {
+    message = "Illegal state";
+  }
+  if (!cond)
+    fail(message);
+}
+var deepFields = function(x2) {
+  return x2 && x2 !== Object.prototype && Object.getOwnPropertyNames(x2).concat(deepFields(Object.getPrototypeOf(x2)) || []);
+};
+var distinctDeepFields = function(x2) {
+  var deepFieldsIndistinct = deepFields(x2);
+  var deepFieldsDistinct = deepFieldsIndistinct.filter(function(item, index2) {
+    return deepFieldsIndistinct.indexOf(item) === index2;
+  });
+  return deepFieldsDistinct;
+};
+var getAllMethodsAndProperties = function(x2) {
+  return distinctDeepFields(x2).filter(function(name) {
+    return name !== "constructor" && !~name.indexOf("__");
+  });
+};
+var PENDING = "pending";
+var FULFILLED = "fulfilled";
+var REJECTED = "rejected";
+function caseImpl(handlers) {
+  switch (this.state) {
+    case PENDING:
+      return handlers.pending && handlers.pending(this.value);
+    case REJECTED:
+      return handlers.rejected && handlers.rejected(this.value);
+    case FULFILLED:
+      return handlers.fulfilled ? handlers.fulfilled(this.value) : this.value;
+  }
+}
+function fromPromise(origPromise, oldPromise) {
+  invariant(arguments.length <= 2, "fromPromise expects up to two arguments");
+  invariant(typeof origPromise === "function" || typeof origPromise === "object" && origPromise && typeof origPromise.then === "function", "Please pass a promise or function to fromPromise");
+  if (origPromise.isPromiseBasedObservable === true)
+    return origPromise;
+  if (typeof origPromise === "function") {
+    origPromise = new Promise(origPromise);
+  }
+  var promise = origPromise;
+  origPromise.then(action("observableFromPromise-resolve", function(value) {
+    promise.value = value;
+    promise.state = FULFILLED;
+  }), action("observableFromPromise-reject", function(reason) {
+    promise.value = reason;
+    promise.state = REJECTED;
+  }));
+  promise.isPromiseBasedObservable = true;
+  promise.case = caseImpl;
+  var oldData = oldPromise && (oldPromise.state === FULFILLED || oldPromise.state === PENDING) ? oldPromise.value : void 0;
+  extendObservable(promise, {
+    value: oldData,
+    state: PENDING
+  }, {}, { deep: false });
+  return promise;
+}
+(function(fromPromise2) {
+  fromPromise2.reject = action("fromPromise.reject", function(reason) {
+    var p = fromPromise2(Promise.reject(reason));
+    p.state = REJECTED;
+    p.value = reason;
+    return p;
+  });
+  function resolveBase(value) {
+    if (value === void 0) {
+      value = void 0;
+    }
+    var p = fromPromise2(Promise.resolve(value));
+    p.state = FULFILLED;
+    p.value = value;
+    return p;
+  }
+  fromPromise2.resolve = action("fromPromise.resolve", resolveBase);
+})(fromPromise || (fromPromise = {}));
+var __decorate = function(decorators, target, key, desc) {
+  var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+  if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+  else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+  return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+(function() {
+  function StreamListener(observable2, initialValue) {
+    var _this = this;
+    Object.defineProperty(this, "current", {
+      enumerable: true,
+      configurable: true,
+      writable: true,
+      value: void 0
+    });
+    Object.defineProperty(this, "subscription", {
+      enumerable: true,
+      configurable: true,
+      writable: true,
+      value: void 0
+    });
+    makeObservable(this);
+    runInAction(function() {
+      _this.current = initialValue;
+      _this.subscription = observable2.subscribe(_this);
+    });
+  }
+  Object.defineProperty(StreamListener.prototype, "dispose", {
+    enumerable: false,
+    configurable: true,
+    writable: true,
+    value: function() {
+      if (this.subscription) {
+        this.subscription.unsubscribe();
+      }
+    }
+  });
+  Object.defineProperty(StreamListener.prototype, "next", {
+    enumerable: false,
+    configurable: true,
+    writable: true,
+    value: function(value) {
+      this.current = value;
+    }
+  });
+  Object.defineProperty(StreamListener.prototype, "complete", {
+    enumerable: false,
+    configurable: true,
+    writable: true,
+    value: function() {
+      this.dispose();
+    }
+  });
+  Object.defineProperty(StreamListener.prototype, "error", {
+    enumerable: false,
+    configurable: true,
+    writable: true,
+    value: function(value) {
+      this.current = value;
+      this.dispose();
+    }
+  });
+  __decorate([
+    observable.ref
+  ], StreamListener.prototype, "current", void 0);
+  __decorate([
+    action.bound
+  ], StreamListener.prototype, "next", null);
+  __decorate([
+    action.bound
+  ], StreamListener.prototype, "complete", null);
+  __decorate([
+    action.bound
+  ], StreamListener.prototype, "error", null);
+  return StreamListener;
+})();
+var __assign = function() {
+  __assign = Object.assign || function(t) {
+    for (var s2, i = 1, n = arguments.length; i < n; i++) {
+      s2 = arguments[i];
+      for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p))
+        t[p] = s2[p];
+    }
+    return t;
+  };
+  return __assign.apply(this, arguments);
+};
+var __decorate$1 = function(decorators, target, key, desc) {
+  var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+  if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+  else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+  return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var RESERVED_NAMES = ["model", "reset", "submit", "isDirty", "isPropertyDirty", "resetProperty"];
+(function() {
+  function ViewModel(model) {
+    var _this = this;
+    Object.defineProperty(this, "model", {
+      enumerable: true,
+      configurable: true,
+      writable: true,
+      value: model
+    });
+    Object.defineProperty(this, "localValues", {
+      enumerable: true,
+      configurable: true,
+      writable: true,
+      value: observable.map({})
+    });
+    Object.defineProperty(this, "localComputedValues", {
+      enumerable: true,
+      configurable: true,
+      writable: true,
+      value: observable.map({})
+    });
+    Object.defineProperty(this, "isPropertyDirty", {
+      enumerable: true,
+      configurable: true,
+      writable: true,
+      value: function(key) {
+        return _this.localValues.has(key);
+      }
+    });
+    makeObservable(this);
+    invariant(isObservableObject(model), "createViewModel expects an observable object");
+    var ownMethodsAndProperties = getAllMethodsAndProperties(this);
+    getAllMethodsAndProperties(model).forEach(function(key) {
+      var _a;
+      if (ownMethodsAndProperties.includes(key)) {
+        return;
+      }
+      if (key === $mobx || key === "__mobxDidRunLazyInitializers") {
+        return;
+      }
+      invariant(RESERVED_NAMES.indexOf(key) === -1, "The propertyname " + key + " is reserved and cannot be used with viewModels");
+      if (isComputedProp(model, key)) {
+        var computedBox = _getAdministration(model, key);
+        var get = computedBox.derivation.bind(_this);
+        var set = (_a = computedBox.setter_) === null || _a === void 0 ? void 0 : _a.bind(_this);
+        _this.localComputedValues.set(key, computed(get, { set }));
+      }
+      var descriptor = Object.getOwnPropertyDescriptor(model, key);
+      var additionalDescriptor = descriptor ? { enumerable: descriptor.enumerable } : {};
+      Object.defineProperty(_this, key, __assign(__assign({}, additionalDescriptor), { configurable: true, get: function() {
+        if (isComputedProp(model, key))
+          return _this.localComputedValues.get(key).get();
+        if (_this.isPropertyDirty(key))
+          return _this.localValues.get(key);
+        else
+          return _this.model[key];
+      }, set: action(function(value) {
+        if (isComputedProp(model, key)) {
+          _this.localComputedValues.get(key).set(value);
+        } else if (value !== _this.model[key]) {
+          _this.localValues.set(key, value);
+        } else {
+          _this.localValues.delete(key);
+        }
+      }) }));
+    });
+  }
+  Object.defineProperty(ViewModel.prototype, "isDirty", {
+    get: function() {
+      return this.localValues.size > 0;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(ViewModel.prototype, "changedValues", {
+    get: function() {
+      return new Map(this.localValues);
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(ViewModel.prototype, "submit", {
+    enumerable: false,
+    configurable: true,
+    writable: true,
+    value: function() {
+      var _this = this;
+      keys(this.localValues).forEach(function(key) {
+        var source = _this.localValues.get(key);
+        var destination = _this.model[key];
+        if (isObservableArray(destination)) {
+          destination.replace(source);
+        } else if (isObservableMap(destination)) {
+          destination.clear();
+          destination.merge(source);
+        } else if (!isComputed(source)) {
+          _this.model[key] = source;
+        }
+      });
+      this.localValues.clear();
+    }
+  });
+  Object.defineProperty(ViewModel.prototype, "reset", {
+    enumerable: false,
+    configurable: true,
+    writable: true,
+    value: function() {
+      this.localValues.clear();
+    }
+  });
+  Object.defineProperty(ViewModel.prototype, "resetProperty", {
+    enumerable: false,
+    configurable: true,
+    writable: true,
+    value: function(key) {
+      this.localValues.delete(key);
+    }
+  });
+  __decorate$1([
+    computed
+  ], ViewModel.prototype, "isDirty", null);
+  __decorate$1([
+    computed
+  ], ViewModel.prototype, "changedValues", null);
+  __decorate$1([
+    action.bound
+  ], ViewModel.prototype, "submit", null);
+  __decorate$1([
+    action.bound
+  ], ViewModel.prototype, "reset", null);
+  __decorate$1([
+    action.bound
+  ], ViewModel.prototype, "resetProperty", null);
+  return ViewModel;
+})();
+var __extends = /* @__PURE__ */ (function() {
+  var extendStatics = function(d, b) {
+    extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(d2, b2) {
+      d2.__proto__ = b2;
+    } || function(d2, b2) {
+      for (var p in b2) if (Object.prototype.hasOwnProperty.call(b2, p)) d2[p] = b2[p];
+    };
+    return extendStatics(d, b);
+  };
+  return function(d, b) {
+    extendStatics(d, b);
+    function __() {
+      this.constructor = d;
+    }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
+})();
+(function(_super) {
+  __extends(ObservableGroupMap, _super);
+  function ObservableGroupMap(base, groupBy, _a) {
+    var _b = _a === void 0 ? {} : _a, _c = _b.name, name = _c === void 0 ? "ogm" + (Math.random() * 1e3 | 0) : _c, _d = _b.keyToName, keyToName = _d === void 0 ? function(x2) {
+      return "" + x2;
+    } : _d;
+    var _this = _super.call(this) || this;
+    Object.defineProperty(_this, "_base", {
+      enumerable: true,
+      configurable: true,
+      writable: true,
+      value: void 0
+    });
+    Object.defineProperty(_this, "_ogmInfoKey", {
+      enumerable: true,
+      configurable: true,
+      writable: true,
+      value: void 0
+    });
+    Object.defineProperty(_this, "_groupBy", {
+      enumerable: true,
+      configurable: true,
+      writable: true,
+      value: void 0
+    });
+    Object.defineProperty(_this, "_keyToName", {
+      enumerable: true,
+      configurable: true,
+      writable: true,
+      value: void 0
+    });
+    Object.defineProperty(_this, "_disposeBaseObserver", {
+      enumerable: true,
+      configurable: true,
+      writable: true,
+      value: void 0
+    });
+    _this._keyToName = keyToName;
+    _this._groupBy = groupBy;
+    _this._ogmInfoKey = /* @__PURE__ */ Symbol("ogmInfo" + name);
+    _this._base = base;
+    for (var i = 0; i < base.length; i++) {
+      _this._addItem(base[i]);
+    }
+    _this._disposeBaseObserver = observe(_this._base, function(change) {
+      if ("splice" === change.type) {
+        transaction(function() {
+          for (var _i2 = 0, _a2 = change.removed; _i2 < _a2.length; _i2++) {
+            var removed = _a2[_i2];
+            _this._removeItem(removed);
+          }
+          for (var _b2 = 0, _c2 = change.added; _b2 < _c2.length; _b2++) {
+            var added = _c2[_b2];
+            _this._addItem(added);
+          }
+        });
+      } else if ("update" === change.type) {
+        transaction(function() {
+          _this._removeItem(change.oldValue);
+          _this._addItem(change.newValue);
+        });
+      } else {
+        throw new Error("illegal state");
+      }
+    });
+    return _this;
+  }
+  Object.defineProperty(ObservableGroupMap.prototype, "clear", {
+    enumerable: false,
+    configurable: true,
+    writable: true,
+    value: function() {
+      throw new Error("not supported");
+    }
+  });
+  Object.defineProperty(ObservableGroupMap.prototype, "delete", {
+    enumerable: false,
+    configurable: true,
+    writable: true,
+    value: function(_key) {
+      throw new Error("not supported");
+    }
+  });
+  Object.defineProperty(ObservableGroupMap.prototype, "set", {
+    enumerable: false,
+    configurable: true,
+    writable: true,
+    value: function(_key, _value) {
+      throw new Error("not supported");
+    }
+  });
+  Object.defineProperty(ObservableGroupMap.prototype, "dispose", {
+    enumerable: false,
+    configurable: true,
+    writable: true,
+    value: function() {
+      this._disposeBaseObserver();
+      for (var i = 0; i < this._base.length; i++) {
+        var item = this._base[i];
+        var grouperItemInfo = item[this._ogmInfoKey];
+        grouperItemInfo.reaction();
+        delete item[this._ogmInfoKey];
+      }
+    }
+  });
+  Object.defineProperty(ObservableGroupMap.prototype, "_getGroupArr", {
+    enumerable: false,
+    configurable: true,
+    writable: true,
+    value: function(key) {
+      var result = _super.prototype.get.call(this, key);
+      if (void 0 === result) {
+        result = observable([], { name: "GroupArray[" + this._keyToName(key) + "]", deep: false });
+        _super.prototype.set.call(this, key, result);
+      }
+      return result;
+    }
+  });
+  Object.defineProperty(ObservableGroupMap.prototype, "_removeFromGroupArr", {
+    enumerable: false,
+    configurable: true,
+    writable: true,
+    value: function(key, itemIndex) {
+      var arr = _super.prototype.get.call(this, key);
+      if (1 === arr.length) {
+        _super.prototype.delete.call(this, key);
+      } else if (itemIndex === arr.length - 1) {
+        arr.length--;
+      } else {
+        arr[itemIndex] = arr[arr.length - 1];
+        arr[itemIndex][this._ogmInfoKey].groupArrIndex = itemIndex;
+        arr.length--;
+      }
+    }
+  });
+  Object.defineProperty(ObservableGroupMap.prototype, "_addItem", {
+    enumerable: false,
+    configurable: true,
+    writable: true,
+    value: function(item) {
+      var _this = this;
+      var groupByValue = this._groupBy(item);
+      var groupArr = this._getGroupArr(groupByValue);
+      var value = {
+        groupByValue,
+        groupArrIndex: groupArr.length,
+        reaction: reaction(function() {
+          return _this._groupBy(item);
+        }, function(newGroupByValue, _r2) {
+          var grouperItemInfo = item[_this._ogmInfoKey];
+          _this._removeFromGroupArr(grouperItemInfo.groupByValue, grouperItemInfo.groupArrIndex);
+          var newGroupArr = _this._getGroupArr(newGroupByValue);
+          var newGroupArrIndex = newGroupArr.length;
+          newGroupArr.push(item);
+          grouperItemInfo.groupByValue = newGroupByValue;
+          grouperItemInfo.groupArrIndex = newGroupArrIndex;
+        })
+      };
+      Object.defineProperty(item, this._ogmInfoKey, {
+        configurable: true,
+        enumerable: false,
+        value
+      });
+      groupArr.push(item);
+    }
+  });
+  Object.defineProperty(ObservableGroupMap.prototype, "_removeItem", {
+    enumerable: false,
+    configurable: true,
+    writable: true,
+    value: function(item) {
+      var grouperItemInfo = item[this._ogmInfoKey];
+      this._removeFromGroupArr(grouperItemInfo.groupByValue, grouperItemInfo.groupArrIndex);
+      grouperItemInfo.reaction();
+      delete item[this._ogmInfoKey];
+    }
+  });
+  return ObservableGroupMap;
+})(ObservableMap);
+let rt$1 = class rt {
+  constructor(e = []) {
+    this.definitions = e.toSorted(
+      (r, s2) => s2.priority - r.priority
+    );
+  }
+  resolve(e) {
+    return this.definitions.find((r) => r.matcher(e));
+  }
+};
+const kr = [
+  // display
+  "inline",
+  "prompt",
+  "unit",
+  "lower",
+  "upper",
+  "flyover",
+  "help",
+  "legal",
+  // group
+  "list",
+  "table",
+  "htable",
+  "gtable",
+  "grid",
+  "header",
+  "footer",
+  "page",
+  "tab-container",
+  // question
+  "autocomplete",
+  "drop-down",
+  "check-box",
+  "lookup",
+  "radio-button",
+  "slider",
+  "spinner",
+  "text-box"
+], Dt$1 = [
+  "list",
+  "table",
+  "htable",
+  "gtable",
+  "grid",
+  "header",
+  "footer",
+  "page",
+  "tab-container"
+], _r = [
+  "autocomplete",
+  "drop-down",
+  "check-box",
+  "lookup",
+  "radio-button",
+  "slider",
+  "spinner",
+  "text-box"
+], f = {
+  aria: {
+    help: "More information",
+    legal: "Legal information",
+    flyover: "More context"
+  },
+  value: {
+    yes: "Yes",
+    no: "No",
+    undefined: "Unanswered"
+  },
+  dialog: {
+    cancel: "Cancel",
+    add: "Apply"
+  },
+  errors: {
+    unknown: "Unknown error"
+  },
+  group: {
+    addSection: "Add another",
+    removeSection: "Remove"
+  },
+  inputs: {
+    referencePlaceholder: "Resource/type/id",
+    referenceDisplayPlaceholder: "Display label",
+    codingSystemPlaceholder: "System",
+    codingCodePlaceholder: "Code",
+    codingDisplayPlaceholder: "Display",
+    quantityValuePlaceholder: "Value",
+    quantityUnitPlaceholder: "Unit"
+  },
+  selection: {
+    specifyOther: "Specify other",
+    addAnother: "Add another",
+    selectPlaceholder: "Select an option"
+  },
+  unsupported: {
+    typePrefix: "Unsupported type:"
+  },
+  validation: {
+    group: {
+      atLeastOneAnswer: "At least one answer is required in this group."
+    },
+    groupList: {
+      minOccurs: "At least {minOccurs} occurrence(s) required.",
+      maxOccurs: "No more than {maxOccurs} occurrence(s) permitted."
+    },
+    question: {
+      minOccursSingle: "At least one  non-empty answer is required.",
+      minOccursMultiple: "At least {minOccurs} non-empty answers are required.",
+      maxOccurs: "No more than {maxOccurs} answers are permitted."
+    },
+    answer: {
+      minLength: "Response must be at least {minLength} characters long.",
+      maxLength: "Response exceeds the maximum length of {maxLength}.",
+      minPrecision: "Response must be at least {minLength} characters to capture the required precision.",
+      maxPrecision: "Response must not exceed {maxLength} characters.",
+      blank: "Response must not be blank.",
+      valueNotEarlier: "Value must not be earlier than {formatted}.",
+      valueNotLater: "Value must not be later than {formatted}.",
+      valueMin: "Value must be greater than or equal to {formatted}.",
+      valueMax: "Value must be less than or equal to {formatted}.",
+      valueDecimalPlaces: "Value must not exceed {maxPlaces} decimal place(s).",
+      quantityMin: "Quantity must be greater than or equal to {formatted}.",
+      quantityMax: "Quantity must be less than or equal to {formatted}.",
+      attachmentTypeRequired: "Attachment must declare a content type from the allowed list ({allowed}).",
+      attachmentTypeAllowed: "Attachment must be one of the allowed content types ({allowed}).",
+      attachmentSizeMax: "Attachment must not exceed {maxSize} bytes."
+    }
+  }
+};
+var Cr = class {
+  _eventListeners;
+  _maxListeners;
+  _logger;
+  _throwOnEmitError = false;
+  _throwOnEmptyListeners = false;
+  _errorEvent = "error";
+  constructor(t) {
+    this._eventListeners = /* @__PURE__ */ new Map(), this._maxListeners = 100, this._logger = t?.logger, t?.throwOnEmitError !== void 0 && (this._throwOnEmitError = t.throwOnEmitError), t?.throwOnEmptyListeners !== void 0 && (this._throwOnEmptyListeners = t.throwOnEmptyListeners);
+  }
+  /**
+   * Gets the logger
+   * @returns {Logger}
+   */
+  get logger() {
+    return this._logger;
+  }
+  /**
+   * Sets the logger
+   * @param {Logger} logger
+   */
+  set logger(t) {
+    this._logger = t;
+  }
+  /**
+   * Gets whether an error should be thrown when an emit throws an error. Default is false and only emits an error event.
+   * @returns {boolean}
+   */
+  get throwOnEmitError() {
+    return this._throwOnEmitError;
+  }
+  /**
+   * Sets whether an error should be thrown when an emit throws an error. Default is false and only emits an error event.
+   * @param {boolean} value
+   */
+  set throwOnEmitError(t) {
+    this._throwOnEmitError = t;
+  }
+  /**
+   * Gets whether an error should be thrown when emitting 'error' event with no listeners. Default is false.
+   * @returns {boolean}
+   */
+  get throwOnEmptyListeners() {
+    return this._throwOnEmptyListeners;
+  }
+  /**
+   * Sets whether an error should be thrown when emitting 'error' event with no listeners. Default is false.
+   * @param {boolean} value
+   */
+  set throwOnEmptyListeners(t) {
+    this._throwOnEmptyListeners = t;
+  }
+  /**
+   * Adds a handler function for a specific event that will run only once
+   * @param {string | symbol} eventName
+   * @param {EventListener} listener
+   * @returns {IEventEmitter} returns the instance of the class for chaining
+   */
+  once(t, e) {
+    const r = (...s2) => {
+      this.off(t, r), e(...s2);
+    };
+    return this.on(t, r), this;
+  }
+  /**
+   * Gets the number of listeners for a specific event. If no event is provided, it returns the total number of listeners
+   * @param {string} eventName The event name. Not required
+   * @returns {number} The number of listeners
+   */
+  listenerCount(t) {
+    if (t === void 0)
+      return this.getAllListeners().length;
+    const e = this._eventListeners.get(t);
+    return e ? e.length : 0;
+  }
+  /**
+   * Gets an array of event names
+   * @returns {Array<string | symbol>} An array of event names
+   */
+  eventNames() {
+    return [...this._eventListeners.keys()];
+  }
+  /**
+   * Gets an array of listeners for a specific event. If no event is provided, it returns all listeners
+   * @param {string} [event] (Optional) The event name
+   * @returns {EventListener[]} An array of listeners
+   */
+  rawListeners(t) {
+    return t === void 0 ? this.getAllListeners() : this._eventListeners.get(t) ?? [];
+  }
+  /**
+   * Prepends a listener to the beginning of the listeners array for the specified event
+   * @param {string | symbol} eventName
+   * @param {EventListener} listener
+   * @returns {IEventEmitter} returns the instance of the class for chaining
+   */
+  prependListener(t, e) {
+    const r = this._eventListeners.get(t) ?? [];
+    return r.unshift(e), this._eventListeners.set(t, r), this;
+  }
+  /**
+   * Prepends a one-time listener to the beginning of the listeners array for the specified event
+   * @param {string | symbol} eventName
+   * @param {EventListener} listener
+   * @returns {IEventEmitter} returns the instance of the class for chaining
+   */
+  prependOnceListener(t, e) {
+    const r = (...s2) => {
+      this.off(t, r), e(...s2);
+    };
+    return this.prependListener(t, r), this;
+  }
+  /**
+   * Gets the maximum number of listeners that can be added for a single event
+   * @returns {number} The maximum number of listeners
+   */
+  maxListeners() {
+    return this._maxListeners;
+  }
+  /**
+   * Adds a listener for a specific event. It is an alias for the on() method
+   * @param {string | symbol} event
+   * @param {EventListener} listener
+   * @returns {IEventEmitter} returns the instance of the class for chaining
+   */
+  addListener(t, e) {
+    return this.on(t, e), this;
+  }
+  /**
+   * Adds a listener for a specific event
+   * @param {string | symbol} event
+   * @param {EventListener} listener
+   * @returns {IEventEmitter} returns the instance of the class for chaining
+   */
+  on(t, e) {
+    this._eventListeners.has(t) || this._eventListeners.set(t, []);
+    const r = this._eventListeners.get(t);
+    return r && (r.length >= this._maxListeners && console.warn(
+      `MaxListenersExceededWarning: Possible event memory leak detected. ${r.length + 1} ${t} listeners added. Use setMaxListeners() to increase limit.`
+    ), r.push(e)), this;
+  }
+  /**
+   * Removes a listener for a specific event. It is an alias for the off() method
+   * @param {string | symbol} event
+   * @param {EventListener} listener
+   * @returns {IEventEmitter} returns the instance of the class for chaining
+   */
+  removeListener(t, e) {
+    return this.off(t, e), this;
+  }
+  /**
+   * Removes a listener for a specific event
+   * @param {string | symbol} event
+   * @param {EventListener} listener
+   * @returns {IEventEmitter} returns the instance of the class for chaining
+   */
+  off(t, e) {
+    const r = this._eventListeners.get(t) ?? [], s2 = r.indexOf(e);
+    return s2 !== -1 && r.splice(s2, 1), r.length === 0 && this._eventListeners.delete(t), this;
+  }
+  /**
+   * Calls all listeners for a specific event
+   * @param {string | symbol} event
+   * @param arguments_ The arguments to pass to the listeners
+   * @returns {boolean} Returns true if the event had listeners, false otherwise
+   */
+  emit(t, ...e) {
+    let r = false;
+    const s2 = this._eventListeners.get(t);
+    if (s2 && s2.length > 0)
+      for (const n of s2)
+        n(...e), r = true;
+    if (t === this._errorEvent) {
+      const n = e[0] instanceof Error ? e[0] : new Error(`${e[0]}`);
+      if (this._throwOnEmitError && !r)
+        throw n;
+      if (this.listeners(this._errorEvent).length === 0 && this._throwOnEmptyListeners === true)
+        throw n;
+    }
+    return this.sendLog(t, e), r;
+  }
+  /**
+   * Gets all listeners for a specific event. If no event is provided, it returns all listeners
+   * @param {string} [event] (Optional) The event name
+   * @returns {EventListener[]} An array of listeners
+   */
+  listeners(t) {
+    return this._eventListeners.get(t) ?? [];
+  }
+  /**
+   * Removes all listeners for a specific event. If no event is provided, it removes all listeners
+   * @param {string} [event] (Optional) The event name
+   * @returns {IEventEmitter} returns the instance of the class for chaining
+   */
+  removeAllListeners(t) {
+    return t !== void 0 ? this._eventListeners.delete(t) : this._eventListeners.clear(), this;
+  }
+  /**
+   * Sets the maximum number of listeners that can be added for a single event
+   * @param {number} n The maximum number of listeners
+   * @returns {void}
+   */
+  setMaxListeners(t) {
+    this._maxListeners = t;
+    for (const e of this._eventListeners.values())
+      e.length > t && e.splice(t);
+  }
+  /**
+   * Gets all listeners
+   * @returns {EventListener[]} An array of listeners
+   */
+  getAllListeners() {
+    let t = [];
+    for (const e of this._eventListeners.values())
+      t = [...t, ...e];
+    return t;
+  }
+  /**
+   * Sends a log message using the configured logger based on the event name
+   * @param {string | symbol} eventName - The event name that determines the log level
+   * @param {unknown} data - The data to log
+   */
+  sendLog(t, e) {
+    if (!this._logger)
+      return;
+    let r;
+    switch (typeof e == "string" ? r = e : Array.isArray(e) && e.length > 0 && e[0] instanceof Error ? r = e[0].message : e instanceof Error ? r = e.message : Array.isArray(e) && e.length > 0 && typeof e[0]?.message == "string" ? r = e[0].message : r = JSON.stringify(e), t) {
+      case "error": {
+        this._logger.error?.(r, { event: t, data: e });
+        break;
+      }
+      case "warn": {
+        this._logger.warn?.(r, { event: t, data: e });
+        break;
+      }
+      case "trace": {
+        this._logger.trace?.(r, { event: t, data: e });
+        break;
+      }
+      case "debug": {
+        this._logger.debug?.(r, { event: t, data: e });
+        break;
+      }
+      case "fatal": {
+        this._logger.fatal?.(r, { event: t, data: e });
+        break;
+      }
+      default: {
+        this._logger.info?.(r, { event: t, data: e });
+        break;
+      }
+    }
+  }
+}, Ir = class extends Cr {
+  _hooks;
+  _throwOnHookError = false;
+  _enforceBeforeAfter = false;
+  _deprecatedHooks;
+  _allowDeprecated = true;
+  constructor(t) {
+    super({
+      logger: t?.logger,
+      throwOnEmitError: t?.throwOnEmitError,
+      throwOnEmptyListeners: t?.throwOnEmptyListeners
+    }), this._hooks = /* @__PURE__ */ new Map(), this._deprecatedHooks = t?.deprecatedHooks ? new Map(t.deprecatedHooks) : /* @__PURE__ */ new Map(), t?.throwOnHookError !== void 0 ? this._throwOnHookError = t.throwOnHookError : t?.throwHookErrors !== void 0 && (this._throwOnHookError = t.throwHookErrors), t?.enforceBeforeAfter !== void 0 && (this._enforceBeforeAfter = t.enforceBeforeAfter), t?.allowDeprecated !== void 0 && (this._allowDeprecated = t.allowDeprecated);
+  }
+  /**
+   * Gets all hooks
+   * @returns {Map<string, Hook[]>}
+   */
+  get hooks() {
+    return this._hooks;
+  }
+  /**
+   * Gets whether an error should be thrown when a hook throws an error. Default is false and only emits an error event.
+   * @returns {boolean}
+   * @deprecated - this will be deprecated in version 2. Please use throwOnHookError.
+   */
+  get throwHookErrors() {
+    return this._throwOnHookError;
+  }
+  /**
+   * Sets whether an error should be thrown when a hook throws an error. Default is false and only emits an error event.
+   * @param {boolean} value
+   * @deprecated - this will be deprecated in version 2. Please use throwOnHookError.
+   */
+  set throwHookErrors(t) {
+    this._throwOnHookError = t;
+  }
+  /**
+   * Gets whether an error should be thrown when a hook throws an error. Default is false and only emits an error event.
+   * @returns {boolean}
+   */
+  get throwOnHookError() {
+    return this._throwOnHookError;
+  }
+  /**
+   * Sets whether an error should be thrown when a hook throws an error. Default is false and only emits an error event.
+   * @param {boolean} value
+   */
+  set throwOnHookError(t) {
+    this._throwOnHookError = t;
+  }
+  /**
+   * Gets whether to enforce that all hook names start with 'before' or 'after'. Default is false.
+   * @returns {boolean}
+   * @default false
+   */
+  get enforceBeforeAfter() {
+    return this._enforceBeforeAfter;
+  }
+  /**
+   * Sets whether to enforce that all hook names start with 'before' or 'after'. Default is false.
+   * @param {boolean} value
+   */
+  set enforceBeforeAfter(t) {
+    this._enforceBeforeAfter = t;
+  }
+  /**
+   * Gets the map of deprecated hook names to deprecation messages.
+   * @returns {Map<string, string>}
+   */
+  get deprecatedHooks() {
+    return this._deprecatedHooks;
+  }
+  /**
+   * Sets the map of deprecated hook names to deprecation messages.
+   * @param {Map<string, string>} value
+   */
+  set deprecatedHooks(t) {
+    this._deprecatedHooks = t;
+  }
+  /**
+   * Gets whether deprecated hooks are allowed to be registered and executed. Default is true.
+   * @returns {boolean}
+   */
+  get allowDeprecated() {
+    return this._allowDeprecated;
+  }
+  /**
+   * Sets whether deprecated hooks are allowed to be registered and executed. Default is true.
+   * @param {boolean} value
+   */
+  set allowDeprecated(t) {
+    this._allowDeprecated = t;
+  }
+  /**
+   * Validates hook event name if enforceBeforeAfter is enabled
+   * @param {string} event - The event name to validate
+   * @throws {Error} If enforceBeforeAfter is true and event doesn't start with 'before' or 'after'
+   */
+  validateHookName(t) {
+    if (this._enforceBeforeAfter) {
+      const e = t.trim().toLocaleLowerCase();
+      if (!e.startsWith("before") && !e.startsWith("after"))
+        throw new Error(
+          `Hook event "${t}" must start with "before" or "after" when enforceBeforeAfter is enabled`
+        );
+    }
+  }
+  /**
+   * Checks if a hook is deprecated and emits a warning if it is
+   * @param {string} event - The event name to check
+   * @returns {boolean} - Returns true if the hook should proceed, false if it should be blocked
+   */
+  checkDeprecatedHook(t) {
+    if (this._deprecatedHooks.has(t)) {
+      const e = this._deprecatedHooks.get(t), r = `Hook "${t}" is deprecated${e ? `: ${e}` : ""}`;
+      return this.emit("warn", { hook: t, message: r }), this._allowDeprecated;
+    }
+    return true;
+  }
+  /**
+   * Adds a handler function for a specific event
+   * @param {string} event
+   * @param {Hook} handler - this can be async or sync
+   * @returns {void}
+   */
+  onHook(t, e) {
+    this.onHookEntry({ event: t, handler: e });
+  }
+  /**
+   * Adds a handler function for a specific event
+   * @param {HookEntry} hookEntry
+   * @returns {void}
+   */
+  onHookEntry(t) {
+    if (this.validateHookName(t.event), !this.checkDeprecatedHook(t.event))
+      return;
+    const e = this._hooks.get(t.event);
+    e ? e.push(t.handler) : this._hooks.set(t.event, [t.handler]);
+  }
+  /**
+   * Alias for onHook. This is provided for compatibility with other libraries that use the `addHook` method.
+   * @param {string} event
+   * @param {Hook} handler - this can be async or sync
+   * @returns {void}
+   */
+  addHook(t, e) {
+    this.onHookEntry({ event: t, handler: e });
+  }
+  /**
+   * Adds a handler function for a specific event
+   * @param {Array<HookEntry>} hooks
+   * @returns {void}
+   */
+  onHooks(t) {
+    for (const e of t)
+      this.onHook(e.event, e.handler);
+  }
+  /**
+   * Adds a handler function for a specific event that runs before all other handlers
+   * @param {string} event
+   * @param {Hook} handler - this can be async or sync
+   * @returns {void}
+   */
+  prependHook(t, e) {
+    if (this.validateHookName(t), !this.checkDeprecatedHook(t))
+      return;
+    const r = this._hooks.get(t);
+    r ? r.unshift(e) : this._hooks.set(t, [e]);
+  }
+  /**
+   * Adds a handler that only executes once for a specific event before all other handlers
+   * @param event
+   * @param handler
+   */
+  prependOnceHook(t, e) {
+    if (this.validateHookName(t), !this.checkDeprecatedHook(t))
+      return;
+    const r = async (...s2) => (this.removeHook(t, r), e(...s2));
+    this.prependHook(t, r);
+  }
+  /**
+   * Adds a handler that only executes once for a specific event
+   * @param event
+   * @param handler
+   */
+  onceHook(t, e) {
+    if (this.validateHookName(t), !this.checkDeprecatedHook(t))
+      return;
+    const r = async (...s2) => (this.removeHook(t, r), e(...s2));
+    this.onHook(t, r);
+  }
+  /**
+   * Removes a handler function for a specific event
+   * @param {string} event
+   * @param {Hook} handler
+   * @returns {void}
+   */
+  removeHook(t, e) {
+    if (this.validateHookName(t), !this.checkDeprecatedHook(t))
+      return;
+    const r = this._hooks.get(t);
+    if (r) {
+      const s2 = r.indexOf(e);
+      s2 !== -1 && r.splice(s2, 1);
+    }
+  }
+  /**
+   * Removes all handlers for a specific event
+   * @param {Array<HookEntry>} hooks
+   * @returns {void}
+   */
+  removeHooks(t) {
+    for (const e of t)
+      this.removeHook(e.event, e.handler);
+  }
+  /**
+   * Calls all handlers for a specific event
+   * @param {string} event
+   * @param {T[]} arguments_
+   * @returns {Promise<void>}
+   */
+  async hook(t, ...e) {
+    if (this.validateHookName(t), !this.checkDeprecatedHook(t))
+      return;
+    const r = this._hooks.get(t);
+    if (r)
+      for (const s2 of r)
+        try {
+          await s2(...e);
+        } catch (n) {
+          const i = `${t}: ${n.message}`;
+          if (this.emit("error", new Error(i)), this._throwOnHookError)
+            throw new Error(i);
+        }
+  }
+  /**
+   * Calls all synchronous handlers for a specific event.
+   * Async handlers (declared with `async` keyword) are silently skipped.
+   *
+   * Note: The `hook` method is preferred as it executes both sync and async functions.
+   * Use `hookSync` only when you specifically need synchronous execution.
+   * @param {string} event
+   * @param {T[]} arguments_
+   * @returns {void}
+   */
+  hookSync(t, ...e) {
+    if (this.validateHookName(t), !this.checkDeprecatedHook(t))
+      return;
+    const r = this._hooks.get(t);
+    if (r) {
+      for (const s2 of r)
+        if (s2.constructor.name !== "AsyncFunction")
+          try {
+            s2(...e);
+          } catch (n) {
+            const i = `${t}: ${n.message}`;
+            if (this.emit("error", new Error(i)), this._throwOnHookError)
+              throw new Error(i);
+          }
+    }
+  }
+  /**
+   * Prepends the word `before` to your hook. Example is event is `test`, the before hook is `before:test`.
+   * @param {string} event - The event name
+   * @param {T[]} arguments_ - The arguments to pass to the hook
+   */
+  async beforeHook(t, ...e) {
+    await this.hook(`before:${t}`, ...e);
+  }
+  /**
+   * Prepends the word `after` to your hook. Example is event is `test`, the after hook is `after:test`.
+   * @param {string} event - The event name
+   * @param {T[]} arguments_ - The arguments to pass to the hook
+   */
+  async afterHook(t, ...e) {
+    await this.hook(`after:${t}`, ...e);
+  }
+  /**
+   * Calls all handlers for a specific event. This is an alias for `hook` and is provided for
+   * compatibility with other libraries that use the `callHook` method.
+   * @param {string} event
+   * @param {T[]} arguments_
+   * @returns {Promise<void>}
+   */
+  async callHook(t, ...e) {
+    await this.hook(t, ...e);
+  }
+  /**
+   * Gets all hooks for a specific event
+   * @param {string} event
+   * @returns {Hook[]}
+   */
+  getHooks(t) {
+    if (this.validateHookName(t), !!this.checkDeprecatedHook(t))
+      return this._hooks.get(t);
+  }
+  /**
+   * Removes all hooks
+   * @returns {void}
+   */
+  clearHooks() {
+    this._hooks.clear();
+  }
+};
+var Ar = class {
+  _enabled = true;
+  _maxSize = 4e3;
+  _store = /* @__PURE__ */ new Map();
+  _keys = [];
+  constructor(t) {
+    t?.enabled !== void 0 && (this._enabled = t.enabled), t?.maxSize !== void 0 && (this._maxSize = t.maxSize);
+  }
+  /**
+   * Gets whether the cache is enabled.
+   */
+  get enabled() {
+    return this._enabled;
+  }
+  /**
+   * Sets whether the cache is enabled.
+   */
+  set enabled(t) {
+    this._enabled = t;
+  }
+  /**
+   * Gets the maximum number of items the cache can hold.
+   */
+  get maxSize() {
+    return this._maxSize;
+  }
+  /**
+   * Sets the maximum number of items the cache can hold.
+   */
+  set maxSize(t) {
+    this._maxSize = t;
+  }
+  /**
+   * Gets the underlying Map store.
+   */
+  get store() {
+    return this._store;
+  }
+  /**
+   * Gets the current number of items in the cache.
+   */
+  get size() {
+    return this._store.size;
+  }
+  /**
+   * Gets a value from the cache.
+   * @param key - The cache key
+   * @returns The cached value, or undefined if not found
+   */
+  get(t) {
+    return this._store.get(t);
+  }
+  /**
+   * Sets a value in the cache with FIFO eviction.
+   * If the cache is disabled, this method does nothing.
+   * If the cache is at capacity, the oldest entry is removed before adding the new one.
+   * @param key - The cache key
+   * @param value - The value to cache
+   */
+  set(t, e) {
+    if (this._enabled) {
+      if (this._store.has(t)) {
+        this._store.set(t, e);
+        return;
+      }
+      if (this._store.size >= this._maxSize) {
+        const r = this._keys.shift();
+        r && this._store.delete(r);
+      }
+      this._keys.push(t), this._store.set(t, e);
+    }
+  }
+  /**
+   * Checks if a key exists in the cache.
+   * @param key - The cache key
+   * @returns True if the key exists, false otherwise
+   */
+  has(t) {
+    return this._store.has(t);
+  }
+  /**
+   * Clears all entries from the cache.
+   */
+  clear() {
+    this._store.clear(), this._keys = [];
+  }
+}, Tr = class {
+  get name() {
+    return "crc32";
+  }
+  toHashSync(t) {
+    let e;
+    if (t instanceof Uint8Array)
+      e = t;
+    else if (t instanceof ArrayBuffer)
+      e = new Uint8Array(t);
+    else if (t instanceof DataView)
+      e = new Uint8Array(t.buffer, t.byteOffset, t.byteLength);
+    else {
+      const i = t;
+      e = new Uint8Array(i.buffer, i.byteOffset, i.byteLength);
+    }
+    const r = 3988292384;
+    let s2 = 4294967295;
+    for (let i = 0; i < e.length; i++) {
+      s2 = s2 ^ e[i];
+      for (let o = 0; o < 8; o++)
+        s2 = s2 >>> 1 ^ r & -(s2 & 1);
+    }
+    return s2 = (s2 ^ 4294967295) >>> 0, s2.toString(16).padStart(8, "0");
+  }
+  async toHash(t) {
+    return this.toHashSync(t);
+  }
+}, Me$1 = class Me {
+  _algorithm = "SHA-256";
+  constructor(t) {
+    t?.algorithm && (this._algorithm = t?.algorithm);
+  }
+  get name() {
+    return this._algorithm;
+  }
+  async toHash(t) {
+    const e = await crypto.subtle.digest(this._algorithm, t);
+    return Array.from(new Uint8Array(e)).map((n) => n.toString(16).padStart(2, "0")).join("");
+  }
+}, Er = class {
+  /**
+   * The name identifier for this hash provider.
+   */
+  get name() {
+    return "djb2";
+  }
+  /**
+   * Computes the DJB2 hash of the provided data synchronously.
+   *
+   * @param data - The data to hash (Uint8Array, ArrayBuffer, or DataView)
+   * @returns An 8-character lowercase hexadecimal string
+   *
+   * @example
+   * ```typescript
+   * const djb2 = new DJB2();
+   * const data = new TextEncoder().encode('hello');
+   * const hash = djb2.toHashSync(data);
+   * console.log(hash); // "7c9df5ea"
+   * ```
+   */
+  toHashSync(t) {
+    let e;
+    if (t instanceof Uint8Array)
+      e = t;
+    else if (t instanceof ArrayBuffer)
+      e = new Uint8Array(t);
+    else if (t instanceof DataView)
+      e = new Uint8Array(t.buffer, t.byteOffset, t.byteLength);
+    else {
+      const n = t;
+      e = new Uint8Array(n.buffer, n.byteOffset, n.byteLength);
+    }
+    let r = 5381;
+    for (let n = 0; n < e.length; n++)
+      r = (r << 5) + r + e[n], r = r >>> 0;
+    return r.toString(16).padStart(8, "0");
+  }
+  /**
+   * Computes the DJB2 hash of the provided data.
+   *
+   * @param data - The data to hash (Uint8Array, ArrayBuffer, or DataView)
+   * @returns A Promise resolving to an 8-character lowercase hexadecimal string
+   *
+   * @example
+   * ```typescript
+   * const djb2 = new DJB2();
+   * const data = new TextEncoder().encode('hello');
+   * const hash = await djb2.toHash(data);
+   * console.log(hash); // "7c9df5ea"
+   * ```
+   */
+  async toHash(t) {
+    return this.toHashSync(t);
+  }
+}, Rr = class {
+  /**
+   * The name identifier for this hash provider.
+   */
+  get name() {
+    return "fnv1";
+  }
+  /**
+   * Computes the FNV-1 hash of the provided data synchronously.
+   *
+   * @param data - The data to hash (Uint8Array, ArrayBuffer, or DataView)
+   * @returns An 8-character lowercase hexadecimal string
+   */
+  toHashSync(t) {
+    let e;
+    if (t instanceof Uint8Array)
+      e = t;
+    else if (t instanceof ArrayBuffer)
+      e = new Uint8Array(t);
+    else if (t instanceof DataView)
+      e = new Uint8Array(t.buffer, t.byteOffset, t.byteLength);
+    else {
+      const o = t;
+      e = new Uint8Array(o.buffer, o.byteOffset, o.byteLength);
+    }
+    const r = 2166136261, s2 = 16777619;
+    let n = r;
+    for (let o = 0; o < e.length; o++)
+      n = n * s2, n = n ^ e[o], n = n >>> 0;
+    return n.toString(16).padStart(8, "0");
+  }
+  /**
+   * Computes the FNV-1 hash of the provided data.
+   *
+   * @param data - The data to hash (Uint8Array, ArrayBuffer, or DataView)
+   * @returns A Promise resolving to an 8-character lowercase hexadecimal string
+   */
+  async toHash(t) {
+    return this.toHashSync(t);
+  }
+}, Nr = class {
+  _seed;
+  /**
+   * Creates a new Murmer instance.
+   *
+   * @param seed - Optional seed value for the hash (default: 0)
+   */
+  constructor(t = 0) {
+    this._seed = t >>> 0;
+  }
+  /**
+   * The name identifier for this hash provider.
+   */
+  get name() {
+    return "murmer";
+  }
+  /**
+   * Gets the current seed value used for hashing.
+   */
+  get seed() {
+    return this._seed;
+  }
+  /**
+   * Computes the Murmer 32-bit hash of the provided data synchronously.
+   *
+   * @param data - The data to hash (Uint8Array, ArrayBuffer, or DataView)
+   * @returns An 8-character lowercase hexadecimal string
+   *
+   * @example
+   * ```typescript
+   * const murmer = new Murmer();
+   * const data = new TextEncoder().encode('hello');
+   * const hash = murmer.toHashSync(data);
+   * console.log(hash); // "248bfa47"
+   * ```
+   */
+  toHashSync(t) {
+    let e;
+    if (t instanceof Uint8Array)
+      e = t;
+    else if (t instanceof ArrayBuffer)
+      e = new Uint8Array(t);
+    else if (t instanceof DataView)
+      e = new Uint8Array(t.buffer, t.byteOffset, t.byteLength);
+    else {
+      const h = t;
+      e = new Uint8Array(h.buffer, h.byteOffset, h.byteLength);
+    }
+    const r = 3432918353, s2 = 461845907, n = e.length, i = Math.floor(n / 4);
+    let o = this._seed;
+    for (let h = 0; h < i; h++) {
+      const p = h * 4;
+      let C = e[p] & 255 | (e[p + 1] & 255) << 8 | (e[p + 2] & 255) << 16 | (e[p + 3] & 255) << 24;
+      C = this._imul(C, r), C = this._rotl32(C, 15), C = this._imul(C, s2), o ^= C, o = this._rotl32(o, 13), o = this._imul(o, 5) + 3864292196;
+    }
+    const a = i * 4;
+    let c = 0;
+    switch (n & 3) {
+      case 3:
+        c ^= (e[a + 2] & 255) << 16;
+      // fallthrough
+      case 2:
+        c ^= (e[a + 1] & 255) << 8;
+      // fallthrough
+      case 1:
+        c ^= e[a] & 255, c = this._imul(c, r), c = this._rotl32(c, 15), c = this._imul(c, s2), o ^= c;
+    }
+    return o ^= n, o ^= o >>> 16, o = this._imul(o, 2246822507), o ^= o >>> 13, o = this._imul(o, 3266489909), o ^= o >>> 16, o = o >>> 0, o.toString(16).padStart(8, "0");
+  }
+  /**
+   * Computes the Murmer 32-bit hash of the provided data.
+   *
+   * @param data - The data to hash (Uint8Array, ArrayBuffer, or DataView)
+   * @returns A Promise resolving to an 8-character lowercase hexadecimal string
+   *
+   * @example
+   * ```typescript
+   * const murmer = new Murmer();
+   * const data = new TextEncoder().encode('hello');
+   * const hash = await murmer.toHash(data);
+   * console.log(hash); // "248bfa47"
+   * ```
+   */
+  async toHash(t) {
+    return this.toHashSync(t);
+  }
+  /**
+   * 32-bit integer multiplication with proper overflow handling.
+   * @private
+   */
+  _imul(t, e) {
+    if (Math.imul)
+      return Math.imul(t, e);
+    const r = t >>> 16 & 65535, s2 = t & 65535, n = e >>> 16 & 65535, i = e & 65535;
+    return s2 * i + (r * i + s2 * n << 16 >>> 0) | 0;
+  }
+  /**
+   * Left rotate a 32-bit integer.
+   * @private
+   */
+  _rotl32(t, e) {
+    return t << e | t >>> 32 - e;
+  }
+}, Dr = class {
+  _providers = /* @__PURE__ */ new Map();
+  _getFuzzy = true;
+  /**
+   * Creates a new HashProviders instance.
+   * @param options - Optional configuration including initial providers to load
+   * @example
+   * ```ts
+   * const providers = new HashProviders({
+   *   providers: [{ name: 'custom', toHash: async (data) => '...' }]
+   * });
+   * ```
+   */
+  constructor(t) {
+    t?.providers && this.loadProviders(t?.providers), t?.getFuzzy !== void 0 && (this._getFuzzy = !!t?.getFuzzy);
+  }
+  /**
+   * Loads multiple hash providers at once.
+   * Each provider is added to the internal map using its name as the key.
+   * @param providers - Array of HashProvider objects to load
+   * @example
+   * ```ts
+   * const providers = new HashProviders();
+   * providers.loadProviders([
+   *   { name: 'md5', toHash: async (data) => '...' },
+   *   { name: 'sha1', toHash: async (data) => '...' }
+   * ]);
+   * ```
+   */
+  loadProviders(t) {
+    for (const e of t)
+      this._providers.set(e.name, e);
+  }
+  /**
+   * Gets the internal Map of all registered hash providers.
+   * @returns Map of provider names to HashProvider objects
+   */
+  get providers() {
+    return this._providers;
+  }
+  /**
+   * Sets the internal Map of hash providers, replacing all existing providers.
+   * @param providers - Map of provider names to HashProvider objects
+   */
+  set providers(t) {
+    this._providers = t;
+  }
+  /**
+   * Gets an array of all provider names.
+   * @returns Array of provider names
+   * @example
+   * ```ts
+   * const providers = new HashProviders();
+   * providers.add({ name: 'sha256', toHash: async (data) => '...' });
+   * providers.add({ name: 'md5', toHash: async (data) => '...' });
+   * console.log(providers.names); // ['sha256', 'md5']
+   * ```
+   */
+  get names() {
+    return Array.from(this._providers.keys());
+  }
+  /**
+   * Gets a hash provider by name with optional fuzzy matching.
+   *
+   * Fuzzy matching (enabled by default) attempts to find providers by:
+   * 1. Exact match (after trimming whitespace)
+   * 2. Case-insensitive match (lowercase)
+   * 3. Dash-removed match (e.g., "SHA-256" matches "sha256")
+   *
+   * @param name - The name of the provider to retrieve
+   * @param options - Optional configuration for the get operation
+   * @param options.fuzzy - Enable/disable fuzzy matching (overrides constructor setting)
+   * @returns The HashProvider if found, undefined otherwise
+   * @example
+   * ```ts
+   * const providers = new HashProviders();
+   * providers.add({ name: 'sha256', toHash: async (data) => '...' });
+   *
+   * // Exact match
+   * const provider = providers.get('sha256');
+   *
+   * // Fuzzy match (case-insensitive)
+   * const provider2 = providers.get('SHA256');
+   *
+   * // Fuzzy match (with dash)
+   * const provider3 = providers.get('SHA-256');
+   *
+   * // Disable fuzzy matching
+   * const provider4 = providers.get('SHA256', { fuzzy: false }); // returns undefined
+   * ```
+   */
+  get(t, e) {
+    const r = e?.fuzzy ?? this._getFuzzy;
+    t = t.trim();
+    let s2 = this._providers.get(t);
+    return s2 === void 0 && r === true && (t = t.toLowerCase(), s2 = this._providers.get(t)), s2 === void 0 && r === true && (t = t.replaceAll("-", ""), s2 = this._providers.get(t)), s2;
+  }
+  /**
+   * Adds a single hash provider to the collection.
+   * If a provider with the same name already exists, it will be replaced.
+   * @param provider - The HashProvider object to add
+   * @example
+   * ```ts
+   * const providers = new HashProviders();
+   * providers.add({
+   *   name: 'custom-hash',
+   *   toHash: async (data) => {
+   *     // Custom hashing logic
+   *     return 'hash-result';
+   *   }
+   * });
+   * ```
+   */
+  add(t) {
+    this._providers.set(t.name, t);
+  }
+  /**
+   * Removes a hash provider from the collection by name.
+   * @param name - The name of the provider to remove
+   * @returns true if the provider was found and removed, false otherwise
+   * @example
+   * ```ts
+   * const providers = new HashProviders();
+   * providers.add({ name: 'custom', toHash: async (data) => '...' });
+   * const removed = providers.remove('custom'); // returns true
+   * const removed2 = providers.remove('nonexistent'); // returns false
+   * ```
+   */
+  remove(t) {
+    return this._providers.delete(t);
+  }
+}, Lr = class extends Ir {
+  _parse = JSON.parse;
+  _stringify = JSON.stringify;
+  _providers = new Dr();
+  _defaultAlgorithm = "SHA-256";
+  _defaultAlgorithmSync = "djb2";
+  _cache;
+  constructor(t) {
+    super(t), t?.parse && (this._parse = t.parse), t?.stringify && (this._stringify = t.stringify), t?.defaultAlgorithm && (this._defaultAlgorithm = t.defaultAlgorithm), t?.defaultAlgorithmSync && (this._defaultAlgorithmSync = t.defaultAlgorithmSync), this._cache = new Ar(t?.cache), this.loadProviders(t?.providers, {
+      includeBase: t?.includeBase ?? true
+    });
+  }
+  /**
+   * Gets the parse function used to deserialize stored values.
+   * @returns The current parse function (defaults to JSON.parse)
+   */
+  get parse() {
+    return this._parse;
+  }
+  /**
+   * Sets the parse function used to deserialize stored values.
+   * @param value - The parse function to use for deserialization
+   */
+  set parse(t) {
+    this._parse = t;
+  }
+  /**
+   * Gets the stringify function used to serialize values for storage.
+   * @returns The current stringify function (defaults to JSON.stringify)
+   */
+  get stringify() {
+    return this._stringify;
+  }
+  /**
+   * Sets the stringify function used to serialize values for storage.
+   * @param value - The stringify function to use for serialization
+   */
+  set stringify(t) {
+    this._stringify = t;
+  }
+  /**
+   * Gets the HashProviders instance used to manage hash providers.
+   * @returns The current HashProviders instance
+   */
+  get providers() {
+    return this._providers;
+  }
+  /**
+   * Sets the HashProviders instance used to manage hash providers.
+   * @param value - The HashProviders instance to use
+   */
+  set providers(t) {
+    this._providers = t;
+  }
+  /**
+   * Gets the names of all registered hash algorithm providers.
+   * @returns An array of provider names (e.g., ['SHA-256', 'SHA-384', 'SHA-512'])
+   */
+  get names() {
+    return this._providers.names;
+  }
+  /**
+   * Gets the default hash algorithm used when none is specified.
+   * @returns The current default algorithm (defaults to 'SHA-256')
+   */
+  get defaultAlgorithm() {
+    return this._defaultAlgorithm;
+  }
+  /**
+   * Sets the default hash algorithm to use when none is specified.
+   * @param value - The default algorithm to use (e.g., 'SHA-256', 'SHA-512', 'djb2')
+   * @example
+   * ```ts
+   * const hashery = new Hashery();
+   * hashery.defaultAlgorithm = 'SHA-512';
+   *
+   * // Now toHash will use SHA-512 by default
+   * const hash = await hashery.toHash({ data: 'example' });
+   * ```
+   */
+  set defaultAlgorithm(t) {
+    this._defaultAlgorithm = t;
+  }
+  /**
+   * Gets the default synchronous hash algorithm used when none is specified.
+   * @returns The current default synchronous algorithm (defaults to 'djb2')
+   */
+  get defaultAlgorithmSync() {
+    return this._defaultAlgorithmSync;
+  }
+  /**
+   * Sets the default synchronous hash algorithm to use when none is specified.
+   * @param value - The default synchronous algorithm to use (e.g., 'djb2', 'fnv1', 'murmer', 'crc32')
+   * @example
+   * ```ts
+   * const hashery = new Hashery();
+   * hashery.defaultAlgorithmSync = 'fnv1';
+   *
+   * // Now synchronous operations will use fnv1 by default
+   * ```
+   */
+  set defaultAlgorithmSync(t) {
+    this._defaultAlgorithmSync = t;
+  }
+  /**
+   * Gets the cache instance used to store computed hash values.
+   * @returns The Cache instance
+   * @example
+   * ```ts
+   * const hashery = new Hashery({ cache: { enabled: true } });
+   *
+   * // Access the cache
+   * hashery.cache.enabled; // true
+   * hashery.cache.size; // number of cached items
+   * hashery.cache.clear(); // clear all cached items
+   * ```
+   */
+  get cache() {
+    return this._cache;
+  }
+  /**
+   * Generates a cryptographic hash of the provided data using the Web Crypto API.
+   * The data is first stringified using the configured stringify function, then hashed.
+   *
+   * If an invalid algorithm is provided, a 'warn' event is emitted and the method falls back
+   * to the default algorithm. You can listen to these warnings:
+   * ```ts
+   * hashery.on('warn', (message) => console.log(message));
+   * ```
+   *
+   * @param data - The data to hash (will be stringified before hashing)
+   * @param options - Optional configuration object
+   * @param options.algorithm - The hash algorithm to use (defaults to 'SHA-256')
+   * @param options.maxLength - Optional maximum length for the hash output
+   * @returns A Promise that resolves to the hexadecimal string representation of the hash
+   *
+   * @example
+   * ```ts
+   * const hashery = new Hashery();
+   * const hash = await hashery.toHash({ name: 'John', age: 30 });
+   * console.log(hash); // "a1b2c3d4..."
+   *
+   * // Using a different algorithm
+   * const hash512 = await hashery.toHash({ name: 'John' }, { algorithm: 'SHA-512' });
+   * ```
+   */
+  async toHash(t, e) {
+    const r = {
+      data: t,
+      algorithm: e?.algorithm ?? this._defaultAlgorithm,
+      maxLength: e?.maxLength
+    };
+    await this.beforeHook("toHash", r);
+    const s2 = this._stringify(r.data), n = `${r.algorithm}:${s2}`;
+    if (this._cache.enabled) {
+      const h = this._cache.get(n);
+      if (h !== void 0)
+        return e?.maxLength && h.length > e.maxLength ? h.substring(0, e.maxLength) : h;
+    }
+    const o = new TextEncoder().encode(s2);
+    let a = this._providers.get(r.algorithm);
+    a || (this.emit(
+      "warn",
+      `Invalid algorithm '${r.algorithm}' not found. Falling back to default algorithm '${this._defaultAlgorithm}'.`
+    ), a = new Me$1({
+      algorithm: this._defaultAlgorithm
+    }));
+    let c = await a.toHash(o);
+    this._cache.enabled && this._cache.set(n, c), e?.maxLength && c.length > e?.maxLength && (c = c.substring(0, e.maxLength));
+    const l = { hash: c, data: r.data, algorithm: r.algorithm };
+    return await this.afterHook("toHash", l), l.hash;
+  }
+  /**
+   * Generates a deterministic number within a specified range based on the hash of the provided data.
+   * This method uses the toHash function to create a consistent hash, then maps it to a number
+   * between min and max (inclusive).
+   *
+   * @param data - The data to hash (will be stringified before hashing)
+   * @param options - Configuration options (optional, defaults to min: 0, max: 100)
+   * @param options.min - The minimum value of the range (inclusive, defaults to 0)
+   * @param options.max - The maximum value of the range (inclusive, defaults to 100)
+   * @param options.algorithm - The hash algorithm to use (defaults to 'SHA-256')
+   * @param options.hashLength - Number of characters from hash to use for conversion (defaults to 16)
+   * @returns A Promise that resolves to a number between min and max (inclusive)
+   *
+   * @example
+   * ```ts
+   * const hashery = new Hashery();
+   * const num = await hashery.toNumber({ user: 'john' }); // Uses default min: 0, max: 100
+   * console.log(num); // Always returns the same number for the same input, e.g., 42
+   *
+   * // Using custom range
+   * const num2 = await hashery.toNumber({ user: 'john' }, { min: 1, max: 100 });
+   *
+   * // Using a different algorithm
+   * const num512 = await hashery.toNumber({ user: 'john' }, { min: 0, max: 255, algorithm: 'SHA-512' });
+   * ```
+   */
+  async toNumber(t, e = {}) {
+    const {
+      min: r = 0,
+      max: s2 = 100,
+      algorithm: n = this._defaultAlgorithm,
+      hashLength: i = 16
+    } = e;
+    if (r > s2)
+      throw new Error("min cannot be greater than max");
+    const o = await this.toHash(t, { algorithm: n, maxLength: i }), a = Number.parseInt(o, 16), c = s2 - r + 1;
+    return r + a % c;
+  }
+  /**
+   * Generates a hash of the provided data synchronously using a non-cryptographic hash algorithm.
+   * The data is first stringified using the configured stringify function, then hashed.
+   *
+   * Note: This method only works with synchronous hash providers (djb2, fnv1, murmer, crc32).
+   * WebCrypto algorithms (SHA-256, SHA-384, SHA-512) are not supported and will throw an error.
+   *
+   * If an invalid algorithm is provided, a 'warn' event is emitted and the method falls back
+   * to the default synchronous algorithm. You can listen to these warnings:
+   * ```ts
+   * hashery.on('warn', (message) => console.log(message));
+   * ```
+   *
+   * @param data - The data to hash (will be stringified before hashing)
+   * @param options - Optional configuration object
+   * @param options.algorithm - The hash algorithm to use (defaults to 'djb2')
+   * @param options.maxLength - Optional maximum length for the hash output
+   * @returns The hexadecimal string representation of the hash
+   *
+   * @throws {Error} If the specified algorithm does not support synchronous hashing
+   * @throws {Error} If the default algorithm is not found
+   *
+   * @example
+   * ```ts
+   * const hashery = new Hashery();
+   * const hash = hashery.toHashSync({ name: 'John', age: 30 });
+   * console.log(hash); // "7c9df5ea..." (djb2 hash)
+   *
+   * // Using a different algorithm
+   * const hashFnv1 = hashery.toHashSync({ name: 'John' }, { algorithm: 'fnv1' });
+   * ```
+   */
+  toHashSync(t, e) {
+    const r = {
+      data: t,
+      algorithm: e?.algorithm ?? this._defaultAlgorithmSync,
+      maxLength: e?.maxLength
+    };
+    this.beforeHook("toHashSync", r);
+    const s2 = r.algorithm, n = this._stringify(r.data), i = `${s2}:${n}`;
+    if (this._cache.enabled) {
+      const p = this._cache.get(i);
+      if (p !== void 0)
+        return e?.maxLength && p.length > e.maxLength ? p.substring(0, e.maxLength) : p;
+    }
+    const a = new TextEncoder().encode(n);
+    let c = this._providers.get(s2);
+    if (!c && (this.emit(
+      "warn",
+      `Invalid algorithm '${s2}' not found. Falling back to default algorithm '${this._defaultAlgorithmSync}'.`
+    ), c = this._providers.get(this._defaultAlgorithmSync), !c))
+      throw new Error(
+        `Hash provider '${this._defaultAlgorithmSync}' (default) not found`
+      );
+    if (!c.toHashSync)
+      throw new Error(
+        `Hash provider '${s2}' does not support synchronous hashing. Use toHash() instead or choose a different algorithm (djb2, fnv1, murmer, crc32).`
+      );
+    let l = c.toHashSync(a);
+    this._cache.enabled && this._cache.set(i, l), e?.maxLength && l.length > e?.maxLength && (l = l.substring(0, e.maxLength));
+    const h = { hash: l, data: r.data, algorithm: r.algorithm };
+    return this.afterHook("toHashSync", h), h.hash;
+  }
+  /**
+   * Generates a deterministic number within a specified range based on the hash of the provided data synchronously.
+   * This method uses the toHashSync function to create a consistent hash, then maps it to a number
+   * between min and max (inclusive).
+   *
+   * Note: This method only works with synchronous hash providers (djb2, fnv1, murmer, crc32).
+   *
+   * @param data - The data to hash (will be stringified before hashing)
+   * @param options - Configuration options (optional, defaults to min: 0, max: 100)
+   * @param options.min - The minimum value of the range (inclusive, defaults to 0)
+   * @param options.max - The maximum value of the range (inclusive, defaults to 100)
+   * @param options.algorithm - The hash algorithm to use (defaults to 'djb2')
+   * @param options.hashLength - Number of characters from hash to use for conversion (defaults to 16)
+   * @returns A number between min and max (inclusive)
+   *
+   * @throws {Error} If the specified algorithm does not support synchronous hashing
+   * @throws {Error} If min is greater than max
+   *
+   * @example
+   * ```ts
+   * const hashery = new Hashery();
+   * const num = hashery.toNumberSync({ user: 'john' }); // Uses default min: 0, max: 100
+   * console.log(num); // Always returns the same number for the same input, e.g., 42
+   *
+   * // Using custom range
+   * const num2 = hashery.toNumberSync({ user: 'john' }, { min: 1, max: 100 });
+   *
+   * // Using a different algorithm
+   * const numFnv1 = hashery.toNumberSync({ user: 'john' }, { min: 0, max: 255, algorithm: 'fnv1' });
+   * ```
+   */
+  toNumberSync(t, e = {}) {
+    const {
+      min: r = 0,
+      max: s2 = 100,
+      algorithm: n = this._defaultAlgorithmSync,
+      hashLength: i = 16
+    } = e;
+    if (r > s2)
+      throw new Error("min cannot be greater than max");
+    const o = this.toHashSync(t, { algorithm: n, maxLength: i }), a = Number.parseInt(o, 16), c = s2 - r + 1;
+    return r + a % c;
+  }
+  loadProviders(t, e = { includeBase: true }) {
+    if (t)
+      for (const r of t)
+        this._providers.add(r);
+    e.includeBase && (this.providers.add(new Me$1({ algorithm: "SHA-256" })), this.providers.add(new Me$1({ algorithm: "SHA-384" })), this.providers.add(new Me$1({ algorithm: "SHA-512" })), this.providers.add(new Tr()), this.providers.add(new Er()), this.providers.add(new Rr()), this.providers.add(new Nr()));
+  }
+};
+function R(t, e) {
+  const r = e;
+  return t.replaceAll(/\{(\w+)\}/g, (s2, n) => {
+    const i = r[n];
+    return i === void 0 ? "" : String(i);
+  });
+}
+function y(t, ...e) {
+  return [t, ...e].filter((r) => r != null).map(String).join("__");
+}
+function qr() {
+  return Math.random().toString(36).slice(2, 10);
+}
+function ve$1(t) {
+  return y(t.token, "label");
+}
+function Ce$1(t) {
+  return t.help ? y(t.token, "help") : void 0;
+}
+function Pr(t) {
+  return y(t.token, "legal");
+}
+function Vr(t) {
+  return y(t.token, "flyover");
+}
+function X(t) {
+  return t.issues.length > 0 ? y(t.token, "errors") : void 0;
+}
+function ge$1(...t) {
+  return t.map((e) => e == null ? "" : String(e)).filter((e) => e.length > 0).join(" ") || void 0;
+}
+function lt$1(t) {
+  const e = /* @__PURE__ */ new Set(), r = [];
+  return t.forEach((s2) => {
+    e.has(s2) || (e.add(s2), r.push(s2));
+  }), r;
+}
+function Ue$1(t, e, r) {
+  return t < e ? e : t > r ? r : t;
+}
+function Fr(t, e) {
+  if (t === void 0)
+    throw new TypeError(e);
+}
+function Mr(t) {
+  return typeof t.status == "number";
+}
+const Ur = "http://hl7.org/fhir/questionnaire-item-control";
+function xe$1(t) {
+  const e = w(
+    "CodeableConcept",
+    t,
+    g.ITEM_CONTROL
+  );
+  if (!e)
+    return;
+  const r = e.coding ?? [];
+  if (r.length !== 1)
+    return;
+  const [s2] = r;
+  if (!s2 || s2.system !== Ur)
+    return;
+  const n = s2.code;
+  return kr.includes(n) ? n : void 0;
+}
+const g = {
+  MIN_OCCURS: "http://hl7.org/fhir/StructureDefinition/questionnaire-minOccurs",
+  MAX_OCCURS: "http://hl7.org/fhir/StructureDefinition/questionnaire-maxOccurs",
+  MIN_VALUE: "http://hl7.org/fhir/StructureDefinition/minValue",
+  MAX_VALUE: "http://hl7.org/fhir/StructureDefinition/maxValue",
+  MIN_LENGTH: "http://hl7.org/fhir/StructureDefinition/minLength",
+  MAX_DECIMAL_PLACES: "http://hl7.org/fhir/StructureDefinition/maxDecimalPlaces",
+  ENTRY_FORMAT: "http://hl7.org/fhir/StructureDefinition/entryFormat",
+  SLIDER_STEP_VALUE: "http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue",
+  MIME_TYPE: "http://hl7.org/fhir/StructureDefinition/mimeType",
+  MAX_SIZE: "http://hl7.org/fhir/StructureDefinition/maxSize",
+  SDC_MIN_QUANTITY: "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-minQuantity",
+  SDC_MAX_QUANTITY: "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-maxQuantity",
+  HIDDEN: "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+  ITEM_CONTROL: "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+  QUESTIONNAIRE_UNIT: "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+  QUESTIONNAIRE_UNIT_OPTION: "http://hl7.org/fhir/StructureDefinition/questionnaire-unitOption",
+  SDC_ENABLE_WHEN_EXPR: "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-enableWhenExpression",
+  SDC_CALCULATED_EXPR: "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
+  SDC_INITIAL_EXPR: "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+  SDC_ANSWER_EXPR: "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression",
+  SDC_ANSWER_OPTIONS_TOGGLE: "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerOptionsToggleExpression",
+  SDC_VARIABLE: "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-variable",
+  SDC_KEYBOARD: "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-keyboard",
+  CQF_EXPRESSION: "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+  TARGET_CONSTRAINT: "http://hl7.org/fhir/StructureDefinition/targetConstraint",
+  PREFERRED_TERMINOLOGY_SERVER: "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-preferredTerminologyServer"
+};
+function Hr(t, e) {
+  const r = U[t], s2 = [], n = (o) => {
+    switch (t) {
+      case "boolean": {
+        const a = Pt$1(o);
+        return a === void 0 ? void 0 : a;
+      }
+      case "decimal":
+      case "integer": {
+        const a = pt$1(o);
+        return a === void 0 ? void 0 : a;
+      }
+      case "date":
+      case "dateTime":
+      case "time":
+      case "string":
+      case "text":
+      case "url":
+        return typeof o == "string" ? o : void 0;
+      case "coding":
+        return De$1(o) ? o : void 0;
+      case "quantity":
+        return ee(o) ? o : void 0;
+      case "reference":
+        return Be$1(o) ? o : void 0;
+      case "attachment":
+        return Qe$1(o) ? o : void 0;
+      default:
+        return;
+    }
+  }, i = (o) => {
+    if (o == null) return;
+    if (Array.isArray(o)) {
+      o.forEach((c) => i(c));
+      return;
+    }
+    if (o && typeof o == "object") {
+      const c = Z(
+        r,
+        o
+      );
+      if (c !== void 0) {
+        const l = n(c);
+        if (l === void 0)
+          return;
+        s2.push({
+          ...o,
+          ...Ne(r, l)
+        });
+        return;
+      }
+    }
+    const a = n(o);
+    a !== void 0 && s2.push(Ne(r, a));
+  };
+  return i(e), s2;
+}
+function J$1(t, e) {
+  return t.extension?.find((r) => r.url === e);
+}
+function dt$1(t, e) {
+  return t.extension?.filter((r) => r.url === e) ?? [];
+}
+function ht$1(t) {
+  if (t.type !== "display")
+    return true;
+  const e = xe$1(t);
+  return e !== "help" && e !== "legal" && e !== "unit" && e !== "prompt" && e !== "flyover" && e !== "lower" && e !== "upper";
+}
+function me$1(t, e) {
+  if (!(!t.item || t.item.length === 0))
+    return t.item.find((r) => r.type === "display" ? e === xe$1(r) : false);
+}
+function Lt$1(t) {
+  const e = J$1(t, g.SLIDER_STEP_VALUE);
+  if (e) {
+    if (typeof e.valueInteger == "number")
+      return e.valueInteger;
+    if (typeof e.valueDecimal == "number")
+      return e.valueDecimal;
+  }
+}
+function qt$1(t) {
+  return t == null || typeof t != "object" ? true : !Object.values(t).some((e) => e == null ? false : Array.isArray(e) ? e.length > 0 : typeof e == "object" ? !qt$1(e) : true);
+}
+function ee(t) {
+  if (typeof t != "object" || t === void 0)
+    return false;
+  const e = t;
+  return "value" in e || "unit" in e || "code" in e || "system" in e || "comparator" in e;
+}
+function z(t) {
+  return ee(t) ? typeof t.value == "number" ? t.value : void 0 : typeof t == "number" ? t : void 0;
+}
+function pt$1(t) {
+  if (typeof t == "number")
+    return t;
+  if (typeof t == "string") {
+    const e = Number(t);
+    return Number.isNaN(e) ? void 0 : e;
+  }
+}
+function Pt$1(t) {
+  if (typeof t == "boolean")
+    return t;
+  if (typeof t == "string") {
+    if (/^true$/i.test(t))
+      return true;
+    if (/^false$/i.test(t))
+      return false;
+  }
+}
+function $r(t) {
+  const e = t.trim();
+  if (!e)
+    return;
+  const r = e.match(
+    /^([+-]?(?:\d+\.\d+|\d+|\.\d+)(?:[eE][+-]?\d+)?)\s*(.*)$/
+  );
+  if (!r)
+    return;
+  const s2 = pt$1(r[1]);
+  if (s2 === void 0)
+    return;
+  const n = r[2]?.trim() ?? "";
+  if (n.length === 0)
+    return { value: s2 };
+  const i = n.length >= 2 && (n.startsWith("'") && n.endsWith("'") || n.startsWith('"') && n.endsWith('"')) ? n.slice(1, -1) : n;
+  return i.length > 0 ? {
+    value: s2,
+    unit: i,
+    code: i,
+    system: "http://unitsofmeasure.org"
+  } : { value: s2 };
+}
+function wt$1(t) {
+  if (!Number.isFinite(t))
+    return 0;
+  const e = t.toString();
+  if (!e.includes("e") && e.includes("."))
+    return e.split(".")[1]?.length ?? 0;
+  const [r, s2] = e.split("e"), n = Number(s2);
+  if (Number.isNaN(n))
+    return 0;
+  const i = r.includes(".") ? r.split(".")[1]?.length ?? 0 : 0;
+  return Math.max(0, i - n);
+}
+function Br(t) {
+  if (typeof t.size == "number")
+    return t.size;
+  if (typeof t.size == "string") {
+    const e = Number(t.size);
+    if (!Number.isNaN(e))
+      return e;
+  }
+  if (typeof t.data == "string") {
+    const e = t.data.length;
+    if (e === 0)
+      return 0;
+    let r = 0;
+    return t.data.endsWith("==") ? r = 2 : t.data.endsWith("=") && (r = 1), Math.floor(e * 3 / 4) - r;
+  }
+}
+async function Qr(t) {
+  const e = await new Promise(
+    (s2) => {
+      const n = new FileReader();
+      n.addEventListener(
+        "load",
+        () => s2(n.result ?? void 0)
+      ), n.readAsDataURL(t);
+    }
+  );
+  if (typeof e != "string")
+    return;
+  const [, r] = e.split(",");
+  return {
+    data: r ?? void 0,
+    title: t.name,
+    size: String(t.size),
+    contentType: t.type
+  };
+}
+function jr(t) {
+  return t.nodes.some((e) => e.responseItems.length > 0);
+}
+function O(t, e) {
+  return {
+    severity: "error",
+    code: t,
+    diagnostics: e
+  };
+}
+const zr = "options";
+function Re$1(t) {
+  const e = t.details?.text ?? t.diagnostics;
+  if (!e)
+    return;
+  const r = e.trim();
+  return r.length > 0 ? r : void 0;
+}
+function Vt$1(t) {
+  const e = t.value;
+  return e == null ? false : typeof e == "string" ? e.trim().length > 0 : typeof e == "object" ? Object.keys(e).length > 0 : true;
+}
+function ft$1(t) {
+  return t.nodes.some((e) => e.responseItems.length > 0) ? true : Vt$1(t);
+}
+const U = {
+  boolean: "boolean",
+  decimal: "decimal",
+  integer: "integer",
+  date: "date",
+  dateTime: "dateTime",
+  time: "time",
+  string: "string",
+  text: "string",
+  url: "uri",
+  coding: "Coding",
+  attachment: "Attachment",
+  reference: "Reference",
+  quantity: "Quantity"
+}, mt$1 = {
+  base64Binary: "Base64Binary",
+  boolean: "Boolean",
+  canonical: "Canonical",
+  code: "Code",
+  date: "Date",
+  dateTime: "DateTime",
+  decimal: "Decimal",
+  id: "Id",
+  instant: "Instant",
+  integer: "Integer",
+  integer64: "Integer64",
+  markdown: "Markdown",
+  oid: "Oid",
+  positiveInt: "PositiveInt",
+  string: "String",
+  time: "Time",
+  unsignedInt: "UnsignedInt",
+  uri: "Uri",
+  url: "Url",
+  uuid: "Uuid",
+  Address: "Address",
+  Age: "Age",
+  Annotation: "Annotation",
+  Attachment: "Attachment",
+  CodeableConcept: "CodeableConcept",
+  CodeableReference: "CodeableReference",
+  Coding: "Coding",
+  ContactPoint: "ContactPoint",
+  Count: "Count",
+  Distance: "Distance",
+  Duration: "Duration",
+  HumanName: "HumanName",
+  Identifier: "Identifier",
+  Money: "Money",
+  Period: "Period",
+  Quantity: "Quantity",
+  Range: "Range",
+  Ratio: "Ratio",
+  RatioRange: "RatioRange",
+  Reference: "Reference",
+  SampledData: "SampledData",
+  Signature: "Signature",
+  Timing: "Timing",
+  ContactDetail: "ContactDetail",
+  DataRequirement: "DataRequirement",
+  Expression: "Expression",
+  ParameterDefinition: "ParameterDefinition",
+  RelatedArtifact: "RelatedArtifact",
+  TriggerDefinition: "TriggerDefinition",
+  UsageContext: "UsageContext",
+  Availability: "Availability",
+  ExtendedContactDetail: "ExtendedContactDetail",
+  Dosage: "Dosage",
+  Meta: "Meta"
+};
+function Ft$1(t, e, r) {
+  if (!e) return;
+  const s2 = mt$1[t], n = `${r}${s2}`;
+  return e[n];
+}
+const Z = (t, e) => Ft$1(t, e, "value"), nt$1 = (t, e) => Ft$1(t, e, "answer");
+function w(t, e, r) {
+  const s2 = e && J$1(e, r);
+  return s2 ? Z(t, s2) : void 0;
+}
+function He$1(t, e, r) {
+  const s2 = J$1(e, r), n = `_value${mt$1[t]}`;
+  return s2?.[n];
+}
+function Pe$1(t, e, r) {
+  return dt$1(e, r).map((n) => Z(t, n)).filter((n) => n != null);
+}
+function Ne(t, e) {
+  return {
+    [`value${mt$1[t]}`]: e
+  };
+}
+function De$1(t) {
+  return typeof t == "object" && t !== void 0 && ("code" in t || "display" in t || "system" in t);
+}
+function Be$1(t) {
+  if (typeof t != "object" || t === void 0)
+    return false;
+  const e = t;
+  return e.reference != null || e.identifier != null || e.type != null || e.display != null;
+}
+function Qe$1(t) {
+  return typeof t == "object" && t !== void 0;
+}
+function gt$1(t, e) {
+  if (!De$1(t) || !De$1(e))
+    return false;
+  const r = t.code ?? void 0, s2 = e.code ?? void 0, n = t.system ?? void 0, i = e.system ?? void 0;
+  if (r != null && s2 != null)
+    return r === s2 && n === i;
+  const o = t.display ?? void 0, a = e.display ?? void 0;
+  return o != null && a != null ? o === a && n === i : false;
+}
+function Mt$1(t, e) {
+  if (!ee(t) || !ee(e) || (t.comparator ?? void 0) !== (e.comparator ?? void 0))
+    return false;
+  const r = typeof t.value == "number" ? t.value : void 0, s2 = typeof e.value == "number" ? e.value : void 0;
+  if (r === void 0 || s2 === void 0)
+    return (t.value ?? void 0) === (e.value ?? void 0) && (t.unit ?? void 0) === (e.unit ?? void 0) && (t.system ?? void 0) === (e.system ?? void 0) && (t.code ?? void 0) === (e.code ?? void 0);
+  if (Yt$1(t, e))
+    return r === s2;
+  if (je$1(t) && je$1(e)) {
+    const n = Ae$1(e);
+    if (n) {
+      const o = ct$1(t, n);
+      if (typeof o == "number")
+        return o === s2;
+    }
+    const i = Ae$1(t);
+    if (i) {
+      const o = ct$1(e, i);
+      if (typeof o == "number")
+        return o === r;
+    }
+  }
+  return false;
+}
+function Ut$1(t, e) {
+  return !Be$1(t) || !Be$1(e) ? false : (t.reference ?? void 0) === (e.reference ?? void 0) && (t.type ?? void 0) === (e.type ?? void 0) && (t.identifier?.system ?? void 0) === (e.identifier?.system ?? void 0) && (t.identifier?.value ?? void 0) === (e.identifier?.value ?? void 0);
+}
+function Ht$1(t, e) {
+  return !Qe$1(t) || !Qe$1(e) ? false : JSON.stringify(t) === JSON.stringify(e);
+}
+const $t$1 = new Intl.DateTimeFormat("en-US", {
+  dateStyle: "long"
+}), Gr = new Intl.DateTimeFormat("en-US", {
+  month: "long",
+  year: "numeric"
+}), Wr = new Intl.DateTimeFormat("en-US", {
+  dateStyle: "long",
+  timeStyle: "short"
+}), Xr = {
+  hour: new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    hour12: true
+  }),
+  minute: new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true
+  }),
+  second: new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true
+  }),
+  millisecond: new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true
+  })
+};
+function Le$1(t) {
+  if (/^\d{4}$/.test(t)) return "year";
+  if (/^\d{4}-\d{2}$/.test(t)) return "month";
+  if (/^\d{4}-\d{2}-\d{2}$/.test(t)) return "day";
+}
+function Bt$1(t, e) {
+  const r = Le$1(t), s2 = Le$1(e);
+  return !r || !s2 || r !== s2 ? false : t === e;
+}
+function Qt$1(t, e) {
+  return typeof t == "string" && typeof e == "string" && Bt$1(t, e);
+}
+function Yr(t) {
+  if (typeof t != "string")
+    return;
+  const e = /^(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?$/.exec(t);
+  if (!e)
+    return;
+  const r = e[1], s2 = e[2] ?? "01", n = e[3] ?? "01", i = /* @__PURE__ */ new Date(`${r}-${s2}-${n}T00:00:00Z`);
+  if (!Number.isNaN(i.getTime()))
+    return e[2] ? e[3] ? $t$1.format(i) : Gr.format(i) : r;
+}
+function Ie$1(t) {
+  const [e, r] = t.split("T");
+  if (!e)
+    return;
+  const s2 = Le$1(e);
+  if (!s2)
+    return;
+  if (r === void 0)
+    return {
+      precision: s2,
+      hasTime: false,
+      hasTimezone: false
+    };
+  const i = /(Z|[+-]\d{2}:\d{2})$/.exec(r)?.[1], o = i ? r.slice(0, -i.length) : r;
+  if (o.length === 0)
+    return;
+  const a = be$1(o);
+  if (!a)
+    return;
+  const l = {
+    hour: "hour",
+    minute: "minute",
+    second: "second",
+    millisecond: "millisecond"
+  }[a.precision], h = !!i;
+  let p;
+  if (h) {
+    const D = Date.parse(`${e}T${o}${i}`);
+    Number.isNaN(D) || (p = D);
+  }
+  const C = {
+    precision: l,
+    hasTime: true,
+    hasTimezone: h
+  };
+  return p !== void 0 && (C.epochMillis = p), C;
+}
+function jt$1(t, e) {
+  const r = Ie$1(t), s2 = Ie$1(e);
+  if (!r || !s2 || r.precision !== s2.precision || r.hasTime !== s2.hasTime)
+    return false;
+  const n = /(Z|[+-]\d{2}:\d{2})$/, i = n.test(t), o = n.test(e);
+  if (i !== o)
+    return false;
+  if (i && o) {
+    const a = Date.parse(t), c = Date.parse(e);
+    if (!Number.isNaN(a) && !Number.isNaN(c))
+      return a === c;
+  }
+  return t === e;
+}
+function Kr(t) {
+  if (typeof t != "string")
+    return;
+  const e = Ie$1(t);
+  if (!e)
+    return;
+  const r = new Date(t);
+  if (!Number.isNaN(r.getTime()))
+    return e.hasTime ? Wr.format(r) : $t$1.format(r);
+}
+function ut$1(t, e) {
+  return typeof t == "string" && typeof e == "string" && jt$1(t, e);
+}
+function be$1(t) {
+  const e = /^(\d{2})(?::(\d{2})(?::(\d{2})(?:\.(\d{1,3}))?)?)?$/.exec(
+    t
+  );
+  if (!e)
+    return;
+  const r = e[2], s2 = e[3], n = e[4];
+  let i;
+  r ? s2 ? n ? i = "millisecond" : i = "second" : i = "minute" : i = "hour";
+  const o = tn$1(t);
+  if (o != null)
+    return { precision: i, millis: o };
+}
+function Zr(t, e) {
+  const r = be$1(t), s2 = be$1(e);
+  return !r || !s2 || r.precision !== s2.precision ? false : r.millis === s2.millis;
+}
+function zt$1(t, e) {
+  return typeof t == "string" && typeof e == "string" && Zr(t, e);
+}
+function Jr(t) {
+  if (typeof t != "string")
+    return;
+  const e = be$1(t);
+  if (!e)
+    return;
+  const [r = "00", s2 = "00", n = "00"] = [
+    ...t.split(":"),
+    "00",
+    "00"
+  ], i = Number.parseInt(r, 10) || 0, o = Number.parseInt(s2, 10) || 0, a = Number.parseInt(n, 10) || 0, c = new Date(1970, 0, 1, i, o, a);
+  if (!Number.isNaN(c.getTime()))
+    return Xr[e.precision].format(c);
+}
+function Gt$1(t, e) {
+  if (typeof t != "string" || typeof e != "string")
+    return;
+  const r = Le$1(t), s2 = Le$1(e);
+  if (!(!r || !s2 || r !== s2))
+    return r !== "day" ? Bt$1(t, e) ? 0 : void 0 : Kt$1(Date.parse(t), Date.parse(e));
+}
+function Wt$1(t, e) {
+  if (typeof t != "string" || typeof e != "string")
+    return;
+  const r = Ie$1(t), s2 = Ie$1(e);
+  if (!(!r || !s2) && !(r.precision !== s2.precision || r.hasTime !== s2.hasTime || r.hasTimezone !== s2.hasTimezone)) {
+    if (!r.hasTime)
+      return jt$1(t, e) ? 0 : void 0;
+    if (r.hasTimezone && r.epochMillis != null && s2.epochMillis != null)
+      return r.epochMillis - s2.epochMillis;
+    if (r.hasTimezone && s2.hasTimezone) {
+      const n = Date.parse(t), i = Date.parse(e);
+      if (!Number.isNaN(n) && !Number.isNaN(i))
+        return n - i;
+    }
+  }
+}
+function Xt$1(t, e) {
+  if (typeof t != "string" || typeof e != "string")
+    return;
+  const r = be$1(t), s2 = be$1(e);
+  if (!(!r || !s2 || r.precision !== s2.precision))
+    return r.millis - s2.millis;
+}
+function en$1(t, e) {
+  return typeof t != "string" || typeof e != "string" ? void 0 : t.localeCompare(e);
+}
+function tn$1(t) {
+  if (typeof t != "string") return;
+  const e = /^(\d{2})(?::(\d{2})(?::(\d{2})(?:\.(\d{1,3}))?)?)?$/.exec(
+    t
+  );
+  if (!e)
+    return;
+  const r = Number.parseInt(e[1] ?? "", 10), s2 = Number.parseInt(e[2] ?? "0", 10), n = Number.parseInt(e[3] ?? "0", 10), i = Number.parseInt((e[4] ?? "0").padEnd(3, "0"), 10);
+  if (!(Number.isNaN(r) || Number.isNaN(s2) || Number.isNaN(n) || Number.isNaN(i)) && !(r > 23 || s2 > 59 || n > 59))
+    return ((r * 60 + s2) * 60 + n) * 1e3 + i;
+}
+const rn$1 = "http://unitsofmeasure.org";
+let st$1;
+function nn$1() {
+  return st$1 || (st$1 = new ucumPkgExports.UcumLhcUtils()), st$1;
+}
+function sn$1(t) {
+  return t == null || t === rn$1;
+}
+function Ae$1(t) {
+  const e = t.code ?? t.unit;
+  if (typeof e != "string")
+    return;
+  const r = e.trim();
+  return r.length === 0 ? void 0 : r;
+}
+function je$1(t) {
+  return sn$1(t.system ?? void 0) && Ae$1(t) !== void 0;
+}
+function ct$1(t, e) {
+  if (typeof t.value != "number")
+    return;
+  const r = Ae$1(t);
+  if (r)
+    try {
+      const s2 = nn$1().convertUnitTo(
+        r,
+        t.value,
+        e
+      );
+      if (s2.status === "succeeded" && typeof s2.toVal == "number")
+        return s2.toVal;
+    } catch {
+      return;
+    }
+}
+function Yt$1(t, e) {
+  return (t.system ?? void 0) === (e.system ?? void 0) && (t.code ?? void 0) === (e.code ?? void 0) && (t.unit ?? void 0) === (e.unit ?? void 0);
+}
+function $e(t, e) {
+  if (!(!ee(t) || !ee(e)) && (t.comparator ?? void 0) === (e.comparator ?? void 0) && !(typeof t.value != "number" || typeof e.value != "number")) {
+    if (Yt$1(t, e))
+      return t.value - e.value;
+    if (je$1(t) && je$1(e)) {
+      const r = Ae$1(e);
+      if (r) {
+        const s2 = ct$1(t, r);
+        if (typeof s2 == "number")
+          return s2 - e.value;
+      }
+    }
+  }
+}
+function Kt$1(t, e) {
+  return typeof t != "number" || typeof e != "number" ? void 0 : t - e;
+}
+function on$1(t, e) {
+  let r = e.parentStore;
+  for (; r; ) {
+    if (r === t) return true;
+    r = r.parentStore;
+  }
+  return false;
+}
+function an$1(t, e, r) {
+  if (on$1(t, r) || // if the question is a *descendant*, we must treat it as not valued (otherwise that would recurse).
+  !r.isEnabled)
+    return e.operator === "exists" ? e.answerBoolean === false : false;
+  const n = (r.repeats ? r.answers : r.answers.slice(0, 1)).filter(
+    (o) => Vt$1(o)
+  ), i = e.operator;
+  switch (i) {
+    case "exists": {
+      const o = e.answerBoolean;
+      return typeof o != "boolean" ? false : o ? n.length > 0 : n.length === 0;
+    }
+    case "=": {
+      const o = nt$1(
+        U[r.type],
+        e
+      );
+      if (o === void 0)
+        return false;
+      for (const a of n) {
+        const c = a.value;
+        if (c != null && kt$1(U[r.type], c, o))
+          return true;
+      }
+      return false;
+    }
+    case "!=": {
+      const o = nt$1(
+        U[r.type],
+        e
+      );
+      if (o === void 0)
+        return false;
+      let a = false;
+      for (const c of n) {
+        const l = c.value;
+        if (l != null && (a = true, kt$1(U[r.type], l, o)))
+          return false;
+      }
+      return a;
+    }
+    case ">":
+    case ">=":
+    case "<":
+    case "<=": {
+      const o = nt$1(
+        U[r.type],
+        e
+      );
+      return o === void 0 ? false : (() => {
+        switch (r.type) {
+          case "decimal":
+          case "integer":
+          case "date":
+          case "dateTime":
+          case "time":
+          case "string":
+          case "text":
+          case "url":
+          case "quantity": {
+            for (const a of n) {
+              const c = a.value;
+              if (c == null) continue;
+              const l = un$1(
+                U[r.type],
+                c,
+                o
+              );
+              if (l !== void 0 && (i === ">" && l > 0 || i === ">=" && l >= 0 || i === "<" && l < 0 || i === "<=" && l <= 0))
+                return true;
+            }
+            return false;
+          }
+          case "boolean":
+          case "coding":
+          case "attachment":
+          case "reference":
+            return false;
+          default:
+            return false;
+        }
+      })();
+    }
+    default:
+      return false;
+  }
+}
+function kt$1(t, e, r) {
+  switch (t) {
+    case "decimal":
+    case "integer":
+    case "string":
+    case "url":
+    case "boolean":
+      return e === r;
+    case "date":
+      return Qt$1(e, r);
+    case "dateTime":
+      return ut$1(e, r);
+    case "time":
+      return zt$1(e, r);
+    case "Coding":
+      return gt$1(e, r);
+    case "Quantity":
+      return Mt$1(e, r);
+    case "Reference":
+      return Ut$1(e, r);
+    case "Attachment":
+      return Ht$1(e, r);
+    case "base64Binary":
+    case "canonical":
+    case "code":
+    case "id":
+    case "instant":
+    case "integer64":
+    case "markdown":
+    case "oid":
+    case "positiveInt":
+    case "unsignedInt":
+    case "uri":
+    case "uuid":
+    case "Address":
+    case "Age":
+    case "Annotation":
+    case "CodeableConcept":
+    case "CodeableReference":
+    case "ContactPoint":
+    case "Count":
+    case "Distance":
+    case "Duration":
+    case "HumanName":
+    case "Identifier":
+    case "Money":
+    case "Period":
+    case "Range":
+    case "Ratio":
+    case "RatioRange":
+    case "SampledData":
+    case "Signature":
+    case "Timing":
+    case "ContactDetail":
+    case "DataRequirement":
+    case "Expression":
+    case "ParameterDefinition":
+    case "RelatedArtifact":
+    case "TriggerDefinition":
+    case "UsageContext":
+    case "Availability":
+    case "ExtendedContactDetail":
+    case "Dosage":
+    case "Meta":
+      throw new Error('Not implemented yet: "Meta" case');
+    default:
+      return e === r;
+  }
+}
+function un$1(t, e, r) {
+  switch (t) {
+    case "decimal":
+    case "integer":
+      return Kt$1(e, r);
+    case "date":
+      return Gt$1(e, r);
+    case "dateTime":
+      return Wt$1(e, r);
+    case "time":
+      return Xt$1(e, r);
+    case "string":
+    case "url":
+      return en$1(e, r);
+    case "Quantity":
+      return $e(e, r);
+    case "boolean":
+    case "base64Binary":
+    case "canonical":
+    case "code":
+    case "id":
+    case "instant":
+    case "integer64":
+    case "markdown":
+    case "oid":
+    case "positiveInt":
+    case "unsignedInt":
+    case "uri":
+    case "uuid":
+    case "Address":
+    case "Age":
+    case "Annotation":
+    case "Attachment":
+    case "CodeableConcept":
+    case "CodeableReference":
+    case "Coding":
+    case "ContactPoint":
+    case "Count":
+    case "Distance":
+    case "Duration":
+    case "HumanName":
+    case "Identifier":
+    case "Money":
+    case "Period":
+    case "Range":
+    case "Ratio":
+    case "RatioRange":
+    case "Reference":
+    case "SampledData":
+    case "Signature":
+    case "Timing":
+    case "ContactDetail":
+    case "DataRequirement":
+    case "Expression":
+    case "ParameterDefinition":
+    case "RelatedArtifact":
+    case "TriggerDefinition":
+    case "UsageContext":
+    case "Availability":
+    case "ExtendedContactDetail":
+    case "Dosage":
+    case "Meta":
+      throw new Error('Not implemented yet: "Meta" case');
+  }
+}
+function ye$1(t) {
+  return Array.isArray(t) ? t.length === 0 ? false : ye$1(t.at(-1)) : typeof t == "boolean" ? t : typeof t == "number" ? t !== 0 && !Number.isNaN(t) : typeof t == "string" ? t.length > 0 : t != null;
+}
+function cn$1(t) {
+  const e = t.system ?? void 0;
+  return t.code ? { system: e, code: t.code } : t.display ? { system: e, display: t.display } : { system: e };
+}
+function ln$1(t) {
+  const e = Ae$1(t);
+  return {
+    value: typeof t.value == "number" ? t.value : void 0,
+    comparator: t.comparator,
+    system: t.system,
+    code: e
+  };
+}
+function dn$1(t) {
+  const e = t.identifier?.system, r = t.identifier?.value, s2 = e != null || r != null ? { system: e, value: r } : void 0;
+  return {
+    reference: t.reference,
+    type: t.type,
+    ...s2 ? { identifier: s2 } : {}
+  };
+}
+function hn$1(t) {
+  const e = {
+    contentType: t.contentType,
+    url: t.url,
+    size: t.size,
+    hash: t.hash,
+    creation: t.creation,
+    language: t.language
+  };
+  return !e.url && !e.hash && t.data && (e.data = t.data), e;
+}
+function pn$1(t, e) {
+  if (e != null) {
+    if (t === "dateTime") {
+      if (typeof e != "string")
+        return e;
+      const r = Ie$1(e);
+      return r ? r.epochMillis !== void 0 ? {
+        epochMillis: r.epochMillis,
+        precision: r.precision,
+        hasTimezone: r.hasTimezone
+      } : {
+        value: e,
+        precision: r.precision,
+        hasTimezone: r.hasTimezone
+      } : e;
+    }
+    if (t === "time") {
+      if (typeof e != "string")
+        return e;
+      const r = be$1(e);
+      return r ? { millis: r.millis, precision: r.precision } : e;
+    }
+    return t === "Coding" ? De$1(e) ? cn$1(e) : e : t === "Quantity" ? ee(e) ? ln$1(e) : e : t === "Reference" ? Be$1(e) ? dn$1(e) : e : t === "Attachment" && Qe$1(e) ? hn$1(e) : e;
+  }
+}
+const _t$1 = new Lr({
+  defaultAlgorithmSync: "djb2",
+  cache: { enabled: true }
+});
+function ze$1(t, e) {
+  try {
+    return _t$1.toHashSync({
+      type: t,
+      value: pn$1(t, e)
+    });
+  } catch {
+    return _t$1.toHashSync({
+      type: t,
+      value: String(e)
+    });
+  }
+}
+function we$1(t, e, r = "") {
+  if (e == null)
+    return r;
+  if (t === "date" && typeof e == "string")
+    return Yr(e) ?? r;
+  if (t === "dateTime" && typeof e == "string")
+    return Kr(e) ?? r;
+  if (t === "time" && typeof e == "string")
+    return Jr(e) ?? r;
+  if (typeof e == "string")
+    return e;
+  if (typeof e == "number")
+    return String(e);
+  if (typeof e == "boolean")
+    return e ? f.value.yes : f.value.no;
+  if (t === "Coding" && De$1(e))
+    return e.display ?? e.code ?? r;
+  if (t === "Quantity" && ee(e)) {
+    const s2 = e;
+    return [
+      s2.value == null ? void 0 : String(s2.value),
+      s2.unit
+    ].filter(Boolean).join(" ") || r;
+  }
+  if (t === "Reference") {
+    const s2 = e;
+    return s2.display ?? s2.reference ?? r;
+  }
+  if (t === "Attachment") {
+    const s2 = e;
+    return s2.title ?? s2.url ?? (s2.contentType ? `${s2.contentType} attachment` : r);
+  }
+  return r;
+}
+function Ge$1(t, e, r) {
+  if (e == null || r == null)
+    return e === r;
+  switch (t) {
+    case "Coding":
+      return gt$1(e, r);
+    case "Quantity":
+      return Mt$1(e, r);
+    case "Reference":
+      return Ut$1(e, r);
+    case "Attachment":
+      return Ht$1(e, r);
+    case "string":
+    case "boolean":
+    case "decimal":
+    case "integer":
+    case "url":
+    case "base64Binary":
+    case "canonical":
+    case "code":
+    case "id":
+    case "integer64":
+    case "markdown":
+    case "oid":
+    case "positiveInt":
+    case "unsignedInt":
+    case "uri":
+    case "uuid":
+      return e === r;
+    case "instant":
+      return ut$1(e, r);
+    case "date":
+      return Qt$1(e, r);
+    case "dateTime":
+      return ut$1(e, r);
+    case "time":
+      return zt$1(e, r);
+    case "Address":
+    case "Age":
+    case "Annotation":
+    case "CodeableConcept":
+    case "CodeableReference":
+    case "ContactPoint":
+    case "Count":
+    case "Distance":
+    case "Duration":
+    case "HumanName":
+    case "Identifier":
+    case "Money":
+    case "Period":
+    case "Range":
+    case "Ratio":
+    case "RatioRange":
+    case "SampledData":
+    case "Signature":
+    case "Timing":
+    case "ContactDetail":
+    case "DataRequirement":
+    case "Expression":
+    case "ParameterDefinition":
+    case "RelatedArtifact":
+    case "TriggerDefinition":
+    case "UsageContext":
+    case "Availability":
+    case "ExtendedContactDetail":
+    case "Dosage":
+    case "Meta":
+      throw new Error('Not implemented yet: "Meta" case');
+  }
+}
+function ie$1(t, e) {
+  if (e === void 0)
+    return [];
+  const r = Array.isArray(e) ? e : [e], s2 = [];
+  return r.forEach((n) => {
+    const i = fn$1(t, n);
+    i !== void 0 && s2.push(i);
+  }), s2;
+}
+function fn$1(t, e) {
+  if (e !== void 0)
+    switch (t) {
+      case "boolean": {
+        const r = Pt$1(e);
+        return r === void 0 ? void 0 : r;
+      }
+      case "decimal":
+      case "integer":
+        return pt$1(e);
+      case "date":
+      case "dateTime":
+      case "time":
+      case "string":
+      case "text":
+      case "url":
+        return typeof e == "string" ? e : void 0;
+      case "coding":
+      case "attachment":
+      case "reference":
+        return e && typeof e == "object" ? e : void 0;
+      case "quantity": {
+        if (typeof e == "string") {
+          const r = $r(e);
+          if (r)
+            return r;
+        }
+        return e && typeof e == "object" && ee(e) ? e : void 0;
+      }
+      default:
+        return;
+    }
+}
+function Xe$1(t) {
+  return Object.hasOwn(t, "__path__") || Object.defineProperty(t, "__path__", {
+    enumerable: false,
+    configurable: false,
+    writable: false,
+    value: {
+      model: Nt$1,
+      fhirNodeDataType: "QuestionnaireResponse.item",
+      propName: "item",
+      path: "QuestionnaireResponse.item",
+      parentResNode: void 0,
+      index: void 0
+    }
+  }), t;
+}
+const Zt$1 = createContext(void 0);
+function mn$1({
+  theme: t,
+  children: e
+}) {
+  return /* @__PURE__ */ jsx(Zt$1.Provider, { value: t, children: e });
+}
+function v() {
+  const t = useContext(Zt$1);
+  return Fr(t, "ThemeProvider is required to render the form."), t;
+}
+const gn$1 = observer(function({
+  node: e
+}) {
+  const { Help: r } = v(), s2 = Ce$1(e);
+  return s2 ? /* @__PURE__ */ jsx(r, { id: s2, ariaLabel: f.aria.help, children: e.help }) : void 0;
+}), yn$1 = observer(function({
+  node: e
+}) {
+  const r = Vr(e), { Flyover: s2 } = v();
+  if (e.flyover)
+    return /* @__PURE__ */ jsx(s2, { id: r, ariaLabel: f.aria.flyover, children: e.flyover });
+}), vn$1 = observer(function({
+  node: e
+}) {
+  const { Legal: r } = v();
+  if (!e.legal)
+    return;
+  const s2 = Pr(e);
+  return /* @__PURE__ */ jsx(r, { id: s2, ariaLabel: f.aria.legal, children: e.legal });
+});
+var bn$1 = Object.defineProperty, On$1 = Object.getOwnPropertyDescriptor, H = (t, e, r, s2) => {
+  for (var n = On$1(e, r), i = t.length - 1, o; i >= 0; i--)
+    (o = t[i]) && (n = o(e, r, n) || n);
+  return n && bn$1(e, r, n), n;
+};
+class L {
+  constructor(e, r, s2) {
+    makeObservable(this), this.form = e, this.template = r, this.parentStore = s2;
+  }
+  get linkId() {
+    const { linkId: e } = this.template;
+    if (!e)
+      throw new Error("Questionnaire item linkId is missing.");
+    return e;
+  }
+  get text() {
+    return this.template.text;
+  }
+  get prefix() {
+    return this.template.prefix;
+  }
+  get help() {
+    return me$1(this.template, "help")?.text;
+  }
+  get legal() {
+    return me$1(this.template, "legal")?.text;
+  }
+  get placeholder() {
+    return J$1(this.template, g.ENTRY_FORMAT)?.valueString ?? me$1(this.template, "prompt")?.text;
+  }
+  get flyover() {
+    return me$1(this.template, "flyover")?.text;
+  }
+  get upper() {
+    return me$1(this.template, "upper")?.text;
+  }
+  get lower() {
+    return me$1(this.template, "lower")?.text;
+  }
+  get required() {
+    return !!this.template.required;
+  }
+  get isEnabled() {
+    return this.parentStore && !this.parentStore.isEnabled ? false : this._isEnabled;
+  }
+  get readOnly() {
+    const e = this.parentStore;
+    return e && e.template.type === "group" && e.readOnly ? true : this._readOnly || !this.isEnabled && this.template.disabledDisplay === "protected";
+  }
+  get hidden() {
+    return J$1(this.template, g.HIDDEN)?.valueBoolean === true ? true : this.isEnabled ? false : this.template.disabledDisplay !== "protected";
+  }
+  get unitDisplay() {
+    if (!(this.template.type !== "integer" && this.template.type !== "decimal"))
+      return me$1(this.template, "unit")?.text ?? J$1(this.template, g.QUESTIONNAIRE_UNIT)?.valueCoding?.display;
+  }
+  get unitOptions() {
+    return this.template.type === "quantity" ? (this.template.extension ?? []).filter(({ url: e }) => e === g.QUESTIONNAIRE_UNIT_OPTION).map((e) => e.valueCoding).filter((e) => e != null) : [];
+  }
+  get preferredTerminologyServers() {
+    const e = Pe$1(
+      "url",
+      this.template,
+      g.PREFERRED_TERMINOLOGY_SERVER
+    ), r = this.parentStore?.preferredTerminologyServers ?? this.form.preferredTerminologyServers;
+    return e.length === 0 ? r : lt$1([...e, ...r]);
+  }
+}
+H([
+  computed
+], L.prototype, "linkId");
+H([
+  computed
+], L.prototype, "text");
+H([
+  computed
+], L.prototype, "prefix");
+H([
+  computed
+], L.prototype, "help");
+H([
+  computed
+], L.prototype, "legal");
+H([
+  computed
+], L.prototype, "placeholder");
+H([
+  computed
+], L.prototype, "flyover");
+H([
+  computed
+], L.prototype, "upper");
+H([
+  computed
+], L.prototype, "lower");
+H([
+  computed
+], L.prototype, "required");
+H([
+  computed
+], L.prototype, "isEnabled");
+H([
+  computed
+], L.prototype, "readOnly");
+H([
+  computed
+], L.prototype, "hidden");
+H([
+  computed
+], L.prototype, "unitDisplay");
+H([
+  computed
+], L.prototype, "unitOptions");
+H([
+  computed
+], L.prototype, "preferredTerminologyServers");
+var xn$1 = Object.defineProperty, Sn$1 = Object.getOwnPropertyDescriptor, Y$1 = (t, e, r, s2) => {
+  for (var n = s2 > 1 ? void 0 : s2 ? Sn$1(e, r) : e, i = t.length - 1, o; i >= 0; i--)
+    (o = t[i]) && (n = (s2 ? o(e, r, n) : o(n)) || n);
+  return s2 && n && xn$1(e, r, n), n;
+};
+class Q extends L {
+  constructor(e, r, s2, n, i) {
+    super(e, r, s2), this.dirty = false, makeObservable(this), this._scope = n, this._token = i;
+  }
+  get scope() {
+    return this._scope;
+  }
+  get token() {
+    return this._token;
+  }
+  get expressionEnvironment() {
+    return this.scope.mergeEnvironment({
+      questionnaire: this.form.questionnaire,
+      resource: this.form.expressionResponse,
+      qitem: this.template,
+      context: this.expressionItems.at(0)
+    });
+  }
+  get minOccurs() {
+    const e = this.expressionRegistry.minOccurs;
+    if (e) {
+      const n = ie$1("integer", e.value)[0];
+      if (n != null && Number.isFinite(n) && n >= 0)
+        return Math.floor(n);
+    }
+    const r = J$1(
+      this.template,
+      g.MIN_OCCURS
+    )?.valueInteger;
+    return typeof r == "number" ? r : this.required ? 1 : 0;
+  }
+  get maxOccurs() {
+    const e = this.expressionRegistry.maxOccurs;
+    if (e) {
+      const n = ie$1("integer", e.value)[0];
+      if (n != null && Number.isFinite(n) && n >= 0)
+        return Math.floor(n);
+    }
+    const r = J$1(
+      this.template,
+      g.MAX_OCCURS
+    )?.valueInteger;
+    return typeof r == "number" ? r : Number.POSITIVE_INFINITY;
+  }
+  get required() {
+    const e = this.expressionRegistry.required;
+    return e ? ye$1(e.value) : super.required;
+  }
+  get _isEnabled() {
+    const e = this.expressionRegistry.enableWhen;
+    if (e)
+      return ye$1(e.value);
+    if (!this.template.enableWhen || this.template.enableWhen.length === 0)
+      return true;
+    const r = this.template.enableBehavior ?? "any", s2 = this.template.enableWhen.map(
+      (n) => this.evaluateEnableWhen(n)
+    );
+    return r === "all" ? s2.every(Boolean) : s2.some(Boolean);
+  }
+  get _readOnly() {
+    const e = this.expressionRegistry.readOnly;
+    return e ? ye$1(e.value) : !!this.template.readOnly;
+  }
+  get hasErrors() {
+    return this.issues.length > 0;
+  }
+  get issues() {
+    if (!this.isEnabled)
+      return [];
+    const e = [
+      ...this.expressionRegistry.registrationIssues,
+      ...this.expressionRegistry.slotsIssues
+    ];
+    return this.shouldValidate && !this.readOnly && e.push(...this.expressionRegistry.constraintsIssues), this.shouldValidate && this.validator && e.push(...this.validator.issues), e.filter((s2) => Re$1(s2) !== void 0);
+  }
+  get isHeaderless() {
+    if (j(this) && this.type === "boolean" && this.control !== "radio-button" && this.control !== "check-box")
+      return true;
+    const e = this.parentStore, r = e && "control" in e ? e.control : void 0;
+    if (r === "tab-container" || r === "gtable")
+      return true;
+    const s2 = !!e && "grid" in e, n = e?.parentStore, i = !!n && "grid" in n && "control" in n && n.control === "grid";
+    return s2 && i;
+  }
+  get isDirty() {
+    return this.dirty;
+  }
+  get text() {
+    const e = this.expressionRegistry.text;
+    return e ? ie$1("text", e.value).at(0) ?? void 0 : this.template.text;
+  }
+  markDirty() {
+    this.dirty || (runInAction(() => {
+      this.dirty = true;
+    }), this.parentStore?.markDirty?.());
+  }
+  clearDirty() {
+    this.dirty && runInAction(() => {
+      this.dirty = false;
+    });
+  }
+  get shouldValidate() {
+    return this.form.isSubmitAttempted;
+  }
+  evaluateEnableWhen(e) {
+    const r = this.scope.lookupNode(e.question);
+    return j(r) ? an$1(this, e, r) : false;
+  }
+}
+Y$1([
+  observable
+], Q.prototype, "dirty", 2);
+Y$1([
+  computed
+], Q.prototype, "expressionEnvironment", 1);
+Y$1([
+  computed
+], Q.prototype, "minOccurs", 1);
+Y$1([
+  computed
+], Q.prototype, "maxOccurs", 1);
+Y$1([
+  override
+], Q.prototype, "required", 1);
+Y$1([
+  computed
+], Q.prototype, "_isEnabled", 1);
+Y$1([
+  computed
+], Q.prototype, "_readOnly", 1);
+Y$1([
+  computed
+], Q.prototype, "hasErrors", 1);
+Y$1([
+  computed
+], Q.prototype, "issues", 1);
+Y$1([
+  computed
+], Q.prototype, "isHeaderless", 1);
+Y$1([
+  computed
+], Q.prototype, "isDirty", 1);
+var wn$1 = Object.defineProperty, kn$1 = Object.getOwnPropertyDescriptor, Jt$1 = (t, e, r, s2) => {
+  for (var n = kn$1(e, r), i = t.length - 1, o; i >= 0; i--)
+    (o = t[i]) && (n = o(e, r, n) || n);
+  return n && wn$1(e, r, n), n;
+};
+let yt$1 = class yt {
+  constructor(e, r) {
+    this.answer = e, this.question = r, makeObservable(this);
+  }
+  get issues() {
+    if (this.question.readOnly || !this.question.isEnabled)
+      return [];
+    if (!this.question.form.isSubmitAttempted)
+      return [];
+    const e = this.question.type, r = this.answer.value;
+    let s2;
+    switch (e) {
+      case "string":
+      case "text": {
+        const i = this.question.template.maxLength, o = this.question.minLength;
+        if (typeof r != "string") {
+          s2 = [];
+          break;
+        }
+        const a = [];
+        o != null && r.length < o && a.push(
+          O(
+            "invalid",
+            R(f.validation.answer.minLength, { minLength: o })
+          )
+        ), i != null && r.length > i && a.push(
+          O(
+            "invalid",
+            R(f.validation.answer.maxLength, { maxLength: i })
+          )
+        ), s2 = a;
+        break;
+      }
+      case "integer": {
+        {
+          let n = this.resolveNumberBound("min", e), i = this.resolveNumberBound("max", e);
+          n != null && i != null && n > i && (n = void 0, i = void 0), s2 = this.validateNumericValue(
+            r,
+            n,
+            i,
+            e
+          );
+        }
+        break;
+      }
+      case "decimal": {
+        {
+          let n = this.resolveNumberBound("min", e), i = this.resolveNumberBound("max", e);
+          n != null && i != null && n > i && (n = void 0, i = void 0);
+          const o = this.question.maxDecimalPlaces;
+          s2 = this.validateNumericValue(
+            r,
+            n,
+            i,
+            e,
+            o
+          );
+        }
+        break;
+      }
+      case "date":
+      case "dateTime":
+      case "time": {
+        const i = this.question.template.maxLength, o = this.question.minLength;
+        let a = this.resolveTemporalBound("min", e), c = this.resolveTemporalBound("max", e);
+        a != null && c != null && a > c && (a = void 0, c = void 0), s2 = this.validateTemporalValue(
+          r,
+          {
+            minLength: o,
+            maxLength: i,
+            comparableMin: a,
+            comparableMax: c
+          },
+          e
+        );
+        break;
+      }
+      case "quantity": {
+        {
+          let n = this.resolveQuantityBound("min"), i = this.resolveQuantityBound("max");
+          n && i && ($e(n, i) === void 0 || typeof n.value == "number" && typeof i.value == "number" && n.value > i.value) && (n = void 0, i = void 0);
+          const o = r;
+          if (!o || typeof o.value != "number") {
+            s2 = [];
+            break;
+          }
+          const a = [];
+          if (n) {
+            const l = $e(o, n);
+            if (l === void 0 || l < 0) {
+              const h = we$1("Quantity", n);
+              a.push(
+                O(
+                  "invalid",
+                  R(f.validation.answer.quantityMin, {
+                    formatted: h
+                  })
+                )
+              );
+            }
+          }
+          if (i) {
+            const l = $e(o, i);
+            if (l === void 0 || l > 0) {
+              const h = we$1("Quantity", i);
+              a.push(
+                O(
+                  "invalid",
+                  R(f.validation.answer.quantityMax, {
+                    formatted: h
+                  })
+                )
+              );
+            }
+          }
+          const c = this.question.maxDecimalPlaces;
+          c != null && wt$1(o.value) > c && a.push(
+            O(
+              "invalid",
+              R(f.validation.answer.valueDecimalPlaces, {
+                maxPlaces: c
+              })
+            )
+          ), s2 = a;
+        }
+        break;
+      }
+      case "attachment": {
+        {
+          const n = r;
+          if (!n) {
+            s2 = [];
+            break;
+          }
+          const i = [], a = this.question.mimeTypes.map((l) => l.toLowerCase());
+          if (a.length > 0) {
+            const l = n.contentType?.toLowerCase();
+            l ? a.includes(l) || i.push(
+              O(
+                "invalid",
+                R(
+                  f.validation.answer.attachmentTypeAllowed,
+                  { allowed: a.join(", ") }
+                )
+              )
+            ) : i.push(
+              O(
+                "invalid",
+                R(
+                  f.validation.answer.attachmentTypeRequired,
+                  { allowed: a.join(", ") }
+                )
+              )
+            );
+          }
+          const c = this.question.maxSize;
+          if (c != null) {
+            const l = Br(n);
+            l != null && l > c && i.push(
+              O(
+                "invalid",
+                R(f.validation.answer.attachmentSizeMax, {
+                  maxSize: c
+                })
+              )
+            );
+          }
+          s2 = i;
+        }
+        break;
+      }
+      case "boolean":
+      case "url":
+      case "coding":
+      case "reference": {
+        s2 = [];
+        break;
+      }
+    }
+    return s2;
+  }
+  validateNumericValue(e, r, s2, n, i) {
+    if (typeof e != "number")
+      return [];
+    const o = [];
+    if (r != null && e < r) {
+      const a = we$1(n, r);
+      o.push(
+        O(
+          "invalid",
+          R(f.validation.answer.valueMin, {
+            formatted: a
+          })
+        )
+      );
+    }
+    if (s2 != null && e > s2) {
+      const a = we$1(n, s2);
+      o.push(
+        O(
+          "invalid",
+          R(f.validation.answer.valueMax, {
+            formatted: a
+          })
+        )
+      );
+    }
+    return i != null && wt$1(e) > i && o.push(
+      O(
+        "invalid",
+        R(f.validation.answer.valueDecimalPlaces, {
+          maxPlaces: i
+        })
+      )
+    ), o;
+  }
+  get bounds() {
+    let e;
+    switch (this.question.type) {
+      case "integer": {
+        e = {
+          min: this.resolveNumberBound("min", "integer"),
+          max: this.resolveNumberBound("max", "integer")
+        };
+        break;
+      }
+      case "decimal": {
+        e = {
+          min: this.resolveNumberBound("min", "decimal"),
+          max: this.resolveNumberBound("max", "decimal")
+        };
+        break;
+      }
+      case "date": {
+        e = {
+          min: this.resolveTemporalBound("min", "date"),
+          max: this.resolveTemporalBound("max", "date")
+        };
+        break;
+      }
+      case "dateTime": {
+        e = {
+          min: this.resolveTemporalBound("min", "dateTime"),
+          max: this.resolveTemporalBound("max", "dateTime")
+        };
+        break;
+      }
+      case "time": {
+        e = {
+          min: this.resolveTemporalBound("min", "time"),
+          max: this.resolveTemporalBound("max", "time")
+        };
+        break;
+      }
+      case "quantity": {
+        e = {
+          min: this.resolveQuantityBound("min"),
+          max: this.resolveQuantityBound("max")
+        };
+        break;
+      }
+      case "boolean":
+      case "string":
+      case "text":
+      case "url":
+      case "coding":
+      case "attachment":
+      case "reference": {
+        e = { min: void 0, max: void 0 };
+        break;
+      }
+    }
+    return e;
+  }
+  validateTemporalValue(e, r, s2) {
+    if (typeof e != "string")
+      return [];
+    const n = [];
+    if (e.trim().length === 0 && n.push(O("invalid", f.validation.answer.blank)), r.minLength != null && e.length < r.minLength && n.push(
+      O(
+        "invalid",
+        R(f.validation.answer.minPrecision, {
+          minLength: r.minLength
+        })
+      )
+    ), r.maxLength != null && e.length > r.maxLength && n.push(
+      O(
+        "invalid",
+        R(f.validation.answer.maxPrecision, {
+          maxLength: r.maxLength
+        })
+      )
+    ), r.comparableMin != null) {
+      const i = this.compareTemporal(
+        s2,
+        e,
+        r.comparableMin
+      );
+      if (i != null && i < 0) {
+        const o = we$1(s2, r.comparableMin);
+        n.push(
+          O(
+            "invalid",
+            R(f.validation.answer.valueNotEarlier, {
+              formatted: o
+            })
+          )
+        );
+      }
+    }
+    if (r.comparableMax != null) {
+      const i = this.compareTemporal(
+        s2,
+        e,
+        r.comparableMax
+      );
+      if (i != null && i > 0) {
+        const o = we$1(s2, r.comparableMax);
+        n.push(
+          O(
+            "invalid",
+            R(f.validation.answer.valueNotLater, {
+              formatted: o
+            })
+          )
+        );
+      }
+    }
+    return n;
+  }
+  compareTemporal(e, r, s2) {
+    let n;
+    switch (e) {
+      case "date": {
+        n = Gt$1(r, s2);
+        break;
+      }
+      case "dateTime": {
+        n = Wt$1(r, s2);
+        break;
+      }
+      case "time": {
+        n = Xt$1(r, s2);
+        break;
+      }
+      default:
+        n = void 0;
+    }
+    return n === void 0 ? r.localeCompare(s2) : n;
+  }
+  resolveNumberBound(e, r) {
+    const s2 = this.question.template, n = e === "min" ? this.question.expressionRegistry?.minValue : this.question.expressionRegistry?.maxValue;
+    if (n !== void 0) {
+      const o = Array.isArray(n.value) ? n.value[0] : n.value, a = ie$1(r, o).at(0);
+      return typeof a == "number" && Number.isFinite(a) ? a : void 0;
+    }
+    const i = e === "min" ? g.MIN_VALUE : g.MAX_VALUE;
+    return w(r, s2, i);
+  }
+  resolveTemporalBound(e, r) {
+    const s2 = this.question.template, n = e === "min" ? this.question.expressionRegistry.minValue : this.question.expressionRegistry.maxValue;
+    if (n !== void 0) {
+      const o = Array.isArray(n.value) ? n.value[0] : n.value, a = ie$1(r, o).at(0);
+      return typeof a == "string" ? a : void 0;
+    }
+    const i = e === "min" ? g.MIN_VALUE : g.MAX_VALUE;
+    return w(r, s2, i);
+  }
+  resolveQuantityBound(e) {
+    const r = this.question.template, s2 = e === "min" ? this.question.expressionRegistry.minQuantity ?? this.question.expressionRegistry.minValue : this.question.expressionRegistry.maxQuantity ?? this.question.expressionRegistry.maxValue;
+    if (s2 !== void 0) {
+      const n = Array.isArray(s2.value) ? s2.value[0] : s2.value, i = ie$1("quantity", n).at(0);
+      if (i)
+        return ee(i) ? i : void 0;
+    }
+    return w(
+      "Quantity",
+      r,
+      e === "min" ? g.SDC_MIN_QUANTITY : g.SDC_MAX_QUANTITY
+    ) ?? w(
+      "Quantity",
+      r,
+      e === "min" ? g.MIN_VALUE : g.MAX_VALUE
+    );
+  }
+};
+Jt$1([
+  computed
+], yt$1.prototype, "issues");
+Jt$1([
+  computed.struct
+], yt$1.prototype, "bounds");
+var _n$1 = Object.defineProperty, Cn$1 = Object.getOwnPropertyDescriptor, oe$1 = (t, e, r, s2) => {
+  for (var n = s2 > 1 ? void 0 : s2 ? Cn$1(e, r) : e, i = t.length - 1, o; i >= 0; i--)
+    (o = t[i]) && (n = (s2 ? o(e, r, n) : o(n)) || n);
+  return s2 && n && _n$1(e, r, n), n;
+};
+const Ct$1 = "__legacy_unit__";
+let re$1 = class re {
+  constructor(e) {
+    this.hasManualSelection = false, this.answer = e, makeObservable(this);
+  }
+  get quantityValue() {
+    return this.answer.value ?? void 0;
+  }
+  get unitEntries() {
+    const e = /* @__PURE__ */ new Map();
+    for (const r of this.answer.question.unitOptions) {
+      const s2 = ze$1("Coding", r);
+      e.has(s2) || e.set(s2, r);
+    }
+    return [...e.entries()];
+  }
+  get fallbackOption() {
+    if (this.unitEntries.length === 0 || this.getUnitTokenForQuantity(this.quantityValue))
+      return;
+    const r = this.quantityValue;
+    if (!r)
+      return;
+    const s2 = r.unit ?? r.code ?? r.system;
+    if (s2)
+      return {
+        token: `${Ct$1}${s2}`,
+        label: s2
+      };
+  }
+  get entries() {
+    const e = this.unitEntries.map(([s2, n]) => ({
+      token: s2,
+      label: n.display ?? n.code ?? n.system ?? s2,
+      disabled: false
+    })), r = this.fallbackOption;
+    return r ? [
+      {
+        token: r.token,
+        label: r.label,
+        disabled: true
+      },
+      ...e
+    ] : e;
+  }
+  get isUnitFreeForm() {
+    return this.unitEntries.length === 0;
+  }
+  get firstEnabledOptionToken() {
+    return this.entries.find((r) => !r.disabled)?.token ?? void 0;
+  }
+  get hasSingleUnit() {
+    return this.unitEntries.length === 1;
+  }
+  get singleUnitCoding() {
+    return this.hasSingleUnit ? this.unitEntries[0][1] : void 0;
+  }
+  get shouldAutoSelectUnit() {
+    if (!this.hasSingleUnit || this.hasManualSelection || !this.firstEnabledOptionToken)
+      return false;
+    const r = this.quantityValue;
+    return r ? r.code || r.system || r.unit ? false : r.value == null : true;
+  }
+  get unitToken() {
+    if (this.shouldAutoSelectUnit)
+      return this.firstEnabledOptionToken ?? "";
+    const e = this.fallbackOption;
+    return e ? e.token : this.getUnitTokenForQuantity(this.quantityValue);
+  }
+  handleNumberInput(e) {
+    if (e === "") {
+      this.applyQuantityChange((n) => {
+        delete n.value;
+      });
+      return;
+    }
+    const r = Number(e);
+    if (Number.isNaN(r))
+      return;
+    const s2 = this.shouldAutoSelectUnit && this.singleUnitCoding ? this.singleUnitCoding : void 0;
+    this.applyQuantityChange((n) => {
+      n.value = r, s2 && (n.unit = s2.display ?? s2.code ?? void 0, n.code = s2.code ?? void 0, n.system = s2.system ?? void 0);
+    }), this.shouldAutoSelectUnit && (this.hasManualSelection = true);
+  }
+  handleSelectChange(e) {
+    if (!e) {
+      this.applyQuantityChange((s2) => {
+        delete s2.unit, delete s2.code, delete s2.system;
+      }), this.hasSingleUnit && (this.hasManualSelection = true);
+      return;
+    }
+    if (e.startsWith(Ct$1))
+      return;
+    const r = this.getCodingForToken(e);
+    r && (this.applyQuantityChange((s2) => {
+      s2.unit = r.display ?? r.code ?? void 0, s2.code = r.code ?? void 0, s2.system = r.system ?? void 0;
+    }), this.hasSingleUnit && (this.hasManualSelection = true));
+  }
+  handleFreeTextChange(e) {
+    this.applyQuantityChange((r) => {
+      e ? r.unit = e : delete r.unit, delete r.code, delete r.system;
+    });
+  }
+  applyQuantityChange(e) {
+    const r = { ...this.quantityValue };
+    e(r), this.answer.setValueByUser(qt$1(r) ? void 0 : r);
+  }
+  getCodingForToken(e) {
+    return this.unitEntries.find(([s2]) => s2 === e)?.[1] ?? void 0;
+  }
+  getUnitTokenForCoding(e) {
+    if (!e)
+      return "";
+    for (const [r, s2] of this.unitEntries)
+      if (gt$1(s2, e))
+        return r;
+    return "";
+  }
+  getUnitTokenForQuantity(e) {
+    if (!e)
+      return "";
+    if (e.code || e.system)
+      return this.getUnitTokenForCoding({
+        code: e.code,
+        system: e.system,
+        display: e.unit
+      });
+    if (e.unit) {
+      const r = e.unit;
+      return this.getUnitTokenForCoding({
+        system: e.system,
+        code: r
+      }) || this.getUnitTokenForCoding({
+        system: e.system,
+        display: r
+      });
+    }
+    return "";
+  }
+};
+oe$1([
+  observable
+], re$1.prototype, "hasManualSelection", 2);
+oe$1([
+  computed
+], re$1.prototype, "unitEntries", 1);
+oe$1([
+  computed
+], re$1.prototype, "fallbackOption", 1);
+oe$1([
+  computed
+], re$1.prototype, "entries", 1);
+oe$1([
+  computed
+], re$1.prototype, "isUnitFreeForm", 1);
+oe$1([
+  computed
+], re$1.prototype, "unitToken", 1);
+oe$1([
+  action
+], re$1.prototype, "handleNumberInput", 1);
+oe$1([
+  action
+], re$1.prototype, "handleSelectChange", 1);
+oe$1([
+  action
+], re$1.prototype, "handleFreeTextChange", 1);
+var In$1 = Object.defineProperty, An$1 = Object.getOwnPropertyDescriptor, ae$1 = (t, e, r, s2) => {
+  for (var n = s2 > 1 ? void 0 : s2 ? An$1(e, r) : e, i = t.length - 1, o; i >= 0; i--)
+    (o = t[i]) && (n = (s2 ? o(e, r, n) : o(n)) || n);
+  return s2 && n && In$1(e, r, n), n;
+};
+class ne {
+  constructor(e, r, s2, n, i = []) {
+    this._value = void 0, this.nodes = observable.array([], {
+      deep: false,
+      name: "AnswerStore.nodes"
+    }), makeObservable(this), this.token = s2, this.scope = r.extend(e.repeats), this.question = e;
+    const o = e.template.item?.filter((a) => ht$1(a)).map(
+      (a) => e.form.createNodeStore(
+        a,
+        e,
+        this.scope,
+        this.token,
+        i
+      )
+    ) ?? [];
+    this.nodes.replace(o), this._value = n, this.validator = new yt$1(
+      this,
+      this.question
+    );
+  }
+  setValueByUser(e) {
+    this._value = e === "" ? void 0 : e, this.question.markDirty(), this.question.markUserOverridden();
+  }
+  setValueBySystem(e) {
+    this._value = e, this.question.markDirty();
+  }
+  get responseAnswer() {
+    return this.buildAnswerSnapshot("response");
+  }
+  get expressionAnswer() {
+    return this.buildAnswerSnapshot("expression");
+  }
+  get issues() {
+    return this.validator.issues.filter(
+      (e) => Re$1(e) !== void 0
+    );
+  }
+  get bounds() {
+    return this.validator.bounds;
+  }
+  buildAnswerSnapshot(e) {
+    const { value: r } = this, s2 = e === "response" ? this.nodes.flatMap((i) => i.responseItems) : this.nodes.flatMap((i) => i.expressionItems);
+    if (r == null && s2.length === 0)
+      return;
+    const n = {};
+    return r != null && Object.assign(
+      n,
+      this.question.answerOption.constraint === "optionsOrString" && typeof r == "string" ? Ne("string", r) : Ne(
+        U[this.question.type],
+        r
+      )
+    ), s2.length > 0 && (n.item = s2), n;
+  }
+  dispose() {
+    const e = [...this.nodes];
+    this.nodes.clear(), e.forEach((r) => r.dispose());
+  }
+  get value() {
+    return this._value;
+  }
+  get quantity() {
+    return new re$1(this);
+  }
+}
+ae$1([
+  action.bound
+], ne.prototype, "setValueByUser", 1);
+ae$1([
+  action.bound
+], ne.prototype, "setValueBySystem", 1);
+ae$1([
+  observable.ref
+], ne.prototype, "_value", 2);
+ae$1([
+  computed.struct
+], ne.prototype, "responseAnswer", 1);
+ae$1([
+  computed.struct
+], ne.prototype, "expressionAnswer", 1);
+ae$1([
+  computed
+], ne.prototype, "issues", 1);
+ae$1([
+  computed.struct
+], ne.prototype, "bounds", 1);
+ae$1([
+  action
+], ne.prototype, "dispose", 1);
+ae$1([
+  computed({ keepAlive: true })
+], ne.prototype, "quantity", 1);
+var Tn$1 = Object.defineProperty, En$1 = Object.getOwnPropertyDescriptor, Rn$1 = (t, e, r, s2) => {
+  for (var n = En$1(e, r), i = t.length - 1, o; i >= 0; i--)
+    (o = t[i]) && (n = o(e, r, n) || n);
+  return n && Tn$1(e, r, n), n;
+};
+class er {
+  constructor(e) {
+    this.question = e, makeObservable(this);
+  }
+  get issues() {
+    if (this.question.readOnly || !this.question.isEnabled)
+      return [];
+    if (!this.question.form.isSubmitAttempted)
+      return [];
+    const e = [], s2 = (this.question.repeats ? this.question.answers : this.question.answers.slice(0, 1)).filter(
+      (n) => ft$1(n)
+    );
+    return this.question.minOccurs > 0 && s2.length < this.question.minOccurs && e.push(
+      O(
+        "required",
+        this.question.minOccurs === 1 ? f.validation.question.minOccursSingle : R(f.validation.question.minOccursMultiple, {
+          minOccurs: this.question.minOccurs
+        })
+      )
+    ), this.question.maxOccurs != null && s2.length > this.question.maxOccurs && e.push(
+      O(
+        "structure",
+        R(f.validation.question.maxOccurs, {
+          maxOccurs: this.question.maxOccurs
+        })
+      )
+    ), e;
+  }
+}
+Rn$1([
+  computed
+], er.prototype, "issues");
+var Nn$1 = Object.defineProperty, Dn$1 = Object.getOwnPropertyDescriptor, he$1 = (t, e, r, s2) => {
+  for (var n = s2 > 1 ? void 0 : s2 ? Dn$1(e, r) : e, i = t.length - 1, o; i >= 0; i--)
+    (o = t[i]) && (n = (s2 ? o(e, r, n) : o(n)) || n);
+  return s2 && n && Nn$1(e, r, n), n;
+};
+let Ln$1 = class Ln extends Error {
+  constructor(e) {
+    super(`Unsupported expression language: ${e ?? "<missing>"}`);
+  }
+};
+class ue {
+  constructor(e, r, s2, n) {
+    makeObservable(this), this.coordinator = e, this.expression = n, this.kind = s2, this.environmentProvider = r;
+  }
+  get name() {
+    return this.expression.name;
+  }
+  get error() {
+    if (!this._cycle && this._error === void 0 && this.value, this._cycle) {
+      const e = `Failed to evaluate ${this.toString()} expression due to a dependency cycle`;
+      return O("business-rule", e);
+    } else
+      return this._error;
+  }
+  setError(e) {
+    this._error = e;
+  }
+  get value() {
+    const e = this.expression.expression?.trim();
+    if (!e) {
+      this.setError(void 0);
+      return;
+    }
+    return this.coordinator.trackEvaluation(this, () => {
+      try {
+        if (this.expression.language !== "text/fhirpath")
+          throw new Ln$1(
+            this.expression.language
+          );
+        const r = Sr.evaluate(
+          this.environmentProvider.expressionEnvironment.context,
+          e,
+          this.environmentProvider.expressionEnvironment,
+          Nt$1
+        );
+        return this.setError(void 0), r;
+      } catch (r) {
+        const s2 = `Failed to evaluate ${this.toString()} expression ${this.summarizeError(r)}`;
+        console.warn("Unrecognized expression evaluation error:", r), this.setError(O("invalid", s2));
+        return;
+      }
+    });
+  }
+  setCycleDetected(e) {
+    this._cycle = e;
+  }
+  clearCycleDetected() {
+    this._cycle = void 0;
+  }
+  summarizeError(e) {
+    const r = (e instanceof Error ? e.message : String(e)).toLowerCase();
+    return r.includes("circular dependency") ? "due to a dependency cycle" : r.includes("unsupported expression language") ? "due to an unsupported expression language" : r.includes("undefined environment variable") ? "because it references unavailable data" : r.includes("mismatched input") ? "because the expression has a syntax error" : r.includes("not implemented") ? "because it calls an unsupported function" : this._cycle ? "due to a dependency cycle" : "because it returned an error";
+  }
+  toString() {
+    return `${this.kind}${this.expression.name ? ` "${this.expression.name}"` : ""}`;
+  }
+}
+he$1([
+  observable.ref
+], ue.prototype, "_cycle", 2);
+he$1([
+  observable.ref
+], ue.prototype, "_error", 2);
+he$1([
+  computed
+], ue.prototype, "name", 1);
+he$1([
+  computed
+], ue.prototype, "error", 1);
+he$1([
+  action
+], ue.prototype, "setError", 1);
+he$1([
+  computed
+], ue.prototype, "value", 1);
+he$1([
+  action
+], ue.prototype, "setCycleDetected", 1);
+he$1([
+  action
+], ue.prototype, "clearCycleDetected", 1);
+var qn$1 = Object.defineProperty, Pn$1 = Object.getOwnPropertyDescriptor, Vn$1 = (t, e, r, s2) => {
+  for (var n = Pn$1(e, r), i = t.length - 1, o; i >= 0; i--)
+    (o = t[i]) && (n = o(e, r, n) || n);
+  return n && qn$1(e, r, n), n;
+};
+class tr {
+  constructor(e, r) {
+    this.definition = e, this.slot = r, makeObservable(this);
+  }
+  get issue() {
+    if (!this.slot)
+      return;
+    const e = this.slot.value;
+    if (e === void 0 || ye$1(e))
+      return;
+    const r = this.definition.severity ?? "error", s2 = this.definition.human && this.definition.human.length > 0 ? this.definition.human : this.definition.key ? `Constraint "${this.definition.key}" was not satisfied.` : "Constraint was not satisfied.", n = {
+      severity: r === "warning" ? "warning" : "error",
+      code: r === "warning" ? "business-rule" : "invalid",
+      diagnostics: s2
+    };
+    return this.definition.location && (n.expression = [this.definition.location]), n;
+  }
+}
+Vn$1([
+  computed.struct
+], tr.prototype, "issue");
+class rr extends Error {
+  constructor(e) {
+    super(`Expression name collision for "${e}".`), this.expressionName = e;
+  }
+}
+let vt$1 = class vt {
+  constructor(e) {
+    this.expressionRegistry = observable.map(
+      {},
+      { deep: false, name: "NodeScope.expressionRegistry" }
+    ), makeObservable(this), this.nodeRegistry = e ? observable.map(
+      {},
+      { deep: false, name: "NodeScope.storeRegistry" }
+    ) : void 0;
+  }
+  mergeEnvironment(e) {
+    return new Proxy(e, {
+      get: (r, s2) => Object.prototype.hasOwnProperty.call(r, s2) ? r[s2] : this.lookupExpression(s2)?.value,
+      has: (r, s2) => Object.prototype.hasOwnProperty.call(r, s2) || !!this.lookupExpression(s2)
+    });
+  }
+  extend(e) {
+    const r = new vt(e);
+    return r.parent = this, r;
+  }
+  registerNode(e) {
+    if (this.nodeRegistry) {
+      this.nodeRegistry.set(e.linkId, e);
+      return;
+    }
+    this.parent?.registerNode(e);
+  }
+  lookupNode(e) {
+    if (this.nodeRegistry) {
+      const r = this.nodeRegistry.get(e);
+      if (r)
+        return r;
+    }
+    return this.parent?.lookupNode(e);
+  }
+  listExpressions() {
+    return this.expressionRegistry.entries();
+  }
+  lookupExpression(e) {
+    return this.expressionRegistry.get(e) ?? this.parent?.lookupExpression(e);
+  }
+  registerExpression(e) {
+    if (e.name) {
+      const r = this.expressionRegistry.get(e.name);
+      if (r && r !== e)
+        throw new rr(e.name);
+      this.expressionRegistry.set(e.name, e);
+    }
+  }
+  getParentScope() {
+    return this.parent;
+  }
+};
+var Fn$1 = Object.defineProperty, Mn$1 = Object.getOwnPropertyDescriptor, nr = (t, e, r, s2) => {
+  for (var n = Mn$1(e, r), i = t.length - 1, o; i >= 0; i--)
+    (o = t[i]) && (n = o(e, r, n) || n);
+  return n && Fn$1(e, r, n), n;
+};
+let Ye$1 = class Ye {
+  constructor(e, r, s2, n) {
+    this.coordinator = e, this.scope = r, this.environmentProvider = s2, this.slots = observable.array([], {
+      deep: false,
+      name: "BaseExpressionRegistry.slots"
+    }), this.constraints = observable.array([], {
+      deep: false,
+      name: "BaseExpressionRegistry.constraints"
+    }), this.registrationIssues = observable.array([], {
+      deep: false,
+      name: "BaseExpressionRegistry.registrationIssues"
+    }), makeObservable(this), Pe$1("Expression", n, g.SDC_VARIABLE).forEach(
+      (o) => {
+        this.createSlot(o, "variable");
+      }
+    ), dt$1(n, g.TARGET_CONSTRAINT).map(
+      (o) => ({
+        key: w("id", o, "key"),
+        severity: w("code", o, "severity"),
+        human: w("string", o, "human"),
+        expression: w(
+          "Expression",
+          o,
+          "expression"
+        ),
+        location: w("string", o, "location"),
+        requirements: w(
+          "markdown",
+          o,
+          "requirements"
+        )
+      })
+    ).forEach((o) => {
+      const a = this.createSlot(o.expression, "constraint");
+      a ? this.constraints.push(new tr(o, a)) : this.registrationIssues.push(
+        O(
+          "invalid",
+          `Constraint ${o.key ? `"${o.key}"` : "with no key"} is missing an expression.`
+        )
+      );
+    });
+  }
+  createSlot(e, r) {
+    if (!e) return;
+    const s2 = new ue(
+      this.coordinator,
+      this.environmentProvider,
+      r,
+      e
+    );
+    this.slots.push(s2);
+    try {
+      this.scope.registerExpression(s2);
+    } catch (n) {
+      if (n instanceof rr)
+        this.registrationIssues.push(O("invalid", n.message));
+      else throw n;
+    }
+    return s2;
+  }
+  get slotsIssues() {
+    return this.slots.map((e) => e.error).filter((e) => e !== void 0);
+  }
+  get constraintsIssues() {
+    return this.constraints.map((e) => e.issue).filter((e) => e !== void 0);
+  }
+};
+nr([
+  computed
+], Ye$1.prototype, "slotsIssues");
+nr([
+  computed
+], Ye$1.prototype, "constraintsIssues");
+let bt$1 = class bt extends Ye$1 {
+  constructor(e, r, s2, n, i) {
+    super(e, r, s2, n), this.answerOptionToggles = observable.array(
+      [],
+      {
+        deep: false,
+        name: "NodeExpressionRegistry.answerOptionToggles"
+      }
+    ), this.enableWhen = this.createSlot(
+      w("Expression", n, g.SDC_ENABLE_WHEN_EXPR),
+      "enable-when"
+    ), this.initial = this.createSlot(
+      w("Expression", n, g.SDC_INITIAL_EXPR),
+      "initial"
+    ), this.calculated = this.createSlot(
+      w("Expression", n, g.SDC_CALCULATED_EXPR),
+      "calculated"
+    ), this.answer = this.createSlot(
+      w("Expression", n, g.SDC_ANSWER_EXPR),
+      "answer"
+    ), this.minValue = this.createSlot(
+      w(
+        "Expression",
+        He$1(
+          U[i],
+          n,
+          g.MIN_VALUE
+        ),
+        g.CQF_EXPRESSION
+      ),
+      "min-value"
+    ), this.maxValue = this.createSlot(
+      w(
+        "Expression",
+        He$1(
+          U[i],
+          n,
+          g.MAX_VALUE
+        ),
+        g.CQF_EXPRESSION
+      ),
+      "max-value"
+    ), i === "quantity" && (this.minQuantity = this.createSlot(
+      w(
+        "Expression",
+        w("Quantity", n, g.SDC_MIN_QUANTITY),
+        g.CQF_EXPRESSION
+      ),
+      "min-quantity"
+    ), this.maxQuantity = this.createSlot(
+      w(
+        "Expression",
+        w("Quantity", n, g.SDC_MAX_QUANTITY),
+        g.CQF_EXPRESSION
+      ),
+      "max-quantity"
+    )), this.minOccurs = this.createSlot(
+      w(
+        "Expression",
+        He$1("integer", n, g.MIN_OCCURS),
+        g.CQF_EXPRESSION
+      ),
+      "min-occurs"
+    ), this.maxOccurs = this.createSlot(
+      w(
+        "Expression",
+        He$1("integer", n, g.MAX_OCCURS),
+        g.CQF_EXPRESSION
+      ),
+      "max-occurs"
+    ), this.required = this.createSlot(
+      w(
+        "Expression",
+        n._required,
+        g.CQF_EXPRESSION
+      ),
+      "required"
+    ), this.text = this.createSlot(
+      w("Expression", n._text, g.CQF_EXPRESSION),
+      "text"
+    ), this.readOnly = this.createSlot(
+      w(
+        "Expression",
+        n._readOnly,
+        g.CQF_EXPRESSION
+      ),
+      "read-only"
+    ), this.repeats = this.createSlot(
+      w("Expression", n._repeats, g.CQF_EXPRESSION),
+      "repeats"
+    ), dt$1(n, g.SDC_ANSWER_OPTIONS_TOGGLE).forEach(
+      (o, a) => {
+        const c = Pe$1(
+          U[i],
+          o,
+          "option"
+        ).map(
+          (h) => Ne(U[i], h)
+        ), l = c.length > 0 ? this.createSlot(
+          w("Expression", o, "expression"),
+          "answer-option-toggle"
+        ) : void 0;
+        l ? this.answerOptionToggles.push({
+          slot: l,
+          options: c
+        }) : this.registrationIssues.push(
+          O(
+            "invalid",
+            `Answer option toggle #${a + 1} on item "${n.linkId ?? "<missing>"}" is missing an expression or an option.`
+          )
+        );
+      }
+    );
+  }
+};
+let We$1 = class We {
+  static getDescendantProperty(e, r, s2 = []) {
+    let n, i, o, a, c, l;
+    if (r) {
+      if (o = r.indexOf("."), o === -1 ? n = r : (n = r.slice(0, o), i = r.slice(o + 1)), a = e[n], a !== null && typeof a < "u")
+        if (!i && (typeof a == "string" || typeof a == "number"))
+          s2.push(a);
+        else if (Object.prototype.toString.call(a) === "[object Array]")
+          for (c = 0, l = a.length; c < l; c++)
+            We.getDescendantProperty(a[c], i, s2);
+        else i && We.getDescendantProperty(a, i, s2);
+    } else
+      s2.push(e);
+    return s2;
+  }
+};
+let ke$1 = class ke {
+  constructor(e = [], r = [], s2 = {}) {
+    Array.isArray(r) || (s2 = r, r = []), this.haystack = e, this.keys = r, this.options = Object.assign({
+      caseSensitive: false,
+      sort: false
+    }, s2);
+  }
+  search(e = "") {
+    if (e === "")
+      return this.haystack;
+    const r = [];
+    for (let s2 = 0; s2 < this.haystack.length; s2++) {
+      const n = this.haystack[s2];
+      if (this.keys.length === 0) {
+        const i = ke.isMatch(n, e, this.options.caseSensitive);
+        i && r.push({ item: n, score: i });
+      } else
+        for (let i = 0; i < this.keys.length; i++) {
+          const o = We$1.getDescendantProperty(n, this.keys[i]);
+          let a = false;
+          for (let c = 0; c < o.length; c++) {
+            const l = ke.isMatch(o[c], e, this.options.caseSensitive);
+            if (l) {
+              a = true, r.push({ item: n, score: l });
+              break;
+            }
+          }
+          if (a)
+            break;
+        }
+    }
+    return this.options.sort && r.sort((s2, n) => s2.score - n.score), r.map((s2) => s2.item);
+  }
+  static isMatch(e, r, s2) {
+    e = String(e), r = String(r), s2 || (e = e.toLocaleLowerCase(), r = r.toLocaleLowerCase());
+    const n = ke.nearestIndexesFor(e, r);
+    return n ? e === r ? 1 : n.length > 1 ? 2 + (n[n.length - 1] - n[0]) : 2 + n[0] : false;
+  }
+  static nearestIndexesFor(e, r) {
+    const s2 = r.split("");
+    let n = [];
+    return ke.indexesOfFirstLetter(e, r).forEach((o, a) => {
+      let c = o + 1;
+      n[a] = [o];
+      for (let l = 1; l < s2.length; l++) {
+        const h = s2[l];
+        if (c = e.indexOf(h, c), c === -1) {
+          n[a] = false;
+          break;
+        }
+        n[a].push(c), c++;
+      }
+    }), n = n.filter((o) => o !== false), n.length ? n.sort((o, a) => o.length === 1 ? o[0] - a[0] : (o = o[o.length - 1] - o[0], a = a[a.length - 1] - a[0], o - a))[0] : false;
+  }
+  static indexesOfFirstLetter(e, r) {
+    const s2 = r[0];
+    return e.split("").map((n, i) => n !== s2 ? false : i).filter((n) => n !== false);
+  }
+};
+var Un$1 = Object.defineProperty, Hn$1 = Object.getOwnPropertyDescriptor, T = (t, e, r, s2) => {
+  for (var n = s2 > 1 ? void 0 : s2 ? Hn$1(e, r) : e, i = t.length - 1, o; i >= 0; i--)
+    (o = t[i]) && (n = (s2 ? o(e, r, n) : o(n)) || n);
+  return s2 && n && Un$1(e, r, n), n;
+};
+class A {
+  constructor(e, r) {
+    this.customAnswerTokens = observable.set(), this.pendingCustomOptionForm = void 0, this.extraOptionsByToken = observable.map({}, { deep: false, name: "AnswerOptionStore.extraOptionsByToken" }), this.searchQuery = "", makeObservable(this), this.question = e, this.store = r;
+  }
+  get isLoading() {
+    return this.store.isLoading;
+  }
+  get customType() {
+    return this.constraint === "optionsOrString" ? "string" : this.question.type;
+  }
+  get allowCustom() {
+    return this.constraint === "optionsOrString" || this.constraint === "optionsOrType";
+  }
+  get filteredOptions() {
+    return this.buildOptions(
+      this.searchQuery ? this.searchIndex.search(this.searchQuery) : this.inherentOptions
+    );
+  }
+  get matchedOptionsByAnswerToken() {
+    return this.inherentOptions.reduce((e, r) => {
+      const s2 = this.question.answers.find((n) => n.token === this.pendingCustomOptionForm?.answer.token || this.customAnswerTokens.has(n.token) ? false : Ge$1(
+        this.question.dataType,
+        n.value,
+        r.value
+      ));
+      return s2 ? e.set(s2.token, {
+        token: r.token,
+        disabled: r.disabled
+      }) : e;
+    }, /* @__PURE__ */ new Map());
+  }
+  get selectedOptions() {
+    const e = [];
+    return this.question.answers.forEach((r) => {
+      if (r.token === this.pendingCustomOptionForm?.answer.token) return;
+      const s2 = this.matchedOptionsByAnswerToken.get(r.token);
+      if (s2) {
+        e.push({
+          token: s2.token,
+          answer: r,
+          value: r.value,
+          answerType: this.question.type,
+          disabled: (this.question.isRepeatingWithoutChildren ? false : s2.disabled) || this.question.isRepeatingWithoutChildren && !this.question.canRemove
+        });
+        return;
+      }
+      const n = this.allowCustom ? this.getCustomTokenForValue(r.value) : this.getLegacyTokenForValue(r.value);
+      n && e.push({
+        token: n,
+        answer: r,
+        value: r.value,
+        answerType: this.allowCustom ? this.customType : this.question.type,
+        disabled: !this.allowCustom || this.question.isRepeatingWithoutChildren && !this.question.canRemove
+      });
+    }), e;
+  }
+  get canAddSelection() {
+    return !this.question.readOnly && (this.question.canAdd || !!this.findAvailableAnswer());
+  }
+  get specifyOtherToken() {
+    return y(this.question.token, "specify_other");
+  }
+  get customOptionFormState() {
+    return this.pendingCustomOptionForm && this.allowCustom ? {
+      answer: this.pendingCustomOptionForm.answer,
+      isNew: this.pendingCustomOptionForm.isNew,
+      canSubmit: ft$1(this.pendingCustomOptionForm.answer)
+    } : void 0;
+  }
+  getSelectedOption(e) {
+    return this.selectedOptions.find(
+      (r) => r.answer.token === e.token
+    );
+  }
+  setSearchQuery(e) {
+    this.searchQuery = e.trim();
+  }
+  selectOption(e) {
+    if (!e) return;
+    if (e === this.specifyOtherToken) {
+      this.openCustomOptionForm();
+      return;
+    }
+    const r = this.findOptionByToken(e);
+    if (!(!r || r.disabled || r.value == null)) {
+      if (!this.isInherentToken(r.token)) {
+        this.allowCustom && this.addCustomValue(r.value);
+        return;
+      }
+      this.addOptionValue(
+        r.token,
+        r.value
+      );
+    }
+  }
+  deselectOption(e) {
+    if (!e) return;
+    if (e === this.specifyOtherToken) {
+      this.cancelCustomOptionForm();
+      return;
+    }
+    const r = this.selectedOptions.find(
+      (s2) => s2.token === e
+    );
+    !r || !this.question.canRemove || (this.rememberAnswerValue(r.answer), this.customAnswerTokens.delete(r.answer.token), this.question.removeAnswer(r.answer));
+  }
+  selectOptionForAnswer(e, r) {
+    const s2 = this.customOptionFormState?.answer.token === e.token;
+    if (r == null) {
+      if (s2) {
+        this.cancelCustomOptionForm();
+        return;
+      }
+      this.rememberAnswerValue(e), this.customAnswerTokens.delete(e.token), e.setValueByUser();
+      return;
+    }
+    if (r === this.specifyOtherToken) {
+      this.rememberAnswerValue(e), this.openCustomOptionForm(e);
+      return;
+    }
+    s2 ? this.cancelCustomOptionForm() : this.rememberAnswerValue(e);
+    const n = this.findOptionByToken(r);
+    if (!n || n.disabled) return;
+    if (n.value == null) {
+      s2 && this.cancelCustomOptionForm(), this.rememberAnswerValue(e), this.customAnswerTokens.delete(e.token), e.setValueByUser();
+      return;
+    }
+    !this.isInherentToken(n.token) && this.allowCustom ? this.customAnswerTokens.add(e.token) : this.customAnswerTokens.delete(e.token);
+    const i = structuredClone(n.value);
+    e.setValueByUser(i);
+  }
+  cancelCustomOptionForm() {
+    this.pendingCustomOptionForm && (this.customAnswerTokens.delete(this.pendingCustomOptionForm.answer.token), this.pendingCustomOptionForm.isNew ? this.question.removeAnswer(this.pendingCustomOptionForm.answer) : this.pendingCustomOptionForm.answer.setValueByUser(), this.pendingCustomOptionForm = void 0);
+  }
+  submitCustomOptionForm() {
+    this.pendingCustomOptionForm && (this.rememberCustomValue(
+      this.pendingCustomOptionForm.answer.value
+    ), this.pendingCustomOptionForm = void 0);
+  }
+  isInherentToken(e) {
+    return this.inherentOptions.some((r) => r.token === e);
+  }
+  getCustomTokenForValue(e) {
+    if (e == null) return "";
+    const r = ze$1(
+      U[this.customType],
+      e
+    );
+    return r ? y(this.question.token, "custom", r) : "";
+  }
+  getLegacyTokenForValue(e) {
+    if (e == null) return "";
+    const r = ze$1(this.question.dataType, e);
+    return r ? y(this.question.token, "legacy", r) : "";
+  }
+  rememberCustomValue(e) {
+    if (!this.allowCustom || e == null || typeof e == "string" && e.trim().length === 0)
+      return;
+    const r = this.getCustomTokenForValue(e);
+    if (!r || this.extraOptionsByToken.has(r)) return;
+    const s2 = structuredClone(e);
+    this.extraOptionsByToken.set(r, {
+      token: r,
+      value: s2,
+      answerType: this.customType,
+      disabled: false
+    });
+  }
+  rememberLegacyValue(e) {
+    if (this.allowCustom || e == null || typeof e == "string" && e.trim().length === 0)
+      return;
+    const r = this.getLegacyTokenForValue(e);
+    !r || this.extraOptionsByToken.has(r) || this.extraOptionsByToken.set(r, {
+      token: r,
+      value: structuredClone(e),
+      answerType: this.question.type,
+      disabled: true
+    });
+  }
+  addCustomValue(e) {
+    if (!this.allowCustom || this.isLoading || !this.canAddSelection || e == null || typeof e == "string" && e.trim().length === 0)
+      return;
+    this.rememberCustomValue(e);
+    const r = structuredClone(e), s2 = this.findAvailableAnswer();
+    if (s2) {
+      this.customAnswerTokens.add(s2.token), s2.setValueByUser(r);
+      return;
+    }
+    if (this.question.canAdd) {
+      const n = this.question.addAnswer(r);
+      n && this.customAnswerTokens.add(n.token);
+    }
+  }
+  rememberAnswerValue(e) {
+    if (e.value == null) return;
+    const r = this.getSelectedOption(e);
+    if (r && !this.isInherentToken(r.token)) {
+      if (this.allowCustom) {
+        this.rememberCustomValue(
+          e.value
+        );
+        return;
+      }
+      this.rememberLegacyValue(
+        e.value
+      );
+    }
+  }
+  openCustomOptionForm(e) {
+    if (!this.allowCustom || this.pendingCustomOptionForm || e?.value == null && (this.isLoading || !this.canAddSelection))
+      return;
+    if (e) {
+      this.customAnswerTokens.add(e.token), e.setValueByUser(), this.pendingCustomOptionForm = {
+        answer: e,
+        isNew: false,
+        canSubmit: false
+      };
+      return;
+    }
+    const r = this.findAvailableAnswer();
+    if (r) {
+      this.customAnswerTokens.add(r.token), this.pendingCustomOptionForm = {
+        answer: r,
+        isNew: false,
+        canSubmit: false
+      };
+      return;
+    }
+    if (this.question.canAdd) {
+      const s2 = this.question.addAnswer();
+      s2 && (this.customAnswerTokens.add(s2.token), this.pendingCustomOptionForm = {
+        answer: s2,
+        isNew: true,
+        canSubmit: false
+      });
+    }
+  }
+  buildOptions(e) {
+    const r = [...this.extraOptionsByToken.values()], s2 = new Set(
+      [...e, ...r].map((a) => a.token)
+    ), n = this.selectedOptions.flatMap((a) => s2.has(a.token) ? [] : [
+      {
+        token: a.token,
+        value: a.value,
+        disabled: a.disabled,
+        answerType: a.answerType
+      }
+    ]), i = [
+      ...e,
+      ...r,
+      ...n
+    ];
+    if (!this.question.isRepeatingWithoutChildren)
+      return i;
+    const o = new Set(
+      this.selectedOptions.map((a) => a.token)
+    );
+    return i.map((a) => {
+      const c = o.has(a.token), l = a.disabled || !c && !this.canAddSelection || c && !this.question.canRemove;
+      return l === a.disabled ? a : { ...a, disabled: l };
+    });
+  }
+  findAvailableAnswer() {
+    return this.question.answers.find(
+      (e) => e.value == null && e.token !== this.pendingCustomOptionForm?.answer.token && !this.customAnswerTokens.has(e.token)
+    );
+  }
+  findOptionByToken(e) {
+    return this.inherentOptions.find((r) => r.token === e) || this.extraOptionsByToken.get(e) || this.selectedOptions.find((r) => r.token === e);
+  }
+  addOptionValue(e, r) {
+    if (!this.canAddSelection || this.isLoading || this.selectedOptions.some((i) => i.token === e)) return;
+    const s2 = structuredClone(r), n = this.findAvailableAnswer();
+    if (n) {
+      n.setValueByUser(s2);
+      return;
+    }
+    this.question.addAnswer(s2);
+  }
+  get inherentOptions() {
+    return this.store.inherentOptions;
+  }
+  get constraint() {
+    return this.store.constraint;
+  }
+  get searchIndex() {
+    const e = {
+      Coding: ["value.display", "value.code", "value.system", "value.version"],
+      Reference: ["value.display", "value.reference", "value.identifier.value"],
+      Quantity: ["value.unit", "value.code", "value.system", "value.value"],
+      Attachment: ["value.title", "value.url", "value.contentType"]
+    };
+    return new ke$1(
+      this.inherentOptions,
+      e[this.question.dataType] ?? ["value"],
+      {
+        caseSensitive: false,
+        sort: true
+      }
+    );
+  }
+}
+T([
+  observable
+], A.prototype, "pendingCustomOptionForm", 2);
+T([
+  observable
+], A.prototype, "searchQuery", 2);
+T([
+  computed
+], A.prototype, "isLoading", 1);
+T([
+  computed
+], A.prototype, "customType", 1);
+T([
+  computed
+], A.prototype, "allowCustom", 1);
+T([
+  computed
+], A.prototype, "filteredOptions", 1);
+T([
+  computed
+], A.prototype, "matchedOptionsByAnswerToken", 1);
+T([
+  computed
+], A.prototype, "selectedOptions", 1);
+T([
+  computed
+], A.prototype, "canAddSelection", 1);
+T([
+  computed
+], A.prototype, "specifyOtherToken", 1);
+T([
+  action.bound
+], A.prototype, "setSearchQuery", 1);
+T([
+  action.bound
+], A.prototype, "selectOption", 1);
+T([
+  action.bound
+], A.prototype, "deselectOption", 1);
+T([
+  action.bound
+], A.prototype, "selectOptionForAnswer", 1);
+T([
+  action.bound
+], A.prototype, "cancelCustomOptionForm", 1);
+T([
+  action.bound
+], A.prototype, "submitCustomOptionForm", 1);
+T([
+  action.bound
+], A.prototype, "rememberCustomValue", 1);
+T([
+  action.bound
+], A.prototype, "rememberLegacyValue", 1);
+T([
+  action.bound
+], A.prototype, "addCustomValue", 1);
+T([
+  action.bound
+], A.prototype, "openCustomOptionForm", 1);
+T([
+  computed
+], A.prototype, "searchIndex", 1);
+var $n$1 = Object.defineProperty, Bn$1 = Object.getOwnPropertyDescriptor, pe = (t, e, r, s2) => {
+  for (var n = Bn$1(e, r), i = t.length - 1, o; i >= 0; i--)
+    (o = t[i]) && (n = o(e, r, n) || n);
+  return n && $n$1(e, r, n), n;
+};
+function Qn$1(t) {
+  return t instanceof Error ? t.message : t == null ? f.errors.unknown : String(t);
+}
+function jn$1(t) {
+  const e = Qn$1(t);
+  return {
+    severity: "error",
+    code: "invalid",
+    diagnostics: e,
+    details: { text: e },
+    expression: [zr]
+  };
+}
+let ce$1 = class ce {
+  constructor(e) {
+    this.question = e, makeObservable(this);
+  }
+  get answerOptions() {
+    const e = this.question.expressionRegistry.answer;
+    return e ? Hr(this.question.type, e.value) : this.expandedValueSetOptions ? this.expandedValueSetOptions : this.question.template.answerOption ?? [];
+  }
+  get expandedValueSetOptions() {
+    return this.expansion?.case({
+      fulfilled: (e) => e.map((r) => ({
+        valueCoding: r
+      }))
+    });
+  }
+  get expansion() {
+    if (this.question.template.answerValueSet)
+      return fromPromise(
+        this.question.form.valueSetExpander.expand(
+          this.question.template.answerValueSet,
+          this.question.preferredTerminologyServers
+        )
+      );
+  }
+  get issues() {
+    return this.expansion?.case({
+      rejected: (e) => [jn$1(e)]
+    }) ?? [];
+  }
+  get inherentOptions() {
+    if (this.question.type === "boolean" && this.answerOptions.length === 0)
+      return [
+        {
+          token: y(this.question.token, "true"),
+          value: true,
+          disabled: false,
+          answerType: "boolean"
+        },
+        {
+          token: y(this.question.token, "false"),
+          value: false,
+          disabled: false,
+          answerType: "boolean"
+        },
+        ...this.question.repeats ? [] : [
+          {
+            token: y(this.question.token, "null"),
+            value: void 0,
+            disabled: false,
+            answerType: "boolean"
+          }
+        ]
+      ];
+    const e = /* @__PURE__ */ new Set();
+    return this.answerOptions.flatMap((r) => {
+      const s2 = Z(this.question.dataType, r);
+      if (s2 == null)
+        return [];
+      const n = ze$1(this.question.dataType, s2);
+      if (e.has(n))
+        return [];
+      e.add(n);
+      const i = !this.isOptionEnabled(r);
+      return [
+        {
+          token: n,
+          value: s2,
+          disabled: i,
+          answerType: this.question.type
+        }
+      ];
+    });
+  }
+  get constraint() {
+    return this.question.template.answerConstraint ?? "optionsOnly";
+  }
+  get isLoading() {
+    return this.expansion?.state === "pending";
+  }
+  get select() {
+    return new A(this.question, this);
+  }
+  isOptionEnabled(e) {
+    const r = this.question.expressionRegistry.answerOptionToggles;
+    if (r.length === 0)
+      return true;
+    const s2 = Z(this.question.dataType, e);
+    if (s2 === void 0)
+      return true;
+    let n = false;
+    for (const i of r)
+      if (i.options.some((a) => {
+        const c = Z(this.question.dataType, a);
+        return c === void 0 ? false : Ge$1(this.question.dataType, c, s2);
+      }) && (n = true, ye$1(i.slot.value)))
+        return true;
+    return !n;
+  }
+};
+pe([
+  computed
+], ce$1.prototype, "answerOptions");
+pe([
+  computed.struct
+], ce$1.prototype, "expandedValueSetOptions");
+pe([
+  computed({ keepAlive: true })
+], ce$1.prototype, "expansion");
+pe([
+  computed
+], ce$1.prototype, "issues");
+pe([
+  computed
+], ce$1.prototype, "inherentOptions");
+pe([
+  computed
+], ce$1.prototype, "constraint");
+pe([
+  computed
+], ce$1.prototype, "isLoading");
+pe([
+  computed({ keepAlive: true })
+], ce$1.prototype, "select");
+var zn$1 = Object.defineProperty, Gn$1 = Object.getOwnPropertyDescriptor, _ = (t, e, r, s2) => {
+  for (var n = s2 > 1 ? void 0 : s2 ? Gn$1(e, r) : e, i = t.length - 1, o; i >= 0; i--)
+    (o = t[i]) && (n = (s2 ? o(e, r, n) : o(n)) || n);
+  return s2 && n && zn$1(e, r, n), n;
+};
+class x extends Q {
+  constructor(e, r, s2, n, i, o) {
+    super(e, r, s2, n, i), this.answers = observable.array([], {
+      deep: false,
+      name: "QuestionStore.answers"
+    }), this.lifecycle = "pristine", this.disposers = [], this.lastIndex = 0, this.expressionRegistry = new bt$1(
+      this.form.coordinator,
+      this.scope,
+      this,
+      r,
+      this.template.type
+    ), this.validator = new er(this), this.applyResponseValues(o?.answer) || this.applyTemplateInitialValues(), this.setupBaselineAnswerReaction(), this.detectInitialOverride(), this.setupExpressionReactions();
+  }
+  get renderer() {
+    return this.form.questionRendererRegistry.resolve(this)?.renderer;
+  }
+  get minLength() {
+    return w("integer", this.template, g.MIN_LENGTH);
+  }
+  get maxLength() {
+    return this.template.maxLength;
+  }
+  get maxDecimalPlaces() {
+    return w(
+      "integer",
+      this.template,
+      g.MAX_DECIMAL_PLACES
+    );
+  }
+  get mimeTypes() {
+    return this.type !== "attachment" ? [] : Pe$1("code", this.template, g.MIME_TYPE);
+  }
+  get maxSize() {
+    if (this.type === "attachment")
+      return w("decimal", this.template, g.MAX_SIZE);
+  }
+  get type() {
+    return this.template.type;
+  }
+  get dataType() {
+    return U[this.type];
+  }
+  get control() {
+    const e = xe$1(this.template);
+    return e && _r.includes(e) ? e : void 0;
+  }
+  get repeats() {
+    const e = this.expressionRegistry.repeats;
+    return e ? ye$1(e.value) : !!this.template.repeats;
+  }
+  get isRepeatingWithoutChildren() {
+    const e = Array.isArray(this.template.item) && this.template.item.length > 0;
+    return this.repeats && !e;
+  }
+  get keyboardType() {
+    if (this.type !== "string" && this.type !== "text")
+      return;
+    const e = w(
+      "Coding",
+      this.template,
+      g.SDC_KEYBOARD
+    ), r = {
+      phone: "tel",
+      email: "email",
+      number: "numeric",
+      url: "url",
+      chat: "text"
+    };
+    return e?.code ? r[e.code] : void 0;
+  }
+  get answerOption() {
+    return new ce$1(this);
+  }
+  get issues() {
+    return [...super.issues, ...this.answerOption.issues].filter((r) => Re$1(r) !== void 0);
+  }
+  get maxOccurs() {
+    return this.repeats ? super.maxOccurs : 1;
+  }
+  get canAdd() {
+    return !this.readOnly && this.answers.length < this.maxOccurs;
+  }
+  get canRemove() {
+    return !this.readOnly && this.answers.length > this.minOccurs;
+  }
+  addAnswer(e) {
+    if (this.canAdd)
+      return this.markDirty(), this.markUserOverridden(), this.pushAnswer(e);
+  }
+  removeAnswer(e) {
+    if (!this.canRemove) return;
+    const r = this.answers.indexOf(e);
+    if (r === -1) return;
+    const [s2] = this.answers.splice(r, 1);
+    s2?.dispose(), this.ensureBaselineAnswers(), this.markDirty(), this.markUserOverridden();
+  }
+  ensureBaselineAnswers(e = false) {
+    const r = e || this.canAdd || this.readOnly && this.answers.length < this.maxOccurs;
+    if (this.repeats) {
+      const s2 = Math.min(this.minOccurs, this.maxOccurs);
+      for (; this.answers.length < s2 && r; )
+        this.pushAnswer();
+      return;
+    }
+    this.answers.length === 0 && r && this.pushAnswer();
+  }
+  get hasContent() {
+    return (this.repeats ? this.answers : this.answers.slice(0, 1)).some((r) => ft$1(r));
+  }
+  detectInitialOverride() {
+    if (!this.expressionRegistry.calculated || this.readOnly || this.lifecycle !== "response" || !this.hasContent)
+      return;
+    const e = ie$1(
+      this.type,
+      this.expressionRegistry.calculated.value
+    );
+    (e.length === 0 || !this.answersMatch(e)) && this.markUserOverridden();
+  }
+  trackDisposer(e) {
+    this.disposers.push(e);
+  }
+  unregisterDisposer(e) {
+    const r = this.disposers.indexOf(e);
+    r !== -1 && this.disposers.splice(r, 1);
+  }
+  setupBaselineAnswerReaction() {
+    this.trackDisposer(
+      reaction(
+        () => [this.canAdd, this.minOccurs, this.repeats, this.answers.length],
+        () => this.ensureBaselineAnswers(),
+        {
+          name: `${this.token}:ensure-baseline-answers`,
+          equals: comparer.structural,
+          fireImmediately: true
+        }
+      )
+    );
+  }
+  setupExpressionReactions() {
+    const { initial: e, calculated: r } = this.expressionRegistry;
+    if (e) {
+      const s2 = reaction(
+        () => [this.isEnabled, e.value, this.hasContent, this.lifecycle],
+        (n, i, o) => {
+          this.applyInitialExpressionValue() && (this.unregisterDisposer(s2), o.dispose());
+        },
+        {
+          name: `${this.token}:apply-initial-value-reaction`,
+          equals: comparer.structural,
+          fireImmediately: true
+        }
+      );
+      this.trackDisposer(s2);
+    }
+    if (r) {
+      const s2 = reaction(
+        () => [this.isEnabled, this.lifecycle, r.value],
+        () => this.applyCalculatedExpressionValue(),
+        {
+          name: `${this.token}:apply-calculated-value-reaction`,
+          equals: comparer.structural,
+          fireImmediately: true
+        }
+      );
+      this.trackDisposer(s2);
+    }
+  }
+  applyTemplateInitialValues() {
+    const e = this.template.initial;
+    if (!e || e.length === 0 || this.answers.length > 0)
+      return;
+    const r = e.map((n) => {
+      const i = Z(U[this.type], n);
+      return i === void 0 && this.answerOption.constraint === "optionsOrString" ? Z("string", n) : i;
+    }).filter(
+      (n) => n != null
+    );
+    if (r.length === 0)
+      return;
+    let s2 = false;
+    if (this.repeats) {
+      const n = Math.min(r.length, this.maxOccurs);
+      for (let i = 0; i < n; i += 1)
+        this.pushAnswer(
+          structuredClone(r[i])
+        ), s2 = true;
+    } else {
+      this.ensureBaselineAnswers(true);
+      const n = this.answers[0];
+      if (!n)
+        return;
+      n.setValueBySystem(
+        structuredClone(r[0])
+      ), s2 = true;
+    }
+    s2 && (this.lifecycle = "template");
+  }
+  applyInitialExpressionValue() {
+    const e = this.expressionRegistry.initial;
+    if (!e || !this.isEnabled) return false;
+    const r = this.lifecycle === "template";
+    if (this.hasContent && !r) return true;
+    if (e.value === void 0) return false;
+    const s2 = ie$1(this.type, e.value);
+    if (s2.length === 0) return false;
+    if (this.repeats) {
+      const n = Number.isFinite(this.maxOccurs) ? s2.slice(0, this.maxOccurs) : s2, i = [...this.answers];
+      this.answers.clear(), i.forEach((o) => o.dispose()), n.forEach((o) => {
+        this.pushAnswer(o);
+      });
+    } else {
+      const n = s2[0] ?? void 0;
+      this.ensureBaselineAnswers(true);
+      const i = this.answers[0];
+      i && i.setValueBySystem(n);
+    }
+    return this.lifecycle = "expression", true;
+  }
+  applyResponseValues(e) {
+    return !e || e.length === 0 ? false : (e.forEach((r) => {
+      const s2 = Z(U[this.type], r), n = this.answerOption.constraint === "optionsOrString" ? Z("string", r) : void 0;
+      this.pushAnswer(
+        s2 ?? n ?? void 0,
+        r.item
+      );
+    }), this.lifecycle = "response", true);
+  }
+  applyCalculatedExpressionValue() {
+    const e = this.expressionRegistry.calculated;
+    e && (!this.isEnabled || this.lifecycle === "manual" || e.value !== void 0 && this.form.coordinator.trackWrite(e, () => {
+      const r = ie$1(this.type, e.value);
+      if (r.length === 0 || this.answersMatch(r)) return true;
+      if (this.repeats)
+        this.syncRepeatingAnswers(r);
+      else {
+        this.ensureBaselineAnswers(true);
+        const s2 = this.answers[0];
+        s2 && s2.setValueBySystem(r[0] ?? void 0);
+      }
+      return this.lifecycle = "expression", false;
+    }));
+  }
+  syncRepeatingAnswers(e) {
+    for (; this.answers.length < e.length && this.canAdd; )
+      this.pushAnswer();
+    for (; this.answers.length > e.length && this.canRemove; )
+      this.answers.pop()?.dispose();
+    e.forEach((r, s2) => {
+      const n = this.answers[s2];
+      n && n.setValueBySystem(r ?? void 0);
+    });
+  }
+  answersMatch(e) {
+    if (this.repeats)
+      return e.length !== this.answers.length ? false : e.every(
+        (s2, n) => this.answers[n]?.value === s2
+      );
+    const r = this.answers[0];
+    return (e[0] ?? void 0) === (r?.value ?? void 0);
+  }
+  markUserOverridden() {
+    this.lifecycle = "manual";
+  }
+  pushAnswer(e, r) {
+    const s2 = new ne(
+      this,
+      this.scope,
+      y(this.token, this.lastIndex++),
+      e,
+      r
+    );
+    return this.answers.push(s2), s2;
+  }
+  dispose() {
+    this.disposers.splice(0).forEach((s2) => s2());
+    const r = [...this.answers];
+    this.answers.clear(), r.forEach((s2) => s2.dispose());
+  }
+  get responseItems() {
+    return this.buildItemSnapshot("response");
+  }
+  get expressionItems() {
+    return this.buildItemSnapshot("expression");
+  }
+  buildItemSnapshot(e) {
+    const r = this.collectAnswers(e);
+    if (e === "response" && (!this.isEnabled || r.length === 0))
+      return [];
+    const s2 = Xe$1({
+      linkId: this.linkId,
+      text: e === "expression" ? this.template.text : this.text
+    });
+    return r.length > 0 && (s2.answer = r), [s2];
+  }
+  collectAnswers(e) {
+    return (e === "expression" ? this.answers : this.repeats ? this.answers : this.answers.slice(0, 1)).map(
+      (s2) => e === "response" ? s2.responseAnswer : s2.expressionAnswer
+    ).filter(
+      (s2) => s2 != null
+    );
+  }
+}
+_([
+  observable
+], x.prototype, "lifecycle", 2);
+_([
+  computed
+], x.prototype, "renderer", 1);
+_([
+  computed
+], x.prototype, "minLength", 1);
+_([
+  computed
+], x.prototype, "maxLength", 1);
+_([
+  computed
+], x.prototype, "maxDecimalPlaces", 1);
+_([
+  computed
+], x.prototype, "mimeTypes", 1);
+_([
+  computed
+], x.prototype, "maxSize", 1);
+_([
+  computed
+], x.prototype, "type", 1);
+_([
+  computed
+], x.prototype, "dataType", 1);
+_([
+  computed
+], x.prototype, "control", 1);
+_([
+  computed
+], x.prototype, "repeats", 1);
+_([
+  computed
+], x.prototype, "isRepeatingWithoutChildren", 1);
+_([
+  computed
+], x.prototype, "keyboardType", 1);
+_([
+  computed({ keepAlive: true })
+], x.prototype, "answerOption", 1);
+_([
+  override
+], x.prototype, "issues", 1);
+_([
+  override
+], x.prototype, "maxOccurs", 1);
+_([
+  computed
+], x.prototype, "canAdd", 1);
+_([
+  computed
+], x.prototype, "canRemove", 1);
+_([
+  action
+], x.prototype, "addAnswer", 1);
+_([
+  action
+], x.prototype, "removeAnswer", 1);
+_([
+  action
+], x.prototype, "ensureBaselineAnswers", 1);
+_([
+  computed
+], x.prototype, "hasContent", 1);
+_([
+  action
+], x.prototype, "applyTemplateInitialValues", 1);
+_([
+  action
+], x.prototype, "applyInitialExpressionValue", 1);
+_([
+  action
+], x.prototype, "applyResponseValues", 1);
+_([
+  action
+], x.prototype, "applyCalculatedExpressionValue", 1);
+_([
+  action
+], x.prototype, "markUserOverridden", 1);
+_([
+  action
+], x.prototype, "pushAnswer", 1);
+_([
+  action
+], x.prototype, "dispose", 1);
+_([
+  computed.struct
+], x.prototype, "responseItems", 1);
+_([
+  computed.struct
+], x.prototype, "expressionItems", 1);
+function j(t) {
+  return t instanceof x;
+}
+function Wn$1(t) {
+  return !!(Array.isArray(t.template.answerOption) && t.template.answerOption.length > 0 || t.expressionRegistry.answer || t.template.answerValueSet);
+}
+function Xn$1(t) {
+  return t === "radio-button" || t === "check-box" || t === "drop-down" || t === "autocomplete" || t === "lookup";
+}
+function Yn$1(t) {
+  return j(t) ? t.isRepeatingWithoutChildren && (Wn$1(t) || t.type === "boolean" && Xn$1(t.control)) : false;
+}
+function Kn$1(t) {
+  if (Yn$1(t))
+    return y(t.token, "multi-select");
+  if (j(t)) {
+    const e = t.answers[0]?.token;
+    if (e) return y(e, "control");
+  }
+}
+const $ = observer(function({
+  node: e,
+  as: r = "label"
+}) {
+  const { Label: s2 } = v(), n = r === "label" ? Kn$1(e) : void 0;
+  return /* @__PURE__ */ jsx(
+    s2,
+    {
+      prefix: e.prefix,
+      id: ve$1(e),
+      htmlFor: n,
+      required: e.required,
+      help: /* @__PURE__ */ jsx(gn$1, { node: e }),
+      legal: /* @__PURE__ */ jsx(vn$1, { node: e }),
+      flyover: /* @__PURE__ */ jsx(yn$1, { node: e }),
+      as: r,
+      children: e.text
+    }
+  );
+});
+function Zn$1({ id: t, messages: e }) {
+  const { Errors: r } = v();
+  return /* @__PURE__ */ jsx(r, { id: t, messages: e });
+}
+function B(t) {
+  const e = X(t);
+  if (!e) return;
+  const r = t.issues.map((s2) => Re$1(s2)).filter((s2) => s2 !== void 0);
+  if (r.length !== 0)
+    return /* @__PURE__ */ jsx(Zn$1, { id: e, messages: r });
+}
+const q = observer(function({
+  node: e,
+  children: r
+}) {
+  const { QuestionScaffold: s2 } = v();
+  return /* @__PURE__ */ jsx(
+    s2,
+    {
+      linkId: e.linkId,
+      header: e.isHeaderless ? void 0 : /* @__PURE__ */ jsx($, { node: e, as: "label" }),
+      errors: B(e),
+      children: r
+    }
+  );
+}), Jn$1 = observer(function({
+  node: e
+}) {
+  const { DisplayRenderer: r } = v();
+  return /* @__PURE__ */ jsx(r, { linkId: e.linkId, children: /* @__PURE__ */ jsx($, { node: e, as: "text" }) });
+});
+var es$1 = Object.defineProperty, ts$1 = Object.getOwnPropertyDescriptor, sr = (t, e, r, s2) => {
+  for (var n = ts$1(e, r), i = t.length - 1, o; i >= 0; i--)
+    (o = t[i]) && (n = o(e, r, n) || n);
+  return n && es$1(e, r, n), n;
+};
+let Ke$1 = class Ke extends Q {
+  constructor(e, r, s2, n, i) {
+    super(e, r, s2, n, i), this.expressionRegistry = new bt$1(
+      this.form.coordinator,
+      this.scope,
+      this,
+      r,
+      this.template.type
+    );
+  }
+  get responseItems() {
+    return this.buildItemSnapshot("response");
+  }
+  get expressionItems() {
+    return this.buildItemSnapshot("expression");
+  }
+  buildItemSnapshot(e) {
+    return e === "response" && !this.isEnabled ? [] : [
+      Xe$1({
+        linkId: this.linkId,
+        text: e === "expression" ? this.template.text : this.text
+      })
+    ];
+  }
+  dispose() {
+  }
+};
+sr([
+  computed.struct
+], Ke$1.prototype, "responseItems");
+sr([
+  computed.struct
+], Ke$1.prototype, "expressionItems");
+function rs$1(t) {
+  return t instanceof Ke$1;
+}
+var ns$1 = Object.defineProperty, ss$1 = Object.getOwnPropertyDescriptor, is$1 = (t, e, r, s2) => {
+  for (var n = ss$1(e, r), i = t.length - 1, o; i >= 0; i--)
+    (o = t[i]) && (n = o(e, r, n) || n);
+  return n && ns$1(e, r, n), n;
+};
+class ir {
+  constructor(e) {
+    this.list = e, makeObservable(this);
+  }
+  get issues() {
+    const e = this.list;
+    if (e.readOnly || !e.isEnabled)
+      return [];
+    if (!e.form.isSubmitAttempted)
+      return [];
+    const r = e.nodes.filter((n) => jr(n)).length, s2 = [];
+    return e.minOccurs > 0 && r < e.minOccurs && s2.push(
+      O(
+        "required",
+        R(f.validation.groupList.minOccurs, {
+          minOccurs: e.minOccurs
+        })
+      )
+    ), e.maxOccurs != null && r > e.maxOccurs && s2.push(
+      O(
+        "structure",
+        R(f.validation.groupList.maxOccurs, {
+          maxOccurs: e.maxOccurs
+        })
+      )
+    ), s2;
+  }
+}
+is$1([
+  computed
+], ir.prototype, "issues");
+var os$1 = Object.defineProperty, as$1 = Object.getOwnPropertyDescriptor, us$1 = (t, e, r, s2) => {
+  for (var n = as$1(e, r), i = t.length - 1, o; i >= 0; i--)
+    (o = t[i]) && (n = o(e, r, n) || n);
+  return n && os$1(e, r, n), n;
+};
+class or {
+  constructor(e) {
+    this.group = e, makeObservable(this);
+  }
+  get issues() {
+    return this.group.readOnly || !this.group.isEnabled ? [] : !this.group.form.isSubmitAttempted || this.group.minOccurs === 0 ? [] : this.group.nodes.some(
+      (r) => r.responseItems.length > 0
+    ) ? [] : [O("required", f.validation.group.atLeastOneAnswer)];
+  }
+}
+us$1([
+  computed
+], or.prototype, "issues");
+var cs$1 = Object.defineProperty, ls$1 = Object.getOwnPropertyDescriptor, Ot$1 = (t, e, r, s2) => {
+  for (var n = ls$1(e, r), i = t.length - 1, o; i >= 0; i--)
+    (o = t[i]) && (n = o(e, r, n) || n);
+  return n && cs$1(e, r, n), n;
+};
+let Ve$1 = class Ve {
+  constructor(e) {
+    this.source = e, makeObservable(this);
+  }
+  get groups() {
+    return this.source();
+  }
+  get columns() {
+    const e = /* @__PURE__ */ new Set(), r = [];
+    return this.groups.forEach((s2) => {
+      s2.visibleNodes.filter((n) => j(n)).forEach((n) => {
+        e.has(n.linkId) || (e.add(n.linkId), r.push(n));
+      });
+    }), r;
+  }
+  get rows() {
+    return this.groups.map((e) => {
+      const r = new Map(
+        e.visibleNodes.filter((s2) => j(s2)).map((s2) => [s2.linkId, s2])
+      );
+      return {
+        group: e,
+        questions: this.columns.map((s2) => r.get(s2.linkId))
+      };
+    });
+  }
+};
+Ot$1([
+  computed
+], Ve$1.prototype, "groups");
+Ot$1([
+  computed
+], Ve$1.prototype, "columns");
+Ot$1([
+  computed
+], Ve$1.prototype, "rows");
+var ds$1 = Object.defineProperty, hs$1 = Object.getOwnPropertyDescriptor, xt$1 = (t, e, r, s2) => {
+  for (var n = hs$1(e, r), i = t.length - 1, o; i >= 0; i--)
+    (o = t[i]) && (n = o(e, r, n) || n);
+  return n && ds$1(e, r, n), n;
+};
+let Ze$1 = class Ze {
+  constructor(e) {
+    this.group = e, makeObservable(this);
+  }
+  get questions() {
+    return this.group.visibleNodes.filter((e) => j(e));
+  }
+  get optionAxis() {
+    const e = [], r = /* @__PURE__ */ new Set();
+    return this.questions.forEach((s2) => {
+      s2.answerOption.inherentOptions.forEach((n) => {
+        r.has(n.token) || (r.add(n.token), e.push({
+          token: n.token,
+          answerType: s2.type,
+          value: n.value
+        }));
+      });
+    }), e;
+  }
+  getCellState(e, r) {
+    const s2 = this.lookup.get(e.token)?.get(r);
+    if (!s2)
+      return;
+    const i = !!e.answers.find((c) => Ge$1(e.dataType, c.value, s2.value)), o = e.readOnly || e.answerOption.select.isLoading, a = !i && (s2.disabled || e.repeats && !e.canAdd);
+    return {
+      selected: i,
+      disabled: o || a
+    };
+  }
+  toggleCell(e, r) {
+    const s2 = this.lookup.get(e.token)?.get(r);
+    if (!s2) return;
+    const n = e.answers.find((c) => Ge$1(e.dataType, c.value, s2.value)), i = e.readOnly || e.answerOption.select.isLoading, o = !n && (s2.disabled || e.repeats && !e.canAdd);
+    if (i || o)
+      return;
+    if (e.repeats) {
+      if (n) {
+        e.removeAnswer(n);
+        return;
+      }
+      if (!e.canAdd) return;
+      e.addAnswer(structuredClone(s2.value));
+      return;
+    }
+    const a = e.answers[0];
+    a && a.setValueByUser(structuredClone(s2.value));
+  }
+  get lookup() {
+    return new Map(
+      this.questions.map((e) => [
+        e.token,
+        new Map(
+          e.answerOption.inherentOptions.map((r) => [
+            r.token,
+            r
+          ])
+        )
+      ])
+    );
+  }
+};
+xt$1([
+  computed
+], Ze$1.prototype, "questions");
+xt$1([
+  computed
+], Ze$1.prototype, "optionAxis");
+xt$1([
+  computed
+], Ze$1.prototype, "lookup");
+var ps$1 = Object.defineProperty, fs$1 = Object.getOwnPropertyDescriptor, le = (t, e, r, s2) => {
+  for (var n = fs$1(e, r), i = t.length - 1, o; i >= 0; i--)
+    (o = t[i]) && (n = o(e, r, n) || n);
+  return n && ps$1(e, r, n), n;
+};
+class W extends Q {
+  constructor(e, r, s2, n, i, o) {
+    super(e, r, s2, n, i), this.nodes = observable.array([], {
+      deep: false,
+      name: "GroupStore.children"
+    }), this.expressionRegistry = new bt$1(
+      this.form.coordinator,
+      this.scope,
+      this,
+      r,
+      this.template.type
+    ), this.nodes.replace(
+      (this.template.item ?? []).filter((a) => ht$1(a)).map(
+        (a) => this.form.createNodeStore(
+          a,
+          this,
+          this.scope,
+          this.token,
+          o?.item
+        )
+      )
+    ), this.validator = new or(this), this.enforceControlRules();
+  }
+  get visibleNodes() {
+    return this.nodes.filter((e) => !e.hidden);
+  }
+  get renderer() {
+    return this.form.groupRendererRegistry.resolve(this)?.renderer;
+  }
+  get grid() {
+    return new Ve$1(
+      () => this.nodes.filter((e) => K(e)).filter((e) => !e.hidden)
+    );
+  }
+  get table() {
+    return new Ze$1(this);
+  }
+  get responseItems() {
+    return this.buildItemSnapshot("response");
+  }
+  get expressionItems() {
+    return this.buildItemSnapshot("expression");
+  }
+  get control() {
+    const e = xe$1(this.template);
+    return e && Dt$1.includes(e) ? e : void 0;
+  }
+  get isHeaderless() {
+    return super.isHeaderless || _e$1(this.parentStore);
+  }
+  buildItemSnapshot(e) {
+    const r = this.collectChildItems(e);
+    if (e === "response" && (!this.isEnabled || r.length === 0))
+      return [];
+    const s2 = Xe$1({
+      linkId: this.linkId,
+      text: e === "expression" ? this.template.text : this.text
+    });
+    return r.length > 0 && (s2.item = r), [s2];
+  }
+  collectChildItems(e) {
+    return this.nodes.flatMap(
+      (r) => e === "response" ? r.responseItems : r.expressionItems
+    );
+  }
+  dispose() {
+    const e = [...this.nodes];
+    this.nodes.clear(), e.forEach((r) => r.dispose());
+  }
+  enforceControlRules() {
+    const e = this.control;
+    if (e) {
+      if ((e === "header" || e === "footer" || e === "page") && this.parentStore && this.form.reportRenderingIssue(
+        O(
+          "structure",
+          `Group "${this.linkId}" with control '${e}' must be a top-level item.`
+        )
+      ), e === "gtable") {
+        this.form.reportRenderingIssue(
+          O(
+            "structure",
+            `Group "${this.linkId}" uses 'gtable' but is not marked as repeating.`
+          )
+        );
+        return;
+      }
+      e === "tab-container" && this.nodes.forEach((r) => {
+        if (!K(r) && !_e$1(r)) {
+          this.form.reportRenderingIssue(
+            O(
+              "structure",
+              `Tab container "${this.linkId}" can only contain group items, but child "${r.linkId}" is type '${r.template.type}'.`
+            )
+          );
+          return;
+        }
+        r.control && this.form.reportRenderingIssue(
+          O(
+            "structure",
+            `Group "${r.linkId}" inside tab container "${this.linkId}" must not declare its own item control.`
+          )
+        );
+      }), e === "grid" && this.nodes.forEach((r) => {
+        !K(r) && !_e$1(r) && this.form.reportRenderingIssue(
+          O(
+            "structure",
+            `Grid group "${this.linkId}" expects child rows to be groups, but "${r.linkId}" is type '${r.template.type}'.`
+          )
+        );
+      }), (e === "table" || e === "htable") && this.nodes.filter((s2) => j(s2)).length === 0 && this.form.reportRenderingIssue(
+        O(
+          "structure",
+          `Group "${this.linkId}" uses '${e}' but has no question items to render.`
+        )
+      );
+    }
+  }
+}
+le([
+  computed
+], W.prototype, "visibleNodes");
+le([
+  computed
+], W.prototype, "renderer");
+le([
+  computed({ keepAlive: true })
+], W.prototype, "grid");
+le([
+  computed({ keepAlive: true })
+], W.prototype, "table");
+le([
+  computed.struct
+], W.prototype, "responseItems");
+le([
+  computed.struct
+], W.prototype, "expressionItems");
+le([
+  computed
+], W.prototype, "control");
+le([
+  override
+], W.prototype, "isHeaderless");
+le([
+  action
+], W.prototype, "dispose");
+function K(t) {
+  return t instanceof W;
+}
+var ms$1 = Object.defineProperty, gs$1 = Object.getOwnPropertyDescriptor, P = (t, e, r, s2) => {
+  for (var n = gs$1(e, r), i = t.length - 1, o; i >= 0; i--)
+    (o = t[i]) && (n = o(e, r, n) || n);
+  return n && ms$1(e, r, n), n;
+};
+class E extends L {
+  constructor(e, r, s2, n, i, o) {
+    super(e, r, s2), this.nodes = observable.array([], {
+      deep: false,
+      name: "GroupListStore.nodes"
+    }), this.lastIndex = 0, this.scope = n, this.token = i, this.validator = new ir(this), o?.forEach((a) => this.pushNode(a)), this.ensureMinOccurs(), this.enforceControlRules();
+  }
+  get visibleNodes() {
+    return this.nodes.filter((e) => !e.hidden);
+  }
+  get renderer() {
+    return this.form.groupListRendererRegistry.resolve(this)?.renderer;
+  }
+  get grid() {
+    return new Ve$1(() => this.visibleNodes);
+  }
+  get minOccurs() {
+    return J$1(this.template, g.MIN_OCCURS)?.valueInteger ?? (this.template.required ? 1 : 0);
+  }
+  get maxOccurs() {
+    return J$1(this.template, g.MAX_OCCURS)?.valueInteger ?? Number.POSITIVE_INFINITY;
+  }
+  get control() {
+    const e = xe$1(this.template);
+    return e && Dt$1.includes(e) ? e : void 0;
+  }
+  get canAdd() {
+    return !this.readOnly && this.nodes.length < this.maxOccurs;
+  }
+  get canRemove() {
+    return !this.readOnly && this.nodes.length > this.minOccurs;
+  }
+  get hidden() {
+    return super.hidden ? true : this.nodes.some((e) => !e.hidden) ? false : !this.canAdd;
+  }
+  get _isEnabled() {
+    return true;
+  }
+  get _readOnly() {
+    return !!this.template.readOnly;
+  }
+  addNode() {
+    this.canAdd && this.pushNode();
+  }
+  removeNode(e) {
+    if (this.canRemove) {
+      const r = this.nodes.indexOf(e);
+      if (r !== -1) {
+        const [s2] = this.nodes.splice(r, 1);
+        s2?.dispose();
+      }
+    }
+  }
+  pushNode(e) {
+    const r = new W(
+      this.form,
+      this.template,
+      this,
+      this.scope.extend(true),
+      y(this.token, this.lastIndex++),
+      e
+    );
+    this.nodes.push(r);
+  }
+  ensureMinOccurs() {
+    for (; this.nodes.length < this.minOccurs && this.canAdd; )
+      this.pushNode();
+  }
+  enforceControlRules() {
+    const e = this.control;
+    e && ((e === "header" || e === "footer" || e === "page") && this.parentStore && this.form.reportRenderingIssue(
+      O(
+        "structure",
+        `Repeating group "${this.linkId}" with control '${e}' must be a top-level item.`
+      )
+    ), (e === "header" || e === "footer") && this.form.reportRenderingIssue(
+      O(
+        "structure",
+        `Repeating group "${this.linkId}" cannot use control '${e}' because these sections cannot repeat.`
+      )
+    ), e === "gtable" && this.nodes.forEach((r) => {
+      r.nodes.forEach((s2) => {
+        if (!j(s2)) {
+          this.form.reportRenderingIssue(
+            O(
+              "structure",
+              `Group table "${this.linkId}" expects only question items, but child "${s2.linkId}" is type '${s2.template.type}'.`
+            )
+          );
+          return;
+        }
+        s2.repeats && this.form.reportRenderingIssue(
+          O(
+            "structure",
+            `Question "${s2.linkId}" inside group table group "${this.linkId}" must not allow multiple answers.`
+          )
+        );
+      });
+    }));
+  }
+  get responseItems() {
+    return this.buildItemSnapshot("response");
+  }
+  get expressionItems() {
+    return this.buildItemSnapshot("expression");
+  }
+  buildItemSnapshot(e) {
+    return e === "response" ? this.nodes.flatMap((r) => r.responseItems) : this.nodes.length === 0 ? [
+      Xe$1({
+        linkId: this.linkId,
+        text: e === "expression" ? this.template.text : this.text
+      })
+    ] : this.nodes.map((r) => r.expressionItems.at(0)).filter((r) => r !== void 0);
+  }
+  markDirty() {
+    this.parentStore?.markDirty?.();
+  }
+  get hasErrors() {
+    return this.nodes.some((e) => e.hasErrors);
+  }
+  get issues() {
+    return this.validator.issues.filter(
+      (e) => Re$1(e) !== void 0
+    );
+  }
+  clearDirty() {
+  }
+  dispose() {
+    const e = [...this.nodes];
+    this.nodes.clear(), e.forEach((r) => r.dispose());
+  }
+}
+P([
+  computed
+], E.prototype, "visibleNodes");
+P([
+  computed
+], E.prototype, "renderer");
+P([
+  computed({ keepAlive: true })
+], E.prototype, "grid");
+P([
+  computed
+], E.prototype, "minOccurs");
+P([
+  computed
+], E.prototype, "maxOccurs");
+P([
+  computed
+], E.prototype, "control");
+P([
+  computed
+], E.prototype, "canAdd");
+P([
+  computed
+], E.prototype, "canRemove");
+P([
+  override
+], E.prototype, "hidden");
+P([
+  computed
+], E.prototype, "_isEnabled");
+P([
+  computed
+], E.prototype, "_readOnly");
+P([
+  action
+], E.prototype, "addNode");
+P([
+  action
+], E.prototype, "removeNode");
+P([
+  action
+], E.prototype, "pushNode");
+P([
+  action
+], E.prototype, "ensureMinOccurs");
+P([
+  computed.struct
+], E.prototype, "responseItems");
+P([
+  computed.struct
+], E.prototype, "expressionItems");
+P([
+  action
+], E.prototype, "dispose");
+function _e$1(t) {
+  return t instanceof E;
+}
+const Je$1 = observer(function({
+  node: e
+}) {
+  if (j(e)) {
+    const r = e.renderer;
+    return r ? /* @__PURE__ */ jsx(r, { node: e }) : void 0;
+  }
+  if (K(e)) {
+    const r = e.renderer;
+    return r ? /* @__PURE__ */ jsx(r, { node: e }) : void 0;
+  }
+  if (_e$1(e)) {
+    const r = e.renderer;
+    return r ? /* @__PURE__ */ jsx(r, { node: e }) : void 0;
+  }
+  if (rs$1(e)) return /* @__PURE__ */ jsx(Jn$1, { node: e });
+}), de = observer(function({
+  nodes: e
+}) {
+  const { Stack: r } = v(), s2 = e.filter((n) => !n.hidden);
+  return s2.length > 0 ? /* @__PURE__ */ jsx(r, { children: s2.map((n) => /* @__PURE__ */ jsx(Je$1, { node: n }, n.token)) }) : void 0;
+}), ys$1 = observer(function({
+  answer: e,
+  control: r
+}) {
+  const { AnswerScaffold: s2 } = v(), n = useCallback(() => {
+    e.question.removeAnswer(e);
+  }, [e]);
+  return e.value, /* @__PURE__ */ jsx(
+    s2,
+    {
+      control: /* @__PURE__ */ jsx(
+        r,
+        {
+          id: y(e.token, "control"),
+          ariaLabelledBy: ve$1(e.question),
+          ariaDescribedBy: ge$1(
+            Ce$1(e.question),
+            X(e.question),
+            X(e)
+          ),
+          answer: e
+        }
+      ),
+      onRemove: e.question.repeats ? n : void 0,
+      canRemove: e.question.repeats ? e.question.canRemove : void 0,
+      errors: B(e),
+      children: /* @__PURE__ */ jsx(de, { nodes: e.nodes })
+    }
+  );
+}), M = observer(function({
+  node: e,
+  control: r
+}) {
+  const { AnswerList: s2 } = v(), n = e.repeats ? e.answers : e.answers.slice(0, 1), i = useCallback(() => e.addAnswer(), [e]), o = e.repeats ? i : void 0, a = e.repeats ? e.canAdd : void 0, c = e.repeats ? f.selection.addAnother : void 0;
+  return /* @__PURE__ */ jsx(s2, { onAdd: o, canAdd: a, addLabel: c, children: n.map((l) => /* @__PURE__ */ jsx(ys$1, { answer: l, control: r }, l.token)) });
+});
+function vs$1({
+  value: t,
+  onChange: e,
+  id: r,
+  ariaLabelledBy: s2,
+  ariaDescribedBy: n,
+  disabled: i,
+  accept: o
+}) {
+  const { FileInput: a } = v(), c = useCallback(
+    async (h) => {
+      h ? e(await Qr(h)) : e();
+    },
+    [e]
+  ), l = useMemo(() => t && {
+    ...t,
+    size: Number(t.size)
+  }, [t]);
+  return /* @__PURE__ */ jsx(
+    a,
+    {
+      id: r,
+      ariaLabelledBy: s2,
+      ariaDescribedBy: n,
+      disabled: i,
+      accept: o,
+      value: l,
+      onChange: (h) => {
+        c(h);
+      }
+    }
+  );
+}
+function ar({
+  answer: t,
+  id: e,
+  ariaLabelledBy: r,
+  ariaDescribedBy: s2
+}) {
+  const n = t.question.mimeTypes, i = n.length > 0 ? lt$1(n).join(",") : void 0;
+  return /* @__PURE__ */ jsx(
+    vs$1,
+    {
+      id: e,
+      ariaLabelledBy: r,
+      ariaDescribedBy: s2,
+      value: t.value,
+      onChange: (o) => t.setValueByUser(o),
+      disabled: t.question.readOnly,
+      accept: i
+    }
+  );
+}
+const bs$1 = observer(function({
+  node: e
+}) {
+  return /* @__PURE__ */ jsx(q, { node: e, children: /* @__PURE__ */ jsx(M, { node: e, control: ar }) });
+});
+function Os$1({
+  value: t,
+  onChange: e,
+  id: r,
+  ariaLabelledBy: s2,
+  ariaDescribedBy: n,
+  disabled: i,
+  label: o
+}) {
+  const { Checkbox: a } = v(), c = t === true;
+  return /* @__PURE__ */ jsx(
+    a,
+    {
+      checked: c,
+      onChange: () => e(!c),
+      id: r,
+      ariaLabelledBy: s2,
+      ariaDescribedBy: n,
+      disabled: !!i,
+      label: o
+    }
+  );
+}
+function ur({
+  answer: t,
+  id: e,
+  ariaLabelledBy: r,
+  ariaDescribedBy: s2
+}) {
+  return /* @__PURE__ */ jsx(
+    Os$1,
+    {
+      id: e,
+      ariaLabelledBy: r,
+      ariaDescribedBy: s2,
+      value: t.value,
+      onChange: (n) => t.setValueByUser(n),
+      disabled: t.question.readOnly,
+      label: /* @__PURE__ */ jsx($, { node: t.question, as: "text" })
+    }
+  );
+}
+const xs$1 = observer(function({
+  node: e
+}) {
+  return /* @__PURE__ */ jsx(q, { node: e, children: /* @__PURE__ */ jsx(M, { node: e, control: ur }) });
+});
+function Ss$1({
+  value: t,
+  onChange: e,
+  id: r,
+  ariaLabelledBy: s2,
+  ariaDescribedBy: n,
+  disabled: i
+}) {
+  const { InputGroup: o, TextInput: a } = v(), c = t ?? {}, l = (h, p) => {
+    const C = {
+      ...c,
+      [h]: p || void 0
+    };
+    e(ws$1(C));
+  };
+  return /* @__PURE__ */ jsxs(o, { spans: [4, 4, 4], children: [
+    /* @__PURE__ */ jsx(
+      a,
+      {
+        id: r,
+        ariaLabelledBy: s2,
+        ariaDescribedBy: n,
+        value: c.system ?? "",
+        onChange: (h) => l("system", h),
+        disabled: i,
+        placeholder: f.inputs.codingSystemPlaceholder
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      a,
+      {
+        id: y(r, "code"),
+        ariaLabelledBy: s2,
+        ariaDescribedBy: n,
+        value: c.code ?? "",
+        onChange: (h) => l("code", h),
+        disabled: i,
+        placeholder: f.inputs.codingCodePlaceholder
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      a,
+      {
+        id: y(r, "display"),
+        ariaLabelledBy: s2,
+        ariaDescribedBy: n,
+        value: c.display ?? "",
+        onChange: (h) => l("display", h),
+        disabled: i,
+        placeholder: f.inputs.codingDisplayPlaceholder
+      }
+    )
+  ] });
+}
+function ws$1(t) {
+  const e = { ...t };
+  return ["system", "code", "display", "version"].forEach((r) => {
+    e[r] || delete e[r];
+  }), Object.keys(e).length > 0 ? e : void 0;
+}
+function cr({
+  answer: t,
+  id: e,
+  ariaLabelledBy: r,
+  ariaDescribedBy: s2
+}) {
+  return /* @__PURE__ */ jsx(
+    Ss$1,
+    {
+      id: e,
+      ariaLabelledBy: r,
+      ariaDescribedBy: s2,
+      value: t.value,
+      onChange: (n) => t.setValueByUser(n),
+      disabled: t.question.readOnly
+    }
+  );
+}
+const ks$1 = observer(function({
+  node: e
+}) {
+  return /* @__PURE__ */ jsx(q, { node: e, children: /* @__PURE__ */ jsx(M, { node: e, control: cr }) });
+});
+function _s$1({
+  value: t,
+  onChange: e,
+  id: r,
+  ariaLabelledBy: s2,
+  ariaDescribedBy: n,
+  placeholder: i,
+  disabled: o,
+  min: a,
+  max: c
+}) {
+  const { DateInput: l } = v();
+  return /* @__PURE__ */ jsx(
+    l,
+    {
+      id: r,
+      ariaLabelledBy: s2,
+      ariaDescribedBy: n,
+      placeholder: i,
+      value: t,
+      onChange: e,
+      disabled: o,
+      min: a,
+      max: c
+    }
+  );
+}
+function lr({
+  answer: t,
+  id: e,
+  ariaLabelledBy: r,
+  ariaDescribedBy: s2
+}) {
+  const n = t.bounds, i = typeof n.min == "string" ? n.min : void 0, o = typeof n.max == "string" ? n.max : void 0;
+  return /* @__PURE__ */ jsx(
+    _s$1,
+    {
+      id: e,
+      ariaLabelledBy: r,
+      ariaDescribedBy: s2,
+      placeholder: t.question.placeholder,
+      value: t.value ?? "",
+      onChange: (a) => t.setValueByUser(a),
+      disabled: t.question.readOnly,
+      min: i,
+      max: o
+    }
+  );
+}
+const Cs$1 = observer(function({
+  node: e
+}) {
+  return /* @__PURE__ */ jsx(q, { node: e, children: /* @__PURE__ */ jsx(M, { node: e, control: lr }) });
+});
+function Is$1({
+  value: t,
+  onChange: e,
+  id: r,
+  ariaLabelledBy: s2,
+  ariaDescribedBy: n,
+  placeholder: i,
+  disabled: o,
+  min: a,
+  max: c
+}) {
+  const { DateTimeInput: l } = v();
+  return /* @__PURE__ */ jsx(
+    l,
+    {
+      id: r,
+      ariaLabelledBy: s2,
+      ariaDescribedBy: n,
+      placeholder: i,
+      value: t,
+      onChange: e,
+      disabled: o,
+      min: a,
+      max: c
+    }
+  );
+}
+function dr({
+  answer: t,
+  id: e,
+  ariaLabelledBy: r,
+  ariaDescribedBy: s2
+}) {
+  const n = t.bounds, i = typeof n.min == "string" ? n.min : void 0, o = typeof n.max == "string" ? n.max : void 0;
+  return /* @__PURE__ */ jsx(
+    Is$1,
+    {
+      id: e,
+      ariaLabelledBy: r,
+      ariaDescribedBy: s2,
+      placeholder: t.question.placeholder,
+      value: t.value ?? "",
+      onChange: (a) => t.setValueByUser(a),
+      disabled: t.question.readOnly,
+      min: i,
+      max: o
+    }
+  );
+}
+const As$1 = observer(function({
+  node: e
+}) {
+  return /* @__PURE__ */ jsx(q, { node: e, children: /* @__PURE__ */ jsx(M, { node: e, control: dr }) });
+});
+function Ts$1({
+  value: t,
+  onChange: e,
+  id: r,
+  ariaLabelledBy: s2,
+  ariaDescribedBy: n,
+  placeholder: i,
+  disabled: o,
+  unitLabel: a,
+  min: c,
+  max: l,
+  step: h
+}) {
+  const { NumberInput: p } = v();
+  return /* @__PURE__ */ jsx(
+    p,
+    {
+      id: r,
+      ariaLabelledBy: s2,
+      ariaDescribedBy: n,
+      placeholder: i,
+      value: t,
+      onChange: e,
+      disabled: o,
+      step: h ?? "any",
+      unitLabel: a,
+      min: c,
+      max: l
+    }
+  );
+}
+function hr({
+  answer: t,
+  id: e,
+  ariaLabelledBy: r,
+  ariaDescribedBy: s2
+}) {
+  const { min: n, max: i } = t.bounds, o = t.question.maxDecimalPlaces;
+  return /* @__PURE__ */ jsx(
+    Ts$1,
+    {
+      id: e,
+      ariaLabelledBy: r,
+      ariaDescribedBy: s2,
+      placeholder: t.question.placeholder,
+      value: t.value,
+      onChange: (a) => t.setValueByUser(a),
+      disabled: t.question.readOnly,
+      unitLabel: t.question.unitDisplay,
+      min: n,
+      max: i,
+      step: o == null ? "any" : 1 / 10 ** o
+    }
+  );
+}
+const Es$1 = observer(function({
+  node: e
+}) {
+  return /* @__PURE__ */ jsx(q, { node: e, children: /* @__PURE__ */ jsx(M, { node: e, control: hr }) });
+});
+function Rs$1({
+  value: t,
+  onChange: e,
+  id: r,
+  ariaLabelledBy: s2,
+  ariaDescribedBy: n,
+  placeholder: i,
+  disabled: o,
+  unitLabel: a,
+  min: c,
+  max: l
+}) {
+  const { NumberInput: h } = v();
+  return /* @__PURE__ */ jsx(
+    h,
+    {
+      id: r,
+      ariaLabelledBy: s2,
+      ariaDescribedBy: n,
+      placeholder: i,
+      value: t,
+      onChange: (p) => e(p == null ? void 0 : Math.round(p)),
+      disabled: o,
+      step: 1,
+      unitLabel: a,
+      min: c,
+      max: l
+    }
+  );
+}
+function pr({
+  answer: t,
+  id: e,
+  ariaLabelledBy: r,
+  ariaDescribedBy: s2
+}) {
+  const { min: n, max: i } = t.bounds;
+  return /* @__PURE__ */ jsx(
+    Rs$1,
+    {
+      id: e,
+      ariaLabelledBy: r,
+      ariaDescribedBy: s2,
+      placeholder: t.question.placeholder,
+      value: t.value,
+      onChange: (o) => t.setValueByUser(o),
+      disabled: t.question.readOnly,
+      unitLabel: t.question.unitDisplay,
+      min: n,
+      max: i
+    }
+  );
+}
+const Ns$1 = observer(function({
+  node: e
+}) {
+  return /* @__PURE__ */ jsx(q, { node: e, children: /* @__PURE__ */ jsx(M, { node: e, control: pr }) });
+}), Ds$1 = observer(function({
+  answer: e,
+  id: r,
+  ariaLabelledBy: s2,
+  ariaDescribedBy: n,
+  placeholder: i,
+  disabled: o
+}) {
+  const { InputGroup: a, NumberInput: c, SelectInput: l, TextInput: h } = v(), { min: p, max: C } = e.bounds, D = (S) => {
+    e.quantity.handleNumberInput(
+      S === void 0 ? "" : String(S)
+    );
+  };
+  return /* @__PURE__ */ jsxs(a, { spans: [8, 4], children: [
+    /* @__PURE__ */ jsx(
+      c,
+      {
+        id: r,
+        ariaLabelledBy: s2,
+        ariaDescribedBy: n,
+        value: e.value?.value ?? void 0,
+        onChange: D,
+        disabled: o,
+        placeholder: i ?? f.inputs.quantityValuePlaceholder,
+        step: "any",
+        min: p?.value,
+        max: C?.value
+      }
+    ),
+    e.quantity.isUnitFreeForm ? /* @__PURE__ */ jsx(
+      h,
+      {
+        id: y(r, "unit"),
+        ariaLabelledBy: s2,
+        ariaDescribedBy: n,
+        value: e.value?.unit ?? "",
+        onChange: (S) => e.quantity.handleFreeTextChange(S),
+        disabled: o,
+        placeholder: f.inputs.quantityUnitPlaceholder
+      }
+    ) : /* @__PURE__ */ jsx(
+      l,
+      {
+        options: e.quantity.entries,
+        selectedOption: e.quantity.entries.find(
+          (S) => S.token === e.quantity.unitToken
+        ),
+        onChange: (S) => e.quantity.handleSelectChange(S ?? ""),
+        id: y(r, "unit"),
+        ariaLabelledBy: s2,
+        ariaDescribedBy: n,
+        disabled: !!o
+      }
+    )
+  ] });
+});
+function fr({
+  answer: t,
+  id: e,
+  ariaLabelledBy: r,
+  ariaDescribedBy: s2
+}) {
+  return /* @__PURE__ */ jsx(
+    Ds$1,
+    {
+      answer: t,
+      id: e,
+      ariaLabelledBy: r,
+      ariaDescribedBy: s2,
+      placeholder: t.question.placeholder,
+      disabled: t.question.readOnly
+    }
+  );
+}
+const Ls$1 = observer(function({
+  node: e
+}) {
+  return /* @__PURE__ */ jsx(q, { node: e, children: /* @__PURE__ */ jsx(M, { node: e, control: fr }) });
+});
+function qs$1({
+  value: t,
+  onChange: e,
+  id: r,
+  ariaLabelledBy: s2,
+  ariaDescribedBy: n,
+  placeholder: i,
+  disabled: o
+}) {
+  const { InputGroup: a, TextInput: c } = v(), l = t ?? {}, h = (p, C) => {
+    const D = {
+      ...l,
+      [p]: C || void 0
+    };
+    e(Ps$1(D));
+  };
+  return /* @__PURE__ */ jsxs(a, { spans: [6, 6], children: [
+    /* @__PURE__ */ jsx(
+      c,
+      {
+        id: r,
+        ariaLabelledBy: s2,
+        ariaDescribedBy: n,
+        value: l.reference ?? "",
+        onChange: (p) => h("reference", p),
+        disabled: o,
+        placeholder: i ?? f.inputs.referencePlaceholder
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      c,
+      {
+        id: y(r, "display"),
+        ariaLabelledBy: s2,
+        ariaDescribedBy: n,
+        value: l.display ?? "",
+        onChange: (p) => h("display", p),
+        disabled: o,
+        placeholder: f.inputs.referenceDisplayPlaceholder
+      }
+    )
+  ] });
+}
+function Ps$1(t) {
+  const e = { ...t };
+  return Object.keys(e).forEach((r) => {
+    (e[r] === void 0 || e[r] === void 0 || e[r] === "") && delete e[r];
+  }), Object.keys(e).length > 0 ? e : void 0;
+}
+function mr({
+  answer: t,
+  id: e,
+  ariaLabelledBy: r,
+  ariaDescribedBy: s2
+}) {
+  return /* @__PURE__ */ jsx(
+    qs$1,
+    {
+      id: e,
+      ariaLabelledBy: r,
+      ariaDescribedBy: s2,
+      value: t.value,
+      onChange: (n) => t.setValueByUser(n),
+      disabled: t.question.readOnly,
+      placeholder: t.question.placeholder
+    }
+  );
+}
+const Vs$1 = observer(function({
+  node: e
+}) {
+  return /* @__PURE__ */ jsx(q, { node: e, children: /* @__PURE__ */ jsx(M, { node: e, control: mr }) });
+});
+function Fs$1({
+  value: t,
+  onChange: e,
+  id: r,
+  ariaLabelledBy: s2,
+  ariaDescribedBy: n,
+  placeholder: i,
+  disabled: o,
+  inputMode: a,
+  minLength: c,
+  maxLength: l
+}) {
+  const { TextInput: h } = v();
+  return /* @__PURE__ */ jsx(
+    h,
+    {
+      id: r,
+      ariaLabelledBy: s2,
+      ariaDescribedBy: n,
+      placeholder: i,
+      value: t,
+      onChange: e,
+      disabled: o,
+      inputMode: a,
+      minLength: c,
+      maxLength: l
+    }
+  );
+}
+function Ms$1({
+  answer: t,
+  id: e,
+  ariaLabelledBy: r,
+  ariaDescribedBy: s2
+}) {
+  const n = t.question.maxLength, i = t.question.minLength;
+  return /* @__PURE__ */ jsx(
+    Fs$1,
+    {
+      id: e,
+      ariaLabelledBy: r,
+      ariaDescribedBy: s2,
+      placeholder: t.question.placeholder,
+      value: t.value ?? "",
+      onChange: (o) => t.setValueByUser(o),
+      disabled: t.question.readOnly,
+      inputMode: t.question.keyboardType,
+      minLength: i,
+      maxLength: n
+    }
+  );
+}
+function Us$1({
+  value: t,
+  onChange: e,
+  id: r,
+  ariaLabelledBy: s2,
+  ariaDescribedBy: n,
+  placeholder: i,
+  disabled: o,
+  inputMode: a,
+  minLength: c,
+  maxLength: l
+}) {
+  const { TextArea: h } = v();
+  return /* @__PURE__ */ jsx(
+    h,
+    {
+      id: r,
+      ariaLabelledBy: s2,
+      ariaDescribedBy: n,
+      placeholder: i,
+      value: t,
+      onChange: e,
+      disabled: o,
+      inputMode: a,
+      minLength: c,
+      maxLength: l
+    }
+  );
+}
+function Hs$1({
+  answer: t,
+  id: e,
+  ariaLabelledBy: r,
+  ariaDescribedBy: s2
+}) {
+  const n = t.question.maxLength, i = t.question.minLength;
+  return /* @__PURE__ */ jsx(
+    Us$1,
+    {
+      id: e,
+      ariaLabelledBy: r,
+      ariaDescribedBy: s2,
+      placeholder: t.question.placeholder,
+      value: t.value ?? "",
+      onChange: (o) => t.setValueByUser(o),
+      disabled: t.question.readOnly,
+      inputMode: t.question.keyboardType,
+      minLength: i,
+      maxLength: n
+    }
+  );
+}
+function $s$1({
+  value: t,
+  onChange: e,
+  id: r,
+  ariaLabelledBy: s2,
+  ariaDescribedBy: n,
+  placeholder: i,
+  disabled: o,
+  min: a,
+  max: c
+}) {
+  const { TimeInput: l } = v();
+  return /* @__PURE__ */ jsx(
+    l,
+    {
+      id: r,
+      ariaLabelledBy: s2,
+      ariaDescribedBy: n,
+      placeholder: i,
+      value: t,
+      onChange: e,
+      disabled: o,
+      min: a,
+      max: c
+    }
+  );
+}
+function gr({
+  answer: t,
+  id: e,
+  ariaLabelledBy: r,
+  ariaDescribedBy: s2
+}) {
+  const n = t.bounds, i = typeof n.min == "string" ? n.min : void 0, o = typeof n.max == "string" ? n.max : void 0;
+  return /* @__PURE__ */ jsx(
+    $s$1,
+    {
+      id: e,
+      ariaLabelledBy: r,
+      ariaDescribedBy: s2,
+      placeholder: t.question.placeholder,
+      value: t.value ?? "",
+      onChange: (a) => t.setValueByUser(a),
+      disabled: t.question.readOnly,
+      min: i,
+      max: o
+    }
+  );
+}
+function Bs$1({
+  value: t,
+  onChange: e,
+  id: r,
+  ariaLabelledBy: s2,
+  ariaDescribedBy: n,
+  placeholder: i,
+  disabled: o,
+  minLength: a,
+  maxLength: c
+}) {
+  const { TextInput: l } = v();
+  return /* @__PURE__ */ jsx(
+    l,
+    {
+      id: r,
+      type: "url",
+      ariaLabelledBy: s2,
+      ariaDescribedBy: n,
+      placeholder: i,
+      value: t,
+      onChange: e,
+      disabled: o,
+      minLength: a,
+      maxLength: c
+    }
+  );
+}
+function Qs$1({
+  answer: t,
+  id: e,
+  ariaLabelledBy: r,
+  ariaDescribedBy: s2
+}) {
+  const n = t.question.maxLength, i = t.question.minLength;
+  return /* @__PURE__ */ jsx(
+    Bs$1,
+    {
+      id: e,
+      ariaLabelledBy: r,
+      ariaDescribedBy: s2,
+      placeholder: t.question.placeholder,
+      value: t.value ?? "",
+      onChange: (o) => t.setValueByUser(o),
+      disabled: t.question.readOnly,
+      minLength: i,
+      maxLength: n
+    }
+  );
+}
+const js$1 = {
+  string: Ms$1,
+  text: Hs$1,
+  integer: pr,
+  decimal: hr,
+  boolean: ur,
+  date: lr,
+  dateTime: dr,
+  time: gr,
+  url: Qs$1,
+  reference: mr,
+  quantity: fr,
+  coding: cr,
+  attachment: ar
+};
+function Fe$1(t) {
+  return js$1[t];
+}
+const it$1 = observer(function({
+  node: e
+}) {
+  const r = Fe$1(e.type);
+  return /* @__PURE__ */ jsx(q, { node: e, children: /* @__PURE__ */ jsx(M, { node: e, control: r }) });
+}), zs$1 = observer(function({
+  node: e
+}) {
+  return /* @__PURE__ */ jsx(q, { node: e, children: /* @__PURE__ */ jsx(M, { node: e, control: gr }) });
+});
+function Gs$1({ value: t }) {
+  return /* @__PURE__ */ jsx(Fragment, { children: t });
+}
+function Ws$1({ value: t }) {
+  return /* @__PURE__ */ jsx(Fragment, { children: t });
+}
+function Xs$1({ value: t }) {
+  return /* @__PURE__ */ jsx(Fragment, { children: t });
+}
+function Ys$1({ value: t }) {
+  return /* @__PURE__ */ jsx(Fragment, { children: t });
+}
+function Ks$1({ value: t }) {
+  return /* @__PURE__ */ jsx(Fragment, { children: t ? f.value.yes : f.value.no });
+}
+function Zs$1({ value: t }) {
+  return /* @__PURE__ */ jsx(Fragment, { children: t });
+}
+function Js$1({ value: t }) {
+  return /* @__PURE__ */ jsx(Fragment, { children: t });
+}
+function ei({ value: t }) {
+  return /* @__PURE__ */ jsx(Fragment, { children: t });
+}
+function ti({ value: t }) {
+  const { Link: e } = v();
+  return /* @__PURE__ */ jsx(e, { href: t, target: "_blank", rel: "noreferrer", children: t });
+}
+function ri({
+  value: t
+}) {
+  const e = t.display ?? t.reference ?? "";
+  return /* @__PURE__ */ jsx(Fragment, { children: e });
+}
+function ni({ value: t }) {
+  const e = [];
+  return t.value !== void 0 && e.push(t.value), t.unit ? e.push(t.unit) : t.code && e.push(t.code), /* @__PURE__ */ jsx(Fragment, { children: e.join(" ") });
+}
+function si({ value: t }) {
+  const e = [];
+  return t.display ? e.push(t.display) : t.code && e.push(t.code), t.system && e.push(`(${t.system})`), /* @__PURE__ */ jsx(Fragment, { children: e.join(" ") });
+}
+function ii({
+  value: t
+}) {
+  const e = t.title ?? t.url ?? "";
+  return /* @__PURE__ */ jsx(Fragment, { children: e });
+}
+const oi = {
+  string: Gs$1,
+  text: Ws$1,
+  integer: Xs$1,
+  decimal: Ys$1,
+  boolean: Ks$1,
+  date: Zs$1,
+  dateTime: Js$1,
+  time: ei,
+  url: ti,
+  reference: ri,
+  quantity: ni,
+  coding: si,
+  attachment: ii
+};
+function te$1({
+  type: t,
+  value: e
+}) {
+  if (e == null)
+    return f.value.undefined;
+  {
+    const r = oi[t];
+    return /* @__PURE__ */ jsx(r, { value: e });
+  }
+}
+const ai = observer(
+  function({
+    answer: e,
+    ariaDescribedBy: r,
+    ariaLabelledBy: s2,
+    id: n
+  }) {
+    const { SelectInput: i, CustomOptionForm: o } = v(), a = e.question, c = a.answerOption.select, l = c.customOptionFormState?.answer.token === e.token, h = c.getSelectedOption(e), p = Fe$1(c.customType), C = l && c.customOptionFormState ? /* @__PURE__ */ jsx(
+      o,
+      {
+        content: /* @__PURE__ */ jsx(
+          p,
+          {
+            answer: e,
+            id: n,
+            ariaLabelledBy: s2,
+            ariaDescribedBy: r
+          }
+        ),
+        errors: B(e),
+        cancel: {
+          label: f.dialog.cancel,
+          onClick: c.cancelCustomOptionForm,
+          disabled: a.readOnly
+        },
+        submit: {
+          label: f.dialog.add,
+          onClick: c.submitCustomOptionForm,
+          disabled: a.readOnly || !c.customOptionFormState.canSubmit
+        }
+      }
+    ) : void 0, D = useMemo(() => c.filteredOptions.map((k) => ({
+      token: k.token,
+      label: /* @__PURE__ */ jsx(te$1, { type: k.answerType, value: k.value }),
+      disabled: k.disabled
+    })), [c.filteredOptions]), S = c.allowCustom ? {
+      token: c.specifyOtherToken,
+      label: f.selection.specifyOther,
+      disabled: c.isLoading
+    } : void 0, fe2 = (() => {
+      if (l)
+        return S;
+      if (h)
+        return {
+          token: h.token,
+          disabled: h.disabled,
+          label: /* @__PURE__ */ jsx(te$1, { type: h.answerType, value: h.value })
+        };
+    })();
+    return /* @__PURE__ */ jsx(
+      i,
+      {
+        options: D,
+        selectedOption: fe2,
+        onChange: (k) => c.selectOptionForAnswer(e, k),
+        onSearch: c.setSearchQuery,
+        specifyOtherOption: S,
+        customOptionForm: C,
+        id: n,
+        ariaLabelledBy: s2,
+        ariaDescribedBy: r,
+        disabled: a.readOnly,
+        isLoading: c.isLoading,
+        placeholder: f.selection.selectPlaceholder
+      }
+    );
+  }
+), ui = observer(
+  function({
+    node: e
+  }) {
+    const { MultiSelectInput: r, CustomOptionForm: s2 } = v(), n = e.answerOption.select, i = Fe$1(n.customType), o = n.selectedOptions.map((p) => ({
+      token: p.token,
+      label: /* @__PURE__ */ jsx(te$1, { type: p.answerType, value: p.value }),
+      ariaDescribedBy: X(p.answer),
+      errors: B(p.answer),
+      disabled: p.disabled
+    })), a = n.customOptionFormState, c = a ? /* @__PURE__ */ jsx(
+      s2,
+      {
+        content: /* @__PURE__ */ jsx(
+          i,
+          {
+            answer: a.answer,
+            id: y(a.answer.token, "custom-input"),
+            ariaLabelledBy: ve$1(e),
+            ariaDescribedBy: X(a.answer)
+          }
+        ),
+        errors: B(a.answer),
+        cancel: {
+          label: f.dialog.cancel,
+          onClick: n.cancelCustomOptionForm
+        },
+        submit: {
+          label: f.dialog.add,
+          onClick: n.submitCustomOptionForm,
+          disabled: !a.canSubmit
+        }
+      }
+    ) : void 0, l = useMemo(() => n.filteredOptions.map((p) => ({
+      token: p.token,
+      disabled: p.disabled,
+      label: /* @__PURE__ */ jsx(te$1, { type: p.answerType, value: p.value })
+    })), [n.filteredOptions]), h = n.allowCustom ? {
+      token: n.specifyOtherToken,
+      label: f.selection.specifyOther,
+      disabled: !n.canAddSelection || n.isLoading
+    } : void 0;
+    return /* @__PURE__ */ jsx(
+      r,
+      {
+        options: l,
+        onSelect: n.selectOption,
+        onDeselect: n.deselectOption,
+        onSearch: n.setSearchQuery,
+        specifyOtherOption: h,
+        id: y(e.token, "multi-select"),
+        ariaLabelledBy: ve$1(e),
+        ariaDescribedBy: ge$1(Ce$1(e), X(e)),
+        disabled: e.readOnly,
+        isLoading: n.isLoading,
+        selectedOptions: o,
+        customOptionForm: c,
+        placeholder: f.selection.selectPlaceholder
+      }
+    );
+  }
+), ci = observer(function({ node: e }) {
+  return /* @__PURE__ */ jsx(q, { node: e, children: e.isRepeatingWithoutChildren ? /* @__PURE__ */ jsx(ui, { node: e }) : /* @__PURE__ */ jsx(M, { node: e, control: ai }) });
+}), li = observer(function({ node: e }) {
+  const { CheckboxList: r, CustomOptionForm: s2 } = v(), n = e.answerOption.select, i = Fe$1(n.customType), o = n.selectedOptions.map((S) => ({
+    token: S.token,
+    label: /* @__PURE__ */ jsx(te$1, { type: S.answerType, value: S.value }),
+    ariaDescribedBy: X(S.answer),
+    errors: B(S.answer),
+    disabled: S.disabled
+  })), a = ve$1(e), c = ge$1(Ce$1(e), X(e)), l = n.customOptionFormState, h = l?.answer ? X(l.answer) : void 0, p = l ? /* @__PURE__ */ jsx(
+    s2,
+    {
+      content: /* @__PURE__ */ jsx(
+        i,
+        {
+          answer: l.answer,
+          id: y(l.answer.token, "custom-input"),
+          ariaLabelledBy: a,
+          ariaDescribedBy: h
+        }
+      ),
+      errors: B(l.answer),
+      cancel: {
+        label: f.dialog.cancel,
+        onClick: n.cancelCustomOptionForm
+      },
+      submit: {
+        label: f.dialog.add,
+        onClick: n.submitCustomOptionForm,
+        disabled: !l.canSubmit
+      }
+    }
+  ) : void 0, C = useMemo(() => n.filteredOptions.map((S) => ({
+    token: S.token,
+    disabled: S.disabled,
+    label: /* @__PURE__ */ jsx(te$1, { type: S.answerType, value: S.value })
+  })), [n.filteredOptions]), D = n.allowCustom ? {
+    token: n.specifyOtherToken,
+    label: f.selection.specifyOther,
+    disabled: !n.canAddSelection || n.isLoading
+  } : void 0;
+  return /* @__PURE__ */ jsx(
+    r,
+    {
+      options: C,
+      onSelect: n.selectOption,
+      onDeselect: n.deselectOption,
+      specifyOtherOption: D,
+      id: y(e.token, "multi-select"),
+      ariaLabelledBy: a,
+      ariaDescribedBy: c,
+      disabled: e.readOnly,
+      isLoading: n.isLoading,
+      selectedOptions: o,
+      customOptionForm: p
+    }
+  );
+}), di = observer(
+  function({
+    answer: e,
+    ariaDescribedBy: r,
+    ariaLabelledBy: s2,
+    id: n
+  }) {
+    const { CustomOptionForm: i, RadioButtonList: o } = v(), a = e.question, c = a.answerOption.select, l = c.customOptionFormState?.answer.token === e.token, h = c.getSelectedOption(e), p = Fe$1(c.customType), C = l && c.customOptionFormState ? /* @__PURE__ */ jsx(
+      i,
+      {
+        content: /* @__PURE__ */ jsx(
+          p,
+          {
+            answer: e,
+            id: n,
+            ariaLabelledBy: s2,
+            ariaDescribedBy: r
+          }
+        ),
+        errors: B(e),
+        cancel: {
+          label: f.dialog.cancel,
+          onClick: c.cancelCustomOptionForm,
+          disabled: a.readOnly
+        },
+        submit: {
+          label: f.dialog.add,
+          onClick: c.submitCustomOptionForm,
+          disabled: a.readOnly || !c.customOptionFormState.canSubmit
+        }
+      }
+    ) : void 0, D = useMemo(() => c.filteredOptions.map((k) => ({
+      token: k.token,
+      label: /* @__PURE__ */ jsx(te$1, { type: k.answerType, value: k.value }),
+      disabled: k.disabled
+    })), [c.filteredOptions]), S = c.allowCustom ? {
+      token: c.specifyOtherToken,
+      label: f.selection.specifyOther,
+      disabled: c.isLoading
+    } : void 0, fe2 = (() => {
+      if (l)
+        return S;
+      if (h)
+        return {
+          token: h.token,
+          disabled: h.disabled,
+          label: /* @__PURE__ */ jsx(te$1, { type: h.answerType, value: h.value })
+        };
+    })();
+    return /* @__PURE__ */ jsx(
+      o,
+      {
+        options: D,
+        selectedOption: fe2,
+        onChange: (k) => c.selectOptionForAnswer(e, k),
+        specifyOtherOption: S,
+        customOptionForm: C,
+        id: n,
+        ariaLabelledBy: s2,
+        ariaDescribedBy: r,
+        disabled: a.readOnly,
+        isLoading: c.isLoading
+      }
+    );
+  }
+), hi = observer(function({ node: e }) {
+  return /* @__PURE__ */ jsx(q, { node: e, children: e.isRepeatingWithoutChildren ? /* @__PURE__ */ jsx(li, { node: e }) : /* @__PURE__ */ jsx(M, { node: e, control: di }) });
+}), pi = observer(function({
+  answer: e,
+  id: r,
+  ariaLabelledBy: s2,
+  ariaDescribedBy: n
+}) {
+  const { SliderInput: i } = v(), { min: o, max: a } = e.bounds, c = Lt$1(e.question.template) ?? (e.question.type === "integer" ? 1 : 0.1), l = useCallback(
+    (h) => {
+      if (e.question.type === "integer") {
+        e.setValueByUser(h == null ? void 0 : Math.round(h));
+        return;
+      }
+      e.setValueByUser(h);
+    },
+    [e]
+  );
+  return /* @__PURE__ */ jsx(
+    i,
+    {
+      id: r,
+      value: z(e.value),
+      onChange: l,
+      min: z(o) ?? void 0,
+      max: z(a) ?? void 0,
+      step: c,
+      disabled: e.question.readOnly,
+      ariaLabelledBy: s2,
+      ariaDescribedBy: n,
+      lowerLabel: e.question.lower,
+      upperLabel: e.question.upper,
+      unitLabel: e.question.unitDisplay
+    }
+  );
+}), fi = observer(function({
+  node: e
+}) {
+  return /* @__PURE__ */ jsx(q, { node: e, children: /* @__PURE__ */ jsx(M, { node: e, control: pi }) });
+}), mi = observer(function({
+  answer: e,
+  id: r,
+  ariaLabelledBy: s2,
+  ariaDescribedBy: n
+}) {
+  const { SpinnerInput: i } = v(), { min: o, max: a } = e.bounds, c = useCallback(
+    (l) => {
+      if (e.question.type === "integer") {
+        e.setValueByUser(l == null ? void 0 : Math.round(l));
+        return;
+      }
+      e.setValueByUser(l);
+    },
+    [e]
+  );
+  return /* @__PURE__ */ jsx(
+    i,
+    {
+      id: r,
+      value: z(e.value),
+      onChange: c,
+      min: z(o) ?? void 0,
+      max: z(a) ?? void 0,
+      step: e.question.type === "integer" ? 1 : 0.1,
+      disabled: e.question.readOnly,
+      ariaLabelledBy: s2,
+      ariaDescribedBy: n,
+      placeholder: e.question.placeholder,
+      unitLabel: e.question.unitDisplay
+    }
+  );
+}), gi = observer(function({
+  node: e
+}) {
+  return /* @__PURE__ */ jsx(q, { node: e, children: /* @__PURE__ */ jsx(M, { node: e, control: mi }) });
+}), yi = observer(function({
+  answer: e,
+  id: r,
+  ariaLabelledBy: s2,
+  ariaDescribedBy: n
+}) {
+  const { InputGroup: i, SliderInput: o, SelectInput: a, TextInput: c } = v(), l = e.quantity.isUnitFreeForm ? e.value?.unit ?? "" : e.quantity.unitToken, h = e.quantity.entries.find((k) => k.token === l) ?? void 0, { min: p, max: C } = e.bounds, D = Lt$1(e.question.template) ?? 0.1, S = e.question.readOnly, fe2 = (k) => {
+    e.quantity.handleNumberInput(
+      k === void 0 ? "" : String(k)
+    );
+  };
+  return /* @__PURE__ */ jsxs(i, { spans: [8, 4], children: [
+    /* @__PURE__ */ jsx(
+      o,
+      {
+        id: r,
+        value: z(e.value),
+        onChange: fe2,
+        min: z(p) ?? void 0,
+        max: z(C) ?? void 0,
+        step: D,
+        disabled: S,
+        ariaLabelledBy: s2,
+        ariaDescribedBy: n,
+        lowerLabel: e.question.lower,
+        upperLabel: e.question.upper,
+        unitLabel: e.value?.unit
+      }
+    ),
+    e.quantity.isUnitFreeForm ? /* @__PURE__ */ jsx(
+      c,
+      {
+        id: y(r, "unit"),
+        ariaLabelledBy: s2,
+        ariaDescribedBy: n,
+        value: l,
+        onChange: (k) => e.quantity.handleFreeTextChange(k),
+        disabled: S,
+        placeholder: f.inputs.quantityUnitPlaceholder
+      }
+    ) : /* @__PURE__ */ jsx(
+      a,
+      {
+        options: e.quantity.entries,
+        selectedOption: h,
+        onChange: (k) => e.quantity.handleSelectChange(k ?? ""),
+        id: y(r, "unit"),
+        ariaLabelledBy: s2,
+        ariaDescribedBy: n,
+        disabled: S
+      }
+    )
+  ] });
+}), vi = observer(function({
+  node: e
+}) {
+  return /* @__PURE__ */ jsx(q, { node: e, children: /* @__PURE__ */ jsx(M, { node: e, control: yi }) });
+}), bi = observer(function({
+  answer: e,
+  id: r,
+  ariaLabelledBy: s2,
+  ariaDescribedBy: n
+}) {
+  const { InputGroup: i, SpinnerInput: o, SelectInput: a, TextInput: c } = v(), l = e.quantity.isUnitFreeForm ? e.value?.unit ?? "" : e.quantity.unitToken, h = e.quantity.entries.find((k) => k.token === l) ?? void 0, { min: p, max: C } = e.bounds, D = e.question.readOnly, S = e.question.placeholder ?? f.inputs.quantityValuePlaceholder, fe2 = (k) => {
+    e.quantity.handleNumberInput(
+      k === void 0 ? "" : String(k)
+    );
+  };
+  return /* @__PURE__ */ jsxs(i, { spans: [8, 4], children: [
+    /* @__PURE__ */ jsx(
+      o,
+      {
+        id: r,
+        value: z(e.value),
+        onChange: fe2,
+        min: z(p) ?? void 0,
+        max: z(C) ?? void 0,
+        step: 0.1,
+        disabled: D,
+        placeholder: S,
+        ariaLabelledBy: s2,
+        ariaDescribedBy: n
+      }
+    ),
+    e.quantity.isUnitFreeForm ? /* @__PURE__ */ jsx(
+      c,
+      {
+        id: y(r, "unit"),
+        ariaLabelledBy: s2,
+        ariaDescribedBy: n,
+        value: l,
+        onChange: (k) => e.quantity.handleFreeTextChange(k),
+        disabled: D,
+        placeholder: f.inputs.quantityUnitPlaceholder
+      }
+    ) : /* @__PURE__ */ jsx(
+      a,
+      {
+        options: e.quantity.entries,
+        selectedOption: h,
+        onChange: (k) => e.quantity.handleSelectChange(k ?? ""),
+        id: y(r, "unit"),
+        ariaLabelledBy: s2,
+        ariaDescribedBy: n,
+        disabled: D
+      }
+    )
+  ] });
+}), Oi = observer(
+  function({
+    node: e
+  }) {
+    return /* @__PURE__ */ jsx(q, { node: e, children: /* @__PURE__ */ jsx(M, { node: e, control: bi }) });
+  }
+);
+function xi({ node: t }) {
+  return /* @__PURE__ */ jsxs(q, { node: t, children: [
+    f.unsupported.typePrefix,
+    " ",
+    t.type
+  ] });
+}
+const Se$1 = observer(function({
+  node: e,
+  children: r,
+  onRemove: s2,
+  canRemove: n,
+  removeLabel: i
+}) {
+  const { GroupScaffold: o } = v(), a = e.isHeaderless ? void 0 : /* @__PURE__ */ jsx($, { node: e, as: "legend" });
+  return /* @__PURE__ */ jsx(
+    o,
+    {
+      header: a,
+      errors: B(e),
+      onRemove: s2,
+      canRemove: n,
+      removeLabel: i,
+      children: r
+    }
+  );
+}), se$1 = observer(function({
+  node: e
+}) {
+  const { GroupList: r } = v(), s2 = e.template.text ? /* @__PURE__ */ jsx($, { node: e, as: "legend" }) : void 0;
+  return /* @__PURE__ */ jsx(
+    r,
+    {
+      linkId: e.linkId,
+      header: s2,
+      onAdd: () => e.addNode(),
+      canAdd: e.canAdd,
+      addLabel: f.group.addSection,
+      children: e.visibleNodes.map((n) => {
+        const i = n.renderer;
+        if (i)
+          return /* @__PURE__ */ jsx(
+            Se$1,
+            {
+              node: n,
+              onRemove: e.canRemove ? () => e.removeNode(n) : void 0,
+              canRemove: e.canRemove,
+              removeLabel: f.group.removeSection,
+              children: /* @__PURE__ */ jsx(i, { node: n })
+            },
+            n.token
+          );
+      })
+    }
+  );
+}), Si = observer(function({
+  node: e
+}) {
+  return /* @__PURE__ */ jsx(de, { nodes: e.visibleNodes });
+}), It$1 = observer(function({
+  node: e
+}) {
+  return /* @__PURE__ */ jsx(Se$1, { node: e, children: /* @__PURE__ */ jsx(Si, { node: e }) });
+}), wi = observer(function({
+  node: e
+}) {
+  const { Footer: r } = v();
+  return /* @__PURE__ */ jsx(r, { linkId: e.linkId, children: /* @__PURE__ */ jsx(de, { nodes: e.visibleNodes }) });
+}), ki = observer(function({
+  node: e
+}) {
+  return /* @__PURE__ */ jsx(Se$1, { node: e, children: /* @__PURE__ */ jsx(wi, { node: e }) });
+}), _i = observer(function({
+  node: e
+}) {
+  const { Table: r } = v();
+  return /* @__PURE__ */ jsx(
+    r,
+    {
+      columns: e.grid.columns.map((s2) => ({
+        token: s2.linkId,
+        content: /* @__PURE__ */ jsx($, { node: s2, as: "text" })
+      })),
+      rows: e.grid.rows.map((s2) => ({
+        token: s2.group.token,
+        content: /* @__PURE__ */ jsx($, { node: s2.group, as: "text" }),
+        cells: e.grid.columns.map((n, i) => {
+          const o = s2.questions[i];
+          return {
+            token: y(s2.group.token, n.linkId),
+            content: o ? /* @__PURE__ */ jsx(Je$1, { node: o }) : void 0
+          };
+        })
+      }))
+    }
+  );
+}), Ci = observer(function({
+  node: e
+}) {
+  return /* @__PURE__ */ jsx(Se$1, { node: e, children: /* @__PURE__ */ jsx(_i, { node: e }) });
+}), Ii = observer(function({
+  list: e
+}) {
+  const { Table: r } = v(), s2 = e.grid.columns.map((i) => ({
+    token: i.linkId,
+    content: /* @__PURE__ */ jsx($, { node: i, as: "text" })
+  })), n = e.grid.rows.map((i) => ({
+    token: i.group.token,
+    content: /* @__PURE__ */ jsx($, { node: i.group, as: "text" }),
+    onRemove: () => e.removeNode(i.group),
+    canRemove: e.canRemove,
+    removeLabel: f.group.removeSection,
+    cells: s2.map((o, a) => {
+      const c = i.questions[a];
+      return {
+        token: y(i.group.token, o.token),
+        content: c ? /* @__PURE__ */ jsx(Je$1, { node: c }) : void 0
+      };
+    })
+  }));
+  return /* @__PURE__ */ jsx(r, { columns: s2, rows: n });
+}), Ai = observer(function({
+  node: e
+}) {
+  const { GroupScaffold: r } = v(), s2 = e.template.text ? /* @__PURE__ */ jsx($, { node: e, as: "legend" }) : void 0;
+  return /* @__PURE__ */ jsx(r, { header: s2, errors: B(e), children: /* @__PURE__ */ jsx(Ii, { list: e }) });
+}), Ti = observer(function({
+  node: e
+}) {
+  const { Header: r } = v();
+  return /* @__PURE__ */ jsx(r, { linkId: e.linkId, children: /* @__PURE__ */ jsx(de, { nodes: e.visibleNodes }) });
+}), Ei = observer(function({
+  node: e
+}) {
+  return /* @__PURE__ */ jsx(Se$1, { node: e, children: /* @__PURE__ */ jsx(Ti, { node: e }) });
+}), Ri = observer(function({
+  node: e
+}) {
+  return /* @__PURE__ */ jsx(de, { nodes: e.visibleNodes });
+}), Ni = observer(function({
+  node: e
+}) {
+  return /* @__PURE__ */ jsx(Se$1, { node: e, children: /* @__PURE__ */ jsx(Ri, { node: e }) });
+}), At$1 = observer(function({
+  store: e,
+  question: r,
+  option: s2,
+  ariaLabelledBy: n
+}) {
+  const { Checkbox: i, RadioButton: o } = v(), a = e.getCellState(r, s2.token), c = useCallback(
+    () => e.toggleCell(r, s2.token),
+    [e, r, s2.token]
+  );
+  if (a)
+    return r.repeats ? /* @__PURE__ */ jsx(
+      i,
+      {
+        id: y(r.token, s2.token, "control"),
+        checked: a.selected,
+        disabled: a.disabled,
+        onChange: c,
+        ariaLabelledBy: ge$1(ve$1(r), n) ?? "",
+        ariaDescribedBy: ge$1(
+          Ce$1(r),
+          X(r)
+        )
+      }
+    ) : /* @__PURE__ */ jsx(
+      o,
+      {
+        id: y(r.token, s2.token, "control"),
+        groupName: y(r.token, "table"),
+        value: s2.token,
+        checked: a.selected,
+        disabled: a.disabled,
+        onChange: c,
+        ariaLabelledBy: ge$1(ve$1(r), n) ?? "",
+        ariaDescribedBy: ge$1(
+          Ce$1(r),
+          X(r)
+        )
+      }
+    );
+}), Di = observer(function({
+  node: e
+}) {
+  const { Table: r, Label: s2 } = v();
+  return e.control === "htable" ? /* @__PURE__ */ jsx(
+    r,
+    {
+      columns: e.table.questions.map((n) => ({
+        token: n.token,
+        content: /* @__PURE__ */ jsx($, { node: n, as: "text" }),
+        isLoading: n.answerOption.select.isLoading,
+        errors: B(n)
+      })),
+      rows: e.table.optionAxis.map((n) => ({
+        token: n.token,
+        content: /* @__PURE__ */ jsx(s2, { id: y(e.token, n.token), children: /* @__PURE__ */ jsx(te$1, { type: n.answerType, value: n.value }) }),
+        cells: e.table.questions.map((i) => ({
+          token: y(i.token, n.token),
+          content: /* @__PURE__ */ jsx(
+            At$1,
+            {
+              store: e.table,
+              question: i,
+              option: n,
+              ariaLabelledBy: y(e.token, n.token)
+            }
+          )
+        }))
+      }))
+    }
+  ) : /* @__PURE__ */ jsx(
+    r,
+    {
+      columns: e.table.optionAxis.map((n) => ({
+        token: n.token,
+        content: /* @__PURE__ */ jsx(s2, { id: y(e.token, n.token), children: /* @__PURE__ */ jsx(te$1, { type: n.answerType, value: n.value }) })
+      })),
+      rows: e.table.questions.map((n) => ({
+        token: n.token,
+        content: /* @__PURE__ */ jsx($, { node: n, as: "text" }),
+        isLoading: n.answerOption.select.isLoading,
+        errors: B(n),
+        cells: e.table.optionAxis.map((i) => ({
+          token: y(n.token, i.token),
+          content: /* @__PURE__ */ jsx(
+            At$1,
+            {
+              store: e.table,
+              question: n,
+              option: i,
+              ariaLabelledBy: y(e.token, i.token)
+            }
+          )
+        }))
+      }))
+    }
+  );
+}), Tt$1 = observer(function({
+  node: e
+}) {
+  return /* @__PURE__ */ jsx(Se$1, { node: e, children: /* @__PURE__ */ jsx(Di, { node: e }) });
+}), Li = observer(function({
+  node: e
+}) {
+  const { TabContainer: r } = v(), [s2, n] = useState(0), i = e.visibleNodes, o = Math.max(i.length - 1, 0), a = Math.min(s2, o), c = /* @__PURE__ */ jsx($, { node: e, as: "legend" }), l = i.map((h, p) => ({
+    token: h.token,
+    label: /* @__PURE__ */ jsx($, { node: h, as: "text" }),
+    buttonId: y(e.token, "tab", p),
+    panelId: y(e.token, "panel", p),
+    content: /* @__PURE__ */ jsx(Je$1, { node: h })
+  }));
+  return /* @__PURE__ */ jsx(
+    r,
+    {
+      header: c,
+      items: l,
+      value: a,
+      onChange: n,
+      errors: B(e),
+      linkId: e.linkId
+    }
+  );
+}), qi = observer(function({
+  node: e
+}) {
+  return /* @__PURE__ */ jsx(Li, { node: e });
+}), Pi = [
+  {
+    name: "quantity-with-slider",
+    priority: 121,
+    matcher: (t) => t.control === "slider" && t.type === "quantity",
+    renderer: vi
+  },
+  {
+    name: "quantity-with-spinner",
+    priority: 116,
+    matcher: (t) => t.control === "spinner" && t.type === "quantity",
+    renderer: Oi
+  },
+  {
+    name: "number-with-slider",
+    priority: 120,
+    matcher: (t) => t.control === "slider" && (t.type === "integer" || t.type === "decimal"),
+    renderer: fi
+  },
+  {
+    name: "number-with-spinner",
+    priority: 115,
+    matcher: (t) => t.control === "spinner" && (t.type === "integer" || t.type === "decimal"),
+    renderer: gi
+  },
+  {
+    name: "list-select",
+    priority: 95,
+    matcher: (t) => (Et$1(t) || t.type === "boolean") && (t.control === "radio-button" || t.control === "check-box"),
+    renderer: hi
+  },
+  {
+    name: "dropdown",
+    priority: 90,
+    matcher: (t) => Et$1(t) || t.type === "boolean" && (t.control === "drop-down" || t.control === "autocomplete" || t.control === "lookup"),
+    renderer: ci
+  },
+  {
+    name: "boolean",
+    priority: 10,
+    matcher: (t) => t.type === "boolean",
+    renderer: xs$1
+  },
+  {
+    name: "string",
+    priority: 10,
+    matcher: (t) => t.type === "string",
+    renderer: it$1
+  },
+  {
+    name: "text",
+    priority: 10,
+    matcher: (t) => t.type === "text",
+    renderer: it$1
+  },
+  {
+    name: "url",
+    priority: 10,
+    matcher: (t) => t.type === "url",
+    renderer: it$1
+  },
+  {
+    name: "integer",
+    priority: 10,
+    matcher: (t) => t.type === "integer",
+    renderer: Ns$1
+  },
+  {
+    name: "decimal",
+    priority: 10,
+    matcher: (t) => t.type === "decimal",
+    renderer: Es$1
+  },
+  {
+    name: "date",
+    priority: 10,
+    matcher: (t) => t.type === "date",
+    renderer: Cs$1
+  },
+  {
+    name: "date-time",
+    priority: 10,
+    matcher: (t) => t.type === "dateTime",
+    renderer: As$1
+  },
+  {
+    name: "time",
+    priority: 10,
+    matcher: (t) => t.type === "time",
+    renderer: zs$1
+  },
+  {
+    name: "quantity",
+    priority: 10,
+    matcher: (t) => t.type === "quantity",
+    renderer: Ls$1
+  },
+  {
+    name: "coding",
+    priority: 10,
+    matcher: (t) => t.type === "coding",
+    renderer: ks$1
+  },
+  {
+    name: "reference",
+    priority: 10,
+    matcher: (t) => t.type === "reference",
+    renderer: Vs$1
+  },
+  {
+    name: "attachment",
+    priority: 10,
+    matcher: (t) => t.type === "attachment",
+    renderer: bs$1
+  },
+  {
+    name: "unsupported-question",
+    priority: Number.NEGATIVE_INFINITY,
+    matcher: () => true,
+    renderer: xi
+  }
+], Vi = [
+  {
+    name: "group-tab-container",
+    priority: 100,
+    matcher: (t) => t.control === "tab-container",
+    renderer: qi
+  },
+  {
+    name: "group-page",
+    priority: 10,
+    matcher: (t) => t.control === "page",
+    renderer: Ni
+  },
+  {
+    name: "group-header",
+    priority: 10,
+    matcher: (t) => t.control === "header",
+    renderer: Ei
+  },
+  {
+    name: "group-footer",
+    priority: 10,
+    matcher: (t) => t.control === "footer",
+    renderer: ki
+  },
+  {
+    name: "group-grid",
+    priority: 10,
+    matcher: (t) => t.control === "grid",
+    renderer: Ci
+  },
+  {
+    name: "group-htable",
+    priority: 10,
+    matcher: (t) => t.control === "htable",
+    renderer: Tt$1
+  },
+  {
+    name: "group-table",
+    priority: 10,
+    matcher: (t) => t.control === "table",
+    renderer: Tt$1
+  },
+  {
+    name: "group-list",
+    priority: 10,
+    matcher: (t) => t.control === "list",
+    renderer: It$1
+  },
+  {
+    name: "group-default",
+    priority: Number.NEGATIVE_INFINITY,
+    matcher: () => true,
+    renderer: It$1
+  }
+], Fi = [
+  {
+    name: "group-tab-container",
+    priority: 100,
+    matcher: (t) => t.control === "tab-container",
+    renderer: se$1
+  },
+  {
+    name: "group-page",
+    priority: 10,
+    matcher: (t) => t.control === "page",
+    renderer: se$1
+  },
+  {
+    name: "group-header",
+    priority: 10,
+    matcher: (t) => t.control === "header",
+    renderer: se$1
+  },
+  {
+    name: "group-footer",
+    priority: 10,
+    matcher: (t) => t.control === "footer",
+    renderer: se$1
+  },
+  {
+    name: "group-grid",
+    priority: 10,
+    matcher: (t) => t.control === "grid",
+    renderer: se$1
+  },
+  {
+    name: "group-gtable",
+    priority: 10,
+    matcher: (t) => t.control === "gtable",
+    renderer: Ai
+  },
+  {
+    name: "group-htable",
+    priority: 10,
+    matcher: (t) => t.control === "htable",
+    renderer: se$1
+  },
+  {
+    name: "group-table",
+    priority: 10,
+    matcher: (t) => t.control === "table",
+    renderer: se$1
+  },
+  {
+    name: "group-list",
+    priority: 10,
+    matcher: (t) => t.control === "list",
+    renderer: se$1
+  },
+  {
+    name: "group-default",
+    priority: Number.NEGATIVE_INFINITY,
+    matcher: () => true,
+    renderer: se$1
+  }
+];
+function Et$1(t) {
+  return !!(t.template.answerOption?.length || t.expressionRegistry.answer || t.template.answerValueSet);
+}
+class Mi extends Error {
+}
+class Ui {
+  constructor(e = 20) {
+    this.maxPasses = e, this.evaluationStack = [], this.writeCounts = /* @__PURE__ */ new WeakMap(), this.recentWriters = /* @__PURE__ */ new Set();
+  }
+  trackEvaluation(e, r) {
+    const s2 = this.evaluationStack.indexOf(e.toString());
+    if (s2 !== -1)
+      throw e.setCycleDetected([
+        ...this.evaluationStack.slice(s2),
+        e.toString()
+      ]), new Mi("Circular dependency detected.");
+    this.evaluationStack.push(e.toString());
+    try {
+      return r();
+    } finally {
+      this.evaluationStack.pop() !== e.toString() && (this.evaluationStack.length = 0);
+    }
+  }
+  trackWrite(e, r) {
+    this.recentWriters.add(e);
+    const s2 = (this.writeCounts.get(e) ?? 0) + 1;
+    if (this.writeCounts.set(e, s2), s2 > this.maxPasses)
+      for (const n of this.recentWriters)
+        n.setCycleDetected([]);
+    else
+      r() && (this.writeCounts.delete(e), this.recentWriters.delete(e), e.clearCycleDetected());
+  }
+}
+const Hi = "https://tx.fhir.org/r5";
+class $i {
+  constructor(e = Hi) {
+    this.defaultServer = e, this.caches = /* @__PURE__ */ new Map();
+  }
+  async expand(e, r) {
+    const s2 = lt$1([...r, this.defaultServer]);
+    let n;
+    for (const i of s2)
+      try {
+        let o = this.caches.get(i);
+        o || (o = /* @__PURE__ */ new Map(), this.caches.set(i, o));
+        let a = o.get(e);
+        return a || (a = this.requestExpansion(i, e).catch((c) => {
+          throw (!Mr(c) || c.status < 400 || c.status >= 500) && o?.delete(e), c;
+        }), o.set(e, a)), await a;
+      } catch (o) {
+        n = o;
+      }
+    throw n ?? new Error(
+      `Failed to expand ValueSet (${e}) via preferred servers.`
+    );
+  }
+  async requestExpansion(e, r) {
+    const n = `${e.endsWith("/") || e.endsWith("\\") ? e.replace(/[\\/]+$/, "") : e}/ValueSet/$expand?url=${encodeURIComponent(r)}`, i = await fetch(n, {
+      headers: {
+        Accept: "application/fhir+json"
+      }
+    });
+    if (!i.ok) {
+      const a = new Error(
+        `Failed to expand ValueSet (${r}) via ${e}: ${i.status} ${i.statusText}`
+      );
+      throw a.status = i.status, a;
+    }
+    return (await i.json()).expansion?.contains ?? [];
+  }
+}
+var Bi = Object.defineProperty, Qi = Object.getOwnPropertyDescriptor, V = (t, e, r, s2) => {
+  for (var n = s2 > 1 ? void 0 : s2 ? Qi(e, r) : e, i = t.length - 1, o; i >= 0; i--)
+    (o = t[i]) && (n = (s2 ? o(e, r, n) : o(n)) || n);
+  return s2 && n && Bi(e, r, n), n;
+};
+class N {
+  constructor(e, r, s2) {
+    this.questionnaire = e, this.token = y("form", qr()), this.nodes = observable.array([], {
+      deep: false,
+      name: "FormStore.children"
+    }), this.renderingIssues = observable.array(
+      [],
+      {
+        deep: false,
+        name: "FormStore.renderingIssues"
+      }
+    ), this.scope = new vt$1(true), this.submitAttempted = false, this.pageIndex = 0, this.coordinator = new Ui(), this.questionRendererRegistry = new rt$1(
+      Pi
+    ), this.groupRendererRegistry = new rt$1(Vi), this.groupListRendererRegistry = new rt$1(
+      Fi
+    ), makeObservable(this), this.questionnaire = e, this.initialResponse = r, this.valueSetExpander = new $i(s2), this.expressionRegistry = new Ye$1(
+      this.coordinator,
+      this.scope,
+      this,
+      e
+    ), runInAction(() => {
+      this.nodes.replace(
+        (e.item ?? []).filter((n) => ht$1(n)).map(
+          (n) => this.createNodeStore(
+            n,
+            void 0,
+            this.scope,
+            this.token,
+            this.initialResponse?.item
+          )
+        )
+      );
+    }), this.validateTopLevelStructure();
+  }
+  get expressionEnvironment() {
+    return this.scope.mergeEnvironment({
+      questionnaire: this.questionnaire,
+      context: this.expressionResponse
+    });
+  }
+  get preferredTerminologyServers() {
+    return Pe$1(
+      "url",
+      this.questionnaire,
+      g.PREFERRED_TERMINOLOGY_SERVER
+    );
+  }
+  get headerNodes() {
+    return this.nodes.filter(
+      (e) => K(e) && e.control === "header" && !e.hidden
+    );
+  }
+  get footerNodes() {
+    return this.nodes.filter(
+      (e) => K(e) && e.control === "footer" && !e.hidden
+    );
+  }
+  get contentNodes() {
+    const e = this.pages;
+    if (e) {
+      const r = Math.max(e.length - 1, 0);
+      return e.length > 0 ? [e[Ue$1(this.pageIndex, 0, r)]] : [];
+    }
+    return this.nodes.filter((r) => ot$1(r) ? r.control !== "header" && r.control !== "footer" : true);
+  }
+  get pagination() {
+    const e = this.pages;
+    if (!e?.length)
+      return;
+    const r = Ue$1(this.pageIndex, 0, e.length - 1);
+    return {
+      current: r + 1,
+      total: e.length,
+      disabledPrev: r === 0,
+      onPrev: action(() => {
+        this.pageIndex = Ue$1(this.pageIndex - 1, 0, e.length - 1);
+      }),
+      disabledNext: r >= e.length - 1,
+      onNext: action(() => {
+        this.pageIndex = Ue$1(this.pageIndex + 1, 0, e.length - 1);
+      })
+    };
+  }
+  get pages() {
+    const e = this.nodes.filter(
+      (r) => ot$1(r) && r.control === "page" && !r.hidden
+    );
+    return e.length > 0 ? e : void 0;
+  }
+  createNodeStore(e, r, s2, n, i) {
+    switch (e.type) {
+      case "display": {
+        const o = new Ke$1(
+          this,
+          e,
+          r,
+          s2.extend(false),
+          y(n, e.linkId)
+        );
+        return s2.registerNode(o), o;
+      }
+      case "group":
+        if (e.repeats) {
+          const o = new E(
+            this,
+            e,
+            r,
+            s2.extend(false),
+            y(n, e.linkId),
+            i?.filter(({ linkId: a }) => a === e.linkId)
+          );
+          return s2.registerNode(o), o;
+        } else {
+          const o = new W(
+            this,
+            e,
+            r,
+            s2.extend(false),
+            y(n, e.linkId),
+            i?.find(({ linkId: a }) => a === e.linkId)
+          );
+          return s2.registerNode(o), o;
+        }
+      case "string":
+      case "boolean":
+      case "question":
+      case "decimal":
+      case "integer":
+      case "date":
+      case "dateTime":
+      case "time":
+      case "text":
+      case "url":
+      case "coding":
+      case "attachment":
+      case "reference":
+      case "quantity": {
+        const o = new x(
+          this,
+          e,
+          r,
+          s2.extend(false),
+          y(n, e.linkId),
+          i?.find(({ linkId: a }) => a === e.linkId)
+        );
+        return s2.registerNode(o), o;
+      }
+    }
+  }
+  get isSubmitAttempted() {
+    return this.submitAttempted;
+  }
+  get issues() {
+    const e = [
+      ...this.renderingIssues,
+      ...this.expressionRegistry.registrationIssues,
+      ...this.expressionRegistry.slotsIssues
+    ];
+    return this.isSubmitAttempted && e.push(...this.expressionRegistry.constraintsIssues), e.filter((r) => Re$1(r) !== void 0);
+  }
+  validateAll() {
+    this.submitAttempted = true;
+    const r = !this.issues.some(
+      (s2) => s2.severity === "error" || s2.severity === "fatal"
+    ) && !this.nodes.some((s2) => this.nodeHasErrors(s2));
+    if (r) {
+      const s2 = this.issues.some(
+        (i) => i.severity === "warning" || i.severity === "information"
+      ), n = this.nodes.some(
+        (i) => this.nodeHasNonBlockingIssues(i)
+      );
+      !s2 && !n && (this.submitAttempted = false);
+    }
+    return r;
+  }
+  get response() {
+    return this.buildResponseSnapshot("response");
+  }
+  get expressionResponse() {
+    return this.buildResponseSnapshot("expression");
+  }
+  reset() {
+    this.submitAttempted = false, this.nodes.forEach((e) => this.clearNodeDirty(e));
+  }
+  reportRenderingIssue(e) {
+    this.renderingIssues.push(e);
+  }
+  dispose() {
+    const e = [...this.nodes];
+    this.nodes.clear(), e.forEach((r) => r.dispose());
+  }
+  nodeHasErrors(e) {
+    return e.issues.some(
+      (s2) => s2.severity === "error" || s2.severity === "fatal"
+    ) || j(e) && (e.repeats ? e.answers : e.answers.slice(0, 1)).some(
+      (i) => i.issues.some(
+        (o) => o.severity === "error" || o.severity === "fatal"
+      )
+    ) ? true : this.getChildNodes(e).some((s2) => this.nodeHasErrors(s2));
+  }
+  nodeHasNonBlockingIssues(e) {
+    return e.issues.some(
+      (s2) => s2.severity === "warning" || s2.severity === "information"
+    ) || j(e) && (e.repeats ? e.answers : e.answers.slice(0, 1)).some(
+      (i) => i.issues.some(
+        (o) => o.severity === "warning" || o.severity === "information"
+      )
+    ) ? true : this.getChildNodes(e).some(
+      (s2) => this.nodeHasNonBlockingIssues(s2)
+    );
+  }
+  getChildNodes(e) {
+    return _e$1(e) ? e.nodes.flatMap((r) => r.nodes) : K(e) ? e.nodes : j(e) ? (e.repeats ? e.answers : e.answers.slice(0, 1)).flatMap((s2) => s2.nodes) : [];
+  }
+  clearNodeDirty(e) {
+    e.clearDirty(), this.getChildNodes(e).forEach((r) => this.clearNodeDirty(r));
+  }
+  validateTopLevelStructure() {
+    const e = this.nodes.filter((a) => ot$1(a)), r = e.filter(
+      (a) => K(a) && a.control === "header"
+    );
+    r.length > 1 && r.slice(1).forEach(
+      (a) => this.reportRenderingIssue(
+        O(
+          "structure",
+          `Only one header group is permitted, but multiple were found (linkId=${a.linkId}).`
+        )
+      )
+    );
+    const s2 = e.filter(
+      (a) => K(a) && a.control === "footer"
+    );
+    s2.length > 1 && s2.slice(1).forEach(
+      (a) => this.reportRenderingIssue(
+        O(
+          "structure",
+          `Only one footer group is permitted, but multiple were found (linkId=${a.linkId}).`
+        )
+      )
+    );
+    const n = [], i = [], o = (a, c, l) => {
+      if (!a || a.length === 0)
+        return;
+      if (a.some((p) => Rt$1(p))) {
+        const p = [];
+        a.forEach((C) => {
+          ji(C) || (p.push(C.linkId), this.reportRenderingIssue(
+            O(
+              "structure",
+              `Items that are siblings of a page group must be groups with item-control 'page', 'header', or 'footer' (parent=${l}, linkId=${C.linkId}).`
+            )
+          ));
+        }), p.length > 0 && i.push({ parent: l, linkIds: p });
+      }
+      a.forEach((p) => {
+        c > 0 && Rt$1(p) && (n.push(p.linkId), this.reportRenderingIssue(
+          O(
+            "structure",
+            `Page groups should be top-level items and must not be nested (linkId=${p.linkId}).`
+          )
+        )), p.item && p.item.length > 0 && o(p.item, c + 1, p.linkId);
+      });
+    };
+    o(this.questionnaire.item, 0, "Questionnaire"), n.length > 0 && console.warn(
+      `[Formbox] Page groups should be top-level items and must not be nested. Invalid linkIds: ${n.join(", ")}.`
+    ), i.forEach((a) => {
+      console.warn(
+        `[Formbox] Items that are siblings of a page group must be groups with item-control 'page', 'header', or 'footer'. Parent: ${a.parent}. Invalid linkIds: ${a.linkIds.join(", ")}.`
+      );
+    });
+  }
+  buildResponseSnapshot(e) {
+    const r = e === "response" ? this.nodes.flatMap((n) => n.responseItems) : this.nodes.flatMap((n) => n.expressionItems), s2 = {
+      resourceType: "QuestionnaireResponse",
+      status: "in-progress",
+      questionnaire: this.questionnaire.url || `Questionnaire/${this.questionnaire.id}`
+    };
+    return r.length > 0 && (s2.item = r), s2;
+  }
+}
+V([
+  observable
+], N.prototype, "submitAttempted", 2);
+V([
+  observable
+], N.prototype, "pageIndex", 2);
+V([
+  computed
+], N.prototype, "expressionEnvironment", 1);
+V([
+  computed
+], N.prototype, "preferredTerminologyServers", 1);
+V([
+  computed
+], N.prototype, "headerNodes", 1);
+V([
+  computed
+], N.prototype, "footerNodes", 1);
+V([
+  computed
+], N.prototype, "contentNodes", 1);
+V([
+  computed
+], N.prototype, "pagination", 1);
+V([
+  computed
+], N.prototype, "pages", 1);
+V([
+  action
+], N.prototype, "createNodeStore", 1);
+V([
+  computed
+], N.prototype, "isSubmitAttempted", 1);
+V([
+  computed
+], N.prototype, "issues", 1);
+V([
+  action
+], N.prototype, "validateAll", 1);
+V([
+  computed.struct
+], N.prototype, "response", 1);
+V([
+  computed.struct
+], N.prototype, "expressionResponse", 1);
+V([
+  action
+], N.prototype, "reset", 1);
+V([
+  action
+], N.prototype, "reportRenderingIssue", 1);
+V([
+  action
+], N.prototype, "dispose", 1);
+function ot$1(t) {
+  return K(t) || _e$1(t);
+}
+function Rt$1(t) {
+  return t.type === "group" && xe$1(t) === "page";
+}
+function ji(t) {
+  if (t.type !== "group")
+    return false;
+  const e = xe$1(t);
+  return e === "page" || e === "header" || e === "footer";
+}
+const zi = observer(function({
+  store: e,
+  onSubmit: r
+}) {
+  const { Form: s2 } = v();
+  return /* @__PURE__ */ jsx(
+    s2,
+    {
+      title: e.questionnaire.title,
+      description: e.questionnaire.description,
+      errors: B(e),
+      before: /* @__PURE__ */ jsx(de, { nodes: e.headerNodes }),
+      after: /* @__PURE__ */ jsx(de, { nodes: e.footerNodes }),
+      onSubmit: r,
+      onCancel: () => e.reset(),
+      pagination: e.pagination,
+      children: /* @__PURE__ */ jsx(de, { nodes: e.contentNodes })
+    }
+  );
+});
+function to({
+  questionnaire: t,
+  initialResponse: e,
+  onSubmit: r,
+  onChange: s2,
+  terminologyServerUrl: n,
+  theme: i
+}) {
+  const o = useMemo(
+    () => new N(t, e, n),
+    [t, e, n]
+  );
+  useEffect(() => () => o.dispose(), [o]), useEffect(() => {
+    if (!s2)
+      return;
+    const c = autorun(() => {
+      s2(o.response);
+    });
+    return () => {
+      c();
+    };
+  }, [s2, o]);
+  const a = useCallback(() => {
+    o.validateAll() && r?.(o.response);
+  }, [r, o]);
+  return /* @__PURE__ */ jsx(mn$1, { theme: i, children: /* @__PURE__ */ jsx(zi, { store: o, onSubmit: a }) });
+}
+const J = "i6tdvg5";
+function Fe({
+  id: e,
+  type: t = "text",
+  value: a,
+  onChange: o,
+  disabled: r,
+  placeholder: l,
+  ariaLabelledBy: c,
+  ariaDescribedBy: d,
+  inputMode: f2,
+  minLength: p,
+  maxLength: i
+}) {
+  return /* @__PURE__ */ jsx(
+    "input",
+    {
+      id: e,
+      className: J,
+      type: t,
+      value: a,
+      onChange: (g2) => o(g2.target.value),
+      disabled: r,
+      placeholder: l,
+      "aria-labelledby": c,
+      "aria-describedby": d,
+      inputMode: f2,
+      minLength: p,
+      maxLength: i
+    }
+  );
+}
+const Le = "t1sq8y5h";
+function He({
+  id: e,
+  value: t,
+  onChange: a,
+  disabled: o,
+  placeholder: r,
+  ariaLabelledBy: l,
+  ariaDescribedBy: c,
+  inputMode: d,
+  minLength: f2,
+  maxLength: p
+}) {
+  return /* @__PURE__ */ jsx("textarea", {
+    id: e,
+    className: Le,
+    value: t,
+    onChange: (i) => a(i.target.value),
+    disabled: o,
+    placeholder: r,
+    "aria-labelledby": l,
+    "aria-describedby": c,
+    inputMode: d,
+    minLength: f2,
+    maxLength: p
+  });
+}
+function ze(e) {
+  var t = /* @__PURE__ */ Object.create(null);
+  return function(a) {
+    return t[a] === void 0 && (t[a] = e(a)), t[a];
+  };
+}
+var De = /^((children|dangerouslySetInnerHTML|key|ref|autoFocus|defaultValue|defaultChecked|innerHTML|suppressContentEditableWarning|suppressHydrationWarning|valueLink|abbr|accept|acceptCharset|accessKey|action|allow|allowUserMedia|allowPaymentRequest|allowFullScreen|allowTransparency|alt|async|autoComplete|autoPlay|capture|cellPadding|cellSpacing|challenge|charSet|checked|cite|classID|className|cols|colSpan|content|contentEditable|contextMenu|controls|controlsList|coords|crossOrigin|data|dateTime|decoding|default|defer|dir|disabled|disablePictureInPicture|disableRemotePlayback|download|draggable|encType|enterKeyHint|fetchpriority|fetchPriority|form|formAction|formEncType|formMethod|formNoValidate|formTarget|frameBorder|headers|height|hidden|high|href|hrefLang|htmlFor|httpEquiv|id|inputMode|integrity|is|keyParams|keyType|kind|label|lang|list|loading|loop|low|marginHeight|marginWidth|max|maxLength|media|mediaGroup|method|min|minLength|multiple|muted|name|nonce|noValidate|open|optimum|pattern|placeholder|playsInline|popover|popoverTarget|popoverTargetAction|poster|preload|profile|radioGroup|readOnly|referrerPolicy|rel|required|reversed|role|rows|rowSpan|sandbox|scope|scoped|scrolling|seamless|selected|shape|size|sizes|slot|span|spellCheck|src|srcDoc|srcLang|srcSet|start|step|style|summary|tabIndex|target|title|translate|type|useMap|value|width|wmode|wrap|about|datatype|inlist|prefix|property|resource|typeof|vocab|autoCapitalize|autoCorrect|autoSave|color|incremental|fallback|inert|itemProp|itemScope|itemType|itemID|itemRef|on|option|results|security|unselectable|accentHeight|accumulate|additive|alignmentBaseline|allowReorder|alphabetic|amplitude|arabicForm|ascent|attributeName|attributeType|autoReverse|azimuth|baseFrequency|baselineShift|baseProfile|bbox|begin|bias|by|calcMode|capHeight|clip|clipPathUnits|clipPath|clipRule|colorInterpolation|colorInterpolationFilters|colorProfile|colorRendering|contentScriptType|contentStyleType|cursor|cx|cy|d|decelerate|descent|diffuseConstant|direction|display|divisor|dominantBaseline|dur|dx|dy|edgeMode|elevation|enableBackground|end|exponent|externalResourcesRequired|fill|fillOpacity|fillRule|filter|filterRes|filterUnits|floodColor|floodOpacity|focusable|fontFamily|fontSize|fontSizeAdjust|fontStretch|fontStyle|fontVariant|fontWeight|format|from|fr|fx|fy|g1|g2|glyphName|glyphOrientationHorizontal|glyphOrientationVertical|glyphRef|gradientTransform|gradientUnits|hanging|horizAdvX|horizOriginX|ideographic|imageRendering|in|in2|intercept|k|k1|k2|k3|k4|kernelMatrix|kernelUnitLength|kerning|keyPoints|keySplines|keyTimes|lengthAdjust|letterSpacing|lightingColor|limitingConeAngle|local|markerEnd|markerMid|markerStart|markerHeight|markerUnits|markerWidth|mask|maskContentUnits|maskUnits|mathematical|mode|numOctaves|offset|opacity|operator|order|orient|orientation|origin|overflow|overlinePosition|overlineThickness|panose1|paintOrder|pathLength|patternContentUnits|patternTransform|patternUnits|pointerEvents|points|pointsAtX|pointsAtY|pointsAtZ|preserveAlpha|preserveAspectRatio|primitiveUnits|r|radius|refX|refY|renderingIntent|repeatCount|repeatDur|requiredExtensions|requiredFeatures|restart|result|rotate|rx|ry|scale|seed|shapeRendering|slope|spacing|specularConstant|specularExponent|speed|spreadMethod|startOffset|stdDeviation|stemh|stemv|stitchTiles|stopColor|stopOpacity|strikethroughPosition|strikethroughThickness|string|stroke|strokeDasharray|strokeDashoffset|strokeLinecap|strokeLinejoin|strokeMiterlimit|strokeOpacity|strokeWidth|surfaceScale|systemLanguage|tableValues|targetX|targetY|textAnchor|textDecoration|textRendering|textLength|to|transform|u1|u2|underlinePosition|underlineThickness|unicode|unicodeBidi|unicodeRange|unitsPerEm|vAlphabetic|vHanging|vIdeographic|vMathematical|values|vectorEffect|version|vertAdvY|vertOriginX|vertOriginY|viewBox|viewTarget|visibility|widths|wordSpacing|writingMode|x|xHeight|x1|x2|xChannelSelector|xlinkActuate|xlinkArcrole|xlinkHref|xlinkRole|xlinkShow|xlinkTitle|xlinkType|xmlBase|xmlns|xmlnsXlink|xmlLang|xmlSpace|y|y1|y2|yChannelSelector|z|zoomAndPan|for|class|autofocus)|(([Dd][Aa][Tt][Aa]|[Aa][Rr][Ii][Aa]|x)-.*))$/, oe = /* @__PURE__ */ ze(
+  function(e) {
+    return De.test(e) || e.charCodeAt(0) === 111 && e.charCodeAt(1) === 110 && e.charCodeAt(2) < 91;
+  }
+  /* Z+1 */
+), Pe = function() {
+  const t = Array.prototype.slice.call(arguments).filter(Boolean), a = {}, o = [];
+  t.forEach((l) => {
+    (l ? l.split(" ") : []).forEach((d) => {
+      if (d.startsWith("atm_")) {
+        const [, f2] = d.split("_");
+        a[f2] = d;
+      } else
+        o.push(d);
+    });
+  });
+  const r = [];
+  for (const l in a)
+    Object.prototype.hasOwnProperty.call(a, l) && r.push(a[l]);
+  return r.push(...o), r.join(" ");
+}, fe = Pe, Me2 = (e) => e.toUpperCase() === e, qe = (e) => (t) => e.indexOf(t) === -1, Se = (e, t) => {
+  const a = {};
+  return Object.keys(e).filter(qe(t)).forEach((o) => {
+    a[o] = e[o];
+  }), a;
+};
+function We2(e, t, a) {
+  const o = Se(t, a);
+  if (!e) {
+    const r = typeof oe == "function" ? { default: oe } : oe;
+    Object.keys(o).forEach((l) => {
+      r.default(l) || delete o[l];
+    });
+  }
+  return o;
+}
+var je = (e, t) => {
+  if (process.env.NODE_ENV !== "production") {
+    if (typeof e == "string" || // eslint-disable-next-line no-self-compare,no-restricted-globals
+    typeof e == "number" && isFinite(e))
+      return;
+    const a = typeof e == "object" ? JSON.stringify(e) : String(e);
+    console.warn(
+      `An interpolation evaluated to '${a}' in the component '${t}', which is probably a mistake. You should explicitly cast or transform the value to a string.`
+    );
+  }
+}, Ve2 = 0;
+function he(e) {
+  let t = "";
+  return process.env.NODE_ENV === "test" && (t += `mocked-styled-${Ve2++}`, e && e.__wyw_meta && e.__wyw_meta.className && (t += ` ${e.__wyw_meta.className}`)), (a) => {
+    if (process.env.NODE_ENV !== "production" && process.env.NODE_ENV !== "test" && Array.isArray(a))
+      throw new Error(
+        'Using the "styled" tag in runtime is not supported. Make sure you have set up the Babel plugin correctly. See https://github.com/callstack/linaria#setup'
+      );
+    const o = (l, c) => {
+      const { as: d = e, class: f2 = t } = l, p = a.propsAsIs === void 0 ? !(typeof d == "string" && d.indexOf("-") === -1 && !Me2(d[0])) : a.propsAsIs, i = We2(p, l, [
+        "as",
+        "class"
+      ]);
+      i.ref = c, i.className = a.atomic ? fe(a.class, i.className || f2) : fe(i.className || f2, a.class);
+      const { vars: g2 } = a;
+      if (g2) {
+        const I = {};
+        for (const B2 in g2) {
+          const v2 = g2[B2], k = v2[0], L2 = v2[1] || "", A2 = typeof k == "function" ? k(l) : k;
+          je(A2, a.name), I[`--${B2}`] = `${A2}${L2}`;
+        }
+        const y2 = i.style || {}, T2 = Object.keys(y2);
+        T2.length > 0 && T2.forEach((B2) => {
+          I[B2] = y2[B2];
+        }), i.style = I;
+      }
+      return e.__wyw_meta && e !== d ? (i.as = d, createElement(e, i)) : createElement(d, i);
+    }, r = forwardRef ? forwardRef(o) : (
+      // React.forwardRef won't available on older React versions and in Preact
+      // Fallback to a innerRef prop in that case
+      ((l) => {
+        const c = Se(l, ["innerRef"]);
+        return o(c, l.innerRef);
+      })
+    );
+    return r.displayName = a.name, r.__wyw_meta = {
+      className: a.class || t,
+      extends: e
+    }, r;
+  };
+}
+var s = process.env.NODE_ENV !== "production" ? new Proxy(he, {
+  get(e, t) {
+    return e(t);
+  }
+}) : he;
+function _e({
+  id: e,
+  value: t,
+  onChange: a,
+  disabled: o,
+  placeholder: r,
+  step: l,
+  min: c,
+  max: d,
+  ariaLabelledBy: f2,
+  ariaDescribedBy: p,
+  unitLabel: i
+}) {
+  const g2 = i ? `${e}-unit` : void 0, I = [p, g2].filter(Boolean), y2 = I.length > 0 ? I.join(" ") : void 0, T2 = !i;
+  return /* @__PURE__ */ jsx(Ue, {
+    "data-has-unit": i ? "true" : "false",
+    children: /* @__PURE__ */ jsxs(Ke2, {
+      $solo: T2,
+      children: [/* @__PURE__ */ jsx(Ge, {
+        id: e,
+        type: "number",
+        value: t ?? "",
+        onChange: (B2) => {
+          const v2 = B2.target.value;
+          a(v2 === "" ? void 0 : Number(v2));
+        },
+        disabled: o,
+        placeholder: r,
+        step: l,
+        min: c,
+        max: d,
+        "aria-labelledby": f2,
+        "aria-describedby": y2,
+        $solo: T2
+      }), i && /* @__PURE__ */ jsx(Ze2, {
+        id: g2,
+        "aria-hidden": "true",
+        children: i
+      })]
+    })
+  });
+}
+const Ue = /* @__PURE__ */ s("div")({
+  name: "NumberInputShell",
+  class: "nsp5rz5",
+  propsAsIs: false
+}), Ke2 = /* @__PURE__ */ s("div")({
+  name: "Frame",
+  class: "f1oepq0t",
+  propsAsIs: false
+}), Ge = /* @__PURE__ */ s("input")({
+  name: "Field",
+  class: "f1d340hw",
+  propsAsIs: false
+}), Ze2 = /* @__PURE__ */ s("span")({
+  name: "Unit",
+  class: "u1dmg6qu",
+  propsAsIs: false
+});
+function Xe({
+  id: e,
+  value: t,
+  onChange: a,
+  disabled: o,
+  placeholder: r,
+  ariaLabelledBy: l,
+  ariaDescribedBy: c,
+  min: d,
+  max: f2
+}) {
+  return /* @__PURE__ */ jsx(
+    "input",
+    {
+      id: e,
+      className: J,
+      type: "date",
+      value: t,
+      onChange: (p) => a(p.target.value),
+      disabled: o,
+      placeholder: r,
+      "aria-labelledby": l,
+      "aria-describedby": c,
+      min: d,
+      max: f2
+    }
+  );
+}
+function Ye2({
+  id: e,
+  value: t,
+  onChange: a,
+  disabled: o,
+  placeholder: r,
+  ariaLabelledBy: l,
+  ariaDescribedBy: c,
+  min: d,
+  max: f2
+}) {
+  return /* @__PURE__ */ jsx(
+    "input",
+    {
+      id: e,
+      className: J,
+      type: "datetime-local",
+      value: t,
+      onChange: (p) => a(p.target.value),
+      disabled: o,
+      placeholder: r,
+      "aria-labelledby": l,
+      "aria-describedby": c,
+      min: d,
+      max: f2
+    }
+  );
+}
+function Oe({
+  id: e,
+  value: t,
+  onChange: a,
+  disabled: o,
+  placeholder: r,
+  ariaLabelledBy: l,
+  ariaDescribedBy: c,
+  min: d,
+  max: f2
+}) {
+  return /* @__PURE__ */ jsx(
+    "input",
+    {
+      id: e,
+      className: J,
+      type: "time",
+      value: t,
+      onChange: (p) => a(p.target.value),
+      disabled: o,
+      placeholder: r,
+      "aria-labelledby": l,
+      "aria-describedby": c,
+      min: d,
+      max: f2
+    }
+  );
+}
+function Qe(e, t) {
+  return e.right < t.left ? t.left - e.right : t.right < e.left ? e.left - t.right : 0;
+}
+function ae(e, t, a) {
+  return e < t ? t : e > a ? a : e;
+}
+function be(e) {
+  if (!Number.isFinite(e)) return 0;
+  const t = e.toString(), a = t.indexOf("e-");
+  if (a !== -1) {
+    const r = Number(t.slice(a + 2));
+    return Number.isFinite(r) ? r : 0;
+  }
+  const o = t.indexOf(".");
+  return o === -1 ? 0 : t.length - o - 1;
+}
+function Je(e, t) {
+  if (!Number.isFinite(e)) return e;
+  if (t <= 0) return Math.round(e);
+  const a = 10 ** t;
+  return Math.round(e * a) / a;
+}
+function me(e, t, a, o, r = []) {
+  const [l, c] = useState(false);
+  return useLayoutEffect(() => {
+    const d = () => {
+      const y2 = t.current, T2 = a.current;
+      if (y2 == null || T2 == null) return;
+      const B2 = y2.getBoundingClientRect(), v2 = T2.getBoundingClientRect(), k = Qe(B2, v2) < o;
+      c(k);
+    }, f2 = typeof globalThis.requestAnimationFrame == "function" ? globalThis.requestAnimationFrame : (y2) => globalThis.setTimeout(y2, 0), p = typeof globalThis.cancelAnimationFrame == "function" ? globalThis.cancelAnimationFrame : (y2) => {
+      globalThis.clearTimeout(y2);
+    }, i = f2(() => d()), g2 = e.current;
+    if (g2 == null)
+      return () => {
+        p(i);
+      };
+    if (typeof ResizeObserver > "u") {
+      const y2 = () => d();
+      return globalThis.addEventListener("resize", y2), () => {
+        p(i), globalThis.removeEventListener("resize", y2);
+      };
+    }
+    const I = new ResizeObserver(() => d());
+    return I.observe(g2), () => {
+      p(i), I.disconnect();
+    };
+  }, [
+    e,
+    o,
+    t,
+    a,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    ...r
+  ]), l;
+}
+function en({
+  id: e,
+  value: t,
+  onChange: a,
+  min: o,
+  max: r,
+  step: l = 1,
+  disabled: c,
+  ariaLabelledBy: d,
+  ariaDescribedBy: f2,
+  lowerLabel: p,
+  upperLabel: i,
+  unitLabel: g2
+}) {
+  const I = typeof o == "number" ? o : 0, y2 = typeof r == "number" ? r : I + 100, T2 = ae(typeof t == "number" ? t : I, I, y2), B2 = y2 - I, v2 = B2 > 0 ? (T2 - I) / B2 * 100 : 0, k = ae(v2, 0, 100), L2 = g2 ? `${e}-unit` : void 0, A2 = [f2, L2].filter(Boolean).join(" ").trim(), m = useRef(null), C = useRef(null), x2 = useRef(null), H2 = useRef(null), E2 = me(m, C, x2, 8, [t]), j2 = me(m, C, H2, 8, [t]), W2 = !!g2 && /* @__PURE__ */ jsx(ln, {
+    id: L2,
+    children: g2
+  });
+  return /* @__PURE__ */ jsxs(nn, {
+    "data-disabled": c ? "true" : "false",
+    children: [/* @__PURE__ */ jsx(tn, {
+      id: e,
+      type: "range",
+      min: I,
+      max: y2,
+      step: l || 1,
+      value: T2,
+      onChange: (D) => {
+        const w2 = Number(D.target.value);
+        a(Number.isNaN(w2) ? void 0 : w2);
+      },
+      disabled: c,
+      "aria-labelledby": d,
+      "aria-describedby": A2.length > 0 ? A2 : void 0
+    }), /* @__PURE__ */ jsxs(rn, {
+      "aria-hidden": "true",
+      ref: m,
+      children: [/* @__PURE__ */ jsxs(on, {
+        "aria-hidden": "true",
+        $left: k,
+        ref: C,
+        children: [t, " ", W2]
+      }), /* @__PURE__ */ jsx("div", {
+        ref: x2,
+        "data-hidden": E2 ? "true" : "false",
+        children: p ?? /* @__PURE__ */ jsxs(Fragment, {
+          children: [I, " ", W2]
+        })
+      }), /* @__PURE__ */ jsx("div", {
+        ref: H2,
+        "data-hidden": j2 ? "true" : "false",
+        children: i ?? /* @__PURE__ */ jsxs(Fragment, {
+          children: [y2, " ", W2]
+        })
+      })]
+    })]
+  });
+}
+const nn = /* @__PURE__ */ s("div")({
+  name: "Wrapper",
+  class: "w1gz5af8",
+  propsAsIs: false
+}), tn = /* @__PURE__ */ s("input")({
+  name: "Slider",
+  class: "s7j4lil",
+  propsAsIs: false
+}), sn = () => (e) => `${e.$left}%`, an = () => (e) => `translate(-${e.$left}%, 0)`, on = /* @__PURE__ */ s("div")({
+  name: "Value",
+  class: "v7fpyu5",
+  propsAsIs: false,
+  vars: {
+    "v7fpyu5-0": [sn()],
+    "v7fpyu5-1": [an()]
+  }
+}), rn = /* @__PURE__ */ s("div")({
+  name: "Labels",
+  class: "l1upky0z",
+  propsAsIs: false
+}), ln = /* @__PURE__ */ s("span")({
+  name: "Unit",
+  class: "u10zun72",
+  propsAsIs: false
+});
+function cn({ size: e = 16 }) {
+  return /* @__PURE__ */ jsx(
+    "svg",
+    {
+      xmlns: "http://www.w3.org/2000/svg",
+      width: e,
+      height: e,
+      fill: "#000000",
+      viewBox: "0 0 256 256",
+      children: /* @__PURE__ */ jsx("path", { d: "M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128Z" })
+    }
+  );
+}
+function ie({ size: e = 16 }) {
+  return /* @__PURE__ */ jsx(
+    "svg",
+    {
+      xmlns: "http://www.w3.org/2000/svg",
+      width: e,
+      height: e,
+      fill: "#000000",
+      viewBox: "0 0 256 256",
+      children: /* @__PURE__ */ jsx("path", { d: "M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z" })
+    }
+  );
+}
+function dn({
+  id: e,
+  value: t,
+  onChange: a,
+  min: o,
+  max: r,
+  step: l = 1,
+  disabled: c,
+  ariaLabelledBy: d,
+  ariaDescribedBy: f2,
+  placeholder: p,
+  unitLabel: i
+}) {
+  const g2 = i ? `${e}-unit` : void 0, I = [f2, g2].filter(Boolean).join(" ").trim(), y2 = (B2) => {
+    if (c) return;
+    const v2 = t ?? 0, k = Number.isFinite(l) && l !== 0 ? l : 1, L2 = Math.max(be(k), be(v2)), A2 = Je(v2 + B2 * k, L2);
+    if (typeof o == "number" && A2 < o) {
+      a(o);
+      return;
+    }
+    if (typeof r == "number" && A2 > r) {
+      a(r);
+      return;
+    }
+    a(A2);
+  }, T2 = /* @__PURE__ */ jsxs(pn, {
+    "data-disabled": c ? "true" : "false",
+    children: [/* @__PURE__ */ jsx(ve, {
+      type: "button",
+      onClick: () => y2(-1),
+      disabled: c,
+      "aria-label": "Decrease value",
+      children: /* @__PURE__ */ jsx(cn, {
+        size: 14
+      })
+    }), /* @__PURE__ */ jsx(fn, {
+      id: e,
+      type: "number",
+      value: t ?? "",
+      onChange: (B2) => {
+        const v2 = B2.target.value;
+        if (v2 === "") {
+          a();
+          return;
+        }
+        const k = Number(v2);
+        a(Number.isNaN(k) ? t : k);
+      },
+      min: o,
+      max: r,
+      step: l,
+      disabled: c,
+      "aria-labelledby": d,
+      "aria-describedby": I.length > 0 ? I : void 0,
+      placeholder: p
+    }), /* @__PURE__ */ jsx(ve, {
+      type: "button",
+      onClick: () => y2(1),
+      disabled: c,
+      "aria-label": "Increase value",
+      children: /* @__PURE__ */ jsx(ie, {
+        size: 14
+      })
+    })]
+  });
+  return i ? /* @__PURE__ */ jsxs(un, {
+    children: [T2, /* @__PURE__ */ jsx(hn, {
+      id: g2,
+      children: i
+    })]
+  }) : T2;
+}
+const un = /* @__PURE__ */ s("div")({
+  name: "SpinnerShell",
+  class: "s1whvwlr",
+  propsAsIs: false
+}), pn = /* @__PURE__ */ s("div")({
+  name: "Spinner",
+  class: "s5xgu43",
+  propsAsIs: false
+}), ve = /* @__PURE__ */ s("button")({
+  name: "SpinnerButton",
+  class: "s7shwqt",
+  propsAsIs: false
+}), fn = /* @__PURE__ */ s("input")({
+  name: "SpinnerField",
+  class: "sbxtz9n",
+  propsAsIs: false
+}), hn = /* @__PURE__ */ s("span")({
+  name: "Unit",
+  class: "u1ad0txx",
+  propsAsIs: false
+});
+function te({
+  label: e = "Loading options...",
+  showLabel: t = false,
+  size: a = "sm"
+}) {
+  return /* @__PURE__ */ jsxs(bn, {
+    role: "status",
+    "aria-live": "polite",
+    children: [/* @__PURE__ */ jsx(mn, {
+      "aria-hidden": "true",
+      "data-size": a
+    }), t ? /* @__PURE__ */ jsx(vn, {
+      children: e
+    }) : /* @__PURE__ */ jsx(yn, {
+      children: e
+    })]
+  });
+}
+const bn = /* @__PURE__ */ s("span")({
+  name: "SpinnerWrapper",
+  class: "s135gkc2",
+  propsAsIs: false
+}), mn = /* @__PURE__ */ s("span")({
+  name: "SpinnerIcon",
+  class: "se1s1jc",
+  propsAsIs: false
+}), vn = /* @__PURE__ */ s("span")({
+  name: "SpinnerText",
+  class: "s1tw29ip",
+  propsAsIs: false
+}), yn = /* @__PURE__ */ s("span")({
+  name: "VisuallyHidden",
+  class: "v1vdzlwb",
+  propsAsIs: false
+});
+function kn({
+  options: e,
+  selectedOption: t,
+  specifyOtherOption: a,
+  customOptionForm: o,
+  onChange: r,
+  onSearch: l,
+  id: c,
+  ariaLabelledBy: d,
+  ariaDescribedBy: f2,
+  disabled: p = false,
+  isLoading: i = false,
+  placeholder: g2
+}) {
+  const I = useRef(null), y2 = useRef(null), [T2, B2] = useState(""), [v2, k] = useState(false), [L2, A2] = useState(false), [m, C] = useState(), x2 = useRef(/* @__PURE__ */ new Map()), H2 = !!o, E2 = v2 || H2, W2 = !!l && E2, D = t?.token ?? "", w2 = (b) => {
+    B2(b), l?.(b);
+  }, Z2 = t ? t.label : /* @__PURE__ */ jsx(Cn, {
+    children: g2 ?? "Select an option"
+  }), P2 = `${c}-listbox`, $2 = useMemo(() => a ? [...e, a] : e, [e, a]), _2 = a ? e.length : -1, q2 = useMemo(() => {
+    if (!E2 || $2.length === 0)
+      return;
+    const b = m ? $2.find((U2) => U2.token === m) : void 0;
+    if (b && !b.disabled)
+      return b.token;
+    const N2 = D ? $2.find((U2) => U2.token === D) : void 0;
+    return N2 && !N2.disabled ? N2.token : $2.find((U2) => !U2.disabled)?.token;
+  }, [m, E2, D, $2]), z2 = $2.findIndex((b) => b.token === q2), X2 = z2 === -1 ? void 0 : `${P2}-option-${z2}`;
+  useEffect(() => {
+    if (!E2 || q2 === void 0) return;
+    x2.current.get(q2)?.scrollIntoView?.({
+      block: "nearest"
+    });
+  }, [E2, q2]), useEffect(() => {
+    v2 && y2.current?.focus();
+  }, [v2]);
+  const K2 = (b) => {
+    p || i || (r(b), w2(""), A2(false), C(void 0), k(false));
+  }, ee2 = () => {
+    r(), w2(""), A2(false), C(void 0), k(false);
+  }, G = (b, N2) => {
+    if ($2.length === 0) return -1;
+    const F = $2.length, U2 = b < 0 ? N2 === 1 ? -1 : F : b;
+    for (const $e2 of $2.keys()) {
+      const de2 = ((U2 + N2 * ($e2 + 1)) % F + F) % F;
+      if (!$2[de2].disabled)
+        return de2;
+    }
+    return -1;
+  }, u = (b) => {
+    const N2 = [...$2.keys()];
+    b === -1 && N2.reverse();
+    for (const F of N2)
+      if (!$2[F].disabled) return F;
+    return -1;
+  }, R2 = (b) => {
+    if (H2 || I.current == null) return;
+    const N2 = b.relatedTarget;
+    if (N2 && I.current.contains(N2))
+      return;
+    !p && !i && L2 && T2.trim().length === 0 && t && r(), C(void 0), k(false);
+  }, S = (b) => {
+    if (b.key === "ArrowDown" || b.key === "ArrowUp") {
+      if (b.preventDefault(), !E2) {
+        w2(""), A2(false), k(true);
+        return;
+      }
+      const N2 = b.key === "ArrowDown" ? 1 : -1, F = G(z2, N2);
+      F !== -1 && C($2[F].token);
+      return;
+    }
+    if (b.key === "Home" || b.key === "End") {
+      b.preventDefault(), E2 || (w2(""), A2(false), k(true));
+      const N2 = b.key === "Home" ? 1 : -1, F = u(N2);
+      F !== -1 && C($2[F].token);
+      return;
+    }
+    if (b.key === "Enter") {
+      if (b.preventDefault(), !E2) {
+        w2(""), A2(false), k(true);
+        return;
+      }
+      if (z2 !== -1) {
+        const N2 = $2[z2];
+        N2.disabled || K2(N2.token);
+      }
+      return;
+    }
+    if (b.key === "Escape") {
+      if (H2) return;
+      C(void 0), k(false);
+    }
+  };
+  return /* @__PURE__ */ jsx("div", {
+    "data-loading": i ? "true" : void 0,
+    ref: I,
+    onBlur: R2,
+    children: /* @__PURE__ */ jsx(In, {
+      children: /* @__PURE__ */ jsxs(gn, {
+        children: [W2 ? /* @__PURE__ */ jsx(An, {
+          ref: y2,
+          id: c,
+          className: J,
+          "data-has-actions": t || i ? "true" : void 0,
+          value: T2,
+          onChange: (b) => {
+            w2(b.target.value), A2(true), k(true);
+          },
+          onFocus: () => {
+            !p && !i && (w2(""), A2(false), k(true));
+          },
+          onClick: () => {
+            !p && !i && !v2 && (w2(""), A2(false), k(true));
+          },
+          onKeyDown: S,
+          disabled: p || i,
+          "aria-labelledby": d,
+          "aria-describedby": f2,
+          "aria-busy": i || void 0,
+          role: "combobox",
+          "aria-autocomplete": "list",
+          "aria-expanded": E2,
+          "aria-controls": P2,
+          "aria-activedescendant": E2 && X2 ? X2 : void 0,
+          placeholder: g2 ?? "Select an option",
+          autoComplete: "off"
+        }) : /* @__PURE__ */ jsx(xn, {
+          id: c,
+          className: J,
+          "data-has-actions": t || i ? "true" : void 0,
+          role: "combobox",
+          "aria-labelledby": d,
+          "aria-describedby": f2,
+          "aria-busy": i || void 0,
+          "aria-expanded": E2,
+          "aria-controls": P2,
+          "aria-placeholder": t ? void 0 : g2 ?? "Select an option",
+          "aria-disabled": p || i ? true : void 0,
+          tabIndex: p || i ? -1 : 0,
+          onClick: () => {
+            !p && !i && !v2 && (w2(""), A2(false), k(true));
+          },
+          onKeyDown: S,
+          children: Z2
+        }), (t || i) && /* @__PURE__ */ jsxs($n, {
+          children: [t && /* @__PURE__ */ jsx(Bn, {
+            type: "button",
+            onClick: ee2,
+            disabled: p || i,
+            onMouseDown: (b) => b.preventDefault(),
+            "aria-label": "Clear",
+            children: "×"
+          }), i && /* @__PURE__ */ jsx(te, {})]
+        }), E2 && /* @__PURE__ */ jsx(Sn, {
+          id: P2,
+          role: "listbox",
+          "aria-labelledby": d,
+          "aria-describedby": f2,
+          children: o ? /* @__PURE__ */ jsx(wn, {
+            role: "presentation",
+            children: o
+          }) : /* @__PURE__ */ jsxs(Fragment, {
+            children: [e.map((b, N2) => /* @__PURE__ */ jsx(we, {
+              id: `${P2}-option-${N2}`,
+              type: "button",
+              role: "option",
+              "aria-selected": b.token === D,
+              "aria-disabled": b.disabled || void 0,
+              disabled: b.disabled,
+              "data-active": b.token === q2,
+              ref: (F) => {
+                F ? x2.current.set(b.token, F) : x2.current.delete(b.token);
+              },
+              onFocus: () => C(b.token),
+              onKeyDown: S,
+              onClick: () => {
+                b.disabled || K2(b.token);
+              },
+              children: b.label
+            }, b.token)), a && /* @__PURE__ */ jsx(Rn, {
+              id: `${P2}-option-${_2}`,
+              type: "button",
+              role: "option",
+              "aria-selected": a.token === D,
+              "aria-disabled": a.disabled || void 0,
+              disabled: !!a.disabled,
+              "data-active": a.token === q2,
+              ref: (b) => {
+                b ? x2.current.set(a.token, b) : x2.current.delete(a.token);
+              },
+              onFocus: () => C(a.token),
+              onKeyDown: S,
+              onClick: () => {
+                a.disabled || K2(a.token);
+              },
+              children: a.label
+            })]
+          })
+        })]
+      })
+    })
+  });
+}
+const In = /* @__PURE__ */ s("div")({
+  name: "FieldRow",
+  class: "f1cbi36d",
+  propsAsIs: false
+}), gn = /* @__PURE__ */ s("div")({
+  name: "SelectWrapper",
+  class: "s3ruqum",
+  propsAsIs: false
+}), An = /* @__PURE__ */ s("input")({
+  name: "SelectInputField",
+  class: "sztqj6i",
+  propsAsIs: false
+}), xn = /* @__PURE__ */ s("div")({
+  name: "DisplayField",
+  class: "d8y68m0",
+  propsAsIs: false
+}), Cn = /* @__PURE__ */ s("span")({
+  name: "PlaceholderText",
+  class: "p1v5n38m",
+  propsAsIs: false
+}), Sn = /* @__PURE__ */ s("div")({
+  name: "OptionsList",
+  class: "o131x9du",
+  propsAsIs: false
+}), wn = /* @__PURE__ */ s("div")({
+  name: "CustomOptionForm",
+  class: "caexoz0",
+  propsAsIs: false
+}), we = /* @__PURE__ */ s("button")({
+  name: "OptionButton",
+  class: "o231jlu",
+  propsAsIs: false
+}), Tn = () => we, Rn = /* @__PURE__ */ s(Tn())({
+  name: "StickyOption",
+  class: "s1f7wrc2",
+  propsAsIs: true
+}), Bn = /* @__PURE__ */ s("button")({
+  name: "ClearButton",
+  class: "cuwbkju",
+  propsAsIs: false
+}), $n = /* @__PURE__ */ s("div")({
+  name: "SelectActions",
+  class: "s1dv5so4",
+  propsAsIs: false
+});
+function En({
+  id: e,
+  groupName: t,
+  value: a,
+  checked: o,
+  onChange: r,
+  ariaLabelledBy: l,
+  ariaDescribedBy: c,
+  disabled: d,
+  label: f2
+}) {
+  return /* @__PURE__ */ jsxs(Nn, {
+    children: [/* @__PURE__ */ jsx("input", {
+      id: e,
+      name: t,
+      type: "radio",
+      value: a,
+      checked: o,
+      disabled: d,
+      "aria-labelledby": l,
+      "aria-describedby": c,
+      onChange: r
+    }), !!f2 && /* @__PURE__ */ jsx("span", {
+      children: f2
+    })]
+  });
+}
+const Nn = /* @__PURE__ */ s("label")({
+  name: "RadioLabel",
+  class: "rxkc9tk",
+  propsAsIs: false
+});
+function Fn({
+  options: e,
+  selectedOption: t,
+  onChange: a,
+  specifyOtherOption: o,
+  customOptionForm: r,
+  id: l,
+  ariaLabelledBy: c,
+  ariaDescribedBy: d,
+  disabled: f2,
+  isLoading: p = false
+}) {
+  const i = o ? [...e, o] : e, g2 = t?.token ?? "", I = i.length > 0;
+  return /* @__PURE__ */ jsxs(Ln2, {
+    id: l,
+    children: [I && /* @__PURE__ */ jsx(Hn, {
+      role: "radiogroup",
+      "aria-labelledby": c,
+      "aria-describedby": d,
+      "aria-busy": p || void 0,
+      children: i.map((y2) => /* @__PURE__ */ jsx(zn, {
+        children: /* @__PURE__ */ jsxs(Dn, {
+          children: [/* @__PURE__ */ jsx("input", {
+            type: "radio",
+            name: l,
+            value: y2.token,
+            checked: g2 === y2.token,
+            disabled: f2 || p || y2.disabled,
+            onChange: (T2) => a(T2.target.value)
+          }), y2.label]
+        })
+      }, y2.token))
+    }), p && /* @__PURE__ */ jsx(te, {
+      showLabel: true
+    }), r && /* @__PURE__ */ jsx(Pn, {
+      children: r
+    })]
+  });
+}
+const Ln2 = /* @__PURE__ */ s("div")({
+  name: "Stack",
+  class: "sudk0o4",
+  propsAsIs: false
+}), Hn = /* @__PURE__ */ s("div")({
+  name: "RadioGroupContainer",
+  class: "r1aow8tu",
+  propsAsIs: false
+}), zn = /* @__PURE__ */ s("div")({
+  name: "RadioOption",
+  class: "rizv34n",
+  propsAsIs: false
+}), Dn = /* @__PURE__ */ s("label")({
+  name: "RadioLabel",
+  class: "rwx5360",
+  propsAsIs: false
+}), Pn = /* @__PURE__ */ s("div")({
+  name: "CustomFormSlot",
+  class: "c16734ic",
+  propsAsIs: false
+});
+function Mn({
+  id: e,
+  checked: t,
+  onChange: a,
+  ariaLabelledBy: o,
+  ariaDescribedBy: r,
+  disabled: l,
+  label: c
+}) {
+  return /* @__PURE__ */ jsxs(qn, {
+    children: [/* @__PURE__ */ jsx("input", {
+      id: e,
+      type: "checkbox",
+      checked: t,
+      disabled: l,
+      "aria-labelledby": o,
+      "aria-describedby": r,
+      onChange: a
+    }), !!c && /* @__PURE__ */ jsx("span", {
+      children: c
+    })]
+  });
+}
+const qn = /* @__PURE__ */ s("label")({
+  name: "CheckboxLabel",
+  class: "ceob62i",
+  propsAsIs: false
+});
+function Wn({
+  options: e,
+  selectedOptions: t,
+  specifyOtherOption: a,
+  customOptionForm: o,
+  onSelect: r,
+  onDeselect: l,
+  id: c,
+  ariaLabelledBy: d,
+  ariaDescribedBy: f2,
+  disabled: p,
+  isLoading: i = false
+}) {
+  const g2 = a ? [...e, a] : e, I = new Map(t.map((v2) => [v2.token, v2])), y2 = a?.token, T2 = !!(o && y2), B2 = g2.length > 0;
+  return /* @__PURE__ */ jsxs(jn, {
+    id: c,
+    "data-disabled": p,
+    "aria-busy": i || void 0,
+    role: "group",
+    "aria-labelledby": d,
+    "aria-describedby": f2,
+    children: [B2 && /* @__PURE__ */ jsx(Vn, {
+      children: g2.map((v2, k) => {
+        const L2 = `${c}-option-${k}`, A2 = I.get(v2.token), m = v2.token === y2, C = [f2, A2?.ariaDescribedBy].filter(Boolean).join(" ") || void 0;
+        return /* @__PURE__ */ jsxs(_n, {
+          children: [/* @__PURE__ */ jsxs(Un, {
+            children: [/* @__PURE__ */ jsx("input", {
+              type: "checkbox",
+              name: c,
+              checked: m && T2 || !!A2,
+              disabled: p || i || v2.disabled && !(m && T2),
+              "aria-labelledby": `${d} ${L2}`,
+              "aria-describedby": C,
+              onChange: (x2) => {
+                x2.target.checked ? r(v2.token) : l(v2.token);
+              }
+            }), /* @__PURE__ */ jsx("span", {
+              id: L2,
+              children: v2.label
+            })]
+          }), A2?.errors ?? void 0]
+        }, v2.token);
+      })
+    }), i && /* @__PURE__ */ jsx(te, {
+      showLabel: true
+    }), !!o && /* @__PURE__ */ jsx("div", {
+      children: o
+    })]
+  });
+}
+const jn = /* @__PURE__ */ s("div")({
+  name: "Stack",
+  class: "ssflfgx",
+  propsAsIs: false
+}), Vn = /* @__PURE__ */ s("div")({
+  name: "OptionsList",
+  class: "o1ecvwjt",
+  propsAsIs: false
+}), _n = /* @__PURE__ */ s("div")({
+  name: "CheckboxOption",
+  class: "c1lee8jc",
+  propsAsIs: false
+}), Un = /* @__PURE__ */ s("label")({
+  name: "CheckboxLabel",
+  class: "c17qz41d",
+  propsAsIs: false
+});
+function Kn(e) {
+  return e instanceof Element ? !!e.closest("input,textarea,select,button,a,[contenteditable]") : false;
+}
+function Gn({
+  options: e,
+  onSelect: t,
+  onDeselect: a,
+  onSearch: o,
+  id: r,
+  specifyOtherOption: l,
+  ariaLabelledBy: c,
+  ariaDescribedBy: d,
+  disabled: f2 = false,
+  isLoading: p = false,
+  selectedOptions: i,
+  customOptionForm: g2,
+  placeholder: I
+}) {
+  const y2 = useRef(null), [T2, B2] = useState(""), [v2, k] = useState(false), [L2, A2] = useState(), m = useRef(/* @__PURE__ */ new Map()), C = !!g2, x2 = v2 || C, H2 = !!o, E2 = useMemo(() => new Set(i.map((u) => u.token)), [i]), j2 = `${r}-listbox`, W2 = (u) => {
+    B2(u), o?.(u);
+  }, D = useMemo(() => e.filter((u) => !E2.has(u.token)), [e, E2]), w2 = useMemo(() => l ? [...D, l] : D, [D, l]), Z2 = l ? D.length : -1, P2 = useMemo(() => {
+    if (!x2 || w2.length === 0)
+      return;
+    const u = L2 ? w2.find((S) => S.token === L2) : void 0;
+    return u && !u.disabled ? u.token : w2.find((S) => !S.disabled)?.token;
+  }, [L2, x2, w2]), $2 = w2.findIndex((u) => u.token === P2), _2 = $2 === -1 ? void 0 : `${j2}-option-${$2}`;
+  useEffect(() => {
+    if (!x2 || P2 === void 0) return;
+    m.current.get(P2)?.scrollIntoView?.({
+      block: "nearest"
+    });
+  }, [P2, x2]);
+  const q2 = (u) => {
+    u.length === 0 || f2 || p || (t(u), W2(""), A2(void 0), k(false));
+  }, z2 = () => {
+    f2 || p || k(true);
+  }, X2 = (u, R2) => {
+    if (w2.length === 0) return -1;
+    const S = w2.length, b = u < 0 ? R2 === 1 ? -1 : S : u;
+    for (const N2 of w2.keys()) {
+      const U2 = ((b + R2 * (N2 + 1)) % S + S) % S;
+      if (!w2[U2].disabled)
+        return U2;
+    }
+    return -1;
+  }, K2 = (u) => {
+    const R2 = [...w2.keys()];
+    u === -1 && R2.reverse();
+    for (const S of R2)
+      if (!w2[S].disabled) return S;
+    return -1;
+  }, ee2 = (u) => {
+    if (C || !y2.current) return;
+    const R2 = u.relatedTarget;
+    R2 && y2.current.contains(R2) || (W2(""), A2(void 0), k(false));
+  }, G = (u) => {
+    if (u.key === "ArrowDown" || u.key === "ArrowUp") {
+      if (u.preventDefault(), !x2) {
+        z2();
+        return;
+      }
+      const R2 = u.key === "ArrowDown" ? 1 : -1, S = X2($2, R2);
+      S !== -1 && A2(w2[S].token);
+      return;
+    }
+    if (u.key === "Home" || u.key === "End") {
+      u.preventDefault(), x2 || z2();
+      const R2 = u.key === "Home" ? 1 : -1, S = K2(R2);
+      S !== -1 && A2(w2[S].token);
+      return;
+    }
+    if (u.key === "Enter") {
+      if (u.preventDefault(), !x2) {
+        z2();
+        return;
+      }
+      if ($2 !== -1) {
+        const R2 = w2[$2];
+        R2.disabled || q2(R2.token);
+      }
+      return;
+    }
+    if (u.key === "Escape") {
+      if (C) return;
+      W2(""), A2(void 0), k(false);
+    }
+  };
+  return /* @__PURE__ */ jsx(Zn, {
+    children: /* @__PURE__ */ jsxs(Xn, {
+      ref: y2,
+      onBlur: ee2,
+      "data-disabled": f2 ? "true" : void 0,
+      children: [i.map((u) => {
+        const R2 = f2 || !!u.disabled;
+        return /* @__PURE__ */ jsxs(at, {
+          children: [/* @__PURE__ */ jsx(ot, {
+            role: "button",
+            tabIndex: R2 ? void 0 : 0,
+            "aria-label": "Remove",
+            "aria-disabled": R2 ? true : void 0,
+            "data-clickable": "true",
+            "data-disabled": R2 ? "true" : void 0,
+            onClick: (S) => {
+              R2 || Kn(S.target) || a(u.token);
+            },
+            onKeyDown: (S) => {
+              R2 || S.currentTarget === S.target && (S.key === "Enter" || S.key === " ") && (S.preventDefault(), a(u.token));
+            },
+            children: /* @__PURE__ */ jsx(rt2, {
+              children: u.label
+            })
+          }), u.errors]
+        }, u.token);
+      }), /* @__PURE__ */ jsx(Yn, {
+        children: H2 ? /* @__PURE__ */ jsx(On, {
+          id: r,
+          value: T2,
+          onChange: (u) => {
+            W2(u.target.value), z2();
+          },
+          onFocus: () => {
+            z2();
+          },
+          onClick: () => {
+            z2();
+          },
+          onKeyDown: G,
+          disabled: f2 || p,
+          "aria-labelledby": c,
+          "aria-describedby": d,
+          "aria-busy": p || void 0,
+          role: "combobox",
+          "aria-autocomplete": "list",
+          "aria-expanded": x2,
+          "aria-controls": j2,
+          "aria-activedescendant": x2 && _2 ? _2 : void 0,
+          placeholder: I ?? "Select an option",
+          autoComplete: "off"
+        }) : /* @__PURE__ */ jsx(Qn, {
+          id: r,
+          role: "combobox",
+          "aria-labelledby": c,
+          "aria-describedby": d,
+          "aria-busy": p || void 0,
+          "aria-expanded": x2,
+          "aria-controls": j2,
+          "aria-activedescendant": x2 && _2 ? _2 : void 0,
+          "aria-disabled": f2 || p ? true : void 0,
+          tabIndex: f2 || p ? -1 : 0,
+          onFocus: z2,
+          onClick: z2,
+          onKeyDown: G,
+          children: i.length === 0 && /* @__PURE__ */ jsx(et, {
+            children: I ?? "Select an option"
+          })
+        })
+      }), p && /* @__PURE__ */ jsx(Jn, {
+        children: /* @__PURE__ */ jsx(te, {})
+      }), x2 && /* @__PURE__ */ jsx(nt, {
+        id: j2,
+        role: "listbox",
+        "aria-labelledby": c,
+        "aria-describedby": d,
+        children: g2 ? /* @__PURE__ */ jsx(lt, {
+          role: "presentation",
+          children: g2
+        }) : /* @__PURE__ */ jsxs(Fragment, {
+          children: [D.map((u, R2) => /* @__PURE__ */ jsx(Te, {
+            id: `${j2}-option-${R2}`,
+            type: "button",
+            role: "option",
+            "aria-selected": E2.has(u.token),
+            "aria-disabled": u.disabled || void 0,
+            disabled: !!u.disabled,
+            "data-active": u.token === P2,
+            ref: (S) => {
+              S ? m.current.set(u.token, S) : m.current.delete(u.token);
+            },
+            onFocus: () => A2(u.token),
+            onKeyDown: G,
+            onClick: () => {
+              u.disabled || q2(u.token);
+            },
+            children: u.label
+          }, u.token)), l && /* @__PURE__ */ jsx(st, {
+            id: `${j2}-option-${Z2}`,
+            type: "button",
+            role: "option",
+            "aria-selected": E2.has(l.token),
+            "aria-disabled": l.disabled || void 0,
+            disabled: !!l.disabled,
+            "data-active": l.token === P2,
+            ref: (u) => {
+              u ? m.current.set(l.token, u) : m.current.delete(l.token);
+            },
+            onFocus: () => A2(l.token),
+            onKeyDown: G,
+            onClick: () => {
+              l.disabled || q2(l.token);
+            },
+            children: l.label
+          }, l.token)]
+        })
+      })]
+    })
+  });
+}
+const Zn = /* @__PURE__ */ s("div")({
+  name: "Stack",
+  class: "s160j3v7",
+  propsAsIs: false
+}), Xn = /* @__PURE__ */ s("div")({
+  name: "SelectField",
+  class: "s1rxrkyk",
+  propsAsIs: false
+}), Yn = /* @__PURE__ */ s("div")({
+  name: "SelectWrapper",
+  class: "s1mun8we",
+  propsAsIs: false
+}), On = /* @__PURE__ */ s("input")({
+  name: "SelectInputField",
+  class: "s3jdfjk",
+  propsAsIs: false
+}), Qn = /* @__PURE__ */ s("div")({
+  name: "SelectTrigger",
+  class: "s1wdx17f",
+  propsAsIs: false
+}), Jn = /* @__PURE__ */ s("div")({
+  name: "SelectActions",
+  class: "sdnw7dp",
+  propsAsIs: false
+}), et = /* @__PURE__ */ s("span")({
+  name: "PlaceholderText",
+  class: "pllwu6z",
+  propsAsIs: false
+}), nt = /* @__PURE__ */ s("div")({
+  name: "DropdownPanel",
+  class: "d1kfhr2q",
+  propsAsIs: false
+}), Te = /* @__PURE__ */ s("button")({
+  name: "OptionButton",
+  class: "oqyeu4k",
+  propsAsIs: false
+}), tt = () => Te, st = /* @__PURE__ */ s(tt())({
+  name: "StickyOption",
+  class: "s145ish8",
+  propsAsIs: true
+}), at = /* @__PURE__ */ s("div")({
+  name: "ChipColumn",
+  class: "c1ohc116",
+  propsAsIs: false
+}), ot = /* @__PURE__ */ s("div")({
+  name: "Chip",
+  class: "c17nsqwo",
+  propsAsIs: false
+}), rt2 = /* @__PURE__ */ s("div")({
+  name: "ChipContent",
+  class: "c1q8ptkp",
+  propsAsIs: false
+}), lt = /* @__PURE__ */ s("div")({
+  name: "CustomOptionContent",
+  class: "c3soz7u",
+  propsAsIs: false
+});
+function it({
+  content: e,
+  errors: t,
+  submit: a,
+  cancel: o
+}) {
+  return /* @__PURE__ */ jsxs(ct, {
+    children: [/* @__PURE__ */ jsx("div", {
+      children: e
+    }), t ?? void 0, /* @__PURE__ */ jsxs(dt, {
+      children: [/* @__PURE__ */ jsx(pt, {
+        type: "button",
+        onClick: o.onClick,
+        disabled: o.disabled,
+        children: o.label
+      }), /* @__PURE__ */ jsx(ht, {
+        type: "button",
+        onClick: a.onClick,
+        disabled: a.disabled,
+        children: a.label
+      })]
+    })]
+  });
+}
+const ct = /* @__PURE__ */ s("div")({
+  name: "Stack",
+  class: "savhv75",
+  propsAsIs: false
+}), dt = /* @__PURE__ */ s("div")({
+  name: "Actions",
+  class: "albyvj",
+  propsAsIs: false
+}), Re = /* @__PURE__ */ s("button")({
+  name: "ActionButton",
+  class: "abr0440",
+  propsAsIs: false
+}), ut = () => Re, pt = /* @__PURE__ */ s(ut())({
+  name: "CancelButton",
+  class: "cthodxk",
+  propsAsIs: true
+}), ft = () => Re, ht = /* @__PURE__ */ s(ft())({
+  name: "SubmitButton",
+  class: "s103vigk",
+  propsAsIs: true
+});
+function bt2({
+  id: e,
+  messages: t
+}) {
+  if (t.length !== 0)
+    return /* @__PURE__ */ jsx(mt, {
+      id: e,
+      role: "alert",
+      children: t.map((a, o) => /* @__PURE__ */ jsx("li", {
+        children: a
+      }, o))
+    });
+}
+const mt = /* @__PURE__ */ s("ul")({
+  name: "List",
+  class: "l4r6tz6",
+  propsAsIs: false
+});
+function vt2({
+  prefix: e,
+  children: t,
+  id: a,
+  htmlFor: o,
+  required: r,
+  help: l,
+  legal: c,
+  flyover: d,
+  as: f2 = "label"
+}) {
+  const p = f2 === "label" ? "label" : "div";
+  return /* @__PURE__ */ jsx(yt2, {
+    as: p,
+    htmlFor: p === "label" ? o : void 0,
+    children: /* @__PURE__ */ jsxs(kt, {
+      as: p === "div" ? "div" : "span",
+      children: [/* @__PURE__ */ jsxs(It, {
+        id: a,
+        as: p === "div" ? "div" : "span",
+        "data-emphasis": f2 !== "text" ? "true" : void 0,
+        "data-size": f2 === "legend" ? "legend" : void 0,
+        children: [e && /* @__PURE__ */ jsx(gt, {
+          children: e
+        }), t, r && /* @__PURE__ */ jsx(At, {
+          "aria-hidden": true,
+          children: "*"
+        })]
+      }), l, c, d]
+    })
+  });
+}
+const yt2 = /* @__PURE__ */ s("label")({
+  name: "Wrapper",
+  class: "w98aeel",
+  propsAsIs: false
+}), kt = /* @__PURE__ */ s("div")({
+  name: "LabelRow",
+  class: "la00vnj",
+  propsAsIs: false
+}), It = /* @__PURE__ */ s("span")({
+  name: "LabelText",
+  class: "l1qfjdc7",
+  propsAsIs: false
+}), gt = /* @__PURE__ */ s("span")({
+  name: "Prefix",
+  class: "p1h2qkre",
+  propsAsIs: false
+}), At = /* @__PURE__ */ s("span")({
+  name: "Required",
+  class: "r1pob1zs",
+  propsAsIs: false
+});
+function xt({
+  linkId: e,
+  header: t,
+  children: a,
+  errors: o
+}) {
+  return /* @__PURE__ */ jsxs(Ct, {
+    "data-linkid": e,
+    children: [t, a, o]
+  });
+}
+const Ct = /* @__PURE__ */ s("div")({
+  name: "Container",
+  class: "c1dvfeyi",
+  propsAsIs: false
+});
+function St({
+  isLoading: e
+}) {
+  if (e)
+    return /* @__PURE__ */ jsx(wt, {
+      role: "status",
+      children: "Loading options…"
+    });
+}
+const wt = /* @__PURE__ */ s("div")({
+  name: "Hint",
+  class: "hxdy7tn",
+  propsAsIs: false
+});
+function Tt({
+  id: e,
+  children: t,
+  ariaLabel: a
+}) {
+  return /* @__PURE__ */ jsxs(Rt, {
+    children: [/* @__PURE__ */ jsx(Bt, {
+      type: "button",
+      "aria-describedby": e,
+      "aria-label": a,
+      children: "?"
+    }), /* @__PURE__ */ jsx($t, {
+      role: "tooltip",
+      "aria-hidden": "true",
+      children: t
+    }), /* @__PURE__ */ jsx(Et, {
+      id: e,
+      children: t
+    })]
+  });
+}
+const Rt = /* @__PURE__ */ s("span")({
+  name: "Wrapper",
+  class: "wgrwmxk",
+  propsAsIs: false
+}), Bt = /* @__PURE__ */ s("button")({
+  name: "HelpButton",
+  class: "h1kz92l1",
+  propsAsIs: false
+}), $t = /* @__PURE__ */ s("div")({
+  name: "Tooltip",
+  class: "tregse8",
+  propsAsIs: false
+}), Et = /* @__PURE__ */ s("span")({
+  name: "SrOnly",
+  class: "s1a7sbb8",
+  propsAsIs: false
+});
+function Nt({
+  id: e,
+  children: t,
+  ariaLabel: a
+}) {
+  return /* @__PURE__ */ jsxs(Ft, {
+    children: [/* @__PURE__ */ jsx(Lt, {
+      type: "button",
+      "aria-describedby": e,
+      "aria-label": a,
+      children: "§"
+    }), /* @__PURE__ */ jsx(Ht, {
+      role: "dialog",
+      "aria-hidden": "true",
+      children: t
+    }), /* @__PURE__ */ jsx(zt, {
+      id: e,
+      children: t
+    })]
+  });
+}
+const Ft = /* @__PURE__ */ s("span")({
+  name: "Wrapper",
+  class: "wwcyxnc",
+  propsAsIs: false
+}), Lt = /* @__PURE__ */ s("button")({
+  name: "LegalButton",
+  class: "l9xdrnt",
+  propsAsIs: false
+}), Ht = /* @__PURE__ */ s("div")({
+  name: "Tooltip",
+  class: "td3rw54",
+  propsAsIs: false
+}), zt = /* @__PURE__ */ s("span")({
+  name: "SrOnly",
+  class: "s1a05kfm",
+  propsAsIs: false
+});
+function Dt({
+  id: e,
+  children: t,
+  ariaLabel: a
+}) {
+  return /* @__PURE__ */ jsxs(Pt, {
+    children: [/* @__PURE__ */ jsx(Mt, {
+      type: "button",
+      "aria-describedby": e,
+      "aria-label": a,
+      children: "i"
+    }), /* @__PURE__ */ jsx(qt, {
+      role: "tooltip",
+      "aria-hidden": "true",
+      children: t
+    }), /* @__PURE__ */ jsx(Wt, {
+      id: e,
+      children: t
+    })]
+  });
+}
+const Pt = /* @__PURE__ */ s("span")({
+  name: "Wrapper",
+  class: "w1xmz4ka",
+  propsAsIs: false
+}), Mt = /* @__PURE__ */ s("button")({
+  name: "FlyoverButton",
+  class: "f1ubdgfr",
+  propsAsIs: false
+}), qt = /* @__PURE__ */ s("div")({
+  name: "Tooltip",
+  class: "t5zau29",
+  propsAsIs: false
+}), Wt = /* @__PURE__ */ s("span")({
+  name: "SrOnly",
+  class: "s2smowq",
+  propsAsIs: false
+});
+function jt({
+  linkId: e,
+  children: t
+}) {
+  return /* @__PURE__ */ jsx(Vt, {
+    "data-linkid": e,
+    children: t
+  });
+}
+const Vt = /* @__PURE__ */ s("div")({
+  name: "Container",
+  class: "c18qd4bk",
+  propsAsIs: false
+});
+function _t({
+  linkId: e,
+  children: t
+}) {
+  return /* @__PURE__ */ jsx(Ut, {
+    "data-linkid": e,
+    children: t
+  });
+}
+const Ut = /* @__PURE__ */ s("div")({
+  name: "Container",
+  class: "cwx0ojp",
+  propsAsIs: false
+});
+function se({
+  icon: e,
+  onClick: t,
+  disabled: a,
+  label: o
+}) {
+  return /* @__PURE__ */ jsx(Kt, {
+    type: "button",
+    onClick: t,
+    disabled: a,
+    title: o,
+    "aria-label": o,
+    children: e
+  });
+}
+const Kt = /* @__PURE__ */ s("button")({
+  name: "ButtonRoot",
+  class: "b1xzeqmh",
+  propsAsIs: false
+});
+function Gt({
+  children: e,
+  onAdd: t,
+  canAdd: a,
+  addLabel: o
+}) {
+  const r = Children.toArray(e), l = o ?? "Add";
+  return /* @__PURE__ */ jsxs(Zt, {
+    children: [r.length > 0 && /* @__PURE__ */ jsx(Xt, {
+      children: r
+    }), t && /* @__PURE__ */ jsx(Yt, {
+      children: /* @__PURE__ */ jsx(se, {
+        icon: /* @__PURE__ */ jsx(ie, {
+          size: 15
+        }),
+        onClick: t,
+        disabled: a === false,
+        label: l
+      })
+    })]
+  });
+}
+const Zt = /* @__PURE__ */ s("div")({
+  name: "Container",
+  class: "cbc6hrs",
+  propsAsIs: false
+}), Xt = /* @__PURE__ */ s("div")({
+  name: "List",
+  class: "l1404yqq",
+  propsAsIs: false
+}), Yt = /* @__PURE__ */ s("div")({
+  name: "Toolbar",
+  class: "tkojr05",
+  propsAsIs: false
+});
+function ce2({ size: e = 16 }) {
+  return /* @__PURE__ */ jsx(
+    "svg",
+    {
+      xmlns: "http://www.w3.org/2000/svg",
+      width: e,
+      height: e,
+      fill: "#000000",
+      viewBox: "0 0 256 256",
+      children: /* @__PURE__ */ jsx("path", { d: "M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z" })
+    }
+  );
+}
+function Ot({
+  control: e,
+  onRemove: t,
+  canRemove: a,
+  errors: o,
+  children: r
+}) {
+  return /* @__PURE__ */ jsxs(Qt, {
+    children: [/* @__PURE__ */ jsxs(Jt, {
+      children: [/* @__PURE__ */ jsx(es, {
+        children: e
+      }), t && /* @__PURE__ */ jsx(ns, {
+        children: /* @__PURE__ */ jsx(se, {
+          icon: /* @__PURE__ */ jsx(ce2, {}),
+          onClick: t,
+          disabled: a === false,
+          label: "Remove"
+        })
+      })]
+    }), /* @__PURE__ */ jsxs(ts, {
+      children: [r, o]
+    })]
+  });
+}
+const Qt = /* @__PURE__ */ s("div")({
+  name: "Row",
+  class: "r1wuksur",
+  propsAsIs: false
+}), Jt = /* @__PURE__ */ s("div")({
+  name: "MainRow",
+  class: "m12yznl2",
+  propsAsIs: false
+}), es = /* @__PURE__ */ s("div")({
+  name: "Control",
+  class: "c1249zy2",
+  propsAsIs: false
+}), ns = /* @__PURE__ */ s("div")({
+  name: "Toolbar",
+  class: "t19ndf30",
+  propsAsIs: false
+}), ts = /* @__PURE__ */ s("div")({
+  name: "Children",
+  class: "c30yrxj",
+  propsAsIs: false
+});
+function ss({
+  onSubmit: e,
+  onCancel: t,
+  children: a,
+  title: o,
+  description: r,
+  errors: l,
+  before: c,
+  after: d,
+  pagination: f2
+}) {
+  const p = (y2) => {
+    y2.preventDefault(), e?.();
+  }, g2 = /* @__PURE__ */ jsxs(Fragment, {
+    children: [/* @__PURE__ */ jsx(ds, {
+      type: "submit",
+      disabled: !e,
+      children: "Submit"
+    }), /* @__PURE__ */ jsx(ps, {
+      type: "button",
+      onClick: t ?? (() => {
+      }),
+      disabled: !t,
+      children: "Cancel"
+    })]
+  }), I = o || r ? /* @__PURE__ */ jsxs(as, {
+    children: [!!o && /* @__PURE__ */ jsx(os, {
+      children: o
+    }), !!r && /* @__PURE__ */ jsx(rs, {
+      children: r
+    })]
+  }) : void 0;
+  return f2 ? /* @__PURE__ */ jsxs(ye, {
+    onSubmit: p,
+    children: [I && /* @__PURE__ */ jsx(ke2, {
+      children: I
+    }), !!l && /* @__PURE__ */ jsx(Y, {
+      children: l
+    }), !!c && /* @__PURE__ */ jsx(Y, {
+      children: c
+    }), a, /* @__PURE__ */ jsxs(is, {
+      children: [/* @__PURE__ */ jsxs(ls, {
+        children: [/* @__PURE__ */ jsx(ge, {
+          type: "button",
+          onClick: f2.onPrev,
+          disabled: f2.disabledPrev,
+          children: "Previous"
+        }), /* @__PURE__ */ jsxs("span", {
+          children: [f2.current, " / ", f2.total]
+        }), /* @__PURE__ */ jsx(ge, {
+          type: "button",
+          onClick: f2.onNext,
+          disabled: f2.disabledNext,
+          children: "Next"
+        })]
+      }), /* @__PURE__ */ jsx(Ie, {
+        children: g2
+      })]
+    }), !!d && /* @__PURE__ */ jsx(Y, {
+      children: d
+    })]
+  }) : /* @__PURE__ */ jsxs(ye, {
+    onSubmit: p,
+    children: [I && /* @__PURE__ */ jsx(ke2, {
+      children: I
+    }), !!l && /* @__PURE__ */ jsx(Y, {
+      children: l
+    }), !!c && /* @__PURE__ */ jsx(Y, {
+      children: c
+    }), a, !!d && /* @__PURE__ */ jsx(Y, {
+      children: d
+    }), /* @__PURE__ */ jsx(Ie, {
+      children: g2
+    })]
+  });
+}
+const ye = /* @__PURE__ */ s("form")({
+  name: "FormElement",
+  class: "f13oxmqr",
+  propsAsIs: false
+}), ke2 = /* @__PURE__ */ s("div")({
+  name: "TitleSlot",
+  class: "tr2c8ce",
+  propsAsIs: false
+}), Y = /* @__PURE__ */ s("div")({
+  name: "Slot",
+  class: "s1hvw6k5",
+  propsAsIs: false
+}), as = /* @__PURE__ */ s("header")({
+  name: "Header",
+  class: "h1oeb9p8",
+  propsAsIs: false
+}), os = /* @__PURE__ */ s("h1")({
+  name: "Title",
+  class: "tw8zxzr",
+  propsAsIs: false
+}), rs = /* @__PURE__ */ s("p")({
+  name: "Description",
+  class: "djz525e",
+  propsAsIs: false
+}), ls = /* @__PURE__ */ s("div")({
+  name: "Nav",
+  class: "n1n83i42",
+  propsAsIs: false
+}), is = /* @__PURE__ */ s("div")({
+  name: "Controls",
+  class: "ccmq4g7",
+  propsAsIs: false
+}), Ie = /* @__PURE__ */ s("div")({
+  name: "Actions",
+  class: "awx4yvs",
+  propsAsIs: false
+}), Be = /* @__PURE__ */ s("button")({
+  name: "BaseButton",
+  class: "b1hxx38y",
+  propsAsIs: false
+}), cs = () => Be, ds = /* @__PURE__ */ s(cs())({
+  name: "PrimaryButton",
+  class: "pim26p6",
+  propsAsIs: true
+}), us = () => Be, ps = /* @__PURE__ */ s(us())({
+  name: "SecondaryButton",
+  class: "s1fzc7cb",
+  propsAsIs: true
+}), ge = /* @__PURE__ */ s("button")({
+  name: "NavButton",
+  class: "non106y",
+  propsAsIs: false
+});
+function fs({
+  children: e
+}) {
+  return /* @__PURE__ */ jsx(hs, {
+    children: e
+  });
+}
+const hs = /* @__PURE__ */ s("div")({
+  name: "Container",
+  class: "c1yt1f4x",
+  propsAsIs: false
+});
+function bs({
+  linkId: e,
+  header: t,
+  children: a,
+  onAdd: o,
+  canAdd: r,
+  addLabel: l
+}) {
+  return /* @__PURE__ */ jsxs(ms, {
+    "data-linkid": e,
+    children: [t, /* @__PURE__ */ jsx(vs, {
+      children: a
+    }), o && /* @__PURE__ */ jsx(ys, {
+      children: /* @__PURE__ */ jsx(se, {
+        icon: /* @__PURE__ */ jsx(ie, {
+          size: 16
+        }),
+        onClick: o,
+        disabled: r === false,
+        label: l ?? "Add"
+      })
+    })]
+  });
+}
+const ms = /* @__PURE__ */ s("div")({
+  name: "Container",
+  class: "c1k7mqb6",
+  propsAsIs: false
+}), vs = /* @__PURE__ */ s("div")({
+  name: "Items",
+  class: "i1skncq",
+  propsAsIs: false
+}), ys = /* @__PURE__ */ s("div")({
+  name: "Toolbar",
+  class: "t10o7kuy",
+  propsAsIs: false
+});
+function ks({
+  header: e,
+  children: t,
+  errors: a,
+  onRemove: o,
+  canRemove: r,
+  removeLabel: l
+}) {
+  const c = Children.toArray(t), d = l ?? "Remove";
+  return /* @__PURE__ */ jsxs(Is, {
+    children: [e, c.length > 0 && (o ? /* @__PURE__ */ jsx(As, {
+      children: c
+    }) : /* @__PURE__ */ jsx(gs, {
+      children: c
+    })), a, o && /* @__PURE__ */ jsx(xs, {
+      children: /* @__PURE__ */ jsx(se, {
+        icon: /* @__PURE__ */ jsx(ce2, {}),
+        onClick: o,
+        disabled: r === false,
+        label: d
+      })
+    })]
+  });
+}
+const Is = /* @__PURE__ */ s("div")({
+  name: "Container",
+  class: "cyolpfl",
+  propsAsIs: false
+}), gs = /* @__PURE__ */ s("div")({
+  name: "GroupContent",
+  class: "g1i60pkq",
+  propsAsIs: false
+}), As = /* @__PURE__ */ s("div")({
+  name: "ItemContent",
+  class: "i1k3jffy",
+  propsAsIs: false
+}), xs = /* @__PURE__ */ s("div")({
+  name: "Toolbar",
+  class: "t7x9e79",
+  propsAsIs: false
+});
+function Cs({
+  columns: e,
+  rows: t
+}) {
+  if (t.length === 0 || e.length === 0)
+    return /* @__PURE__ */ jsx(Es, {
+      children: "Nothing to display."
+    });
+  const a = t.some((r) => r.content != null), o = t.some((r) => r.onRemove != null);
+  return /* @__PURE__ */ jsx(Ss, {
+    children: /* @__PURE__ */ jsxs(ws, {
+      children: [/* @__PURE__ */ jsx("thead", {
+        children: /* @__PURE__ */ jsxs("tr", {
+          children: [a && /* @__PURE__ */ jsx(re2, {
+            scope: "col",
+            "aria-hidden": "true"
+          }), e.map((r) => /* @__PURE__ */ jsx(re2, {
+            scope: "col",
+            children: Ae(r.content, r)
+          }, r.token)), o && /* @__PURE__ */ jsx(re2, {
+            scope: "col",
+            "aria-hidden": "true"
+          })]
+        })
+      }), /* @__PURE__ */ jsx("tbody", {
+        children: t.map((r) => /* @__PURE__ */ jsxs("tr", {
+          children: [a && /* @__PURE__ */ jsx(Ts, {
+            scope: "row",
+            children: Ae(r.content, r)
+          }), r.cells.map((l) => /* @__PURE__ */ jsx(xe, {
+            children: l.content
+          }, l.token)), o && /* @__PURE__ */ jsx(xe, {
+            children: r.onRemove && /* @__PURE__ */ jsx(se, {
+              icon: /* @__PURE__ */ jsx(ce2, {}),
+              onClick: r.onRemove,
+              disabled: r.canRemove === false,
+              label: r.removeLabel ?? "Remove"
+            })
+          })]
+        }, r.token))
+      })]
+    })
+  });
+}
+function Ae(e, t) {
+  return !t.isLoading && !t.errors ? e : /* @__PURE__ */ jsxs(Rs, {
+    children: [/* @__PURE__ */ jsxs(Bs, {
+      children: [e, t.isLoading && /* @__PURE__ */ jsx(te, {})]
+    }), t.errors ? /* @__PURE__ */ jsx($s, {
+      children: t.errors
+    }) : void 0]
+  });
+}
+const Ss = /* @__PURE__ */ s("div")({
+  name: "Wrapper",
+  class: "w1gs9682",
+  propsAsIs: false
+}), ws = /* @__PURE__ */ s("table")({
+  name: "TableElement",
+  class: "t1fa3fx1",
+  propsAsIs: false
+}), re2 = /* @__PURE__ */ s("th")({
+  name: "Header",
+  class: "h14kcojn",
+  propsAsIs: false
+}), Ts = /* @__PURE__ */ s("th")({
+  name: "RowHeader",
+  class: "r10n2std",
+  propsAsIs: false
+}), xe = /* @__PURE__ */ s("td")({
+  name: "Cell",
+  class: "cuvv5ha",
+  propsAsIs: false
+}), Rs = /* @__PURE__ */ s("div")({
+  name: "HeaderContent",
+  class: "h1svhsr3",
+  propsAsIs: false
+}), Bs = /* @__PURE__ */ s("div")({
+  name: "HeaderRow",
+  class: "h463hf7",
+  propsAsIs: false
+}), $s = /* @__PURE__ */ s("div")({
+  name: "HeaderErrors",
+  class: "hefa0hs",
+  propsAsIs: false
+}), Es = /* @__PURE__ */ s("p")({
+  name: "Empty",
+  class: "e1pkj0dh",
+  propsAsIs: false
+});
+function Ns({
+  children: e,
+  spans: t
+}) {
+  const a = Children.toArray(e);
+  return /* @__PURE__ */ jsx(Fs, {
+    children: a.map((o, r) => /* @__PURE__ */ jsx(Hs, {
+      $span: t[r],
+      children: o
+    }, r))
+  });
+}
+const Fs = /* @__PURE__ */ s("div")({
+  name: "Group",
+  class: "g16r3v2o",
+  propsAsIs: false
+}), Ls = () => (e) => `${e.$span} 1 0`, Hs = /* @__PURE__ */ s("div")({
+  name: "Item",
+  class: "i18qw0nd",
+  propsAsIs: false,
+  vars: {
+    "i18qw0nd-0": [Ls()]
+  }
+});
+function zs({
+  id: e,
+  ariaLabelledBy: t,
+  ariaDescribedBy: a,
+  disabled: o,
+  accept: r,
+  value: l,
+  onChange: c
+}) {
+  const d = l == null, f2 = l != null, p = l?.title ?? l?.url ?? (d ? "Choose file" : "Attachment selected"), i = l?.size == null ? "" : `${Math.round(l.size / 1024)} KB`, g2 = useRef(null), I = () => {
+    o || g2.current?.click();
+  };
+  return /* @__PURE__ */ jsxs(Ps, {
+    role: "button",
+    tabIndex: o ? -1 : 0,
+    "aria-disabled": o ? "true" : void 0,
+    "aria-labelledby": t,
+    "aria-describedby": a,
+    onClick: (v2) => {
+      o || v2.target.closest("button") || I();
+    },
+    onKeyDown: (v2) => {
+      o || (v2.key === "Enter" || v2.key === " ") && (v2.preventDefault(), I());
+    },
+    children: [/* @__PURE__ */ jsx(Ds, {
+      ref: g2,
+      id: e,
+      type: "file",
+      onChange: (v2) => {
+        const k = v2.currentTarget.files?.[0];
+        if (k !== void 0)
+          try {
+            c?.(k);
+          } finally {
+            v2.currentTarget.value = "";
+          }
+      },
+      "aria-labelledby": t,
+      "aria-describedby": a,
+      disabled: o,
+      accept: r
+    }), /* @__PURE__ */ jsxs(Ms, {
+      "data-empty": d ? "true" : void 0,
+      children: [p, i ? ` (${i})` : ""]
+    }), f2 && /* @__PURE__ */ jsx(qs, {
+      type: "button",
+      onClick: () => c?.(),
+      disabled: o,
+      "aria-label": "Clear attachment",
+      children: "×"
+    })]
+  });
+}
+const Ds = /* @__PURE__ */ s("input")({
+  name: "HiddenInput",
+  class: "h1gbbv2g",
+  propsAsIs: false
+}), Ps = /* @__PURE__ */ s("div")({
+  name: "Summary",
+  class: "s2iis2i",
+  propsAsIs: false
+}), Ms = /* @__PURE__ */ s("span")({
+  name: "Label",
+  class: "l18vj6fr",
+  propsAsIs: false
+}), qs = /* @__PURE__ */ s("button")({
+  name: "ClearButton",
+  class: "cx5iiuk",
+  propsAsIs: false
+});
+function Ws({
+  header: e,
+  items: t,
+  value: a,
+  onChange: o,
+  errors: r,
+  linkId: l
+}) {
+  const c = useRef(null), d = useRef(null), f2 = useRef(null), p = useRef(null), [i, g2] = useState(false), [I, y2] = useState(false), [T2, B2] = useState(false), v2 = ae(a, 0, Math.max(t.length - 1, 0)), k = useCallback(() => {
+    const m = c.current;
+    if (!m) return;
+    const C = Math.max(m.scrollWidth - m.clientWidth, 0), x2 = C > 1, H2 = m.scrollLeft > 0, E2 = m.scrollLeft < C - 1;
+    g2(x2), y2(H2), B2(E2);
+  }, []);
+  useEffect(() => {
+    const m = c.current;
+    if (!m) return;
+    k();
+    const C = () => k();
+    if (m.addEventListener("scroll", C, {
+      passive: true
+    }), typeof ResizeObserver > "u") {
+      const H2 = () => k();
+      return globalThis.addEventListener("resize", H2), () => {
+        m.removeEventListener("scroll", C), globalThis.removeEventListener("resize", H2);
+      };
+    }
+    const x2 = new ResizeObserver(() => k());
+    return x2.observe(m), () => {
+      m.removeEventListener("scroll", C), x2.disconnect();
+    };
+  }, [t.length, k]), useEffect(() => {
+    k();
+  }, [t, k]), useEffect(() => {
+    const m = c.current;
+    if (!m) return;
+    const C = m.querySelector('[data-selected="true"]');
+    if (!C) return;
+    const x2 = d.current;
+    if (!x2) return;
+    const H2 = globalThis.getComputedStyle(x2), E2 = Number.parseFloat(H2.paddingLeft) || 0, j2 = Number.parseFloat(H2.paddingRight) || 0, W2 = f2.current?.offsetWidth ?? 0, D = p.current?.offsetWidth ?? 0, w2 = i ? Math.max(E2, W2) : 0, Z2 = i ? Math.max(j2, D) : 0, P2 = m.getBoundingClientRect(), $2 = C.getBoundingClientRect(), _2 = $2.left - P2.left + m.scrollLeft, q2 = _2 + $2.width, z2 = m.scrollLeft + w2, X2 = m.scrollLeft + m.clientWidth - Z2;
+    let K2 = m.scrollLeft;
+    _2 < z2 ? K2 = _2 - w2 : q2 > X2 && (K2 = q2 - (m.clientWidth - Z2));
+    const ee2 = Math.max(m.scrollWidth - m.clientWidth, 0), G = ae(K2, 0, ee2);
+    G !== m.scrollLeft && m.scrollTo({
+      left: G,
+      behavior: "smooth"
+    });
+  }, [v2, i, t.length]);
+  const L2 = (m) => {
+    const C = c.current;
+    if (!C) return;
+    const x2 = Math.max(140, Math.round(C.clientWidth * 0.6));
+    C.scrollBy({
+      left: m * x2,
+      behavior: "smooth"
+    });
+  };
+  if (t.length === 0)
+    return /* @__PURE__ */ jsx(Ys, {
+      children: "No tab content available."
+    });
+  const A2 = t[v2];
+  return /* @__PURE__ */ jsxs(js, {
+    "data-linkid": l,
+    children: [!!e && /* @__PURE__ */ jsx(Vs, {
+      children: e
+    }), /* @__PURE__ */ jsxs(_s, {
+      children: [/* @__PURE__ */ jsx(Ce, {
+        ref: f2,
+        type: "button",
+        "aria-label": "Scroll tabs left",
+        onClick: () => L2(-1),
+        "data-direction": "left",
+        "data-visible": i && I ? "true" : "false",
+        disabled: !I
+      }), /* @__PURE__ */ jsx(Us, {
+        role: "tablist",
+        ref: c,
+        children: /* @__PURE__ */ jsx(Ks, {
+          ref: d,
+          "data-scrollable": i ? "true" : "false",
+          children: t.map((m, C) => {
+            const x2 = C === v2;
+            return /* @__PURE__ */ jsx(Gs, {
+              type: "button",
+              role: "tab",
+              "aria-selected": x2,
+              "aria-controls": m.panelId,
+              id: m.buttonId,
+              onClick: () => o(C),
+              "data-selected": x2 ? "true" : "false",
+              children: m.label
+            }, m.token);
+          })
+        })
+      }), /* @__PURE__ */ jsx(Ce, {
+        ref: p,
+        type: "button",
+        "aria-label": "Scroll tabs right",
+        onClick: () => L2(1),
+        "data-direction": "right",
+        "data-visible": i && T2 ? "true" : "false",
+        disabled: !T2
+      })]
+    }), /* @__PURE__ */ jsx(Zs, {
+      role: "tabpanel",
+      id: A2.panelId,
+      "aria-labelledby": A2.buttonId,
+      children: A2.content
+    }), !!r && /* @__PURE__ */ jsx(Xs, {
+      children: r
+    })]
+  });
+}
+const js = /* @__PURE__ */ s("div")({
+  name: "Shell",
+  class: "sysxgr7",
+  propsAsIs: false
+}), Vs = /* @__PURE__ */ s("div")({
+  name: "Header",
+  class: "h11u4gqs",
+  propsAsIs: false
+}), _s = /* @__PURE__ */ s("div")({
+  name: "TabStrip",
+  class: "tg4svgp",
+  propsAsIs: false
+}), Us = /* @__PURE__ */ s("div")({
+  name: "TabList",
+  class: "tn2grbt",
+  propsAsIs: false
+}), Ks = /* @__PURE__ */ s("div")({
+  name: "TabListInner",
+  class: "t1vm7wka",
+  propsAsIs: false
+}), Gs = /* @__PURE__ */ s("button")({
+  name: "TabButton",
+  class: "tblm8ws",
+  propsAsIs: false
+}), Ce = /* @__PURE__ */ s("button")({
+  name: "TabScrollButton",
+  class: "tox5npf",
+  propsAsIs: false
+}), Zs = /* @__PURE__ */ s("div")({
+  name: "Panel",
+  class: "p4uihw0",
+  propsAsIs: false
+}), Xs = /* @__PURE__ */ s("div")({
+  name: "ErrorsSlot",
+  class: "ep6nz7x",
+  propsAsIs: false
+}), Ys = /* @__PURE__ */ s("p")({
+  name: "Empty",
+  class: "e5ziqb1",
+  propsAsIs: false
+});
+function Os({
+  linkId: e,
+  children: t
+}) {
+  return /* @__PURE__ */ jsx(Qs, {
+    "data-linkid": e,
+    children: t
+  });
+}
+const Qs = /* @__PURE__ */ s("div")({
+  name: "Wrapper",
+  class: "w1lax90e",
+  propsAsIs: false
+});
+function Js({
+  href: e,
+  children: t,
+  target: a,
+  rel: o
+}) {
+  return /* @__PURE__ */ jsx(ea, {
+    href: e,
+    target: a,
+    rel: o,
+    children: t
+  });
+}
+const ea = /* @__PURE__ */ s("a")({
+  name: "Anchor",
+  class: "a1anarvs",
+  propsAsIs: false
+}), aa = {
+  TextInput: Fe,
+  TextArea: He,
+  NumberInput: _e,
+  DateInput: Xe,
+  DateTimeInput: Ye2,
+  TimeInput: Oe,
+  SliderInput: en,
+  SpinnerInput: dn,
+  SelectInput: kn,
+  RadioButton: En,
+  RadioButtonList: Fn,
+  Checkbox: Mn,
+  CheckboxList: Wn,
+  MultiSelectInput: Gn,
+  CustomOptionForm: it,
+  Errors: bt2,
+  Label: vt2,
+  QuestionScaffold: xt,
+  OptionsLoading: St,
+  Help: Tt,
+  Legal: Nt,
+  Flyover: Dt,
+  Header: jt,
+  Footer: _t,
+  Form: ss,
+  Stack: fs,
+  AnswerList: Gt,
+  AnswerScaffold: Ot,
+  GroupList: bs,
+  GroupScaffold: ks,
+  Table: Cs,
+  InputGroup: Ns,
+  FileInput: zs,
+  DisplayRenderer: Os,
+  TabContainer: Ws,
+  Link: Js
+};
+const getPhaseMessage = (phase) => {
+  if (phase === SmartMessagingPhase.Disabled) {
+    return "Missing SDC SWM parameters.";
+  }
+  if (phase === SmartMessagingPhase.AwaitingHandshake) {
+    return "Waiting for handshake.";
+  }
+  if (phase === SmartMessagingPhase.AwaitingConfig) {
+    return "Waiting for configuration.";
+  }
+  if (phase === SmartMessagingPhase.AwaitingContext) {
+    return "Waiting for context.";
+  }
+  if (phase === SmartMessagingPhase.AwaitingQuestionnaire) {
+    return "Waiting for questionnaire.";
+  }
+  return "";
+};
+const noop = () => {
+};
+function subscribeToClient() {
+  return noop;
+}
+function getClientSnapshot() {
+  return true;
+}
+function getServerSnapshot() {
+  return false;
+}
+function SwmClient() {
+  const {
+    questionnaire,
+    questionnaireResponse,
+    config: config2,
+    phase,
+    onQuestionnaireResponseChange
+  } = useSmartMessaging({
+    application: {
+      name: "Formbox Renderer",
+      publisher: "Health Samurai"
+    },
+    capabilities: {
+      extraction: false,
+      focusChangeNotifications: false
+    }
+  });
+  const phaseMessage = getPhaseMessage(phase);
+  if (phaseMessage) {
+    return /* @__PURE__ */ jsx("div", { className: "flex min-h-screen w-full items-center justify-center", children: phaseMessage });
+  }
+  if (!questionnaire || !Array.isArray(questionnaire.item)) {
+    return;
+  }
+  return /* @__PURE__ */ jsx("div", { className: "min-h-screen w-full", children: /* @__PURE__ */ jsx(
+    to,
+    {
+      questionnaire,
+      initialResponse: questionnaireResponse,
+      onChange: onQuestionnaireResponseChange,
+      terminologyServerUrl: config2?.terminologyServer,
+      theme: aa
+    }
+  ) });
+}
+function SwmPage() {
+  const isClient = useSyncExternalStore(
+    subscribeToClient,
+    getClientSnapshot,
+    getServerSnapshot
+  );
+  if (!isClient) {
+    return /* @__PURE__ */ jsx("div", { className: "flex min-h-screen w-full items-center justify-center", children: "Loading smart messaging..." });
+  }
+  return /* @__PURE__ */ jsx(SwmClient, {});
+}
 function Breadcrumbs({ route, pages }) {
   const page = pages.find((item) => item.href === route);
   const items = [];
@@ -1607,12 +16562,12 @@ function Breadcrumbs({ route, pages }) {
   const lastIndex = items.length - 1;
   return /* @__PURE__ */ jsx("nav", { "aria-label": "breadcrumb", className: "mb-4", children: /* @__PURE__ */ jsx("ol", { className: "flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5", children: items.map((item, index2) => {
     const showSeparator = index2 < lastIndex;
-    return /* @__PURE__ */ jsxs(Fragment, { children: [
+    return /* @__PURE__ */ jsxs(Fragment$1, { children: [
       /* @__PURE__ */ jsx("li", { className: "inline-flex items-center gap-1.5", children: item.href ? /* @__PURE__ */ jsx(
         "a",
         {
           href: withBase(item.href),
-          className: cn(
+          className: cn$2(
             "hover:text-foreground transition-colors",
             index2 === lastIndex && "text-foreground"
           ),
@@ -1663,7 +16618,7 @@ function Diagram({ svg, className }) {
   return /* @__PURE__ */ jsx(
     "div",
     {
-      className: cn(
+      className: cn$2(
         "overflow-x-auto rounded-lg p-4 [&:not(:first-child)]:mt-6",
         className
       ),
@@ -1685,7 +16640,7 @@ const mdxComponents = {
   h1: ({ className, ...properties }) => /* @__PURE__ */ jsx(
     "h1",
     {
-      className: cn(
+      className: cn$2(
         "scroll-m-20 break-words text-4xl font-extrabold tracking-tight lg:text-5xl [&:not(:first-child)]:mt-10",
         className
       ),
@@ -1703,7 +16658,7 @@ const mdxComponents = {
       "h2",
       {
         id: headingId,
-        className: cn(
+        className: cn$2(
           "scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight [&:not(:first-child)]:mt-10",
           className
         ),
@@ -1723,7 +16678,7 @@ const mdxComponents = {
       "h3",
       {
         id: headingId,
-        className: cn(
+        className: cn$2(
           "scroll-m-20 text-2xl font-semibold tracking-tight [&:not(:first-child)]:mt-10",
           className
         ),
@@ -1743,7 +16698,7 @@ const mdxComponents = {
       "h4",
       {
         id: headingId,
-        className: cn(
+        className: cn$2(
           "scroll-m-20 text-xl font-semibold tracking-tight [&:not(:first-child)]:mt-10",
           className
         ),
@@ -1755,7 +16710,7 @@ const mdxComponents = {
   h5: ({ className, ...properties }) => /* @__PURE__ */ jsx(
     "h5",
     {
-      className: cn(
+      className: cn$2(
         "scroll-m-20 text-lg font-semibold tracking-tight [&:not(:first-child)]:mt-10",
         className
       ),
@@ -1765,7 +16720,7 @@ const mdxComponents = {
   h6: ({ className, ...properties }) => /* @__PURE__ */ jsx(
     "h6",
     {
-      className: cn(
+      className: cn$2(
         "scroll-m-20 text-lg font-semibold tracking-tight [&:not(:first-child)]:mt-10",
         className
       ),
@@ -1775,21 +16730,21 @@ const mdxComponents = {
   p: ({ className, ...properties }) => /* @__PURE__ */ jsx(
     "p",
     {
-      className: cn("leading-7 [&:not(:first-child)]:mt-6", className),
+      className: cn$2("leading-7 [&:not(:first-child)]:mt-6", className),
       ...properties
     }
   ),
   a: ({ className, ...properties }) => /* @__PURE__ */ jsx(
     "a",
     {
-      className: cn("font-semibold underline underline-offset-4", className),
+      className: cn$2("font-semibold underline underline-offset-4", className),
       ...properties
     }
   ),
   ul: ({ className, ...properties }) => /* @__PURE__ */ jsx(
     "ul",
     {
-      className: cn(
+      className: cn$2(
         "[&:not(:first-child)]:mt-6 ml-6 list-disc [&>li]:mt-2",
         className
       ),
@@ -1799,21 +16754,21 @@ const mdxComponents = {
   ol: ({ className, ...properties }) => /* @__PURE__ */ jsx(
     "ol",
     {
-      className: cn(
+      className: cn$2(
         "[&:not(:first-child)]:mt-6 ml-6 list-decimal [&>li]:mt-2",
         className
       ),
       ...properties
     }
   ),
-  li: ({ className, ...properties }) => /* @__PURE__ */ jsx("li", { className: cn(className), ...properties }),
+  li: ({ className, ...properties }) => /* @__PURE__ */ jsx("li", { className: cn$2(className), ...properties }),
   blockquote: ({
     className,
     ...properties
   }) => /* @__PURE__ */ jsx(
     "blockquote",
     {
-      className: cn(
+      className: cn$2(
         "[&:not(:first-child)]:mt-6 border-l-2 pl-6 italic",
         className
       ),
@@ -1823,25 +16778,25 @@ const mdxComponents = {
   pre: ({ className, ...properties }) => /* @__PURE__ */ jsx(
     "pre",
     {
-      className: cn(
+      className: cn$2(
         "relative overflow-x-auto rounded-lg border p-4 font-mono text-sm [&:not(:first-child)]:mt-6",
         className
       ),
       ...properties
     }
   ),
-  table: ({ className, ...properties }) => /* @__PURE__ */ jsx("div", { className: "w-full overflow-y-auto [&:not(:first-child)]:mt-6", children: /* @__PURE__ */ jsx("table", { className: cn("w-full", className), ...properties }) }),
+  table: ({ className, ...properties }) => /* @__PURE__ */ jsx("div", { className: "w-full overflow-y-auto [&:not(:first-child)]:mt-6", children: /* @__PURE__ */ jsx("table", { className: cn$2("w-full", className), ...properties }) }),
   tr: ({ className, ...properties }) => /* @__PURE__ */ jsx(
     "tr",
     {
-      className: cn("m-0 border-t p-0 even:bg-muted", className),
+      className: cn$2("m-0 border-t p-0 even:bg-muted", className),
       ...properties
     }
   ),
   th: ({ className, ...properties }) => /* @__PURE__ */ jsx(
     "th",
     {
-      className: cn(
+      className: cn$2(
         "border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right",
         className
       ),
@@ -1851,7 +16806,7 @@ const mdxComponents = {
   td: ({ className, ...properties }) => /* @__PURE__ */ jsx(
     "td",
     {
-      className: cn(
+      className: cn$2(
         "border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right",
         className
       ),
@@ -1861,14 +16816,14 @@ const mdxComponents = {
   hr: ({ className, ...properties }) => /* @__PURE__ */ jsx(
     "hr",
     {
-      className: cn("[&:not(:first-child)]:mt-6", className),
+      className: cn$2("[&:not(:first-child)]:mt-6", className),
       ...properties
     }
   ),
   strong: ({
     className,
     ...properties
-  }) => /* @__PURE__ */ jsx("strong", { className: cn("font-semibold", className), ...properties })
+  }) => /* @__PURE__ */ jsx("strong", { className: cn$2("font-semibold", className), ...properties })
 };
 function Markdown({
   children,
@@ -1879,7 +16834,7 @@ function Markdown({
     "div",
     {
       id: contentId,
-      className: cn(
+      className: cn$2(
         "[&_:not(pre)>code]:bg-muted [&_:not(pre)>code]:relative [&_:not(pre)>code]:rounded [&_:not(pre)>code]:px-[0.3rem] [&_:not(pre)>code]:py-[0.2rem] [&_:not(pre)>code]:font-mono [&_:not(pre)>code]:text-sm [&_:not(pre)>code]:font-semibold",
         className
       ),
@@ -1896,18 +16851,26 @@ function _createMdxContent$7(props) {
   const _components = {
     code: "code",
     h2: "h2",
+    li: "li",
     p: "p",
     pre: "pre",
     span: "span",
+    table: "table",
+    tbody: "tbody",
+    td: "td",
+    th: "th",
+    thead: "thead",
+    tr: "tr",
+    ul: "ul",
     ...useMDXComponents(),
     ...props.components
   };
-  return jsxs(Fragment$1, {
+  return jsxs(Fragment, {
     children: [jsx(_components.p, {
-      children: "Formbox Renderer is a React renderer for FHIR R5 Questionnaires."
+      children: "Formbox Renderer is a React renderer for HL7 FHIR R5 Questionnaires. It is headless. You must pass a theme object and include the theme CSS."
     }), "\n", jsx(_components.h2, {
       children: "Install"
-    }), "\n", jsx(Fragment$1, {
+    }), "\n", jsx(Fragment, {
       children: jsx(_components.pre, {
         className: "shiki github-dark",
         style: {
@@ -1915,8 +16878,8 @@ function _createMdxContent$7(props) {
           color: "#e1e4e8"
         },
         tabIndex: "0",
-        children: jsx(_components.code, {
-          children: jsxs(_components.span, {
+        children: jsxs(_components.code, {
+          children: [jsxs(_components.span, {
             className: "line",
             children: [jsx(_components.span, {
               style: {
@@ -1939,12 +16902,59 @@ function _createMdxContent$7(props) {
               },
               children: " @formbox/hs-theme"
             })]
-          })
+          }), "\n", jsx(_components.span, {
+            className: "line",
+            children: jsx(_components.span, {
+              style: {
+                color: "#6A737D"
+              },
+              children: "# or"
+            })
+          }), "\n", jsxs(_components.span, {
+            className: "line",
+            children: [jsx(_components.span, {
+              style: {
+                color: "#B392F0"
+              },
+              children: "npm"
+            }), jsx(_components.span, {
+              style: {
+                color: "#9ECBFF"
+              },
+              children: " install"
+            }), jsx(_components.span, {
+              style: {
+                color: "#9ECBFF"
+              },
+              children: " @formbox/renderer"
+            }), jsx(_components.span, {
+              style: {
+                color: "#9ECBFF"
+              },
+              children: " @formbox/hs-theme"
+            })]
+          })]
         })
       })
     }), "\n", jsx(_components.h2, {
-      children: "Usage"
-    }), "\n", jsx(Fragment$1, {
+      children: "Peer dependencies"
+    }), "\n", jsx(_components.p, {
+      children: "Install these in your app. Your package manager will usually warn you if any are missing."
+    }), "\n", jsxs(_components.ul, {
+      children: ["\n", jsx(_components.li, {
+        children: "react, react-dom"
+      }), "\n", jsx(_components.li, {
+        children: "mobx, mobx-react-lite, mobx-utils"
+      }), "\n", jsx(_components.li, {
+        children: "classnames"
+      }), "\n", jsx(_components.li, {
+        children: "fhirpath"
+      }), "\n", jsx(_components.li, {
+        children: "@lhncbc/ucum-lhc"
+      }), "\n"]
+    }), "\n", jsx(_components.h2, {
+      children: "Quick start"
+    }), "\n", jsx(Fragment, {
       children: jsx(_components.pre, {
         className: "shiki github-dark",
         style: {
@@ -2033,6 +17043,159 @@ function _createMdxContent$7(props) {
             className: "line",
             children: [jsx(_components.span, {
               style: {
+                color: "#F97583"
+              },
+              children: "const"
+            }), jsx(_components.span, {
+              style: {
+                color: "#79B8FF"
+              },
+              children: " questionnaire"
+            }), jsx(_components.span, {
+              style: {
+                color: "#F97583"
+              },
+              children: " ="
+            }), jsx(_components.span, {
+              style: {
+                color: "#E1E4E8"
+              },
+              children: " {"
+            })]
+          }), "\n", jsxs(_components.span, {
+            className: "line",
+            children: [jsx(_components.span, {
+              style: {
+                color: "#E1E4E8"
+              },
+              children: "  resourceType: "
+            }), jsx(_components.span, {
+              style: {
+                color: "#9ECBFF"
+              },
+              children: '"Questionnaire"'
+            }), jsx(_components.span, {
+              style: {
+                color: "#E1E4E8"
+              },
+              children: ","
+            })]
+          }), "\n", jsx(_components.span, {
+            className: "line",
+            children: jsx(_components.span, {
+              style: {
+                color: "#E1E4E8"
+              },
+              children: "  item: ["
+            })
+          }), "\n", jsxs(_components.span, {
+            className: "line",
+            children: [jsx(_components.span, {
+              style: {
+                color: "#E1E4E8"
+              },
+              children: "    { linkId: "
+            }), jsx(_components.span, {
+              style: {
+                color: "#9ECBFF"
+              },
+              children: '"first"'
+            }), jsx(_components.span, {
+              style: {
+                color: "#E1E4E8"
+              },
+              children: ", text: "
+            }), jsx(_components.span, {
+              style: {
+                color: "#9ECBFF"
+              },
+              children: '"First name"'
+            }), jsx(_components.span, {
+              style: {
+                color: "#E1E4E8"
+              },
+              children: ", type: "
+            }), jsx(_components.span, {
+              style: {
+                color: "#9ECBFF"
+              },
+              children: '"string"'
+            }), jsx(_components.span, {
+              style: {
+                color: "#E1E4E8"
+              },
+              children: ", required: "
+            }), jsx(_components.span, {
+              style: {
+                color: "#79B8FF"
+              },
+              children: "true"
+            }), jsx(_components.span, {
+              style: {
+                color: "#E1E4E8"
+              },
+              children: " },"
+            })]
+          }), "\n", jsxs(_components.span, {
+            className: "line",
+            children: [jsx(_components.span, {
+              style: {
+                color: "#E1E4E8"
+              },
+              children: "    { linkId: "
+            }), jsx(_components.span, {
+              style: {
+                color: "#9ECBFF"
+              },
+              children: '"consent"'
+            }), jsx(_components.span, {
+              style: {
+                color: "#E1E4E8"
+              },
+              children: ", text: "
+            }), jsx(_components.span, {
+              style: {
+                color: "#9ECBFF"
+              },
+              children: '"Consent to treatment"'
+            }), jsx(_components.span, {
+              style: {
+                color: "#E1E4E8"
+              },
+              children: ", type: "
+            }), jsx(_components.span, {
+              style: {
+                color: "#9ECBFF"
+              },
+              children: '"boolean"'
+            }), jsx(_components.span, {
+              style: {
+                color: "#E1E4E8"
+              },
+              children: " },"
+            })]
+          }), "\n", jsx(_components.span, {
+            className: "line",
+            children: jsx(_components.span, {
+              style: {
+                color: "#E1E4E8"
+              },
+              children: "  ],"
+            })
+          }), "\n", jsx(_components.span, {
+            className: "line",
+            children: jsx(_components.span, {
+              style: {
+                color: "#E1E4E8"
+              },
+              children: "};"
+            })
+          }), "\n", jsx(_components.span, {
+            className: "line"
+          }), "\n", jsxs(_components.span, {
+            className: "line",
+            children: [jsx(_components.span, {
+              style: {
                 color: "#E1E4E8"
               },
               children: "<"
@@ -2075,6 +17238,209 @@ function _createMdxContent$7(props) {
           })]
         })
       })
+    }), "\n", jsxs(_components.p, {
+      children: ["If you want strong typing, import FHIR types from ", jsx(_components.code, {
+        children: "fhir/r5"
+      }), " and add ", jsx(_components.code, {
+        children: "@types/fhir"
+      }), " as a dev dependency if your editor cannot resolve the module."]
+    }), "\n", jsx(Fragment, {
+      children: jsx(_components.pre, {
+        className: "shiki github-dark",
+        style: {
+          backgroundColor: "#24292e",
+          color: "#e1e4e8"
+        },
+        tabIndex: "0",
+        children: jsx(_components.code, {
+          children: jsxs(_components.span, {
+            className: "line",
+            children: [jsx(_components.span, {
+              style: {
+                color: "#F97583"
+              },
+              children: "import"
+            }), jsx(_components.span, {
+              style: {
+                color: "#F97583"
+              },
+              children: " type"
+            }), jsx(_components.span, {
+              style: {
+                color: "#E1E4E8"
+              },
+              children: " { Questionnaire, QuestionnaireResponse } "
+            }), jsx(_components.span, {
+              style: {
+                color: "#F97583"
+              },
+              children: "from"
+            }), jsx(_components.span, {
+              style: {
+                color: "#9ECBFF"
+              },
+              children: ' "fhir/r5"'
+            }), jsx(_components.span, {
+              style: {
+                color: "#E1E4E8"
+              },
+              children: ";"
+            })]
+          })
+        })
+      })
+    }), "\n", jsx(_components.h2, {
+      children: "Renderer props"
+    }), "\n", jsxs(_components.table, {
+      children: [jsx(_components.thead, {
+        children: jsxs(_components.tr, {
+          children: [jsx(_components.th, {
+            children: "Prop"
+          }), jsx(_components.th, {
+            children: "Type"
+          }), jsx(_components.th, {
+            children: "Required"
+          }), jsx(_components.th, {
+            children: "Description"
+          })]
+        })
+      }), jsxs(_components.tbody, {
+        children: [jsxs(_components.tr, {
+          children: [jsx(_components.td, {
+            children: jsx(_components.code, {
+              children: "questionnaire"
+            })
+          }), jsx(_components.td, {
+            children: jsx(_components.code, {
+              children: "Questionnaire"
+            })
+          }), jsx(_components.td, {
+            children: "Yes"
+          }), jsx(_components.td, {
+            children: "FHIR Questionnaire resource that drives the form."
+          })]
+        }), jsxs(_components.tr, {
+          children: [jsx(_components.td, {
+            children: jsx(_components.code, {
+              children: "theme"
+            })
+          }), jsx(_components.td, {
+            children: jsx(_components.code, {
+              children: "Theme"
+            })
+          }), jsx(_components.td, {
+            children: "Yes"
+          }), jsx(_components.td, {
+            children: "Theme contract implementation."
+          })]
+        }), jsxs(_components.tr, {
+          children: [jsx(_components.td, {
+            children: jsx(_components.code, {
+              children: "initialResponse"
+            })
+          }), jsx(_components.td, {
+            children: jsx(_components.code, {
+              children: "QuestionnaireResponse"
+            })
+          }), jsx(_components.td, {
+            children: "No"
+          }), jsx(_components.td, {
+            children: "Seed response used to initialize answers."
+          })]
+        }), jsxs(_components.tr, {
+          children: [jsx(_components.td, {
+            children: jsx(_components.code, {
+              children: "onChange"
+            })
+          }), jsx(_components.td, {
+            children: jsx(_components.code, {
+              children: "(response: QuestionnaireResponse) => void"
+            })
+          }), jsx(_components.td, {
+            children: "No"
+          }), jsx(_components.td, {
+            children: "Called with the latest response whenever state changes."
+          })]
+        }), jsxs(_components.tr, {
+          children: [jsx(_components.td, {
+            children: jsx(_components.code, {
+              children: "onSubmit"
+            })
+          }), jsx(_components.td, {
+            children: jsx(_components.code, {
+              children: "(response: QuestionnaireResponse) => void"
+            })
+          }), jsx(_components.td, {
+            children: "No"
+          }), jsx(_components.td, {
+            children: "Called after validation passes and the form is submitted."
+          })]
+        }), jsxs(_components.tr, {
+          children: [jsx(_components.td, {
+            children: jsx(_components.code, {
+              children: "terminologyServerUrl"
+            })
+          }), jsx(_components.td, {
+            children: jsx(_components.code, {
+              children: "string"
+            })
+          }), jsx(_components.td, {
+            children: "No"
+          }), jsxs(_components.td, {
+            children: ["Base URL for ValueSet ", jsx(_components.code, {
+              children: "$expand"
+            }), " requests."]
+          })]
+        })]
+      })]
+    }), "\n", jsx(_components.h2, {
+      children: "Validation and submit"
+    }), "\n", jsxs(_components.p, {
+      children: [jsx(_components.code, {
+        children: "onSubmit"
+      }), " fires only after validation passes. When validation fails, the renderer populates Errors slots so your theme can surface issues next to controls or in summaries."]
+    }), "\n", jsx(_components.h2, {
+      children: "ValueSet expansion"
+    }), "\n", jsxs(_components.p, {
+      children: ["When a question references a ValueSet, the renderer expands it through a terminology server. If you do not pass ", jsx(_components.code, {
+        children: "terminologyServerUrl"
+      }), ", the default server is ", jsx(_components.code, {
+        children: "https://tx.fhir.org/r5"
+      }), "."]
+    }), "\n", jsx(_components.h2, {
+      children: "Themes"
+    }), "\n", jsxs(_components.p, {
+      children: ["Themes live in ", jsx(_components.code, {
+        children: "themes/*"
+      }), " in this repo. Every theme exports a ", jsx(_components.code, {
+        children: "theme"
+      }), " object and a compiled CSS file."]
+    }), "\n", jsxs(_components.ul, {
+      children: ["\n", jsx(_components.li, {
+        children: jsx(_components.code, {
+          children: "@formbox/hs-theme"
+        })
+      }), "\n", jsx(_components.li, {
+        children: jsx(_components.code, {
+          children: "@formbox/nshuk-theme"
+        })
+      }), "\n", jsx(_components.li, {
+        children: jsx(_components.code, {
+          children: "@formbox/antd-theme"
+        })
+      }), "\n", jsx(_components.li, {
+        children: jsx(_components.code, {
+          children: "@formbox/mantine-theme"
+        })
+      }), "\n"]
+    }), "\n", jsxs(_components.p, {
+      children: ["To build your own theme, see the theme specification and reference in ", jsx(_components.code, {
+        children: "packages/theme/doc"
+      }), "."]
+    }), "\n", jsx(_components.h2, {
+      children: "Compatibility"
+    }), "\n", jsx(_components.p, {
+      children: "The published output targets ES2023. Use a modern browser or Node runtime, or add a transpile or polyfill step if you need to support older environments."
     })]
   });
 }
@@ -2110,8 +17476,10 @@ function _createMdxContent$6(props) {
     ...useMDXComponents(),
     ...props.components
   };
-  return jsxs(Fragment$1, {
-    children: [jsx(_components.h2, {
+  return jsxs(Fragment, {
+    children: [jsx(_components.p, {
+      children: "This page describes runtime behavior that every theme must respect. If you are unsure how a prop behaves, check here before guessing."
+    }), "\n", jsx(_components.h2, {
       children: "Accessibility contract"
     }), "\n", jsxs(_components.ul, {
       children: ["\n", jsxs(_components.li, {
@@ -2119,29 +17487,31 @@ function _createMdxContent$6(props) {
           children: "ariaLabelledBy"
         }), " and ", jsx(_components.code, {
           children: "ariaDescribedBy"
-        }), " are already-composed, space-separated id strings. Attach them verbatim to the\nfocusable element; do not join or parse them."]
+        }), " are already-composed, space-separated id strings. Attach them verbatim to the focusable element."]
       }), "\n", jsxs(_components.li, {
         children: [jsx(_components.code, {
           children: "Label"
         }), " receives ", jsx(_components.code, {
           children: "id"
-        }), " for the label element id. Apply it to the element that wraps the visible label text so controls\ncan reference it via ", jsx(_components.code, {
+        }), " for the label element. Apply it to the element that wraps the visible label text so controls can reference it via ", jsx(_components.code, {
           children: "aria-labelledby"
         }), "."]
       }), "\n", jsxs(_components.li, {
         children: ["When ", jsx(_components.code, {
           children: "id"
-        }), " is provided, set it on the primary focusable element. For composite widgets, choose the element that\nreceives keyboard focus."]
+        }), " is provided, set it on the primary focusable element. For composite widgets, pick the element that receives keyboard focus."]
       }), "\n", jsxs(_components.li, {
         children: [jsx(_components.code, {
           children: "ariaDescribedBy"
-        }), " references the rendered ", jsx(_components.code, {
+        }), " references rendered ", jsx(_components.code, {
           children: "Help"
         }), " and ", jsx(_components.code, {
           children: "Errors"
-        }), " ids. Keep those elements in the DOM when you render\nthem. Legal and flyover content is not included in ", jsx(_components.code, {
+        }), " ids. Keep those elements in the DOM when you render them."]
+      }), "\n", jsxs(_components.li, {
+        children: ["Legal and flyover content is not included in ", jsx(_components.code, {
           children: "ariaDescribedBy"
-        }), " by default, so ensure it remains accessible in\nyour layout."]
+        }), " by default. Keep those controls accessible in your layout."]
       }), "\n", jsxs(_components.li, {
         children: ["For ", jsx(_components.code, {
           children: "TabContainer"
@@ -2149,7 +17519,7 @@ function _createMdxContent$6(props) {
           children: 'role="tablist"'
         }), " on the container, ", jsx(_components.code, {
           children: 'role="tab"'
-        }), " on each tab with\n", jsx(_components.code, {
+        }), " on each tab with ", jsx(_components.code, {
           children: "id={buttonId}"
         }), ", ", jsx(_components.code, {
           children: 'role="tabpanel"'
@@ -2157,43 +17527,43 @@ function _createMdxContent$6(props) {
           children: "id={panelId}"
         }), ", and wire ", jsx(_components.code, {
           children: "aria-controls"
-        }), "/", jsx(_components.code, {
+        }), " and ", jsx(_components.code, {
           children: "aria-labelledby"
         }), "."]
       }), "\n", jsx(_components.li, {
-        children: "For custom select or multiselect widgets, follow standard combobox/listbox roles and keyboard interactions (Arrow\nkeys, Enter/Space to select, Escape to close) when you are not using native inputs."
+        children: "For custom select or multiselect widgets, follow combobox/listbox roles and keyboard interactions (Arrow keys, Enter or Space to select, Escape to close) when you are not using native inputs."
       }), "\n"]
     }), "\n", jsx(_components.h2, {
-      children: "Controlled-value contract"
+      children: "Controlled values"
     }), "\n", jsx(_components.p, {
       children: "All inputs are controlled; callbacks receive values, not DOM events."
     }), "\n", jsxs(_components.ul, {
       children: ["\n", jsx(_components.li, {
-        children: "TextInput/TextArea: pass the raw string; empty string stays empty string."
+        children: "TextInput and TextArea: pass the raw string. Empty string stays empty string."
       }), "\n", jsxs(_components.li, {
-        children: ["NumberInput/SpinnerInput/SliderInput: parse to ", jsx(_components.code, {
+        children: ["NumberInput, SpinnerInput, SliderInput: parse to ", jsx(_components.code, {
           children: "number"
         }), " or ", jsx(_components.code, {
           children: "undefined"
         }), ". Use ", jsx(_components.code, {
           children: "undefined"
-        }), " when the field is empty or\ninvalid; do not pass strings."]
+        }), " when the field is empty or invalid."]
       }), "\n", jsx(_components.li, {
-        children: "DateInput/DateTimeInput/TimeInput: treat the value as an opaque string and return it as entered. Do not normalize,\nformat, or shift timezones."
+        children: "DateInput, DateTimeInput, TimeInput: treat the value as an opaque string and return it as entered. Do not normalize, format, or shift timezones."
       }), "\n", jsxs(_components.li, {
-        children: ["Select/Radio: ", jsx(_components.code, {
+        children: ["Select and Radio: ", jsx(_components.code, {
           children: "selectedOption = undefined"
         }), " means no selection. Call ", jsx(_components.code, {
           children: "onChange(token | undefined)"
-        }), " for changes."]
+        }), " when the selection changes."]
       }), "\n", jsxs(_components.li, {
-        children: ["CheckboxList/MultiSelect: treat ", jsx(_components.code, {
+        children: ["CheckboxList and MultiSelect: treat ", jsx(_components.code, {
           children: "selectedOptions[].token"
         }), " as the selected set. Call ", jsx(_components.code, {
           children: "onSelect"
         }), " or ", jsx(_components.code, {
           children: "onDeselect"
-        }), " once per\nuser action and do not reorder the provided selections."]
+        }), " once per user action and do not reorder the provided selections."]
       }), "\n"]
     }), "\n", jsx(_components.h2, {
       children: "Disabled behavior"
@@ -2211,15 +17581,15 @@ function _createMdxContent$6(props) {
           children: 'aria-disabled="true"'
         }), ", remove from the tab order (", jsx(_components.code, {
           children: "tabIndex={-1}"
-        }), "), and ignore pointer/keyboard\nevents."]
+        }), "), and ignore pointer and keyboard events."]
       }), "\n", jsx(_components.li, {
         children: "Disabled options should remain visible and announced as disabled."
       }), "\n", jsxs(_components.li, {
-        children: ["If an add/remove action is provided with ", jsx(_components.code, {
+        children: ["If an add or remove action is provided with ", jsx(_components.code, {
           children: "canAdd={false}"
         }), " or ", jsx(_components.code, {
           children: "canRemove={false}"
-        }), ", render it disabled rather than\nhiding it."]
+        }), ", render it disabled rather than hiding it."]
       }), "\n"]
     }), "\n", jsx(_components.h2, {
       children: "Options and custom options lifecycle"
@@ -2233,17 +17603,17 @@ function _createMdxContent$6(props) {
       }), "\n", jsxs(_components.li, {
         children: ["The renderer may include disabled legacy options in ", jsx(_components.code, {
           children: "options"
-        }), " to keep stored answers visible. Treat them as normal\noptions, but disabled."]
+        }), " to keep stored answers visible. Treat them as normal options, but disabled."]
       }), "\n", jsxs(_components.li, {
         children: [jsx(_components.code, {
           children: "specifyOtherOption"
-        }), " is an extra option row. When the user selects it, the renderer enters a custom-entry state and\nprovides ", jsx(_components.code, {
+        }), " is an extra option row. When the user selects it, the renderer enters a custom-entry state and provides ", jsx(_components.code, {
           children: "customOptionForm"
         }), "."]
       }), "\n", jsxs(_components.li, {
         children: [jsx(_components.code, {
           children: "customOptionForm"
-        }), " is present only while custom entry is active. Render it near the options list or in place of it;\nuse its ", jsx(_components.code, {
+        }), " is present only while custom entry is active. Render it near the options list or in place of it. Use its ", jsx(_components.code, {
           children: "submit"
         }), " and ", jsx(_components.code, {
           children: "cancel"
@@ -2253,7 +17623,7 @@ function _createMdxContent$6(props) {
           children: "isLoading"
         }), " can be true while options fetch. The renderer may also render ", jsx(_components.code, {
           children: "OptionsLoading"
-        }), " in the question scaffold;\nhandle both without duplicating spinners."]
+        }), " in the question scaffold; handle both without duplicating spinners."]
       }), "\n"]
     }), "\n", jsx(_components.h2, {
       children: "Repeating items contract"
@@ -2265,17 +17635,17 @@ function _createMdxContent$6(props) {
           children: "AnswerScaffold"
         }), " entries; when ", jsx(_components.code, {
           children: "onAdd"
-        }), " is provided it should render add-answer\ncontrols."]
+        }), " is provided it should render add-answer controls."]
       }), "\n", jsxs(_components.li, {
         children: [jsx(_components.code, {
           children: "AnswerScaffold.onRemove"
-        }), " is provided for repeating questions; render a remove action next to the control and disable\nit when ", jsx(_components.code, {
+        }), " is provided for repeating questions. Render a remove action next to the control and disable it when ", jsx(_components.code, {
           children: "canRemove"
         }), " is false."]
       }), "\n", jsxs(_components.li, {
         children: [jsx(_components.code, {
           children: "AnswerScaffold.errors"
-        }), " is provided for per-answer validation; render it near the answer content (it may render\nnothing)."]
+        }), " is provided for per-answer validation; render it near the answer content."]
       }), "\n", jsxs(_components.li, {
         children: [jsx(_components.code, {
           children: "GroupList"
@@ -2283,7 +17653,7 @@ function _createMdxContent$6(props) {
           children: "GroupScaffold"
         }), ") and can show an add control when ", jsx(_components.code, {
           children: "onAdd"
-        }), "\nis provided."]
+        }), " is provided."]
       }), "\n", jsxs(_components.li, {
         children: [jsx(_components.code, {
           children: "GroupScaffold"
@@ -2291,7 +17661,7 @@ function _createMdxContent$6(props) {
           children: "onRemove"
         }), " is provided; use ", jsx(_components.code, {
           children: "canRemove"
-        }), " to disable."]
+        }), " to disable it."]
       }), "\n"]
     })]
   });
@@ -2331,10 +17701,51 @@ function _createMdxContent$5(props) {
     ...props.components
   }, { Diagram: Diagram2 } = _components;
   if (!Diagram2) _missingMdxReference("Diagram");
-  return jsxs(Fragment$1, {
-    children: [jsx(_components.h2, {
+  return jsxs(Fragment, {
+    children: [jsx(_components.p, {
+      children: "This package defines the theme contract for Formbox Renderer. Use it when you build a theme or want strict typing while customizing an existing theme."
+    }), "\n", jsx(_components.h2, {
       children: "Install"
-    }), "\n", jsx(Fragment$1, {
+    }), "\n", jsx(_components.p, {
+      children: "If you only need types in an app, install as a dev dependency:"
+    }), "\n", jsx(Fragment, {
+      children: jsx(_components.pre, {
+        className: "shiki github-dark",
+        style: {
+          backgroundColor: "#24292e",
+          color: "#e1e4e8"
+        },
+        tabIndex: "0",
+        children: jsx(_components.code, {
+          children: jsxs(_components.span, {
+            className: "line",
+            children: [jsx(_components.span, {
+              style: {
+                color: "#B392F0"
+              },
+              children: "pnpm"
+            }), jsx(_components.span, {
+              style: {
+                color: "#9ECBFF"
+              },
+              children: " add"
+            }), jsx(_components.span, {
+              style: {
+                color: "#79B8FF"
+              },
+              children: " -D"
+            }), jsx(_components.span, {
+              style: {
+                color: "#9ECBFF"
+              },
+              children: " @formbox/theme"
+            })]
+          })
+        })
+      })
+    }), "\n", jsx(_components.p, {
+      children: "If you are publishing a theme package, add it as a dependency:"
+    }), "\n", jsx(Fragment, {
       children: jsx(_components.pre, {
         className: "shiki github-dark",
         style: {
@@ -2366,9 +17777,11 @@ function _createMdxContent$5(props) {
       })
     }), "\n", jsx(_components.h2, {
       children: "Quick start"
-    }), "\n", jsx(_components.p, {
-      children: "Create a theme by implementing the Theme contract. You can start from a base theme and override only what you need."
-    }), "\n", jsx(Fragment$1, {
+    }), "\n", jsxs(_components.p, {
+      children: ["Create a theme by implementing the ", jsx(_components.code, {
+        children: "Theme"
+      }), " contract. The easiest path is to start from an existing theme and override the components you want to replace."]
+    }), "\n", jsx(Fragment, {
       children: jsx(_components.pre, {
         className: "shiki github-dark",
         style: {
@@ -2590,30 +18003,50 @@ function _createMdxContent$5(props) {
       })
     }), "\n", jsx(_components.h2, {
       children: "Theme contract"
-    }), "\n", jsx(_components.p, {
-      children: "A Theme is a full object with React components for every slot listed in the component reference. The renderer never\ntouches DOM APIs directly, so the theme is responsible for markup, layout, and styling while keeping the data flow\npurely through props."
-    }), "\n", jsx(_components.p, {
-      children: "You may create a complete theme from scratch or extend an existing one with object spread. The Theme type is strict, so\nevery component must be provided."
+    }), "\n", jsxs(_components.p, {
+      children: ["A ", jsx(_components.code, {
+        children: "Theme"
+      }), " is a full object with React components for every slot listed in the reference. The renderer never touches DOM APIs directly; the theme owns markup, layout, and styling. Data flows only through props."]
+    }), "\n", jsxs(_components.p, {
+      children: ["The ", jsx(_components.code, {
+        children: "Theme"
+      }), " type is strict. You must supply every component, either by building a complete theme from scratch or by extending a base theme."]
     }), "\n", jsx(_components.h2, {
       children: "Conventions"
     }), "\n", jsxs(_components.ul, {
       children: ["\n", jsx(_components.li, {
-        children: "Controlled props: text/number/date inputs use value and onChange. Single-selects pass selectedOption, multi-selects\npass selectedOptions with onSelect/onDeselect, and checkbox lists use tokens for the selected set. onChange receives\nthe next value, never a DOM event."
-      }), "\n", jsx(_components.li, {
-        children: "Disabled states: the renderer uses disabled to indicate non-editable inputs. Prefer disabled over readOnly in theme\ncomponents."
-      }), "\n", jsx(_components.li, {
-        children: "Accessibility: ariaLabelledBy and ariaDescribedBy are string ids. Wire them to the relevant elements."
-      }), "\n", jsx(_components.li, {
-        children: "Ids: when id is provided, pass it through to the focusable control."
-      }), "\n", jsx(_components.li, {
-        children: "children is the slot name for single content. Option data types use label for the display content."
-      }), "\n", jsx(_components.li, {
-        children: "Optional = Yes means the renderer may omit the prop at runtime; Optional = No means it is always passed. Treat undefined as not provided."
+        children: "Inputs are controlled. Callbacks receive values, not DOM events."
+      }), "\n", jsxs(_components.li, {
+        children: ["Use ", jsx(_components.code, {
+          children: "disabled"
+        }), " to indicate non-editable state; avoid ", jsx(_components.code, {
+          children: "readOnly"
+        }), " unless your component needs it."]
+      }), "\n", jsxs(_components.li, {
+        children: [jsx(_components.code, {
+          children: "ariaLabelledBy"
+        }), " and ", jsx(_components.code, {
+          children: "ariaDescribedBy"
+        }), " are id strings. Forward them directly to the focusable element."]
+      }), "\n", jsxs(_components.li, {
+        children: ["When ", jsx(_components.code, {
+          children: "id"
+        }), " is provided, apply it to the primary focusable element."]
+      }), "\n", jsxs(_components.li, {
+        children: [jsx(_components.code, {
+          children: "children"
+        }), " is the slot for rendered content. Option types use ", jsx(_components.code, {
+          children: "label"
+        }), " for display content."]
+      }), "\n", jsxs(_components.li, {
+        children: ["When a prop is optional, the renderer may omit it. Treat ", jsx(_components.code, {
+          children: "undefined"
+        }), " as not provided."]
       }), "\n"]
     }), "\n", jsx(_components.h2, {
       children: "Renderer composition overview"
     }), "\n", jsx(_components.p, {
-      children: "The renderer composes your theme in a predictable tree. You control layout, but the nesting explains where headers,\nerrors, and actions appear."
+      children: "The renderer composes your theme in a predictable tree. You control layout, but the nesting describes where headers, errors, and actions appear."
     }), "\n", jsx(_components.p, {
       children: "Overview diagram (simplified):"
     }), "\n", jsx(Diagram2, {
@@ -2624,7 +18057,7 @@ function _createMdxContent$5(props) {
       svg: '<svg id="diagram-1" width="100%" xmlns="http://www.w3.org/2000/svg" class="flowchart" style="max-width: 601.6px" viewBox="-8 -8 601.6 310.00000000000006" role="graphics-document document" aria-roledescription="flowchart-v2"><style>#diagram-1{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#e1e4e8;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#diagram-1 .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#diagram-1 .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#diagram-1 .error-icon{fill:hsl(26.6666666667, 12.676056338%, 18.9215686275%);}#diagram-1 .error-text{fill:rgb(200.6338028168, 207.4295774647, 212.866197183);stroke:rgb(200.6338028168, 207.4295774647, 212.866197183);}#diagram-1 .edge-thickness-normal{stroke-width:1px;}#diagram-1 .edge-thickness-thick{stroke-width:3.5px;}#diagram-1 .edge-pattern-solid{stroke-dasharray:0;}#diagram-1 .edge-thickness-invisible{stroke-width:0;fill:none;}#diagram-1 .edge-pattern-dashed{stroke-dasharray:3;}#diagram-1 .edge-pattern-dotted{stroke-dasharray:2;}#diagram-1 .marker{fill:#586069;stroke:#586069;}#diagram-1 .marker.cross{stroke:#586069;}#diagram-1 svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#diagram-1 p{margin:0;}#diagram-1 .label{font-family:"trebuchet ms",verdana,arial,sans-serif;color:#e1e4e8;}#diagram-1 .cluster-label text{fill:rgb(200.6338028168, 207.4295774647, 212.866197183);}#diagram-1 .cluster-label span{color:rgb(200.6338028168, 207.4295774647, 212.866197183);}#diagram-1 .cluster-label span p{background-color:transparent;}#diagram-1 .label text,#diagram-1 span{fill:#e1e4e8;color:#e1e4e8;}#diagram-1 .node rect,#diagram-1 .node circle,#diagram-1 .node ellipse,#diagram-1 .node polygon,#diagram-1 .node path{fill:#24292e;stroke:#1b1f23;stroke-width:1px;}#diagram-1 .rough-node .label text,#diagram-1 .node .label text,#diagram-1 .image-shape .label,#diagram-1 .icon-shape .label{text-anchor:middle;}#diagram-1 .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#diagram-1 .rough-node .label,#diagram-1 .node .label,#diagram-1 .image-shape .label,#diagram-1 .icon-shape .label{text-align:center;}#diagram-1 .node.clickable{cursor:pointer;}#diagram-1 .root .anchor path{fill:#586069!important;stroke-width:0;stroke:#586069;}#diagram-1 .arrowheadPath{fill:#dbd6d1;}#diagram-1 .edgePath .path{stroke:#586069;stroke-width:2.0px;}#diagram-1 .flowchart-link{stroke:#586069;fill:none;}#diagram-1 .edgeLabel{background-color:hsl(86.6666666667, 12.676056338%, 13.9215686275%);text-align:center;}#diagram-1 .edgeLabel p{background-color:hsl(86.6666666667, 12.676056338%, 13.9215686275%);}#diagram-1 .edgeLabel rect{opacity:0.5;background-color:hsl(86.6666666667, 12.676056338%, 13.9215686275%);fill:hsl(86.6666666667, 12.676056338%, 13.9215686275%);}#diagram-1 .labelBkg{background-color:rgba(36.0000000001, 40.0000000001, 31.0000000001, 0.5);}#diagram-1 .cluster rect{fill:hsl(26.6666666667, 12.676056338%, 18.9215686275%);stroke:hsl(26.6666666667, 0%, 8.9215686275%);stroke-width:1px;}#diagram-1 .cluster text{fill:rgb(200.6338028168, 207.4295774647, 212.866197183);}#diagram-1 .cluster span{color:rgb(200.6338028168, 207.4295774647, 212.866197183);}#diagram-1 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:12px;background:hsl(26.6666666667, 12.676056338%, 18.9215686275%);border:1px solid hsl(26.6666666667, 0%, 8.9215686275%);border-radius:2px;pointer-events:none;z-index:100;}#diagram-1 .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#e1e4e8;}#diagram-1 rect.text{fill:none;stroke-width:0;}#diagram-1 .icon-shape,#diagram-1 .image-shape{background-color:hsl(86.6666666667, 12.676056338%, 13.9215686275%);text-align:center;}#diagram-1 .icon-shape p,#diagram-1 .image-shape p{background-color:hsl(86.6666666667, 12.676056338%, 13.9215686275%);padding:2px;}#diagram-1 .icon-shape rect,#diagram-1 .image-shape rect{opacity:0.5;background-color:hsl(86.6666666667, 12.676056338%, 13.9215686275%);fill:hsl(86.6666666667, 12.676056338%, 13.9215686275%);}#diagram-1 .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#diagram-1 .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#diagram-1 :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g><marker id="diagram-1_flowchart-v2-pointEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1,0;"/></marker><marker id="diagram-1_flowchart-v2-pointStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1,0;"/></marker><marker id="diagram-1_flowchart-v2-circleEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1,0;"/></marker><marker id="diagram-1_flowchart-v2-circleStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1,0;"/></marker><marker id="diagram-1_flowchart-v2-crossEnd" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1,0;"/></marker><marker id="diagram-1_flowchart-v2-crossStart" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1,0;"/></marker><g class="root"><g class="clusters"/><g class="edgePaths"><path d="M199.6,53.157L176.667,59.598C153.733,66.038,107.867,78.919,84.933,90.46C62,102,62,112.2,62,117.3L62,122.4" id="L_GLS_GLH_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_GLS_GLH_0" data-points="W3sieCI6MTk5LjYwMDAwMDAwMDAwMDAyLCJ5Ijo1My4xNTcxMTU3NDk1MjU2MTZ9LHsieCI6NjIsInkiOjkxLjh9LHsieCI6NjIsInkiOjEyNi40fV0=" marker-end="url(#diagram-1_flowchart-v2-pointEnd)"/><path d="M272.8,57.2L272.8,62.967C272.8,68.733,272.8,80.267,272.8,91.133C272.8,102,272.8,112.2,272.8,117.3L272.8,122.4" id="L_GLS_GS_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_GLS_GS_0" data-points="W3sieCI6MjcyLjgsInkiOjU3LjJ9LHsieCI6MjcyLjgsInkiOjkxLjh9LHsieCI6MjcyLjgsInkiOjEyNi40fV0=" marker-end="url(#diagram-1_flowchart-v2-pointEnd)"/><path d="M230.997,175.6L221.197,181.367C211.398,187.133,191.799,198.667,181.999,209.533C172.2,220.4,172.2,230.6,172.2,235.7L172.2,240.8" id="L_GS_GSE_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_GS_GSE_0" data-points="W3sieCI6MjMwLjk5NjYyMTYyMTYyMTY3LCJ5IjoxNzUuNn0seyJ4IjoxNzIuMjAwMDAwMDAwMDAwMDUsInkiOjIxMC4yMDAwMDAwMDAwMDAwMn0seyJ4IjoxNzIuMjAwMDAwMDAwMDAwMDUsInkiOjI0NC44MDAwMDAwMDAwMDAwNH1d" marker-end="url(#diagram-1_flowchart-v2-pointEnd)"/><path d="M314.603,175.6L324.403,181.367C334.202,187.133,353.801,198.667,363.601,209.533C373.4,220.4,373.4,230.6,373.4,235.7L373.4,240.8" id="L_GS_GSR_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_GS_GSR_0" data-points="W3sieCI6MzE0LjYwMzM3ODM3ODM3ODM1LCJ5IjoxNzUuNn0seyJ4IjozNzMuNCwieSI6MjEwLjIwMDAwMDAwMDAwMDAyfSx7IngiOjM3My40LCJ5IjoyNDQuODAwMDAwMDAwMDAwMDR9XQ==" marker-end="url(#diagram-1_flowchart-v2-pointEnd)"/><path d="M346,51.056L372.933,57.847C399.867,64.637,453.733,78.219,480.667,90.109C507.6,102,507.6,112.2,507.6,117.3L507.6,122.4" id="L_GLS_GLAdd_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_GLS_GLAdd_0" data-points="W3sieCI6MzQ2LCJ5Ijo1MS4wNTU4NzczNDI0MTkwN30seyJ4Ijo1MDcuNiwieSI6OTEuOH0seyJ4Ijo1MDcuNiwieSI6MTI2LjR9XQ==" marker-end="url(#diagram-1_flowchart-v2-pointEnd)"/></g><g class="edgeLabels"><g><rect class="background" style="stroke: none"/></g><g><rect class="background" style="stroke: none"/></g><g><rect class="background" style="stroke: none"/></g><g><rect class="background" style="stroke: none"/></g><g><rect class="background" style="stroke: none"/></g><g class="edgeLabel"><g class="label" data-id="L_GLS_GLH_0" transform="translate(-4, -9.6)"><text y="-10.1"><tspan class="text-outer-tspan" x="0" y="-0.1em" dy="1.1em"/></text></g></g><g class="edgeLabel"><g class="label" data-id="L_GLS_GS_0" transform="translate(-4, -9.6)"><text y="-10.1"><tspan class="text-outer-tspan" x="0" y="-0.1em" dy="1.1em"/></text></g></g><g class="edgeLabel"><g class="label" data-id="L_GS_GSE_0" transform="translate(-4, -9.6)"><text y="-10.1"><tspan class="text-outer-tspan" x="0" y="-0.1em" dy="1.1em"/></text></g></g><g class="edgeLabel"><g class="label" data-id="L_GS_GSR_0" transform="translate(-4, -9.6)"><text y="-10.1"><tspan class="text-outer-tspan" x="0" y="-0.1em" dy="1.1em"/></text></g></g><g class="edgeLabel"><g class="label" data-id="L_GLS_GLAdd_0" transform="translate(-4, -9.6)"><text y="-10.1"><tspan class="text-outer-tspan" x="0" y="-0.1em" dy="1.1em"/></text></g></g></g><g class="nodes"><g class="node default" id="flowchart-GLS-0" transform="translate(272.8, 32.6)"><rect class="basic label-container" style="" x="-73.19999999999999" y="-24.6" width="146.39999999999998" height="49.2"/><g class="label" style="" transform="translate(0, -9.6)"><rect/><g><rect class="background" style="stroke: none"/><text y="-10.1" style=""><tspan class="text-outer-tspan" x="0" y="-0.1em" dy="1.1em"><tspan font-style="normal" class="text-inner-tspan" font-weight="normal">GroupList</tspan></tspan></text></g></g></g><g class="node default" id="flowchart-GLH-1" transform="translate(62, 151)"><rect class="basic label-container" style="" x="-54" y="-24.6" width="108" height="49.2"/><g class="label" style="" transform="translate(0, -9.6)"><rect/><g><rect class="background" style="stroke: none"/><text y="-10.1" style=""><tspan class="text-outer-tspan" x="0" y="-0.1em" dy="1.1em"><tspan font-style="normal" class="text-inner-tspan" font-weight="normal">Label</tspan></tspan></text></g></g></g><g class="node default" id="flowchart-GS-3" transform="translate(272.8, 151)"><rect class="basic label-container" style="" x="-106.8" y="-24.6" width="213.6" height="49.2"/><g class="label" style="" transform="translate(0, -9.6)"><rect/><g><rect class="background" style="stroke: none"/><text y="-10.1" style=""><tspan class="text-outer-tspan" x="0" y="-0.1em" dy="1.1em"><tspan font-style="normal" class="text-inner-tspan" font-weight="normal">GroupScaffold...</tspan></tspan></text></g></g></g><g class="node default" id="flowchart-GSE-5" transform="translate(172.20000000000005, 269.40000000000003)"><rect class="basic label-container" style="" x="-58.8" y="-24.6" width="117.6" height="49.2"/><g class="label" style="" transform="translate(0, -9.6)"><rect/><g><rect class="background" style="stroke: none"/><text y="-10.1" style=""><tspan class="text-outer-tspan" x="0" y="-0.1em" dy="1.1em"><tspan font-style="normal" class="text-inner-tspan" font-weight="normal">Errors</tspan></tspan></text></g></g></g><g class="node default" id="flowchart-GSR-7" transform="translate(373.4, 269.40000000000003)"><rect class="basic label-container" style="" x="-92.4" y="-24.6" width="184.8" height="49.2"/><g class="label" style="" transform="translate(0, -9.6)"><rect/><g><rect class="background" style="stroke: none"/><text y="-10.1" style=""><tspan class="text-outer-tspan" x="0" y="-0.1em" dy="1.1em"><tspan font-style="normal" class="text-inner-tspan" font-weight="normal">Remove</tspan><tspan font-style="normal" class="text-inner-tspan" font-weight="normal"> action</tspan></tspan></text></g></g></g><g class="node default" id="flowchart-GLAdd-9" transform="translate(507.6, 151)"><rect class="basic label-container" style="" x="-78" y="-24.6" width="156" height="49.2"/><g class="label" style="" transform="translate(0, -9.6)"><rect/><g><rect class="background" style="stroke: none"/><text y="-10.1" style=""><tspan class="text-outer-tspan" x="0" y="-0.1em" dy="1.1em"><tspan font-style="normal" class="text-inner-tspan" font-weight="normal">Add</tspan><tspan font-style="normal" class="text-inner-tspan" font-weight="normal"> action</tspan></tspan></text></g></g></g></g></g></g></svg>'
     }), "\n", jsx(_components.p, {
       children: "Typical question node:"
-    }), "\n", jsx(Fragment$1, {
+    }), "\n", jsx(Fragment, {
       children: jsx(_components.pre, {
         className: "shiki github-dark",
         style: {
@@ -2683,7 +18116,7 @@ function _createMdxContent$5(props) {
       })
     }), "\n", jsx(_components.p, {
       children: "Typical repeating group list:"
-    }), "\n", jsx(Fragment$1, {
+    }), "\n", jsx(Fragment, {
       children: jsx(_components.pre, {
         className: "shiki github-dark",
         style: {
@@ -2727,7 +18160,7 @@ function _createMdxContent$5(props) {
       })
     }), "\n", jsx(_components.p, {
       children: "Typical non-repeating group:"
-    }), "\n", jsx(Fragment$1, {
+    }), "\n", jsx(Fragment, {
       children: jsx(_components.pre, {
         className: "shiki github-dark",
         style: {
@@ -2769,15 +18202,15 @@ function _createMdxContent$5(props) {
           children: "ariaLabelledBy"
         }), ", and ", jsx(_components.code, {
           children: "ariaDescribedBy"
-        }), " values are unique within a form render and stable for a given node or\nanswer instance."]
+        }), " values are unique within a render and stable for a given node or answer."]
       }), "\n", jsxs(_components.li, {
         children: [jsx(_components.code, {
           children: "ariaDescribedBy"
         }), " strings are already space-joined; use them as-is."]
       }), "\n", jsx(_components.li, {
-        children: "Option tokens are stable across renders; selected options may remain when the option list changes."
+        children: "Option tokens are stable across renders; selected options may remain when the options list changes."
       }), "\n", jsx(_components.li, {
-        children: "When needed, the renderer passes disabled legacy options so stored answers can still render."
+        children: "When needed, the renderer passes disabled legacy options so stored answers still render."
       }), "\n", jsxs(_components.li, {
         children: [jsx(_components.code, {
           children: "label"
@@ -2787,6 +18220,14 @@ function _createMdxContent$5(props) {
           children: "ReactNode"
         }), " values."]
       }), "\n"]
+    }), "\n", jsx(_components.h2, {
+      children: "Next"
+    }), "\n", jsxs(_components.p, {
+      children: ["See ", jsx(_components.code, {
+        children: "reference.md"
+      }), " for component props and ", jsx(_components.code, {
+        children: "behavior.md"
+      }), " for runtime behavior details."]
     })]
   });
 }
@@ -2820,6 +18261,7 @@ function _createMdxContent$4(props) {
     code: "code",
     h2: "h2",
     h3: "h3",
+    li: "li",
     p: "p",
     pre: "pre",
     span: "span",
@@ -2829,11 +18271,52 @@ function _createMdxContent$4(props) {
     th: "th",
     thead: "thead",
     tr: "tr",
+    ul: "ul",
     ...useMDXComponents(),
     ...props.components
   };
-  return jsxs(Fragment$1, {
-    children: [jsx(_components.h2, {
+  return jsxs(Fragment, {
+    children: [jsx(_components.p, {
+      children: "This reference lists every component in the Theme contract and the props the renderer passes at runtime."
+    }), "\n", jsx(_components.h2, {
+      children: "How to read this reference"
+    }), "\n", jsxs(_components.ul, {
+      children: ["\n", jsxs(_components.li, {
+        children: ['Optional column: "Yes" means the renderer may omit the prop. Treat ', jsx(_components.code, {
+          children: "undefined"
+        }), " as not provided."]
+      }), "\n", jsxs(_components.li, {
+        children: [jsx(_components.code, {
+          children: "ariaLabelledBy"
+        }), " and ", jsx(_components.code, {
+          children: "ariaDescribedBy"
+        }), " are already space-joined strings. Forward them to the focusable element."]
+      }), "\n", jsx(_components.li, {
+        children: "Inputs are controlled. Callbacks receive values, not DOM events."
+      }), "\n", jsxs(_components.li, {
+        children: [jsx(_components.code, {
+          children: "children"
+        }), " and ", jsx(_components.code, {
+          children: "label"
+        }), " props are already rendered ", jsx(_components.code, {
+          children: "ReactNode"
+        }), " values."]
+      }), "\n"]
+    }), "\n", jsx(_components.h2, {
+      children: "Shared types"
+    }), "\n", jsxs(_components.p, {
+      children: [jsx(_components.code, {
+        children: "OptionItem"
+      }), ", ", jsx(_components.code, {
+        children: "SelectedOptionItem"
+      }), ", ", jsx(_components.code, {
+        children: "CustomOptionAction"
+      }), ", and ", jsx(_components.code, {
+        children: "Attachment"
+      }), " are exported by ", jsx(_components.code, {
+        children: "@formbox/theme"
+      }), ". Import them when you need to type your components or helpers."]
+    }), "\n", jsx(_components.h2, {
       children: "Component reference"
     }), "\n", jsx(_components.h3, {
       children: "Link"
@@ -2922,7 +18405,7 @@ function _createMdxContent$4(props) {
     }), "\n", jsx(_components.h3, {
       children: "Errors"
     }), "\n", jsx(_components.p, {
-      children: "Inline list of validation messages for a specific control, answer, or the form summary. Keep each message distinct and\nclose to the related input or summary area."
+      children: "Inline list of validation messages for a specific control, answer, or form-level errors. Keep each message distinct and\nclose to the related input or summary area."
     }), "\n", jsxs(_components.table, {
       children: [jsx(_components.thead, {
         children: jsxs(_components.tr, {
@@ -6683,7 +22166,7 @@ function _createMdxContent$4(props) {
       })]
     }), "\n", jsx(_components.p, {
       children: "Example patterns:"
-    }), "\n", jsx(Fragment$1, {
+    }), "\n", jsx(Fragment, {
       children: jsx(_components.pre, {
         className: "shiki github-dark",
         style: {
@@ -6819,7 +22302,7 @@ function _createMdxContent$4(props) {
           })]
         })
       })
-    }), "\n", jsx(Fragment$1, {
+    }), "\n", jsx(Fragment, {
       children: jsx(_components.pre, {
         className: "shiki github-dark",
         style: {
@@ -7904,12 +23387,12 @@ function _createMdxContent$3(props) {
     ...useMDXComponents(),
     ...props.components
   };
-  return jsxs(Fragment$1, {
+  return jsxs(Fragment, {
     children: [jsx(_components.p, {
       children: "Ant Design theme for Formbox Renderer."
     }), "\n", jsx(_components.h2, {
       children: "Install"
-    }), "\n", jsx(Fragment$1, {
+    }), "\n", jsx(Fragment, {
       children: jsx(_components.pre, {
         className: "shiki github-dark",
         style: {
@@ -7941,7 +23424,7 @@ function _createMdxContent$3(props) {
       })
     }), "\n", jsx(_components.p, {
       children: "Include the compiled CSS:"
-    }), "\n", jsx(Fragment$1, {
+    }), "\n", jsx(Fragment, {
       children: jsx(_components.pre, {
         className: "shiki github-dark",
         style: {
@@ -7973,7 +23456,7 @@ function _createMdxContent$3(props) {
       })
     }), "\n", jsx(_components.h2, {
       children: "Usage"
-    }), "\n", jsx(Fragment$1, {
+    }), "\n", jsx(Fragment, {
       children: jsx(_components.pre, {
         className: "shiki github-dark",
         style: {
@@ -8120,12 +23603,12 @@ function _createMdxContent$2(props) {
     ...useMDXComponents(),
     ...props.components
   };
-  return jsxs(Fragment$1, {
+  return jsxs(Fragment, {
     children: [jsx(_components.p, {
       children: "Health Samurai-styled theme for Formbox Renderer."
     }), "\n", jsx(_components.h2, {
       children: "Install"
-    }), "\n", jsx(Fragment$1, {
+    }), "\n", jsx(Fragment, {
       children: jsx(_components.pre, {
         className: "shiki github-dark",
         style: {
@@ -8157,7 +23640,7 @@ function _createMdxContent$2(props) {
       })
     }), "\n", jsx(_components.p, {
       children: "Include the compiled CSS:"
-    }), "\n", jsx(Fragment$1, {
+    }), "\n", jsx(Fragment, {
       children: jsx(_components.pre, {
         className: "shiki github-dark",
         style: {
@@ -8189,7 +23672,7 @@ function _createMdxContent$2(props) {
       })
     }), "\n", jsx(_components.h2, {
       children: "Usage"
-    }), "\n", jsx(Fragment$1, {
+    }), "\n", jsx(Fragment, {
       children: jsx(_components.pre, {
         className: "shiki github-dark",
         style: {
@@ -8336,12 +23819,12 @@ function _createMdxContent$1(props) {
     ...useMDXComponents(),
     ...props.components
   };
-  return jsxs(Fragment$1, {
+  return jsxs(Fragment, {
     children: [jsx(_components.p, {
       children: "Mantine theme for Formbox Renderer."
     }), "\n", jsx(_components.h2, {
       children: "Install"
-    }), "\n", jsx(Fragment$1, {
+    }), "\n", jsx(Fragment, {
       children: jsx(_components.pre, {
         className: "shiki github-dark",
         style: {
@@ -8373,7 +23856,7 @@ function _createMdxContent$1(props) {
       })
     }), "\n", jsx(_components.p, {
       children: "Include the compiled CSS:"
-    }), "\n", jsx(Fragment$1, {
+    }), "\n", jsx(Fragment, {
       children: jsx(_components.pre, {
         className: "shiki github-dark",
         style: {
@@ -8411,7 +23894,7 @@ function _createMdxContent$1(props) {
       }), " in the React tree.\nThis package re-exports it as ", jsx(_components.code, {
         children: "Provider"
       }), " so you can pass any Mantine provider props."]
-    }), "\n", jsx(Fragment$1, {
+    }), "\n", jsx(Fragment, {
       children: jsx(_components.pre, {
         className: "shiki github-dark",
         style: {
@@ -8595,7 +24078,7 @@ function _createMdxContent(props) {
     ...useMDXComponents(),
     ...props.components
   };
-  return jsxs(Fragment$1, {
+  return jsxs(Fragment, {
     children: [jsxs(_components.p, {
       children: [jsx(_components.a, {
         href: "https://service-manual.nhs.uk/design-system",
@@ -8603,7 +24086,7 @@ function _createMdxContent(props) {
       }), " theme for Formbox Renderer."]
     }), "\n", jsx(_components.h2, {
       children: "Install"
-    }), "\n", jsx(Fragment$1, {
+    }), "\n", jsx(Fragment, {
       children: jsx(_components.pre, {
         className: "shiki github-dark",
         style: {
@@ -8635,7 +24118,7 @@ function _createMdxContent(props) {
       })
     }), "\n", jsx(_components.p, {
       children: "Include the compiled CSS:"
-    }), "\n", jsx(Fragment$1, {
+    }), "\n", jsx(Fragment, {
       children: jsx(_components.pre, {
         className: "shiki github-dark",
         style: {
@@ -8667,7 +24150,7 @@ function _createMdxContent(props) {
       })
     }), "\n", jsx(_components.h2, {
       children: "Usage"
-    }), "\n", jsx(Fragment$1, {
+    }), "\n", jsx(Fragment, {
       children: jsx(_components.pre, {
         className: "shiki github-dark",
         style: {
@@ -8992,7 +24475,7 @@ const ScrollArea = React.forwardRef(({ className, children, ...props }, ref) => 
   ScrollAreaPrimitive.Root,
   {
     ref,
-    className: cn("relative overflow-hidden", className),
+    className: cn$2("relative overflow-hidden", className),
     ...props,
     children: [
       /* @__PURE__ */ jsx(ScrollAreaPrimitive.Viewport, { className: "h-full w-full rounded-[inherit]", children }),
@@ -9007,7 +24490,7 @@ const ScrollBar = React.forwardRef(({ className, orientation = "vertical", ...pr
   {
     ref,
     orientation,
-    className: cn(
+    className: cn$2(
       "flex touch-none select-none transition-colors",
       orientation === "vertical" && "h-full w-2.5 border-l border-l-transparent p-[1px]",
       orientation === "horizontal" && "h-2.5 flex-col border-t border-t-transparent p-[1px]",
@@ -9094,14 +24577,14 @@ const TocTree = ({
   className,
   onNavigate
 }) => {
-  return /* @__PURE__ */ jsx("ul", { className: cn(level !== 0 && "pl-4", className), children: nodes.map((node) => {
+  return /* @__PURE__ */ jsx("ul", { className: cn$2(level !== 0 && "pl-4", className), children: nodes.map((node) => {
     const isActive = activeIds.includes(node.id);
     const showBar = level === 0 || isActive;
     const barPositionClass = level === 0 ? "left-0 md:left-[6px]" : "-left-4 md:left-[-10px]";
     return /* @__PURE__ */ jsxs(
       "li",
       {
-        className: cn(
+        className: cn$2(
           "relative py-1",
           level !== 0 && "[&:first-child]:pt-2 [&:last-child]:pb-0"
         ),
@@ -9110,7 +24593,7 @@ const TocTree = ({
             showBar ? /* @__PURE__ */ jsx(
               "div",
               {
-                className: cn(
+                className: cn$2(
                   "absolute top-0 bottom-0 w-px transition-colors duration-300 ease-in-out",
                   barPositionClass,
                   level === 0 ? isActive ? "bg-primary" : "bg-border" : "bg-primary"
@@ -9121,7 +24604,7 @@ const TocTree = ({
               "a",
               {
                 href: `#${node.id}`,
-                className: cn(
+                className: cn$2(
                   "text-muted-foreground hover:text-primary transition-all",
                   "pl-4.5 md:pl-5.5",
                   isActive && "text-primary"
@@ -9181,7 +24664,7 @@ function TableOfContents({
       return;
     }
     const visibleIds = /* @__PURE__ */ new Set();
-    const observer = new IntersectionObserver(
+    const observer2 = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           const headingId = entry.target.id;
@@ -9206,9 +24689,9 @@ function TableOfContents({
       const heading = documentReference.querySelector(
         `#${item.id}`
       );
-      if (heading) observer.observe(heading);
+      if (heading) observer2.observe(heading);
     });
-    return () => observer.disconnect();
+    return () => observer2.disconnect();
   }, [contentId, activeRoute]);
   useEffect(() => {
     if (isSmall || activeIds.length === 0) return;
@@ -9257,7 +24740,7 @@ function TableOfContents({
             /* @__PURE__ */ jsx(
               ChevronRight,
               {
-                className: cn(
+                className: cn$2(
                   "ml-auto self-center transition-all",
                   isOpen && "rotate-90"
                 )
@@ -9299,7 +24782,7 @@ function TableOfContents({
         tocLinks.length > 0 ? /* @__PURE__ */ jsx(
           "div",
           {
-            className: cn(
+            className: cn$2(
               "text-muted-foreground",
               tocIconLinks.length > 0 && "border-b pb-5"
             ),
@@ -9372,7 +24855,7 @@ const Card = React.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ 
   "div",
   {
     ref,
-    className: cn(
+    className: cn$2(
       "rounded-lg border bg-card text-card-foreground shadow-sm",
       className
     ),
@@ -9384,7 +24867,7 @@ const CardHeader = React.forwardRef(({ className, ...props }, ref) => /* @__PURE
   "div",
   {
     ref,
-    className: cn("flex flex-col space-y-1.5 p-6", className),
+    className: cn$2("flex flex-col space-y-1.5 p-6", className),
     ...props
   }
 ));
@@ -9393,7 +24876,7 @@ const CardTitle = React.forwardRef(({ className, ...props }, ref) => /* @__PURE_
   "div",
   {
     ref,
-    className: cn("font-semibold leading-none tracking-tight", className),
+    className: cn$2("font-semibold leading-none tracking-tight", className),
     ...props
   }
 ));
@@ -9402,18 +24885,18 @@ const CardDescription = React.forwardRef(({ className, ...props }, ref) => /* @_
   "div",
   {
     ref,
-    className: cn("text-sm text-muted-foreground", className),
+    className: cn$2("text-sm text-muted-foreground", className),
     ...props
   }
 ));
 CardDescription.displayName = "CardDescription";
-const CardContent = React.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx("div", { ref, className: cn("p-6 pt-0", className), ...props }));
+const CardContent = React.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx("div", { ref, className: cn$2("p-6 pt-0", className), ...props }));
 CardContent.displayName = "CardContent";
 const CardFooter = React.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   "div",
   {
     ref,
-    className: cn("flex items-center p-6 pt-0", className),
+    className: cn$2("flex items-center p-6 pt-0", className),
     ...props
   }
 ));
@@ -9497,7 +24980,7 @@ const SheetPortal = SheetPrimitive.Portal;
 const SheetOverlay = React.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   SheetPrimitive.Overlay,
   {
-    className: cn(
+    className: cn$2(
       "fixed inset-0 z-50 bg-black/80  data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     ),
@@ -9528,11 +25011,11 @@ const SheetContent = React.forwardRef(({ side = "right", className, children, ..
     SheetPrimitive.Content,
     {
       ref,
-      className: cn(sheetVariants({ side }), className),
+      className: cn$2(sheetVariants({ side }), className),
       ...props,
       children: [
         /* @__PURE__ */ jsxs(SheetPrimitive.Close, { className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary", children: [
-          /* @__PURE__ */ jsx(X, { className: "h-4 w-4" }),
+          /* @__PURE__ */ jsx(X$1, { className: "h-4 w-4" }),
           /* @__PURE__ */ jsx("span", { className: "sr-only", children: "Close" })
         ] }),
         children
@@ -9547,7 +25030,7 @@ const SheetHeader = ({
 }) => /* @__PURE__ */ jsx(
   "div",
   {
-    className: cn(
+    className: cn$2(
       "flex flex-col space-y-2 text-center sm:text-left",
       className
     ),
@@ -9559,7 +25042,7 @@ const SheetTitle = React.forwardRef(({ className, ...props }, ref) => /* @__PURE
   SheetPrimitive.Title,
   {
     ref,
-    className: cn("text-lg font-semibold text-foreground", className),
+    className: cn$2("text-lg font-semibold text-foreground", className),
     ...props
   }
 ));
@@ -9568,7 +25051,7 @@ const SheetDescription = React.forwardRef(({ className, ...props }, ref) => /* @
   SheetPrimitive.Description,
   {
     ref,
-    className: cn("text-sm text-muted-foreground", className),
+    className: cn$2("text-sm text-muted-foreground", className),
     ...props
   }
 ));
@@ -9765,7 +25248,7 @@ function Sidebar({
     return nextState;
   }, [activeRoute, activeSection]);
   if (!activeSection) return;
-  return /* @__PURE__ */ jsxs(Fragment$1, { children: [
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
     /* @__PURE__ */ jsx("ul", { className: "flex flex-col gap-1 border-b pb-4", children: sidebar2.map((section) => {
       const href = getSectionHref(section);
       const isActive = activeRoute === href;
@@ -9775,7 +25258,7 @@ function Sidebar({
         {
           href: withBase(href),
           onClick: onNavigate,
-          className: cn(
+          className: cn$2(
             "text-foreground/80 hover:bg-muted hover:text-primary flex h-8 items-center gap-2 rounded-md p-2 text-sm",
             isActive && "bg-muted !text-primary font-medium"
           ),
@@ -9800,7 +25283,7 @@ function Sidebar({
             {
               href: withBase(item.href),
               onClick: onNavigate,
-              className: cn(
+              className: cn$2(
                 "text-foreground/80 hover:bg-muted hover:text-primary flex h-8 items-center gap-2 rounded-md p-2 text-sm",
                 isActive && "bg-muted !text-primary font-medium"
               ),
@@ -9830,7 +25313,7 @@ function Sidebar({
               /* @__PURE__ */ jsx(
                 ChevronDown,
                 {
-                  className: cn(
+                  className: cn$2(
                     "ml-auto transition-transform",
                     !isOpen && "-rotate-90"
                   ),
@@ -9852,7 +25335,7 @@ function Sidebar({
             {
               href: withBase(item.href),
               onClick: onNavigate,
-              className: cn(
+              className: cn$2(
                 "text-foreground/80 hover:bg-muted hover:text-primary flex h-8 items-center gap-2 rounded-md p-2 text-sm",
                 isActive && "bg-muted !text-primary font-medium"
               ),
@@ -9945,6 +25428,7 @@ const NotFound = ({ title }) => /* @__PURE__ */ jsx(Shell, { title, children: /*
 ) });
 const getRoutes = () => [
   "/",
+  "/swm/",
   "/docs/",
   "/docs/themes/",
   ...routes.keys()
@@ -10011,6 +25495,12 @@ const resolveRoute = async (url) => {
         }
       ),
       title: `${entry.title} - Formbox Docs`
+    };
+  }
+  if (pathname === "/swm/") {
+    return {
+      element: /* @__PURE__ */ jsx(SwmPage, {}),
+      title: "Formbox Renderer · Smart Web Messaging"
     };
   }
   if (pathname !== "/") {
