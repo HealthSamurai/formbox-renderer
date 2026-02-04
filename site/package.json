@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite",
     "storybook": "storybook dev -p 6006",
+    "prebuild": "pnpm --filter @formbox/renderer build",
     "build": "vite build && vite build --ssr src/app/entry-server.tsx && node scripts/prerender.mjs && storybook build --output-dir dist/storybook",
     "build:storybook": "storybook build --output-dir dist/storybook",
     "preview": "vite preview",
