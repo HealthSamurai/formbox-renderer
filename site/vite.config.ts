@@ -13,7 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, "..");
 const siteRoot = path.resolve(__dirname, "src");
-const distRoot = path.resolve(__dirname, "dist");
+const distributionRoot = path.resolve(__dirname, "dist");
 const require = createRequire(import.meta.url);
 const mdxReactPath = require.resolve("@mdx-js/react");
 const htmlInputs = {
@@ -74,12 +74,12 @@ export default defineConfig(async ({ mode, isSsrBuild }) => {
     build: isSsrBuild
       ? {
           emptyOutDir: true,
-          outDir: path.resolve(distRoot, "server"),
+          outDir: path.resolve(distributionRoot, "server"),
           ssr: path.resolve(siteRoot, "server.tsx"),
         }
       : {
           emptyOutDir: true,
-          outDir: distRoot,
+          outDir: distributionRoot,
           rollupOptions: {
             input: htmlInputs,
           },

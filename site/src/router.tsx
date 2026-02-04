@@ -37,7 +37,7 @@ const renderNotFound = async (title: string): Promise<RouteResult> => {
   };
 };
 
-const loadDocs = async () => {
+const loadDocumentation = async () => {
   const [manifest, layout, documentPage, documentationIndex, themes] =
     await Promise.all([
       import("./docs/manifest.ts"),
@@ -79,7 +79,7 @@ export const resolveRoute = async (url: string): Promise<RouteResult> => {
       DocumentPage,
       DocumentationIndex,
       Themes,
-    } = await loadDocs();
+    } = await loadDocumentation();
 
     if (pathname === "/docs/") {
       return {

@@ -51,10 +51,11 @@ const renderClient = async () => {
     return;
   }
 
-  const isDocsRoute = pathname === "/docs" || pathname.startsWith("/docs/");
+  const isDocumentationRoute =
+    pathname === "/docs" || pathname.startsWith("/docs/");
   const isRootRoute = pathname === "/";
 
-  if (!isDocsRoute && !isRootRoute) {
+  if (!isDocumentationRoute && !isRootRoute) {
     return;
   }
 
