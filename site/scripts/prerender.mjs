@@ -8,14 +8,14 @@ const siteDirectory = path.resolve(__dirname, "..");
 const distributionDirectory = path.join(siteDirectory, "dist");
 const clientDirectory = distributionDirectory;
 const serverDirectory = path.join(distributionDirectory, "server");
-let serverEntry = path.join(serverDirectory, "entry-server.js");
+let serverEntry = path.join(serverDirectory, "server.js");
 
 try {
   await fs.access(serverEntry);
 } catch {
   const entries = await fs.readdir(serverDirectory);
   const match = entries.find(
-    (file) => file.startsWith("entry-server") && file.endsWith(".js"),
+    (file) => file.startsWith("server") && file.endsWith(".js"),
   );
   if (!match) {
     throw new Error("SSR entry not found in dist/server.");
@@ -32,7 +32,7 @@ const { render, prerenderRoutes } = await import(
 );
 
 const routes =
-  typeof prerenderRoutes === "function" ? prerenderRoutes() : ["/"];
+  typeof prerenderRoutes === "function" ? await prerenderRoutes() : ["/"];
 
 const normalizeRoute = (value) => {
   if (!value.startsWith("/")) {
@@ -51,6 +51,9 @@ const escapeHtml = (value) =>
 
 for (const route of routes) {
   const normalizedRoute = normalizeRoute(route);
+  if (normalizedRoute === "/swm/") {
+    continue;
+  }
   const { appHtml, title } = await render(normalizedRoute);
   const resolvedTitle = title && title.trim() ? title : "Formbox Renderer";
   const withAppHtml = template.includes("<!--app-html-->")

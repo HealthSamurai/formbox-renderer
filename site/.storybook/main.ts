@@ -152,7 +152,7 @@ const config: StorybookConfig = {
     config.plugins = [
       ...(config.plugins ?? []),
       linaria({
-        include: ["**/*.{ts,tsx,js,jsx}"],
+        include: [path.resolve(rootDirectory, "site/stories/**/*.tsx")],
         exclude: ["**/dist/**", "**/node_modules/**"],
         babelOptions: {
           parserOpts: {

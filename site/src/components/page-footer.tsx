@@ -1,7 +1,7 @@
 import { ArrowLeft, ArrowRight, ArrowUp, SquarePen } from "lucide-react";
 
 import type { FlattenedSidebarEntry } from "@/components/sidebar.tsx";
-import { routes } from "@/features/docs/manifest.ts";
+import { routes } from "@/docs/manifest.ts";
 import { withBase } from "@/lib/base-url.ts";
 
 type Properties = {

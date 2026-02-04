@@ -19,10 +19,10 @@ type Frontmatter = {
 const PATH_RE = /\/(packages|themes)\/([^/]+)\/(?:doc|docs)\/(.+)\.(md|mdx)$/i;
 
 const modules = import.meta.glob<Module>(
-  "../../../../{packages,themes}/*/{doc,docs}/**/*.{md,mdx}",
+  "../../../{packages,themes}/*/{doc,docs}/**/*.{md,mdx}",
 );
 const frontmatterByPath = import.meta.glob<Frontmatter>(
-  "../../../../{packages,themes}/*/{doc,docs}/**/*.{md,mdx}",
+  "../../../{packages,themes}/*/{doc,docs}/**/*.{md,mdx}",
   {
     eager: true,
     import: "frontmatter",

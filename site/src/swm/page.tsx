@@ -8,6 +8,8 @@ import {
 } from "sdc-smart-web-messaging-react";
 import type { Questionnaire, QuestionnaireResponse } from "fhir/r5";
 
+import "./style.css";
+
 const getPhaseMessage = (phase: SmartMessagingPhase) => {
   if (phase === SmartMessagingPhase.Disabled) {
     return "Missing SDC SWM parameters.";
@@ -61,11 +63,7 @@ function SwmClient() {
 
   const phaseMessage = getPhaseMessage(phase);
   if (phaseMessage) {
-    return (
-      <div className="flex min-h-screen w-full items-center justify-center">
-        {phaseMessage}
-      </div>
-    );
+    return <div className="swm-status">{phaseMessage}</div>;
   }
 
   if (!questionnaire || !Array.isArray(questionnaire.item)) {
@@ -73,7 +71,7 @@ function SwmClient() {
   }
 
   return (
-    <div className="min-h-screen w-full">
+    <div className="swm-page">
       <Renderer
         questionnaire={questionnaire as unknown as Questionnaire}
         initialResponse={
@@ -99,11 +97,7 @@ export default function SwmPage() {
   );
 
   if (!isClient) {
-    return (
-      <div className="flex min-h-screen w-full items-center justify-center">
-        Loading smart messaging...
-      </div>
-    );
+    return <div className="swm-status">Loading smart messaging...</div>;
   }
 
   return <SwmClient />;

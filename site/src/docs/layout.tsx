@@ -18,7 +18,7 @@ import Search from "@/components/search.tsx";
 import Sidebar from "@/components/sidebar.tsx";
 import type { FlattenedSidebarEntry } from "@/components/sidebar.tsx";
 import TableOfContents from "@/components/table-of-contents.tsx";
-import { sidebar } from "@/features/docs/manifest.ts";
+import { sidebar } from "@/docs/manifest.ts";
 
 type Properties = {
   title: string;

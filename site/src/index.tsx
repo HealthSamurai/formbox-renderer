@@ -1,9 +1,9 @@
-import CodeBlock from "../components/code-block.tsx";
-import GlareHover from "../components/glare-hover.tsx";
-import Magnet from "../components/magnet.tsx";
-import SiteHeader from "../components/site-header.tsx";
-import SplitText from "../components/split-text.tsx";
-import Threads from "../components/threads.tsx";
+import CodeBlock from "./components/code-block.tsx";
+import GlareHover from "./components/glare-hover.tsx";
+import Magnet from "./components/magnet.tsx";
+import SiteHeader from "./components/site-header.tsx";
+import SplitText from "./components/split-text.tsx";
+import Threads from "./components/threads.tsx";
 
 export default function Landing() {
   const heroHeadline = "Render HL7® FHIR® Questionnaires across any UI system";
