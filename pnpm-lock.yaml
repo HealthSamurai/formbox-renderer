@@ -216,6 +216,9 @@ importers:
       react-dom:
         specifier: 19.2.3
         version: 19.2.3(react@19.2.3)
+      sdc-smart-web-messaging-react:
+        specifier: ^1.0.3
+        version: 1.0.3(@types/fhir@0.0.41)(react@19.2.3)
       tailwind-merge:
         specifier: ^3.4.0
         version: 3.4.0
@@ -4831,6 +4834,12 @@ packages:
 
   scroll-into-view-if-needed@3.1.0:
     resolution: {integrity: sha512-49oNpRjWRvnU8NyGVmUaYG4jtTkNonFZI86MmGRDqBphEK2EXT9gdEUoQPZhuBM8yWHxCWbobltqYO5M4XrUvQ==}
+
+  sdc-smart-web-messaging-react@1.0.3:
+    resolution: {integrity: sha512-1U0xe2pVn4Qv0Yn3UNaeaxkOBuXaZhpwvXhlKVx5DmXV89CogGo/k+ehfbkPFaE8nh3xU5gwPrci3+AgLn6vwQ==}
+    peerDependencies:
+      '@types/fhir': ^0.0.41
+      react: 19.2.3
 
   semver@6.3.1:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
@@ -10546,6 +10555,11 @@ snapshots:
   scroll-into-view-if-needed@3.1.0:
     dependencies:
       compute-scroll-into-view: 3.1.1
+
+  sdc-smart-web-messaging-react@1.0.3(@types/fhir@0.0.41)(react@19.2.3):
+    dependencies:
+      '@types/fhir': 0.0.41
+      react: 19.2.3
 
   semver@6.3.1: {}
 

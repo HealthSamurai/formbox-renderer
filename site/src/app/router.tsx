@@ -1,6 +1,7 @@
 import type { ReactElement } from "react";
 
 import Landing from "../pages/landing.tsx";
+import SwmPage from "../pages/swm.tsx";
 import DocumentPage from "../features/docs/page.tsx";
 import Themes from "../features/docs/themes.tsx";
 import DocumentationIndex from "../features/docs/index.tsx";
@@ -38,6 +39,7 @@ const NotFound = ({ title }: { title: string }) => (
 
 export const getRoutes = () => [
   "/",
+  "/swm/",
   "/docs/",
   "/docs/themes/",
   ...routes.keys(),
@@ -108,6 +110,13 @@ export const resolveRoute = async (url: string): Promise<RouteResult> => {
         </Layout>
       ),
       title: `${entry.title} - Formbox Docs`,
+    };
+  }
+
+  if (pathname === "/swm/") {
+    return {
+      element: <SwmPage />,
+      title: "Formbox Renderer · Smart Web Messaging",
     };
   }
 
