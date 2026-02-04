@@ -75,7 +75,9 @@ describe("item.item", () => {
     const singleGroupStore = getGroupStore();
     assertGroupNode(singleGroupStore);
     const groupQuestion = singleGroupStore.nodes.at(0);
-    expect(groupQuestion?.token).toBe("__single-group__group-question");
+    expect(groupQuestion?.token).toMatch(
+      /^form__\w+__single-group__group-question$/,
+    );
     expect(groupQuestion && isQuestionNode(groupQuestion)).toBe(true);
     assertQuestionNode(groupQuestion);
     expect(groupQuestion.answers).toHaveLength(1);
@@ -87,7 +89,7 @@ describe("item.item", () => {
     assertGroupNode(singleGroupStore);
     const groupNote = singleGroupStore.nodes.at(1);
     expect(groupNote && isDisplayNode(groupNote)).toBe(true);
-    expect(groupNote?.token).toBe("__single-group__group-note");
+    expect(groupNote?.token).toMatch(/^form__\w+__single-group__group-note$/);
   });
 
   it("nests question answers under group items", () => {
