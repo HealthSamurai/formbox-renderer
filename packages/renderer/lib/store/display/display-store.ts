@@ -7,7 +7,7 @@ import {
   SnapshotKind,
   AnswerType,
 } from "../../types.ts";
-import { QuestionnaireItem, QuestionnaireResponseItem } from "fhir/r5";
+import type { QuestionnaireItem, QuestionnaireResponseItem } from "fhir/r5";
 import { AbstractActualNodeStore } from "../base/abstract-actual-node-store.ts";
 import { computed } from "mobx";
 import { NodeExpressionRegistry } from "../expression/registry/node-expression-registry.ts";

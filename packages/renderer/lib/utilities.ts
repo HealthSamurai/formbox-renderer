@@ -17,7 +17,7 @@ import {
 } from "./types.ts";
 import { strings } from "./strings.ts";
 import { Hashery } from "hashery";
-import {
+import type {
   Attachment,
   Coding,
   Element,

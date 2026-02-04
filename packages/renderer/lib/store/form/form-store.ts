@@ -28,7 +28,7 @@ import {
   observable,
   runInAction,
 } from "mobx";
-import {
+import type {
   OperationOutcomeIssue,
   Questionnaire,
   QuestionnaireItem,

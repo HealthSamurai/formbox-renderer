@@ -14,7 +14,7 @@ import {
   INodeValidator,
   IScope,
 } from "../../types.ts";
-import {
+import type {
   OperationOutcomeIssue,
   QuestionnaireItem,
   QuestionnaireItemEnableWhen,

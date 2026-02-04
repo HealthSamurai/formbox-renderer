@@ -1,4 +1,4 @@
-import { Expression, OperationOutcomeIssue } from "fhir/r5";
+import type { Expression, OperationOutcomeIssue } from "fhir/r5";
 import { action, computed, makeObservable, observable } from "mobx";
 import {
   ExpressionSlotKind,

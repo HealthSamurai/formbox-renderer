@@ -1,6 +1,7 @@
 import Renderer from "@formbox/renderer";
 import "@formbox/hs-theme/style.css";
 import { theme } from "@formbox/hs-theme";
+import { useEffect, useState } from "react";
 import {
   SmartMessagingPhase,
   useSmartMessaging,
@@ -26,7 +27,7 @@ const getPhaseMessage = (phase: SmartMessagingPhase) => {
   return "";
 };
 
-export default function SwmPage() {
+function SwmClient() {
   const {
     questionnaire,
     questionnaireResponse,
@@ -54,7 +55,7 @@ export default function SwmPage() {
   }
 
   if (!questionnaire || !Array.isArray(questionnaire.item)) {
-    return;
+    return null;
   }
 
   return (
@@ -74,4 +75,22 @@ export default function SwmPage() {
       />
     </div>
   );
+}
+
+export default function SwmPage() {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return (
+      <div className="flex min-h-screen w-full items-center justify-center">
+        Loading smart messaging...
+      </div>
+    );
+  }
+
+  return <SwmClient />;
 }

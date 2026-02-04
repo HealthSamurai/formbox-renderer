@@ -12,7 +12,7 @@ import {
   SnapshotKind,
   IGrid,
 } from "../../types.ts";
-import {
+import type {
   OperationOutcomeIssue,
   QuestionnaireItem,
   QuestionnaireResponseItem,

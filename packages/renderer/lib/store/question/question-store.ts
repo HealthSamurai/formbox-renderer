@@ -24,7 +24,7 @@ import {
   type QuestionItemControl,
   SnapshotKind,
 } from "../../types.ts";
-import {
+import type {
   QuestionnaireItem,
   QuestionnaireResponseItem,
   QuestionnaireResponseItemAnswer,

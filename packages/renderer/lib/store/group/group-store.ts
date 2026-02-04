@@ -13,7 +13,7 @@ import {
   IGrid,
   ITable,
 } from "../../types.ts";
-import { QuestionnaireItem, QuestionnaireResponseItem } from "fhir/r5";
+import type { QuestionnaireItem, QuestionnaireResponseItem } from "fhir/r5";
 
 import { AbstractActualNodeStore } from "../base/abstract-actual-node-store.ts";
 import {
