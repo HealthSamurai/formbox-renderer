@@ -35,11 +35,11 @@ const renderNotFound = async (title) => {
 };
 const loadDocumentation = async () => {
   const [manifest, layout, documentPage, documentationIndex, themes] = await Promise.all([
-    import("./assets/manifest-DUoeLbGp.js").then((n) => n.m),
-    import("./assets/layout-B13W_G9K.js"),
-    import("./assets/page-CFoDebtT.js"),
+    import("./assets/manifest-C-7eEzzR.js").then((n) => n.m),
+    import("./assets/layout-BqZVv04q.js"),
+    import("./assets/page-d0Mpuyt4.js"),
     import("./assets/index-Biw2Xbl-.js"),
-    import("./assets/themes-Ce44G5sM.js")
+    import("./assets/themes-ls7ostG8.js")
   ]);
   return {
     routes: manifest.routes,
@@ -52,7 +52,7 @@ const loadDocumentation = async () => {
 };
 const getRoutes = async () => {
   {
-    const { routes } = await import("./assets/manifest-DUoeLbGp.js").then((n) => n.m);
+    const { routes } = await import("./assets/manifest-C-7eEzzR.js").then((n) => n.m);
     return ["/", "/swm/", "/docs/", "/docs/themes/", ...routes.keys()];
   }
 };
@@ -136,7 +136,7 @@ const resolveRoute = async (url) => {
   if (pathname !== "/") {
     return await renderNotFound("Not Found");
   }
-  const { default: Landing } = await import("./assets/index-DbxVb0Z2.js");
+  const { default: Landing } = await import("./assets/index-tgnjz-0i.js");
   return {
     element: /* @__PURE__ */ jsx(Landing, {}),
     title: "Formbox Renderer"
