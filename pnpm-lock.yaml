@@ -8,11 +8,6 @@ overrides:
   react: 19.2.3
   react-dom: 19.2.3
 
-patchedDependencies:
-  '@lhncbc/ucum-lhc@7.1.3':
-    hash: 3179673f53a760a3c5663751809c2249ed644eea25ed87626d45d753f6c0b11c
-    path: patches/@lhncbc__ucum-lhc@7.1.3.patch
-
 importers:
 
   .:
@@ -95,7 +90,7 @@ importers:
         version: link:../theme
       '@lhncbc/ucum-lhc':
         specifier: 7.1.3
-        version: 7.1.3(patch_hash=3179673f53a760a3c5663751809c2249ed644eea25ed87626d45d753f6c0b11c)
+        version: 7.1.3
       '@types/fhir':
         specifier: ^0.0.41
         version: 0.0.41
@@ -217,8 +212,8 @@ importers:
         specifier: 19.2.3
         version: 19.2.3(react@19.2.3)
       sdc-smart-web-messaging-react:
-        specifier: ^1.0.3
-        version: 1.0.3(@types/fhir@0.0.41)(react@19.2.3)
+        specifier: ^1.0.4
+        version: 1.0.4(@types/fhir@0.0.41)(react@19.2.3)
       tailwind-merge:
         specifier: ^3.4.0
         version: 3.4.0
@@ -340,7 +335,7 @@ importers:
         version: link:../packages/theme
       '@lhncbc/ucum-lhc':
         specifier: 7.1.3
-        version: 7.1.3(patch_hash=3179673f53a760a3c5663751809c2249ed644eea25ed87626d45d753f6c0b11c)
+        version: 7.1.3
       '@testing-library/jest-dom':
         specifier: ^6.9.1
         version: 6.9.1
@@ -4812,8 +4807,8 @@ packages:
   scroll-into-view-if-needed@3.1.0:
     resolution: {integrity: sha512-49oNpRjWRvnU8NyGVmUaYG4jtTkNonFZI86MmGRDqBphEK2EXT9gdEUoQPZhuBM8yWHxCWbobltqYO5M4XrUvQ==}
 
-  sdc-smart-web-messaging-react@1.0.3:
-    resolution: {integrity: sha512-1U0xe2pVn4Qv0Yn3UNaeaxkOBuXaZhpwvXhlKVx5DmXV89CogGo/k+ehfbkPFaE8nh3xU5gwPrci3+AgLn6vwQ==}
+  sdc-smart-web-messaging-react@1.0.4:
+    resolution: {integrity: sha512-QGPmbSteWX7LpI1wsb7qKO/ZxxYWTETDQXTFVMmP0EP3NlaofnZQ1+d1dgPEUfJBuaBOcZ2Z4NwywxvwN9e1MA==}
     peerDependencies:
       '@types/fhir': ^0.0.41
       react: 19.2.3
@@ -6373,7 +6368,7 @@ snapshots:
       string-to-stream: 1.1.1
       xmldoc: 0.4.0
 
-  '@lhncbc/ucum-lhc@7.1.3(patch_hash=3179673f53a760a3c5663751809c2249ed644eea25ed87626d45d753f6c0b11c)':
+  '@lhncbc/ucum-lhc@7.1.3':
     dependencies:
       coffeescript: 2.7.0
       csv-parse: 4.16.3
@@ -10528,7 +10523,7 @@ snapshots:
     dependencies:
       compute-scroll-into-view: 3.1.1
 
-  sdc-smart-web-messaging-react@1.0.3(@types/fhir@0.0.41)(react@19.2.3):
+  sdc-smart-web-messaging-react@1.0.4(@types/fhir@0.0.41)(react@19.2.3):
     dependencies:
       '@types/fhir': 0.0.41
       react: 19.2.3

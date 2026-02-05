@@ -5,15 +5,21 @@ import type {
 import Renderer from "@formbox/renderer";
 import "@formbox/hs-theme/style.css";
 import { theme } from "@formbox/hs-theme";
-import { useSyncExternalStore } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import {
   SmartMessagingPhase,
   useSmartMessaging,
 } from "sdc-smart-web-messaging-react";
 import "./style.css";
 
-type Questionnaire = QuestionnaireOf<"r5">;
-type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
+type Questionnaire = QuestionnaireOf<"r4">;
+type QuestionnaireResponse = QuestionnaireResponseOf<"r4">;
 const getPhaseMessage = (phase: SmartMessagingPhase) => {
   if (phase === SmartMessagingPhase.Disabled) {
     return "Missing SDC SWM parameters.";
@@ -65,6 +71,45 @@ function SwmClient() {
     },
   });
 
+  const lastQuestionnaireReference = useRef<Questionnaire | undefined>(
+    undefined,
+  );
+  const lastSentResponseReference = useRef<QuestionnaireResponse | undefined>(
+    undefined,
+  );
+  const [initialResponse, setInitialResponse] = useState<
+    QuestionnaireResponse | undefined
+  >(questionnaireResponse as QuestionnaireResponse | undefined);
+
+  useEffect(() => {
+    if (questionnaire !== lastQuestionnaireReference.current) {
+      lastQuestionnaireReference.current = questionnaire as
+        | Questionnaire
+        | undefined;
+      lastSentResponseReference.current = undefined;
+    }
+
+    if (questionnaireResponse === lastSentResponseReference.current) {
+      return;
+    }
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setInitialResponse(
+      questionnaireResponse as QuestionnaireResponse | undefined,
+    );
+  }, [questionnaire, questionnaireResponse]);
+
+  const handleChange = useCallback(
+    (response: QuestionnaireResponse) => {
+      if (response === lastSentResponseReference.current) {
+        return;
+      }
+      lastSentResponseReference.current = response;
+      onQuestionnaireResponseChange(response as QuestionnaireResponse);
+    },
+    [onQuestionnaireResponseChange],
+  );
+
   const phaseMessage = getPhaseMessage(phase);
   if (phaseMessage) {
     return <div className="swm-status">{phaseMessage}</div>;
@@ -77,16 +122,10 @@ function SwmClient() {
   return (
     <div className="swm-page">
       <Renderer
-        fhirVersion="r5"
+        fhirVersion="r4"
         questionnaire={questionnaire as unknown as Questionnaire}
-        initialResponse={
-          questionnaireResponse as QuestionnaireResponse | undefined
-        }
-        onChange={
-          onQuestionnaireResponseChange as (
-            response: QuestionnaireResponse,
-          ) => void
-        }
+        initialResponse={initialResponse}
+        onChange={handleChange}
         terminologyServerUrl={config?.terminologyServer}
         theme={theme}
       />
