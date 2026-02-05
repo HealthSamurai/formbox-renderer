@@ -1,5 +1,11 @@
 # @formbox/renderer
 
+## 0.1.0
+
+### Minor Changes
+
+- [`bb1f487`](https://github.com/HealthSamurai/formbox-renderer/commit/bb1f487c84776f6cdf0007815f34f084bf1292aa) Thanks [@olimsaidov](https://github.com/olimsaidov)! - Support FHIR R4
+
 ## 0.0.6
 
 ### Patch Changes
