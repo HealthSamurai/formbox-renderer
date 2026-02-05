@@ -1,1 +1,0 @@
-import{c as r}from"./client-ybKxeeeo.js";import{j as t}from"./jsx-runtime-u17CrQMm.js";import e from"./page-DmScO7We.js";import"./index-Dh3zDKDA.js";import"./index-u2u93EQD.js";import"./index-C1EAhekg.js";const o=globalThis.document?.querySelector("#root");if(!o)throw new Error("Root element not found");r.createRoot(o).render(t.jsx(e,{}));
