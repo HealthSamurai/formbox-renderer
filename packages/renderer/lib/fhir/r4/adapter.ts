@@ -1,4 +1,4 @@
-import type { FhirVersion } from "@formbox/renderer";
+import type { FhirVersion } from "../generated-types.ts";
 import type {
   IAttachmentAdapter,
   IDataRequirementAdapter,
@@ -15,24 +15,24 @@ import type {
   IValueSetExpansionAdapter,
   IValueSetExpansionContainsAdapter,
   QuestionnaireResponseItem,
-} from "@formbox/renderer/fhir/generated-types.ts";
-import { ExtensionAdapter as R4ExtensionAdapter } from "@formbox/renderer/fhir/r4/extension-adapter.ts";
-import { AttachmentAdapter as R4AttachmentAdapter } from "@formbox/renderer/fhir/r4/attachment-adapter.ts";
-import { TimingAdapter as R4TimingAdapter } from "@formbox/renderer/fhir/r4/timing-adapter.ts";
-import { RelatedArtifactAdapter as R4RelatedArtifactAdapter } from "@formbox/renderer/fhir/r4/related-artifact-adapter.ts";
-import { DataRequirementAdapter as R4DataRequirementAdapter } from "@formbox/renderer/fhir/r4/data-requirement-adapter.ts";
-import { SampledDataAdapter as R4SampledDataAdapter } from "@formbox/renderer/fhir/r4/sampled-data-adapter.ts";
-import { SignatureAdapter as R4SignatureAdapter } from "@formbox/renderer/fhir/r4/signature-adapter.ts";
-import { TriggerDefinitionAdapter as R4TriggerDefinitionAdapter } from "@formbox/renderer/fhir/r4/trigger-definition-adapter.ts";
-import { ValueSetExpansionContainsAdapter as R4ValueSetExpansionContainsAdapter } from "@formbox/renderer/fhir/r4/value-set-expansion-contains-adapter.ts";
-import { ValueSetExpansionAdapter as R4ValueSetExpansionAdapter } from "@formbox/renderer/fhir/r4/value-set-expansion-adapter.ts";
-import { ValueSetAdapter as R4ValueSetAdapter } from "@formbox/renderer/fhir/r4/value-set-adapter.ts";
-import { QuestionnaireItemAdapter as R4QuestionnaireItemAdapter } from "@formbox/renderer/fhir/r4/questionnaire-item-adapter.ts";
-import { QuestionnaireAdapter as R4QuestionnaireAdapter } from "@formbox/renderer/fhir/r4/questionnaire-adapter.ts";
-import { QuestionnaireResponseAdapter as R4QuestionnaireResponseAdapter } from "@formbox/renderer/fhir/r4/questionnaire-response-adapter.ts";
+} from "../generated-types.ts";
+import { ExtensionAdapter as R4ExtensionAdapter } from "./extension-adapter.ts";
+import { AttachmentAdapter as R4AttachmentAdapter } from "./attachment-adapter.ts";
+import { TimingAdapter as R4TimingAdapter } from "./timing-adapter.ts";
+import { RelatedArtifactAdapter as R4RelatedArtifactAdapter } from "./related-artifact-adapter.ts";
+import { DataRequirementAdapter as R4DataRequirementAdapter } from "./data-requirement-adapter.ts";
+import { SampledDataAdapter as R4SampledDataAdapter } from "./sampled-data-adapter.ts";
+import { SignatureAdapter as R4SignatureAdapter } from "./signature-adapter.ts";
+import { TriggerDefinitionAdapter as R4TriggerDefinitionAdapter } from "./trigger-definition-adapter.ts";
+import { ValueSetExpansionContainsAdapter as R4ValueSetExpansionContainsAdapter } from "./value-set-expansion-contains-adapter.ts";
+import { ValueSetExpansionAdapter as R4ValueSetExpansionAdapter } from "./value-set-expansion-adapter.ts";
+import { ValueSetAdapter as R4ValueSetAdapter } from "./value-set-adapter.ts";
+import { QuestionnaireItemAdapter as R4QuestionnaireItemAdapter } from "./questionnaire-item-adapter.ts";
+import { QuestionnaireAdapter as R4QuestionnaireAdapter } from "./questionnaire-adapter.ts";
+import { QuestionnaireResponseAdapter as R4QuestionnaireResponseAdapter } from "./questionnaire-response-adapter.ts";
 import type { Model } from "fhirpath";
 import r4Model from "fhirpath/fhir-context/r4";
-import { IFhirAdapter } from "@formbox/renderer/fhir/fhir-adapter.ts";
+import type { IFhirAdapter } from "../fhir-adapter.ts";
 
 export class R4Adapter implements IFhirAdapter {
   readonly version: FhirVersion = "r4";

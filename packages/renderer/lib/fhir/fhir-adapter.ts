@@ -17,8 +17,8 @@ import type {
   IValueSetExpansionContainsAdapter,
   QuestionnaireResponseItem,
 } from "./generated-types.ts";
-import { R4Adapter } from "@formbox/renderer/fhir/r4/adapter.ts";
-import { R5Adapter } from "@formbox/renderer/fhir/r5/adapter.ts";
+import { R4Adapter } from "./r4/adapter.ts";
+import { R5Adapter } from "./r5/adapter.ts";
 
 export interface IFhirAdapter {
   readonly version: FhirVersion;
