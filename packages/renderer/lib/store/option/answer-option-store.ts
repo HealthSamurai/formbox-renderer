@@ -2,6 +2,7 @@ import { computed, makeObservable } from "mobx";
 import type {
   AnswerOption,
   AnswerType,
+  AnswerConstraint,
   IOptionSelection,
   IAnswerOptions,
   IQuestionNode,
@@ -10,9 +11,8 @@ import type {
 import type {
   Coding,
   OperationOutcomeIssue,
-  QuestionnaireItem,
   QuestionnaireItemAnswerOption,
-} from "fhir/r5";
+} from "../../fhir/generated-types.ts";
 import {
   answerify,
   areValuesEqual,
@@ -159,8 +159,12 @@ export class AnswerOptionStore<
   }
 
   @computed
-  get constraint(): QuestionnaireItem["answerConstraint"] {
-    return this.question.template.answerConstraint ?? "optionsOnly";
+  get constraint(): AnswerConstraint {
+    return (
+      this.question.adapter.questionnaireItem.getAnswerConstraint(
+        this.question.template,
+      ) ?? "optionsOnly"
+    );
   }
 
   @computed

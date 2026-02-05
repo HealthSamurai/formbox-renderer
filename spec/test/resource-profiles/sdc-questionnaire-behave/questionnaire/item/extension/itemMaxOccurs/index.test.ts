@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire, QuestionnaireResponse } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import {
@@ -17,6 +16,12 @@ import {
   makeVariable,
 } from "../../../../../../utilities.ts";
 
+import type {
+  QuestionnaireOf,
+  QuestionnaireResponseOf,
+} from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
 const minOccurs = (value: number) => ({
   url: "http://hl7.org/fhir/StructureDefinition/questionnaire-minOccurs",
   valueInteger: value,
@@ -62,7 +67,7 @@ describe("itemMaxOccurs", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const gate = form.scope.lookupNode("gate");
     const target = form.scope.lookupNode("target");
 
@@ -136,7 +141,7 @@ describe("itemMaxOccurs", () => {
     };
 
     const createEmptyGroupStore = () =>
-      new FormStore(questionnaire, responseWithoutItems);
+      new FormStore("r5", questionnaire, responseWithoutItems, undefined);
 
     const getEmptyGroupList = () => {
       const form = createEmptyGroupStore();
@@ -201,7 +206,7 @@ describe("itemMaxOccurs", () => {
     };
 
     const createMaxGroupStore = () =>
-      new FormStore(questionnaireAtMax, responseAtMax);
+      new FormStore("r5", questionnaireAtMax, responseAtMax, undefined);
 
     it("prevents adding new nodes when maxOccurs reached", () => {
       const form = createMaxGroupStore();
@@ -243,8 +248,10 @@ describe("itemMaxOccurs", () => {
       };
 
       const form = new FormStore(
+        "r5",
         questionnaireMissingAnswers,
         responseMissingAnswers,
+        undefined,
       );
       const question = form.scope.lookupNode("repeating-question");
       assertQuestionNode(question);
@@ -278,7 +285,7 @@ describe("itemMaxOccurs", () => {
     };
 
     const createAtMaxStore = () =>
-      new FormStore(questionnaireAtMax, responseAtMax);
+      new FormStore("r5", questionnaireAtMax, responseAtMax, undefined);
 
     it("prevents adding new answers beyond maxOccurs", () => {
       const form = createAtMaxStore();

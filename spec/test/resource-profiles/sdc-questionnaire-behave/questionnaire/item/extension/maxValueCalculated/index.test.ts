@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -7,6 +6,8 @@ import { assertDefined } from "@formbox/renderer/utilities.ts";
 
 import { makeMaxValueExpression } from "../../../../../../utilities.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 describe("maxValueCalculated", () => {
   it("enforces a calculated maximum", () => {
     const questionnaire: Questionnaire = {
@@ -21,7 +22,7 @@ describe("maxValueCalculated", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const score = form.scope.lookupNode("score");
     assertQuestionNode(score);
 

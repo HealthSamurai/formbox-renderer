@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { QuestionnaireItem } from "fhir/r5";
 import {
   buildQuestionItem,
   buildQuestionnaire,
@@ -7,6 +6,8 @@ import {
 } from "../helpers.tsx";
 import { Renderer } from "../renderer.tsx";
 
+import type { QuestionnaireItemOf } from "@formbox/renderer";
+type QuestionnaireItem = QuestionnaireItemOf<"r5">;
 type CoreRendererConfig = {
   name: string;
   buildItem: () => QuestionnaireItem;
@@ -145,7 +146,6 @@ const coreRenderers = {
             title: "Sample.pdf",
             url: "https://example.org/sample.pdf",
             contentType: "application/pdf",
-            size: "45211",
           },
         ]),
       }),
@@ -174,6 +174,7 @@ function makeStory(config: CoreRendererConfig): StoryObj {
       const item = config.buildItem();
       return (
         <Renderer
+          fhirVersion="r5"
           questionnaire={buildQuestionnaire(item)}
           storyId={context.id}
           mode="node"

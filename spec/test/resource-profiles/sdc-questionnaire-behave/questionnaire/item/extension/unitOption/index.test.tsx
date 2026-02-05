@@ -7,7 +7,6 @@ import {
   within,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import type { Questionnaire, QuestionnaireResponse } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -17,6 +16,12 @@ import type { IQuestionNode } from "@formbox/renderer/types.ts";
 import { EXT } from "@formbox/renderer/utilities.ts";
 import { strings } from "@formbox/renderer/strings.ts";
 
+import type {
+  QuestionnaireOf,
+  QuestionnaireResponseOf,
+} from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
 function getQuantityQuestion(form: FormStore, linkId: string) {
   const node = form.scope.lookupNode(linkId);
   expect(node && isQuestionNode(node)).toBe(true);
@@ -96,7 +101,7 @@ describe("unitOption", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = getQuantityQuestion(form, "dosage");
 
     render(<QuantityRenderer node={question} />);
@@ -158,7 +163,7 @@ describe("unitOption", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire, response);
+    const form = new FormStore("r5", questionnaire, response, undefined);
     const question = getQuantityQuestion(form, "weight");
 
     render(<QuantityRenderer node={question} />);
@@ -190,7 +195,7 @@ describe("unitOption", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = getQuantityQuestion(form, "volume");
 
     const { getByRole } = render(<QuantityRenderer node={question} />);
@@ -240,7 +245,7 @@ describe("unitOption", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = getQuantityQuestion(form, "temp");
 
     const { container } = render(<QuantityRenderer node={question} />);
@@ -290,7 +295,7 @@ describe("unitOption", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = getQuantityQuestion(form, "temp");
 
     const { getByRole } = render(<QuantityRenderer node={question} />);
@@ -359,7 +364,7 @@ describe("unitOption", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire, response);
+    const form = new FormStore("r5", questionnaire, response, undefined);
     const question = getQuantityQuestion(form, "rate");
 
     const { getByRole } = render(<QuantityRenderer node={question} />);
@@ -433,7 +438,7 @@ describe("unitOption", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire, response);
+    const form = new FormStore("r5", questionnaire, response, undefined);
     const question = getQuantityQuestion(form, "rate");
 
     const { getByRole } = render(<QuantityRenderer node={question} />);
@@ -497,7 +502,7 @@ describe("unitOption", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = getQuantityQuestion(form, "dosage");
 
     render(<ListSelectRenderer node={question} />);

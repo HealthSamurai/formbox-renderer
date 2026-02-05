@@ -7,11 +7,13 @@ import {
   SnapshotKind,
   AnswerType,
 } from "../../types.ts";
-import type { QuestionnaireItem, QuestionnaireResponseItem } from "fhir/r5";
+import type {
+  QuestionnaireItem,
+  QuestionnaireResponseItem,
+} from "../../fhir/generated-types.ts";
 import { AbstractActualNodeStore } from "../base/abstract-actual-node-store.ts";
 import { computed } from "mobx";
 import { NodeExpressionRegistry } from "../expression/registry/node-expression-registry.ts";
-import { withQuestionnaireResponseItemMeta } from "../../utilities.ts";
 
 export class DisplayStore
   extends AbstractActualNodeStore
@@ -33,7 +35,7 @@ export class DisplayStore
       this.scope,
       this,
       template,
-      this.template.type as AnswerType,
+      this.adapter.questionnaireItem.getType(template) as AnswerType,
     );
   }
 
@@ -53,7 +55,7 @@ export class DisplayStore
     }
 
     return [
-      withQuestionnaireResponseItemMeta({
+      this.adapter.withQuestionnaireResponseItemMeta({
         linkId: this.linkId,
         text: kind === "expression" ? this.template.text : this.text,
       }),

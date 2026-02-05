@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -9,6 +8,8 @@ import { ListSelectRenderer } from "@formbox/renderer/component/question/rendere
 import type { IQuestionNode } from "@formbox/renderer/types.ts";
 import { assertDefined } from "@formbox/renderer/utilities.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 const minLengthExtension = (value: number) => ({
   url: "http://hl7.org/fhir/StructureDefinition/minLength",
   valueInteger: value,
@@ -30,7 +31,7 @@ describe("minLength", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("nickname");
     assertQuestionNode(question);
     const answer = question.answers[0];
@@ -64,7 +65,7 @@ describe("minLength", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("passcode");
     assertQuestionNode(question);
     const answer = question.answers[0];
@@ -89,7 +90,7 @@ describe("minLength", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("nickname");
     assertQuestionNode(question);
 
@@ -116,7 +117,7 @@ describe("minLength", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("call-sign");
     assertQuestionNode(question);
 

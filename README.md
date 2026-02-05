@@ -1,6 +1,6 @@
 # Formbox Renderer
 
-React renderer for HL7® FHIR® R5 Questionnaires with pluggable themes. The renderer is headless: you must pass a theme and include its CSS.
+React renderer for HL7® FHIR® R4 and R5 Questionnaires with pluggable themes. The renderer is headless: you must pass a theme and include its CSS.
 
 ## Install
 
@@ -38,21 +38,25 @@ const questionnaire = {
 };
 
 export function IntakeForm() {
-  return <Renderer questionnaire={questionnaire} theme={theme} />;
+  return (
+    <Renderer fhirVersion="r5" questionnaire={questionnaire} theme={theme} />
+  );
 }
 ```
 
-If you want strong typing, import FHIR types from `fhir/r5`:
+If you want strong typing, use the versioned type helpers from the renderer:
 
 ```ts
-import type { Questionnaire, QuestionnaireResponse } from "fhir/r5";
+import type { QuestionnaireOf } from "@formbox/renderer";
+
+const questionnaire: QuestionnaireOf<"r4"> = {
+  resourceType: "Questionnaire",
+  status: "active",
+  item: [{ linkId: "first", text: "First name", type: "string" }],
+};
 ```
 
-If TypeScript cannot resolve `fhir/r5`, add `@types/fhir` as a dev dependency:
-
-```bash
-pnpm add -D @types/fhir
-```
+These types map directly to `fhir/r4` or `fhir/r5` based on the version you pass.
 
 ## Themes
 
@@ -71,7 +75,7 @@ import { Provider, theme } from "@formbox/mantine-theme";
 import "@formbox/mantine-theme/style.css";
 
 <Provider>
-  <Renderer questionnaire={questionnaire} theme={theme} />
+  <Renderer fhirVersion="r5" questionnaire={questionnaire} theme={theme} />
 </Provider>;
 ```
 
@@ -83,6 +87,7 @@ import "@formbox/mantine-theme/style.css";
 - `onChange`: Called on every response change.
 - `onSubmit`: Called after validation passes.
 - `terminologyServerUrl`: Base URL for ValueSet `$expand` requests.
+- `fhirVersion` (required): `"r4"` or `"r5"`.
 
 ## Custom themes
 

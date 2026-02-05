@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -8,6 +7,8 @@ import { IntegerRenderer } from "@formbox/renderer/component/question/fhir/integ
 import { EXT } from "@formbox/renderer/utilities.ts";
 import type { IQuestionNode } from "@formbox/renderer/types.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 function getIntegerQuestion(form: FormStore, linkId: string) {
   const node = form.scope.lookupNode(linkId);
   expect(node && isQuestionNode(node)).toBe(true);
@@ -31,7 +32,7 @@ describe("type.integer", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = getIntegerQuestion(form, "count");
 
     render(<IntegerRenderer node={question} />);
@@ -63,7 +64,7 @@ describe("type.integer", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = getIntegerQuestion(form, "pills");
 
     render(<IntegerRenderer node={question} />);

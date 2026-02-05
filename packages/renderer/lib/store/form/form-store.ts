@@ -29,12 +29,19 @@ import {
   runInAction,
 } from "mobx";
 import type {
+  FhirVersion,
   OperationOutcomeIssue,
   Questionnaire,
   QuestionnaireItem,
   QuestionnaireResponse,
   QuestionnaireResponseItem,
-} from "fhir/r5";
+} from "../../fhir/generated-types.ts";
+import type {
+  QuestionnaireOf,
+  QuestionnaireResponseOf,
+} from "../../fhir/public-types.ts";
+import { createFhirAdapter } from "../../fhir/fhir-adapter.ts";
+import type { IFhirAdapter } from "../../fhir/fhir-adapter.ts";
 import { isQuestionNode, QuestionStore } from "../question/question-store.ts";
 import { GroupStore, isGroupNode } from "../group/group-store.ts";
 import { DisplayStore } from "../display/display-store.ts";
@@ -56,9 +63,12 @@ import {
 import { ValueSetExpander } from "../option/valueset-expander.ts";
 import type { FormPagination } from "@formbox/theme";
 
-export class FormStore implements IForm, IExpressionEnvironmentProvider {
+export class FormStore<V extends FhirVersion = FhirVersion>
+  implements IForm, IExpressionEnvironmentProvider
+{
   private readonly initialResponse: QuestionnaireResponse | undefined;
   readonly token = buildId("form", randomToken());
+  readonly questionnaire: Questionnaire;
 
   readonly nodes = observable.array<IPresentableNode>([], {
     deep: false,
@@ -96,10 +106,12 @@ export class FormStore implements IForm, IExpressionEnvironmentProvider {
   >;
   readonly expressionRegistry: IExpressionRegistry;
   readonly valueSetExpander: IValueSetExpander;
+  readonly adapter: IFhirAdapter;
 
   constructor(
-    readonly questionnaire: Questionnaire,
-    response?: QuestionnaireResponse,
+    readonly fhirVersion: V,
+    questionnaire: QuestionnaireOf<V>,
+    response?: QuestionnaireResponseOf<V>,
     terminologyServerUrl?: string,
   ) {
     this.questionRendererRegistry = new RendererRegistry(
@@ -113,21 +125,24 @@ export class FormStore implements IForm, IExpressionEnvironmentProvider {
 
     makeObservable(this);
 
-    this.questionnaire = questionnaire;
-    this.initialResponse = response;
-    this.valueSetExpander = new ValueSetExpander(terminologyServerUrl);
+    this.questionnaire = questionnaire as Questionnaire;
+    this.initialResponse = response as QuestionnaireResponse | undefined;
+    this.adapter = createFhirAdapter(this.fhirVersion);
+    this.valueSetExpander = new ValueSetExpander(
+      terminologyServerUrl ?? this.adapter.getDefaultTerminologyServer(),
+    );
 
     this.expressionRegistry = new BaseExpressionRegistry(
       this.coordinator,
       this.scope,
       this,
-      questionnaire,
+      this.questionnaire,
     );
 
     runInAction(() => {
       this.nodes.replace(
-        (questionnaire.item ?? [])
-          .filter((item) => shouldCreateStore(item))
+        (this.questionnaire.item ?? [])
+          .filter((item) => shouldCreateStore(item, this.adapter))
           .map((item) =>
             this.createNodeStore(
               item,
@@ -234,7 +249,9 @@ export class FormStore implements IForm, IExpressionEnvironmentProvider {
     parentToken: string,
     parentResponseItems: QuestionnaireResponseItem[] | undefined,
   ): IPresentableNode {
-    switch (item.type) {
+    const itemType = this.adapter.questionnaireItem.getType(item);
+
+    switch (itemType) {
       case "display": {
         const store = new DisplayStore(
           this,
@@ -297,6 +314,9 @@ export class FormStore implements IForm, IExpressionEnvironmentProvider {
         );
         parentScope.registerNode(store);
         return store;
+      }
+      default: {
+        throw new Error(`Unsupported QuestionnaireItem type: ${itemType}`);
       }
     }
   }
@@ -499,11 +519,11 @@ export class FormStore implements IForm, IExpressionEnvironmentProvider {
         return;
       }
 
-      const hasPage = items.some((item) => isPageGroupItem(item));
+      const hasPage = items.some((item) => isPageGroupItem(this.adapter, item));
       if (hasPage) {
         const invalidLinkIds: string[] = [];
         items.forEach((item) => {
-          if (!isAllowedPageSibling(item)) {
+          if (!isAllowedPageSibling(this.adapter, item)) {
             invalidLinkIds.push(item.linkId);
             this.reportRenderingIssue(
               makeIssue(
@@ -520,7 +540,7 @@ export class FormStore implements IForm, IExpressionEnvironmentProvider {
       }
 
       items.forEach((item) => {
-        if (depth > 0 && isPageGroupItem(item)) {
+        if (depth > 0 && isPageGroupItem(this.adapter, item)) {
           nestedPageLinkIds.push(item.linkId);
           this.reportRenderingIssue(
             makeIssue(
@@ -560,9 +580,12 @@ export class FormStore implements IForm, IExpressionEnvironmentProvider {
     const response: QuestionnaireResponse = {
       resourceType: "QuestionnaireResponse",
       status: "in-progress",
-      questionnaire:
-        this.questionnaire.url || `Questionnaire/${this.questionnaire.id}`,
     };
+
+    this.adapter.questionnaireResponse.setQuestionnaire(
+      response,
+      this.questionnaire.url || `Questionnaire/${this.questionnaire.id}`,
+    );
 
     if (items.length > 0) {
       response.item = items;
@@ -578,12 +601,15 @@ function isGroupControlNode(
   return isGroupNode(node) || isGroupListStore(node);
 }
 
-function isPageGroupItem(item: QuestionnaireItem) {
-  return item.type === "group" && getItemControlCode(item) === "page";
+function isPageGroupItem(adapter: IFhirAdapter, item: QuestionnaireItem) {
+  return (
+    adapter.questionnaireItem.getType(item) === "group" &&
+    getItemControlCode(item) === "page"
+  );
 }
 
-function isAllowedPageSibling(item: QuestionnaireItem) {
-  if (item.type !== "group") {
+function isAllowedPageSibling(adapter: IFhirAdapter, item: QuestionnaireItem) {
+  if (adapter.questionnaireItem.getType(item) !== "group") {
     return false;
   }
 

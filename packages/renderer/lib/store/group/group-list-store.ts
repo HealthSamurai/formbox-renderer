@@ -16,7 +16,7 @@ import type {
   OperationOutcomeIssue,
   QuestionnaireItem,
   QuestionnaireResponseItem,
-} from "fhir/r5";
+} from "../../fhir/generated-types.ts";
 import { AbstractPresentableNode } from "../base/abstract-presentable-node.ts";
 import { GroupListValidator } from "./group-list-validator.ts";
 import {
@@ -26,7 +26,6 @@ import {
   getIssueMessage,
   getItemControlCode,
   makeIssue,
-  withQuestionnaireResponseItemMeta,
 } from "../../utilities.ts";
 import { isQuestionNode } from "../question/question-store.ts";
 import { GroupStore } from "./group-store.ts";
@@ -209,7 +208,7 @@ export class GroupListStore
             this.form.reportRenderingIssue(
               makeIssue(
                 "structure",
-                `Group table "${this.linkId}" expects only question items, but child "${childNode.linkId}" is type '${childNode.template.type}'.`,
+                `Group table "${this.linkId}" expects only question items, but child "${childNode.linkId}" is type '${this.adapter.questionnaireItem.getType(childNode.template)}'.`,
               ),
             );
             return;
@@ -245,7 +244,7 @@ export class GroupListStore
 
     if (this.nodes.length === 0) {
       return [
-        withQuestionnaireResponseItemMeta({
+        this.adapter.withQuestionnaireResponseItemMeta({
           linkId: this.linkId,
           text: kind === "expression" ? this.template.text : this.text,
         }),

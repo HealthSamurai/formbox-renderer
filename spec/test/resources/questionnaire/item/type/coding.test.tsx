@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -8,6 +7,8 @@ import { CodingRenderer } from "@formbox/renderer/component/question/fhir/coding
 import type { IQuestionNode } from "@formbox/renderer/types.ts";
 import { strings } from "@formbox/renderer/strings.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 function getCodingQuestion(form: FormStore, linkId: string) {
   const node = form.scope.lookupNode(linkId);
   expect(node && isQuestionNode(node)).toBe(true);
@@ -31,7 +32,7 @@ describe("type.coding", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = getCodingQuestion(form, "diagnosis");
 
     render(<CodingRenderer node={question} />);
@@ -60,7 +61,7 @@ describe("type.coding", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = getCodingQuestion(form, "diagnosis");
 
     render(<CodingRenderer node={question} />);

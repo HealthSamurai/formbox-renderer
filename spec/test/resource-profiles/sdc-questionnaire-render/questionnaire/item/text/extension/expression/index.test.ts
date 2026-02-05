@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -10,6 +9,8 @@ import {
   makeVariable,
 } from "../../../../../../../utilities.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 describe("item text expressions", () => {
   it("renders dynamic labels using expressions on _text", () => {
     const questionnaire: Questionnaire = {
@@ -48,7 +49,7 @@ describe("item text expressions", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const name = form.scope.lookupNode("name");
     const greeting = form.scope.lookupNode("greeting");
 
@@ -82,7 +83,7 @@ describe("item text expressions", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const detail = form.scope.lookupNode("detail");
 
     assertQuestionNode(detail);

@@ -3,7 +3,6 @@ import type {
   AnswerTypeToDataType,
   DataTypeToType,
 } from "@formbox/renderer/types.ts";
-import type { Coding, Extension, QuestionnaireItem } from "fhir/r5";
 import {
   buildQuestionItem,
   buildQuestionnaire,
@@ -12,6 +11,14 @@ import {
 import { Renderer } from "../renderer.tsx";
 import { EXT } from "@formbox/renderer/utilities.ts";
 
+import type {
+  CodingOf,
+  ExtensionOf,
+  QuestionnaireItemOf,
+} from "@formbox/renderer";
+type Coding = CodingOf<"r5">;
+type Extension = ExtensionOf<"r5">;
+type QuestionnaireItem = QuestionnaireItemOf<"r5">;
 type UnitMode = "freeText" | "singleOption" | "multipleOptions";
 
 type QuantitySliderArguments = {
@@ -284,6 +291,7 @@ export const QuantitySliderRenderer: StoryObj<QuantitySliderArguments> = {
     const item = buildQuantitySliderItem(arguments_);
     return (
       <Renderer
+        fhirVersion="r5"
         questionnaire={buildQuestionnaire(item)}
         storyId={context.id}
         mode="node"
@@ -299,6 +307,7 @@ export const QuantitySpinnerRenderer: StoryObj<QuantitySpinnerArguments> = {
     const item = buildQuantitySpinnerItem(arguments_);
     return (
       <Renderer
+        fhirVersion="r5"
         questionnaire={buildQuestionnaire(item)}
         storyId={context.id}
         mode="node"

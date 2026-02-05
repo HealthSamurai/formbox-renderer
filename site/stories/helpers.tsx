@@ -1,11 +1,4 @@
 import type {
-  Extension,
-  Questionnaire,
-  QuestionnaireItem,
-  QuestionnaireItemAnswerOption,
-  QuestionnaireItemInitial,
-} from "fhir/r5";
-import type {
   AnswerType,
   AnswerTypeToDataType,
   DataTypeToType,
@@ -19,6 +12,18 @@ import {
   ITEM_CONTROL_SYSTEM,
 } from "@formbox/renderer/utilities.ts";
 
+import type {
+  ExtensionOf,
+  QuestionnaireOf,
+  QuestionnaireItemOf,
+  QuestionnaireItemAnswerOptionOf,
+  QuestionnaireItemInitialOf,
+} from "@formbox/renderer";
+type Extension = ExtensionOf<"r5">;
+type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireItem = QuestionnaireItemOf<"r5">;
+type QuestionnaireItemAnswerOption = QuestionnaireItemAnswerOptionOf<"r5">;
+type QuestionnaireItemInitial = QuestionnaireItemInitialOf<"r5">;
 export type QuestionItemConfig<T extends AnswerType> = {
   linkId: string;
   text: string;

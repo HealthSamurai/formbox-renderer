@@ -1,3 +1,7 @@
+import type {
+  QuestionnaireOf,
+  QuestionnaireResponseOf,
+} from "@formbox/renderer";
 import Renderer from "@formbox/renderer";
 import "@formbox/hs-theme/style.css";
 import { theme } from "@formbox/hs-theme";
@@ -6,10 +10,10 @@ import {
   SmartMessagingPhase,
   useSmartMessaging,
 } from "sdc-smart-web-messaging-react";
-import type { Questionnaire, QuestionnaireResponse } from "fhir/r5";
-
 import "./style.css";
 
+type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
 const getPhaseMessage = (phase: SmartMessagingPhase) => {
   if (phase === SmartMessagingPhase.Disabled) {
     return "Missing SDC SWM parameters.";
@@ -73,6 +77,7 @@ function SwmClient() {
   return (
     <div className="swm-page">
       <Renderer
+        fhirVersion="r5"
         questionnaire={questionnaire as unknown as Questionnaire}
         initialResponse={
           questionnaireResponse as QuestionnaireResponse | undefined

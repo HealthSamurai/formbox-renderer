@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import {
@@ -8,6 +7,8 @@ import {
 } from "@formbox/renderer/store/question/question-store.ts";
 import { assertDefined } from "@formbox/renderer/utilities.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 describe("item.text", () => {
   it("includes display items in the response", () => {
     const questionnaire: Questionnaire = {
@@ -28,7 +29,7 @@ describe("item.text", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("ack");
     expect(question && isQuestionNode(question)).toBe(true);
     assertQuestionNode(question);

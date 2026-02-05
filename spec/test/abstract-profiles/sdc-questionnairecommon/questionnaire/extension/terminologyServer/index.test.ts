@@ -1,10 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { ValueSetExpander } from "@formbox/renderer/store/option/valueset-expander.ts";
 import { EXT } from "@formbox/renderer/utilities.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 const buildFetchResponse = (contains = [{ system: "sys", code: "code" }]) =>
   ({
     ok: true,
@@ -45,7 +46,7 @@ describe("terminologyServer", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const node = form.scope.lookupNode("root-question");
     expect(node?.preferredTerminologyServers).toEqual([
       "https://terminology.example/questionnaire",

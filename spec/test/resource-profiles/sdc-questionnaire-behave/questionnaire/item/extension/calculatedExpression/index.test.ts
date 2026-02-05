@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { runInAction } from "mobx";
-import type { Questionnaire, QuestionnaireResponse } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -11,6 +10,12 @@ import {
   makeVariable,
 } from "../../../../../../utilities.ts";
 
+import type {
+  QuestionnaireOf,
+  QuestionnaireResponseOf,
+} from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
 const bmiQuestionnaire: Questionnaire = {
   resourceType: "Questionnaire",
   status: "active",
@@ -54,7 +59,7 @@ const bmiQuestionnaire: Questionnaire = {
 
 describe("calculatedExpression", () => {
   it("updates until user override", () => {
-    const form = new FormStore(bmiQuestionnaire);
+    const form = new FormStore("r5", bmiQuestionnaire, undefined, undefined);
     const heightStore = form.scope.lookupNode("height");
     const weightStore = form.scope.lookupNode("weight");
     const bmiStore = form.scope.lookupNode("bmi");
@@ -103,7 +108,7 @@ describe("calculatedExpression", () => {
       ],
     };
 
-    const form = new FormStore(bmiQuestionnaire, response);
+    const form = new FormStore("r5", bmiQuestionnaire, response, undefined);
     const heightStore = form.scope.lookupNode("height");
     const weightStore = form.scope.lookupNode("weight");
     const bmiStore = form.scope.lookupNode("bmi");
@@ -163,7 +168,7 @@ describe("calculatedExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const aStore = form.scope.lookupNode("a");
     const bStore = form.scope.lookupNode("b");
 
@@ -196,7 +201,7 @@ describe("calculatedExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const multiStore = form.scope.lookupNode("multi");
 
     assertQuestionNode(multiStore);
@@ -222,7 +227,7 @@ describe("calculatedExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const node = form.scope.lookupNode("result");
 
     assertQuestionNode(node);
@@ -270,7 +275,7 @@ describe("calculatedExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const base = form.scope.lookupNode("base");
     const derived = form.scope.lookupNode("derived");
 
@@ -306,7 +311,7 @@ describe("calculatedExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const resultStore = form.scope.lookupNode("result");
 
     assertQuestionNode(resultStore);
@@ -339,7 +344,7 @@ describe("calculatedExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const resultStore = form.scope.lookupNode("result");
 
     assertQuestionNode(resultStore);
@@ -414,7 +419,7 @@ describe("calculatedExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire, response);
+    const form = new FormStore("r5", questionnaire, response, undefined);
     const heightStore = form.scope.lookupNode("height");
     const weightStore = form.scope.lookupNode("weight");
     const bmiStore = form.scope.lookupNode("bmi");

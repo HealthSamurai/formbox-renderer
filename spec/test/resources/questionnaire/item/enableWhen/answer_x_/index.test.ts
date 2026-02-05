@@ -1,17 +1,22 @@
 import { describe, expect, it } from "vitest";
-import type {
-  Coding,
-  Questionnaire,
-  QuestionnaireItemEnableWhen,
-  Quantity,
-  Reference,
-} from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import type { AnswerType, EnableWhenAnswer } from "@formbox/renderer/types.ts";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { assertDefined } from "@formbox/renderer/utilities.ts";
 
+import type {
+  CodingOf,
+  QuestionnaireOf,
+  QuestionnaireItemEnableWhenOf,
+  QuantityOf,
+  ReferenceOf,
+} from "@formbox/renderer";
+type Coding = CodingOf<"r5">;
+type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireItemEnableWhen = QuestionnaireItemEnableWhenOf<"r5">;
+type Quantity = QuantityOf<"r5">;
+type Reference = ReferenceOf<"r5">;
 function makeCondition(
   type: AnswerType,
   operator: QuestionnaireItemEnableWhen["operator"],
@@ -98,7 +103,7 @@ function createForm(
     ],
   };
 
-  const form = new FormStore(questionnaire);
+  const form = new FormStore("r5", questionnaire, undefined, undefined);
   const control = form.scope.lookupNode("control");
   const dependent = form.scope.lookupNode("dependent");
 

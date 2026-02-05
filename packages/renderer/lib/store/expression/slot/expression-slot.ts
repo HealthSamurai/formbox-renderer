@@ -1,4 +1,7 @@
-import type { Expression, OperationOutcomeIssue } from "fhir/r5";
+import type {
+  Expression,
+  OperationOutcomeIssue,
+} from "../../../fhir/generated-types.ts";
 import { action, computed, makeObservable, observable } from "mobx";
 import {
   ExpressionSlotKind,
@@ -7,8 +10,7 @@ import {
   IExpressionSlot,
 } from "../../../types.ts";
 import { makeIssue } from "../../../utilities.ts";
-import fhirpath, { Model } from "fhirpath";
-import r5 from "fhirpath/fhir-context/r5";
+import fhirpath from "fhirpath";
 
 export class UnsupportedExpressionLanguageError extends Error {
   constructor(language: string | undefined) {
@@ -88,7 +90,7 @@ export class ExpressionSlot implements IExpressionSlot {
           this.environmentProvider.expressionEnvironment.context,
           expression,
           this.environmentProvider.expressionEnvironment,
-          r5 as Model,
+          this.environmentProvider.adapter.getFhirpathModel(),
         );
 
         this.setError(undefined);

@@ -5,7 +5,6 @@ import type {
   DataTypeToType,
   QuestionItemControl,
 } from "@formbox/renderer/types.ts";
-import type { QuestionnaireItem } from "fhir/r5";
 import {
   buildQuestionItem,
   buildQuestionnaire,
@@ -14,6 +13,8 @@ import {
 } from "../helpers.tsx";
 import { Renderer } from "../renderer.tsx";
 
+import type { QuestionnaireItemOf } from "@formbox/renderer";
+type QuestionnaireItem = QuestionnaireItemOf<"r5">;
 type AnswerConstraint = QuestionnaireItem["answerConstraint"];
 
 type DropdownArguments = {
@@ -664,6 +665,7 @@ export const DropdownRenderer: StoryObj<DropdownArguments> = {
     const item = buildSelectionItem(arguments_, "drop-down");
     return (
       <Renderer
+        fhirVersion="r5"
         questionnaire={buildQuestionnaire(item)}
         storyId={context.id}
         mode="node"
@@ -689,6 +691,7 @@ export const ListSelectRenderer: StoryObj<ListSelectArguments> = {
     const item = buildListSelectItem(arguments_);
     return (
       <Renderer
+        fhirVersion="r5"
         questionnaire={buildQuestionnaire(item)}
         storyId={context.id}
         mode="node"

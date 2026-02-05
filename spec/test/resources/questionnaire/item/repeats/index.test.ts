@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire, QuestionnaireResponse } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import type { IGroupNode } from "@formbox/renderer/types.ts";
@@ -14,6 +13,12 @@ import {
 } from "@formbox/renderer/store/question/question-store.ts";
 import { assertDefined } from "@formbox/renderer/utilities.ts";
 
+import type {
+  QuestionnaireOf,
+  QuestionnaireResponseOf,
+} from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
 const minOccurs = (value: number) => ({
   url: "http://hl7.org/fhir/StructureDefinition/questionnaire-minOccurs",
   valueInteger: value,
@@ -55,7 +60,7 @@ describe("repeats", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const list = form.scope.lookupNode("repeating-group");
     const toggle = form.scope.lookupNode("toggle");
 
@@ -130,7 +135,8 @@ describe("repeats", () => {
       ],
     };
 
-    const createStore = () => new FormStore(questionnaire, response);
+    const createStore = () =>
+      new FormStore("r5", questionnaire, response, undefined);
 
     const getGroupList = () => {
       const form = createStore();
@@ -232,7 +238,8 @@ describe("repeats", () => {
       ],
     };
 
-    const createStore = () => new FormStore(questionnaire, response);
+    const createStore = () =>
+      new FormStore("r5", questionnaire, response, undefined);
 
     const getQuestionStore = () => {
       const form = createStore();

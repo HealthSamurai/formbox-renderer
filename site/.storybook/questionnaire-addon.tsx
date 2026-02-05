@@ -1,8 +1,9 @@
 import * as React from "react";
 import { addons, types, useStorybookState } from "storybook/manager-api";
 import { SyntaxHighlighter } from "storybook/internal/components";
-import type { Questionnaire } from "fhir/r5";
+import type { QuestionnaireOf } from "@formbox/renderer";
 
+type Questionnaire = QuestionnaireOf<"r5">;
 export function QuestionnairePanel() {
   const { storyId } = useStorybookState();
   const [value, setValue] = React.useState("");

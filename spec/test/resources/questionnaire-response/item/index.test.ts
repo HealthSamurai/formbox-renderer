@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import {
@@ -12,6 +11,8 @@ import {
 } from "@formbox/renderer/store/question/question-store.ts";
 import { assertDefined } from "@formbox/renderer/utilities.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 describe("item", () => {
   it("omits disabled items from the QuestionnaireResponse", () => {
     const questionnaire: Questionnaire = {
@@ -39,7 +40,7 @@ describe("item", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const toggle = form.scope.lookupNode("toggle");
     const extra = form.scope.lookupNode("extra");
     expect(
@@ -82,7 +83,7 @@ describe("item", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("notes");
     expect(question && isQuestionNode(question)).toBe(true);
     assertQuestionNode(question);
@@ -116,7 +117,7 @@ describe("item", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const group = form.scope.lookupNode("family-history");
     expect(group && isGroupListStore(group)).toBe(true);
     assertGroupListStore(group);
@@ -152,7 +153,7 @@ describe("item", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const group = form.scope.lookupNode("family-history");
     expect(group && isGroupListStore(group)).toBe(true);
     assertGroupListStore(group);

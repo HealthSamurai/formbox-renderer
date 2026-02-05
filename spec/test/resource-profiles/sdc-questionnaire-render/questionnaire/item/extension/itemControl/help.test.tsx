@@ -1,11 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { render } from "@testing-library/react";
-import type { QuestionnaireItem } from "fhir/r5";
 
 import { NodeHelp } from "@formbox/renderer/component/node/node-help.tsx";
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 
+import type { QuestionnaireItemOf } from "@formbox/renderer";
+type QuestionnaireItem = QuestionnaireItemOf<"r5">;
 function makeQuestionnaireItem(helpText?: string): QuestionnaireItem {
   return {
     linkId: "question",
@@ -38,11 +39,16 @@ function makeQuestionnaireItem(helpText?: string): QuestionnaireItem {
 
 describe("itemControl.help", () => {
   it("renders nothing when the node has no help text", () => {
-    const form = new FormStore({
-      resourceType: "Questionnaire",
-      status: "active",
-      item: [makeQuestionnaireItem()],
-    });
+    const form = new FormStore(
+      "r5",
+      {
+        resourceType: "Questionnaire",
+        status: "active",
+        item: [makeQuestionnaireItem()],
+      },
+      undefined,
+      undefined,
+    );
     const node = form.scope.lookupNode("question");
     expect(node && isQuestionNode(node)).toBe(true);
     if (!node || !isQuestionNode(node)) {
@@ -54,11 +60,16 @@ describe("itemControl.help", () => {
   });
 
   it("renders help badge and tooltip when help is present", () => {
-    const form = new FormStore({
-      resourceType: "Questionnaire",
-      status: "active",
-      item: [makeQuestionnaireItem("Helpful guidance")],
-    });
+    const form = new FormStore(
+      "r5",
+      {
+        resourceType: "Questionnaire",
+        status: "active",
+        item: [makeQuestionnaireItem("Helpful guidance")],
+      },
+      undefined,
+      undefined,
+    );
     const node = form.scope.lookupNode("question");
     expect(node && isQuestionNode(node)).toBe(true);
     if (!node || !isQuestionNode(node)) {

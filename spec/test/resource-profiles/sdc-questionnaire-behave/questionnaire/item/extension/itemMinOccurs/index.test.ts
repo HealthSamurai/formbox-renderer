@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire, QuestionnaireResponse } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import type { IGroupNode } from "@formbox/renderer/types.ts";
@@ -22,6 +21,12 @@ import {
   makeVariable,
 } from "../../../../../../utilities.ts";
 
+import type {
+  QuestionnaireOf,
+  QuestionnaireResponseOf,
+} from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
 const minOccurs = (value: number) => ({
   url: "http://hl7.org/fhir/StructureDefinition/questionnaire-minOccurs",
   valueInteger: value,
@@ -63,7 +68,7 @@ describe("itemMinOccurs", () => {
     };
 
     const createEmptyGroupStore = () =>
-      new FormStore(questionnaire, responseWithoutItems);
+      new FormStore("r5", questionnaire, responseWithoutItems, undefined);
 
     const getEmptyGroupList = () => {
       const form = createEmptyGroupStore();
@@ -117,7 +122,12 @@ describe("itemMinOccurs", () => {
     };
 
     const createMissingAnswersStore = () =>
-      new FormStore(questionnaireMissingAnswers, responseMissingAnswers);
+      new FormStore(
+        "r5",
+        questionnaireMissingAnswers,
+        responseMissingAnswers,
+        undefined,
+      );
 
     it("seeds empty answers to meet minOccurs", () => {
       const form = createMissingAnswersStore();
@@ -177,7 +187,7 @@ describe("itemMinOccurs", () => {
         ],
       };
 
-      const form = new FormStore(questionnaire);
+      const form = new FormStore("r5", questionnaire, undefined, undefined);
       const gate = form.scope.lookupNode("gate");
       const target = form.scope.lookupNode("target");
 
@@ -221,7 +231,7 @@ describe("itemMinOccurs", () => {
         ],
       };
 
-      const form = new FormStore(questionnaire);
+      const form = new FormStore("r5", questionnaire, undefined, undefined);
       const question = form.scope.lookupNode("symptom");
       assertQuestionNode(question);
 
@@ -269,7 +279,7 @@ describe("itemMinOccurs", () => {
         ],
       };
 
-      const form = new FormStore(questionnaire);
+      const form = new FormStore("r5", questionnaire, undefined, undefined);
       const group = form.scope.lookupNode("family-history");
       expect(group && isGroupListStore(group)).toBe(true);
       assertGroupListStore(group);
@@ -314,7 +324,7 @@ describe("itemMinOccurs", () => {
         ],
       };
 
-      const form = new FormStore(questionnaire);
+      const form = new FormStore("r5", questionnaire, undefined, undefined);
       const group = form.scope.lookupNode("lifestyle");
       expect(group && isGroupNode(group)).toBe(true);
       assertGroupNode(group);

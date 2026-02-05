@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { Questionnaire } from "fhir/r5";
 import { Renderer } from "../renderer.tsx";
 import answerConstraint from "./samples/answer-constraint-examples.json" with { type: "json" };
 import answerExpression from "./samples/answer-expression.json" with { type: "json" };
@@ -25,6 +24,8 @@ import targetConstraint from "./samples/target-constraint.json" with { type: "js
 import textControls from "./samples/text-controls.json" with { type: "json" };
 import validation from "./samples/validation.json" with { type: "json" };
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 type PlaygroundArguments = {
   questionnaire: Questionnaire;
 };
@@ -54,6 +55,7 @@ function makeStory(
     render: (arguments_, context) => {
       return (
         <Renderer
+          fhirVersion="r5"
           questionnaire={arguments_.questionnaire}
           storyId={context.id}
           mode="form"

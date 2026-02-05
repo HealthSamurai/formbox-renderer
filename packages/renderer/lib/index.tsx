@@ -1,4 +1,8 @@
-import type { Questionnaire, QuestionnaireResponse } from "fhir/r5";
+import type {
+  FhirVersion,
+  QuestionnaireOf,
+  QuestionnaireResponseOf,
+} from "./fhir/public-types.ts";
 import { FormStore } from "./store/form/form-store.ts";
 import { Form } from "./component/form/form.tsx";
 import { useCallback, useEffect, useMemo } from "react";
@@ -6,26 +10,34 @@ import { autorun } from "mobx";
 import type { Theme } from "@formbox/theme";
 import { ThemeProvider } from "./ui/theme.tsx";
 
-type RendererProperties = {
-  questionnaire: Questionnaire;
-  initialResponse?: QuestionnaireResponse | undefined;
-  onChange?: ((response: QuestionnaireResponse) => void) | undefined;
-  onSubmit?: ((response: QuestionnaireResponse) => void) | undefined;
+type RendererProperties<V extends FhirVersion> = {
+  questionnaire: QuestionnaireOf<V>;
+  initialResponse?: QuestionnaireResponseOf<V> | undefined;
+  onChange?: ((response: QuestionnaireResponseOf<V>) => void) | undefined;
+  onSubmit?: ((response: QuestionnaireResponseOf<V>) => void) | undefined;
   terminologyServerUrl?: string | undefined;
+  fhirVersion: V;
   theme: Theme;
 };
 
-function Renderer({
+function Renderer<V extends FhirVersion>({
   questionnaire,
   initialResponse,
   onSubmit,
   onChange,
   terminologyServerUrl,
+  fhirVersion,
   theme,
-}: RendererProperties) {
+}: RendererProperties<V>) {
   const store = useMemo(
-    () => new FormStore(questionnaire, initialResponse, terminologyServerUrl),
-    [questionnaire, initialResponse, terminologyServerUrl],
+    () =>
+      new FormStore(
+        fhirVersion,
+        questionnaire,
+        initialResponse,
+        terminologyServerUrl,
+      ),
+    [questionnaire, initialResponse, terminologyServerUrl, fhirVersion],
   );
 
   useEffect(() => () => store.dispose(), [store]);
@@ -36,7 +48,7 @@ function Renderer({
     }
 
     const dispose = autorun(() => {
-      onChange(store.response);
+      onChange(store.response as QuestionnaireResponseOf<V>);
     });
 
     return () => {
@@ -46,7 +58,7 @@ function Renderer({
 
   const handleSubmit = useCallback(() => {
     if (store.validateAll()) {
-      onSubmit?.(store.response);
+      onSubmit?.(store.response as QuestionnaireResponseOf<V>);
     }
   }, [onSubmit, store]);
 
@@ -58,3 +70,23 @@ function Renderer({
 }
 
 export default Renderer;
+
+export type {
+  AttachmentOf,
+  CodingOf,
+  ElementOf,
+  ExtensionOf,
+  FhirVersion,
+  FhirTypesByVersion,
+  OperationOutcomeIssueOf,
+  QuantityOf,
+  QuestionnaireItemAnswerOptionOf,
+  QuestionnaireItemEnableWhenOf,
+  QuestionnaireItemInitialOf,
+  QuestionnaireItemOf,
+  QuestionnaireOf,
+  QuestionnaireResponseItemAnswerOf,
+  QuestionnaireResponseItemOf,
+  QuestionnaireResponseOf,
+  ReferenceOf,
+} from "./fhir/public-types.ts";

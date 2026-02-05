@@ -1,12 +1,6 @@
 import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import type {
-  Quantity,
-  Questionnaire,
-  QuestionnaireItemAnswerOption,
-  QuestionnaireResponse,
-} from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -15,6 +9,22 @@ import type { AnswerType, IQuestionNode } from "@formbox/renderer/types.ts";
 import { EXT } from "@formbox/renderer/utilities.ts";
 import { strings } from "@formbox/renderer/strings.ts";
 
+import type {
+  QuestionnaireOf,
+  QuestionnaireItemAnswerOptionOf,
+  QuestionnaireResponseOf,
+} from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireItemAnswerOption = QuestionnaireItemAnswerOptionOf<"r5">;
+type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
+
+type QuantityValue = {
+  value?: number | undefined;
+  unit?: string | undefined;
+  code?: string | undefined;
+  system?: string | undefined;
+  comparator?: "<" | "<=" | ">=" | ">" | undefined;
+};
 const valueDisplayOverrides = vi.hoisted(
   () => new Map<AnswerType, (properties: { value: unknown }) => ReactNode>(),
 );
@@ -67,7 +77,7 @@ function getQuantityAnswers(question: IQuestionNode) {
   return question.answers
     .map((answer) => answer.value)
     .filter(
-      (value): value is Quantity =>
+      (value): value is QuantityValue =>
         typeof value === "object" && value !== undefined,
     );
 }
@@ -101,7 +111,7 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire, response);
+        const form = new FormStore("r5", questionnaire, response, undefined);
         const question = getQuestion(form, "color");
 
         render(<ListSelectRenderer node={question} />);
@@ -128,7 +138,7 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "color");
 
         render(<ListSelectRenderer node={question} />);
@@ -158,7 +168,7 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "consent");
 
         render(<ListSelectRenderer node={question} />);
@@ -220,7 +230,7 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "note");
 
         render(<ListSelectRenderer node={question} />);
@@ -278,7 +288,7 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire, response);
+        const form = new FormStore("r5", questionnaire, response, undefined);
         const question = getQuestion(form, "dose");
 
         render(<ListSelectRenderer node={question} />);
@@ -311,7 +321,7 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "color");
 
         render(<ListSelectRenderer node={question} />);
@@ -358,7 +368,7 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire, response);
+        const form = new FormStore("r5", questionnaire, response, undefined);
         const question = getQuestion(form, "color");
 
         render(<ListSelectRenderer node={question} />);
@@ -400,7 +410,7 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "color");
 
         render(<ListSelectRenderer node={question} />);
@@ -470,7 +480,7 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "color");
 
         render(<ListSelectRenderer node={question} />);
@@ -524,7 +534,7 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire, response);
+        const form = new FormStore("r5", questionnaire, response, undefined);
         const question = getQuestion(form, "call-sign");
 
         render(<ListSelectRenderer node={question} />);
@@ -578,7 +588,7 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire, response);
+        const form = new FormStore("r5", questionnaire, response, undefined);
         const question = getQuestion(form, "dose");
 
         render(<ListSelectRenderer node={question} />);
@@ -613,7 +623,7 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "dose");
 
         render(<ListSelectRenderer node={question} />);
@@ -685,7 +695,7 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "dose");
 
         render(<ListSelectRenderer node={question} />);
@@ -734,7 +744,7 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "call-sign");
 
         render(<ListSelectRenderer node={question} />);
@@ -806,7 +816,7 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "call-sign");
 
         render(<ListSelectRenderer node={question} />);

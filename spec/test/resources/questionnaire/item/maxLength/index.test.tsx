@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import type { Questionnaire, QuestionnaireItemAnswerOption } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -8,6 +7,12 @@ import { ListSelectRenderer } from "@formbox/renderer/component/question/rendere
 import type { IQuestionNode } from "@formbox/renderer/types.ts";
 import { assertDefined } from "@formbox/renderer/utilities.ts";
 
+import type {
+  QuestionnaireOf,
+  QuestionnaireItemAnswerOptionOf,
+} from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireItemAnswerOption = QuestionnaireItemAnswerOptionOf<"r5">;
 const minLengthExtension = (value: number) => ({
   url: "http://hl7.org/fhir/StructureDefinition/minLength",
   valueInteger: value,
@@ -28,7 +33,7 @@ describe("maxLength", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("notes");
     assertQuestionNode(question);
     const answer = question.answers[0];
@@ -69,7 +74,7 @@ describe("maxLength", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("passcode");
     assertQuestionNode(question);
     const answer = question.answers[0];
@@ -93,7 +98,7 @@ describe("maxLength", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("weight");
     assertQuestionNode(question);
     const answer = question.answers[0];
@@ -127,7 +132,7 @@ describe("maxLength", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("dose");
     assertQuestionNode(question);
 

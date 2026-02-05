@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -9,6 +8,9 @@ import { ListSelectRenderer } from "@formbox/renderer/component/question/rendere
 import type { IQuestionNode } from "@formbox/renderer/types.ts";
 import { assertDefined } from "@formbox/renderer/utilities.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+import type { Attachment } from "@formbox/renderer/fhir/generated-types.ts";
+type Questionnaire = QuestionnaireOf<"r5">;
 const mimeTypeExtension = (code: string) => ({
   url: "http://hl7.org/fhir/StructureDefinition/mimeType",
   valueCode: code,
@@ -38,7 +40,7 @@ describe("mimeType", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("photo");
     assertQuestionNode(question);
     const answer = question.answers[0];
@@ -46,10 +48,11 @@ describe("mimeType", () => {
 
     const invalidAnswer = question.answers[0];
     assertDefined(invalidAnswer);
-    invalidAnswer.setValueByUser({
+    const invalidAttachment = {
       contentType: "image/gif",
       size: "200",
-    });
+    } as unknown as Attachment;
+    invalidAnswer.setValueByUser(invalidAttachment);
     expect(form.validateAll()).toBe(false);
     expect(
       answer.issues.some((issue) =>
@@ -59,10 +62,11 @@ describe("mimeType", () => {
 
     const validAnswer = question.answers[0];
     assertDefined(validAnswer);
-    validAnswer.setValueByUser({
+    const validAttachment = {
       contentType: "image/jpeg",
       size: "256",
-    });
+    } as unknown as Attachment;
+    validAnswer.setValueByUser(validAttachment);
     expect(answer.issues).toHaveLength(0);
   });
 
@@ -84,7 +88,7 @@ describe("mimeType", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("document");
     assertQuestionNode(question);
 
@@ -118,7 +122,7 @@ describe("mimeType", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("upload");
     assertQuestionNode(question);
 
@@ -153,7 +157,7 @@ describe("mimeType", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("notes");
     assertQuestionNode(question);
 

@@ -28,7 +28,7 @@ import type {
   QuestionnaireItem,
   QuestionnaireResponseItem,
   QuestionnaireResponseItemAnswer,
-} from "fhir/r5";
+} from "../../fhir/generated-types.ts";
 
 import { AbstractActualNodeStore } from "../base/abstract-actual-node-store.ts";
 import { AnswerStore } from "../answer/answer-store.ts";
@@ -45,7 +45,6 @@ import {
   getValue,
   buildId,
   normalizeExpressionValues,
-  withQuestionnaireResponseItemMeta,
 } from "../../utilities.ts";
 import type { HTMLAttributes } from "react";
 import { NodeExpressionRegistry } from "../expression/registry/node-expression-registry.ts";
@@ -126,7 +125,7 @@ export class QuestionStore<T extends AnswerType = AnswerType>
       this.scope,
       this,
       template,
-      this.template.type as AnswerType,
+      this.adapter.questionnaireItem.getType(template) as AnswerType,
     );
 
     this.validator = new QuestionValidator(this);
@@ -139,9 +138,9 @@ export class QuestionStore<T extends AnswerType = AnswerType>
     this.setupExpressionReactions();
   }
 
-  @computed
-  get type() {
-    return this.template.type as T;
+  @override
+  override get type() {
+    return super.type as T;
   }
 
   @computed
@@ -587,7 +586,7 @@ export class QuestionStore<T extends AnswerType = AnswerType>
       return [];
     }
 
-    const item = withQuestionnaireResponseItemMeta({
+    const item = this.adapter.withQuestionnaireResponseItemMeta({
       linkId: this.linkId,
       text: kind === "expression" ? this.template.text : this.text,
     });

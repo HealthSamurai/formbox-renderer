@@ -17,5 +17,5 @@ import Renderer from "@formbox/renderer";
 import { theme } from "@formbox/antd-theme";
 import "@formbox/antd-theme/style.css";
 
-<Renderer questionnaire={questionnaire} theme={theme} />;
+<Renderer fhirVersion="r5" questionnaire={questionnaire} theme={theme} />;
 ```

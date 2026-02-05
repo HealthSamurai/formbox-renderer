@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
-import type { Extension, Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { assertDefined } from "@formbox/renderer/utilities.ts";
 
+import type { ExtensionOf, QuestionnaireOf } from "@formbox/renderer";
+type Extension = ExtensionOf<"r5">;
+type Questionnaire = QuestionnaireOf<"r5">;
 const targetConstraint = (config: {
   key?: string | undefined;
   severity?: "error" | "warning" | undefined;
@@ -64,7 +66,7 @@ describe("questionnaire constraint extension", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("consent");
     assertQuestionNode(question);
 

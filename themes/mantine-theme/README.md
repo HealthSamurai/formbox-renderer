@@ -20,6 +20,6 @@ import { Provider, theme } from "@formbox/mantine-theme";
 import "@formbox/mantine-theme/style.css";
 
 <Provider>
-  <Renderer questionnaire={questionnaire} theme={theme} />
+  <Renderer fhirVersion="r5" questionnaire={questionnaire} theme={theme} />
 </Provider>;
 ```

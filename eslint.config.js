@@ -30,6 +30,12 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
       "@typescript-eslint/no-explicit-any": "error",
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: ["fhir/*"],
+        },
+      ],
       "unicorn/no-array-reduce": "off",
       "unicorn/no-array-for-each": "off",
       "unicorn/no-nested-ternary": "off",
@@ -72,6 +78,23 @@ export default tseslint.config(
             "Renderer should not set className/style; use theme components instead.",
         },
       ],
+    },
+  },
+  {
+    files: ["packages/renderer/lib/fhir/generated-types.ts"],
+    rules: {
+      "unicorn/prevent-abbreviations": "off",
+    },
+  },
+  {
+    files: [
+      "packages/renderer/lib/fhir/fhir-adapter.ts",
+      "packages/renderer/lib/fhir/public-types.ts",
+      "packages/renderer/lib/fhir/r4/**/*.{ts,tsx}",
+      "packages/renderer/lib/fhir/r5/**/*.{ts,tsx}",
+    ],
+    rules: {
+      "no-restricted-imports": "off",
     },
   },
   storybook.configs["flat/recommended"],

@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -10,6 +9,8 @@ import {
   makeVariable,
 } from "../../../../../utilities.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 describe("questionnaire variable extension", () => {
   it("records questionnaire-level variable name collisions on the form", () => {
     const questionnaire: Questionnaire = {
@@ -21,7 +22,7 @@ describe("questionnaire variable extension", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
 
     const collision = form.issues.find((issue) => {
       const diagnostics = issue.diagnostics?.toLowerCase();
@@ -49,7 +50,7 @@ describe("questionnaire variable extension", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const rootVariable = form.scope.lookupExpression("globalValue");
     assertDefined(rootVariable);
 
@@ -75,7 +76,7 @@ describe("questionnaire variable extension", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const slot = form.scope.lookupExpression("badVar");
     assertDefined(slot);
 

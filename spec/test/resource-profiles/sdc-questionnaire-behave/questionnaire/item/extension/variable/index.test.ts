@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire, QuestionnaireResponse } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { assertGroupListStore } from "@formbox/renderer/store/group/group-list-store.ts";
@@ -12,6 +11,12 @@ import {
   makeVariable,
 } from "../../../../../../utilities.ts";
 
+import type {
+  QuestionnaireOf,
+  QuestionnaireResponseOf,
+} from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
 describe("item variable extension", () => {
   it("honors variable shadowing", () => {
     const questionnaire: Questionnaire = {
@@ -54,7 +59,7 @@ describe("item variable extension", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const mirror = form.scope.lookupNode("mirror");
     assertQuestionNode(mirror);
     const childMirror = form.scope.lookupNode("child-mirror");
@@ -98,7 +103,7 @@ describe("item variable extension", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const household = form.scope.lookupNode("household");
     assertGroupListStore(household);
 
@@ -207,7 +212,7 @@ describe("item variable extension", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const household = form.scope.lookupNode("household");
     assertGroupListStore(household);
 
@@ -316,7 +321,7 @@ describe("item variable extension", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const families = form.scope.lookupNode("families");
     assertGroupListStore(families);
 
@@ -448,7 +453,7 @@ describe("item variable extension", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire, response);
+    const form = new FormStore("r5", questionnaire, response, undefined);
     const addresses = form.scope.lookupNode("addresses");
     assertGroupListStore(addresses);
 
@@ -507,7 +512,7 @@ describe("item variable extension", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire, response);
+    const form = new FormStore("r5", questionnaire, response, undefined);
     const aliases = form.scope.lookupNode("aliases");
     assertQuestionNode(aliases);
 
@@ -613,7 +618,7 @@ describe("item variable extension", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire, response);
+    const form = new FormStore("r5", questionnaire, response, undefined);
     const addresses = form.scope.lookupNode("addresses");
     assertGroupListStore(addresses);
 
@@ -689,7 +694,7 @@ describe("item variable extension", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const group = form.scope.lookupNode("duplicate-vars");
     assertGroupNode(group);
 
@@ -716,7 +721,7 @@ describe("item variable extension", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const mystery = form.scope.lookupNode("mystery");
     assertQuestionNode(mystery);
 
@@ -765,7 +770,7 @@ describe("item variable extension", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const outerMirror = form.scope.lookupNode("outer-mirror");
     assertQuestionNode(outerMirror);
     const innerMirror = form.scope.lookupNode("inner-mirror");
@@ -797,7 +802,7 @@ describe("item variable extension", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const unsupported = form.scope.lookupNode("unsupported");
     assertGroupNode(unsupported);
 
@@ -828,7 +833,7 @@ describe("item variable extension", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const runtime = form.scope.lookupNode("runtime");
     assertQuestionNode(runtime);
 
@@ -860,7 +865,7 @@ describe("item variable extension", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const cycle = form.scope.lookupNode("cycle");
     assertGroupNode(cycle);
 
@@ -893,7 +898,7 @@ describe("item variable extension", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const group = form.scope.lookupNode("indirect-cycle");
     assertGroupNode(group);
 

@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -8,6 +7,8 @@ import { DecimalRenderer } from "@formbox/renderer/component/question/fhir/decim
 import { EXT } from "@formbox/renderer/utilities.ts";
 import type { IQuestionNode } from "@formbox/renderer/types.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 function getDecimalQuestion(form: FormStore, linkId: string) {
   const node = form.scope.lookupNode(linkId);
   expect(node && isQuestionNode(node)).toBe(true);
@@ -41,7 +42,7 @@ describe("type.decimal", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = getDecimalQuestion(form, "weight");
 
     expect(question.unitDisplay).toBe("kg");
@@ -80,7 +81,7 @@ describe("type.decimal", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = getDecimalQuestion(form, "dosage");
 
     render(<DecimalRenderer node={question} />);
@@ -109,7 +110,7 @@ describe("type.decimal", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = getDecimalQuestion(form, "glucose");
 
     render(<DecimalRenderer node={question} />);

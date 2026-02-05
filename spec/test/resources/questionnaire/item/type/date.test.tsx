@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import type { Questionnaire, QuestionnaireResponse } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -8,6 +7,12 @@ import { DateRenderer } from "@formbox/renderer/component/question/fhir/date/dat
 import { EXT } from "@formbox/renderer/utilities.ts";
 import type { IQuestionNode } from "@formbox/renderer/types.ts";
 
+import type {
+  QuestionnaireOf,
+  QuestionnaireResponseOf,
+} from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
 function getDateQuestion(form: FormStore, linkId: string) {
   const node = form.scope.lookupNode(linkId);
   expect(node && isQuestionNode(node)).toBe(true);
@@ -43,7 +48,7 @@ describe("type.date", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire, response);
+    const form = new FormStore("r5", questionnaire, response, undefined);
     const question = getDateQuestion(form, "dob");
 
     render(<DateRenderer node={question} />);
@@ -70,7 +75,7 @@ describe("type.date", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = getDateQuestion(form, "visit");
 
     render(<DateRenderer node={question} />);

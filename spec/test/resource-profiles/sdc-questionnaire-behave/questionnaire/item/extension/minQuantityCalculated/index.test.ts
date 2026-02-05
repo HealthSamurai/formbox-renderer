@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -10,6 +9,8 @@ import {
   makeVariable,
 } from "../../../../../../utilities.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 describe("minQuantityCalculated", () => {
   it("enforces the quantity floor returned by the expression", () => {
     const questionnaire: Questionnaire = {
@@ -47,7 +48,7 @@ describe("minQuantityCalculated", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const limit = form.scope.lookupNode("limit");
     const dose = form.scope.lookupNode("dose");
 
@@ -114,7 +115,7 @@ describe("minQuantityCalculated", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const dose = form.scope.lookupNode("dose");
 
     assertQuestionNode(dose);

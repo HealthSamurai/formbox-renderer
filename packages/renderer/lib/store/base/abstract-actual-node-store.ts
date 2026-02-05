@@ -18,7 +18,7 @@ import type {
   OperationOutcomeIssue,
   QuestionnaireItem,
   QuestionnaireItemEnableWhen,
-} from "fhir/r5";
+} from "../../fhir/generated-types.ts";
 import { NodeExpressionRegistry } from "../expression/registry/node-expression-registry.ts";
 import {
   booleanify,

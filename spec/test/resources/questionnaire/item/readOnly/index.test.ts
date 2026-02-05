@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire, QuestionnaireResponse } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import {
@@ -7,6 +6,12 @@ import {
   isQuestionNode,
 } from "@formbox/renderer/store/question/question-store.ts";
 
+import type {
+  QuestionnaireOf,
+  QuestionnaireResponseOf,
+} from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
 describe("readOnly", () => {
   it("prefers response answers while remaining immutable", () => {
     const questionnaire: Questionnaire = {
@@ -35,7 +40,7 @@ describe("readOnly", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire, response);
+    const form = new FormStore("r5", questionnaire, response, undefined);
     const node = form.scope.lookupNode("readonly");
     expect(node && isQuestionNode(node)).toBe(true);
     assertQuestionNode(node);
@@ -60,7 +65,7 @@ describe("readOnly", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     expect(form.validateAll()).toBe(true);
     const question = form.scope.lookupNode("readonly-question");
     assertQuestionNode(question);

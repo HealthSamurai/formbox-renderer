@@ -1,7 +1,7 @@
 {
   "name": "@formbox/renderer",
   "version": "0.0.6",
-  "description": "Formbox Renderer for FHIR R5 Questionnaires",
+  "description": "Formbox Renderer for FHIR R4 and R5 Questionnaires",
   "type": "module",
   "license": "MIT",
   "repository": {
@@ -23,6 +23,7 @@
     "dev": "vite",
     "build": "tsc -b ./tsconfig.lib.json && vite build",
     "lint": "eslint .",
+    "gen:fhir-types": "node ../../scripts/gen-fhir-common-types.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.lib.json",
     "lint-staged": "lint-staged",
     "format": "prettier --write .",

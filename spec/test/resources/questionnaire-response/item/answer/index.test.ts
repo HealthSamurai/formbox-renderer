@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire, QuestionnaireResponse } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import {
@@ -7,6 +6,12 @@ import {
   isQuestionNode,
 } from "@formbox/renderer/store/question/question-store.ts";
 
+import type {
+  QuestionnaireOf,
+  QuestionnaireResponseOf,
+} from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
 describe("item.answer", () => {
   const questionnaire: Questionnaire = {
     resourceType: "Questionnaire",
@@ -32,7 +37,8 @@ describe("item.answer", () => {
     ],
   };
 
-  const createStore = () => new FormStore(questionnaire, response);
+  const createStore = () =>
+    new FormStore("r5", questionnaire, response, undefined);
 
   const getQuestionStore = () => {
     const form = createStore();
@@ -74,7 +80,12 @@ describe("item.answer", () => {
     };
 
     const createMissingAnswerStore = () =>
-      new FormStore(questionnaireMissingAnswer, responseMissingAnswer);
+      new FormStore(
+        "r5",
+        questionnaireMissingAnswer,
+        responseMissingAnswer,
+        undefined,
+      );
 
     it("ensures a placeholder answer exists", () => {
       const form = createMissingAnswerStore();
@@ -108,7 +119,7 @@ describe("item.answer", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("allergies");
     expect(question && isQuestionNode(question)).toBe(true);
     assertQuestionNode(question);

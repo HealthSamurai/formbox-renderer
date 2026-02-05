@@ -16,7 +16,7 @@ import type {
   OperationOutcomeIssue,
   QuestionnaireResponseItem,
   QuestionnaireResponseItemAnswer,
-} from "fhir/r5";
+} from "../../fhir/generated-types.ts";
 import {
   ANSWER_TYPE_TO_DATA_TYPE,
   asAnswerFragment,
@@ -70,7 +70,7 @@ export class AnswerStore<T extends AnswerType> implements IAnswer<T> {
 
     const children =
       question.template.item
-        ?.filter((item) => shouldCreateStore(item))
+        ?.filter((item) => shouldCreateStore(item, question.adapter))
         .map((item) =>
           question.form.createNodeStore(
             item,

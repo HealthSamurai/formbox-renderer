@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { assertDefined } from "@formbox/renderer/utilities.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 const minValueInteger = (value: number) => ({
   url: "http://hl7.org/fhir/StructureDefinition/minValue",
   valueInteger: value,
@@ -40,7 +41,7 @@ describe("minValue", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("age");
     assertQuestionNode(question);
     const answer = question.answers[0];
@@ -84,7 +85,7 @@ describe("minValue", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("weight");
     assertQuestionNode(question);
     const answer = question.answers[0];
@@ -123,7 +124,7 @@ describe("minValue", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("priority");
     assertQuestionNode(question);
     const answer = question.answers[0];

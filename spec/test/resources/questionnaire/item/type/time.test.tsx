@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import type { Questionnaire, QuestionnaireResponse } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -8,6 +7,12 @@ import { TimeRenderer } from "@formbox/renderer/component/question/fhir/time/tim
 import { EXT } from "@formbox/renderer/utilities.ts";
 import type { IQuestionNode } from "@formbox/renderer/types.ts";
 
+import type {
+  QuestionnaireOf,
+  QuestionnaireResponseOf,
+} from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
 function getTimeQuestion(form: FormStore, linkId: string) {
   const node = form.scope.lookupNode(linkId);
   expect(node && isQuestionNode(node)).toBe(true);
@@ -43,7 +48,7 @@ describe("type.time", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire, response);
+    const form = new FormStore("r5", questionnaire, response, undefined);
     const question = getTimeQuestion(form, "dose-time");
 
     render(<TimeRenderer node={question} />);
@@ -70,7 +75,7 @@ describe("type.time", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = getTimeQuestion(form, "dose-time");
 
     render(<TimeRenderer node={question} />);

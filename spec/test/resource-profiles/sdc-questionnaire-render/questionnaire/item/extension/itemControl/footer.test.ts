@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 const ITEM_CONTROL_EXTENSION =
   "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl";
 const ITEM_CONTROL_SYSTEM = "http://hl7.org/fhir/questionnaire-item-control";
@@ -18,7 +19,7 @@ describe("itemControl.footer", () => {
       ],
     };
 
-    const store = new FormStore(questionnaire);
+    const store = new FormStore("r5", questionnaire, undefined, undefined);
 
     expect(
       store.issues.some((issue) =>

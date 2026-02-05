@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { addons } from "storybook/preview-api";
 import { autorun } from "mobx";
-import type { Questionnaire } from "fhir/r5";
 import type { IForm } from "@formbox/renderer/types.ts";
 
+import type { FhirVersion, QuestionnaireOf } from "@formbox/renderer";
 export function useQuestionnaireResponseBroadcaster(
   form: IForm,
   storyId: string,
@@ -37,8 +37,8 @@ export function useQuestionnaireResponseBroadcaster(
   }, [form, storyId]);
 }
 
-export function useQuestionnaireBroadcaster(
-  questionnaire: Questionnaire,
+export function useQuestionnaireBroadcaster<V extends FhirVersion>(
+  questionnaire: QuestionnaireOf<V>,
   storyId: string,
 ) {
   useEffect(() => {

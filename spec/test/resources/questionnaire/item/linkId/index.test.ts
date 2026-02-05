@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 describe("linkId", () => {
   const questionnaire: Questionnaire = {
     resourceType: "Questionnaire",
@@ -25,7 +26,8 @@ describe("linkId", () => {
     ],
   };
 
-  const createStore = () => new FormStore(questionnaire);
+  const createStore = () =>
+    new FormStore("r5", questionnaire, undefined, undefined);
 
   it("creates node stores for each top-level item", () => {
     const form = createStore();

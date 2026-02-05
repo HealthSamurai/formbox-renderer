@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import {
@@ -22,6 +21,8 @@ import {
   makeVariable,
 } from "../../../../../../utilities.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 describe("enableWhenExpression", () => {
   it("toggles enablement using scoped variables", () => {
     const questionnaire: Questionnaire = {
@@ -54,7 +55,7 @@ describe("enableWhenExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const control = form.scope.lookupNode("control");
     const dependent = form.scope.lookupNode("dependent");
 
@@ -114,7 +115,7 @@ describe("enableWhenExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const control = form.scope.lookupNode("control");
     const dependent = form.scope.lookupNode("dependent");
 
@@ -146,7 +147,7 @@ describe("enableWhenExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const controlled = form.scope.lookupNode("controlled");
 
     assertQuestionNode(controlled);
@@ -174,7 +175,7 @@ describe("enableWhenExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const controlled = form.scope.lookupNode("controlled");
 
     assertQuestionNode(controlled);
@@ -202,7 +203,7 @@ describe("enableWhenExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const controlled = form.scope.lookupNode("controlled");
 
     assertQuestionNode(controlled);
@@ -239,7 +240,7 @@ describe("enableWhenExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const list = form.scope.lookupNode("repeating-group");
 
     expect(list && isGroupListStore(list)).toBe(true);

@@ -3,7 +3,6 @@ import type {
   AnswerTypeToDataType,
   DataTypeToType,
 } from "@formbox/renderer/types.ts";
-import type { Extension, QuestionnaireItem } from "fhir/r5";
 import {
   buildDisplayItem,
   buildQuestionItem,
@@ -13,6 +12,9 @@ import {
 import { Renderer } from "../renderer.tsx";
 import { EXT } from "@formbox/renderer/utilities.ts";
 
+import type { ExtensionOf, QuestionnaireItemOf } from "@formbox/renderer";
+type Extension = ExtensionOf<"r5">;
+type QuestionnaireItem = QuestionnaireItemOf<"r5">;
 type NumericType = "integer" | "decimal";
 
 type NumberSliderArguments = {
@@ -305,6 +307,7 @@ export const NumberSliderRenderer: StoryObj<NumberSliderArguments> = {
     const item = buildNumberSliderItem(arguments_);
     return (
       <Renderer
+        fhirVersion="r5"
         questionnaire={buildQuestionnaire(item)}
         storyId={context.id}
         mode="node"
@@ -329,6 +332,7 @@ export const NumberSpinnerRenderer: StoryObj<NumberSpinnerArguments> = {
     const item = buildNumberSpinnerItem(arguments_);
     return (
       <Renderer
+        fhirVersion="r5"
         questionnaire={buildQuestionnaire(item)}
         storyId={context.id}
         mode="node"

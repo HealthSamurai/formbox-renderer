@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -8,6 +7,8 @@ import { QuantityRenderer } from "@formbox/renderer/component/question/fhir/quan
 import type { IQuestionNode } from "@formbox/renderer/types.ts";
 import { assertDefined } from "@formbox/renderer/utilities.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 const minQuantityExtension = (value: number, unit = "kg") => ({
   url: "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-minQuantity",
   valueQuantity: {
@@ -53,7 +54,7 @@ describe("maxQuantity", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("dose");
     assertQuestionNode(question);
     const answer = question.answers[0];
@@ -145,7 +146,7 @@ describe("maxQuantity", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("weight");
     assertQuestionNode(question);
 
@@ -171,7 +172,7 @@ describe("maxQuantity", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("dose");
     assertQuestionNode(question);
     const answer = question.answers[0];

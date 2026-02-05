@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import type { IPresentableNode } from "@formbox/renderer/types.ts";
@@ -13,6 +12,8 @@ import {
 } from "@formbox/renderer/store/question/question-store.ts";
 import { EXT } from "@formbox/renderer/utilities.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 describe("terminologyServer", () => {
   it("uses the node-level preferredTerminologyServer extension when present", () => {
     const questionnaire: Questionnaire = {
@@ -32,7 +33,7 @@ describe("terminologyServer", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const node = form.scope.lookupNode("direct");
     expect(node?.preferredTerminologyServers).toEqual([
       "https://terminology.example/direct",
@@ -91,7 +92,7 @@ describe("terminologyServer", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const node = form.scope.lookupNode("question");
     expect(node?.preferredTerminologyServers).toEqual([
       "https://terminology.example/item-first",
@@ -128,7 +129,7 @@ describe("terminologyServer", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const list = form.scope.lookupNode("repeating-group");
     expect(list && isGroupListStore(list)).toBe(true);
     assertGroupListStore(list);
@@ -167,7 +168,7 @@ describe("terminologyServer", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const parent = form.scope.lookupNode("parent-question");
     expect(parent && isQuestionNode(parent)).toBe(true);
     assertQuestionNode(parent);
@@ -215,7 +216,7 @@ describe("terminologyServer", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const list = form.scope.lookupNode("rg");
     expect(list && isGroupListStore(list)).toBe(true);
     assertGroupListStore(list);
@@ -273,7 +274,7 @@ describe("terminologyServer", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const node = form.scope.lookupNode("question");
     expect(node?.preferredTerminologyServers[0]).toBe(
       "https://terminology.example/question",

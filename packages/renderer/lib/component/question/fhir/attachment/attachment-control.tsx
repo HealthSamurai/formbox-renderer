@@ -18,6 +18,7 @@ export function AttachmentControl({
       ariaLabelledBy={ariaLabelledBy}
       ariaDescribedBy={ariaDescribedBy}
       value={answer.value}
+      adapter={answer.question.adapter}
       onChange={(value) => answer.setValueByUser(value)}
       disabled={answer.question.readOnly}
       accept={accept}

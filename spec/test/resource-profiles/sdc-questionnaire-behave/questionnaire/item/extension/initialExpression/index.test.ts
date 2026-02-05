@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -10,6 +9,8 @@ import {
   makeInitialExpression,
 } from "../../../../../../utilities.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 describe("initialExpression", () => {
   it("runs once when the item first becomes enabled", () => {
     const questionnaire: Questionnaire = {
@@ -37,7 +38,7 @@ describe("initialExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const gate = form.scope.lookupNode("gate");
     const name = form.scope.lookupNode("name");
 
@@ -77,7 +78,7 @@ describe("initialExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const node = form.scope.lookupNode("favorite");
     expect(node).toBeDefined();
     assertQuestionNode(node);
@@ -105,7 +106,7 @@ describe("initialExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const history = form.scope.lookupNode("history");
 
     assertQuestionNode(history);
@@ -144,7 +145,7 @@ describe("initialExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const answer = form.scope.lookupNode("answer");
 
     assertQuestionNode(answer);
@@ -171,7 +172,7 @@ describe("initialExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const target = form.scope.lookupNode("target");
 
     assertQuestionNode(target);
@@ -200,7 +201,7 @@ describe("initialExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const target = form.scope.lookupNode("target");
 
     assertQuestionNode(target);

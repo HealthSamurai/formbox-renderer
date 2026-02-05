@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -10,6 +9,8 @@ import {
   makeVariable,
 } from "../../../../../../../../utilities.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 describe("requiredExpression", () => {
   it("makes questions required only when the guard expression is true", () => {
     const questionnaire: Questionnaire = {
@@ -42,7 +43,7 @@ describe("requiredExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const gate = form.scope.lookupNode("gate");
     const detail = form.scope.lookupNode("detail");
 

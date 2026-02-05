@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -10,6 +9,8 @@ import {
   makeVariable,
 } from "../../../../../../utilities.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 describe("answerExpression", () => {
   it("builds answer options from expression output", () => {
     const questionnaire: Questionnaire = {
@@ -25,7 +26,7 @@ describe("answerExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const color = form.scope.lookupNode("color");
 
     assertQuestionNode(color);
@@ -72,7 +73,7 @@ describe("answerExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const source = form.scope.lookupNode("source");
     const mirror = form.scope.lookupNode("mirror");
 

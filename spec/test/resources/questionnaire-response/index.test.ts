@@ -1,8 +1,13 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire, QuestionnaireResponse } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 
+import type {
+  QuestionnaireOf,
+  QuestionnaireResponseOf,
+} from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
 describe("QuestionnaireResponse", () => {
   it("reproduces seeded QuestionnaireResponse content", () => {
     const questionnaire: Questionnaire = {
@@ -81,7 +86,7 @@ describe("QuestionnaireResponse", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire, initialResponse);
+    const form = new FormStore("r5", questionnaire, initialResponse, undefined);
 
     expect(form.response).toEqual(initialResponse);
   });

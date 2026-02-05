@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -9,6 +8,8 @@ import { AttachmentRenderer } from "@formbox/renderer/component/question/fhir/at
 import { EXT } from "@formbox/renderer/utilities.ts";
 import type { IQuestionNode } from "@formbox/renderer/types.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 function getAttachmentQuestion(form: FormStore, linkId: string) {
   const node = form.scope.lookupNode(linkId);
   expect(node && isQuestionNode(node)).toBe(true);
@@ -38,7 +39,7 @@ describe("type.attachment", () => {
         },
       ],
     };
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = getAttachmentQuestion(form, "report");
 
     render(<AttachmentRenderer node={question} />);
@@ -71,7 +72,7 @@ describe("type.attachment", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = getAttachmentQuestion(form, "upload");
 
     const { container } = render(<AttachmentRenderer node={question} />);

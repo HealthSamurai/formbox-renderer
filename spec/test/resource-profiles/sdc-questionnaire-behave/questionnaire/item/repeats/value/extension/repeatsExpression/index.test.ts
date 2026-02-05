@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -10,6 +9,8 @@ import {
   makeVariable,
 } from "../../../../../../../../utilities.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 describe("repeatsExpression", () => {
   it("switches question cardinality when expressions are attached to _repeats", () => {
     const questionnaire: Questionnaire = {
@@ -44,7 +45,7 @@ describe("repeatsExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const allow = form.scope.lookupNode("allow");
     const favorite = form.scope.lookupNode("favorite");
 
@@ -101,7 +102,7 @@ describe("repeatsExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const item = form.scope.lookupNode("item");
 
     assertQuestionNode(item);

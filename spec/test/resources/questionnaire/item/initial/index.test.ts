@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire, QuestionnaireResponse } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import {
@@ -7,6 +6,12 @@ import {
   isQuestionNode,
 } from "@formbox/renderer/store/question/question-store.ts";
 
+import type {
+  QuestionnaireOf,
+  QuestionnaireResponseOf,
+} from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
 const minOccurs = (value: number) => ({
   url: "http://hl7.org/fhir/StructureDefinition/questionnaire-minOccurs",
   valueInteger: value,
@@ -32,7 +37,7 @@ describe("initial", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const node = form.scope.lookupNode("greeting");
     expect(node && isQuestionNode(node)).toBe(true);
     assertQuestionNode(node);
@@ -56,7 +61,7 @@ describe("initial", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const node = form.scope.lookupNode("symptom");
     expect(node && isQuestionNode(node)).toBe(true);
     assertQuestionNode(node);
@@ -93,7 +98,7 @@ describe("initial", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire, response);
+    const form = new FormStore("r5", questionnaire, response, undefined);
     const node = form.scope.lookupNode("nickname");
     expect(node && isQuestionNode(node)).toBe(true);
     assertQuestionNode(node);
@@ -118,7 +123,7 @@ describe("initial", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const node = form.scope.lookupNode("symptom");
     expect(node && isQuestionNode(node)).toBe(true);
     assertQuestionNode(node);
@@ -151,7 +156,7 @@ describe("initial", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const node = form.scope.lookupNode("meds");
     expect(node && isQuestionNode(node)).toBe(true);
     assertQuestionNode(node);

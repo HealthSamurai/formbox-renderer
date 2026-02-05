@@ -1,4 +1,4 @@
-import type { Coding } from "fhir/r5";
+import type { Coding } from "../../../../fhir/generated-types.ts";
 import { useTheme } from "../../../../ui/theme.tsx";
 import { strings } from "../../../../strings.ts";
 import { buildId } from "../../../../utilities.ts";

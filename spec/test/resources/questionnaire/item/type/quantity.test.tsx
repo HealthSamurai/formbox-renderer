@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -9,6 +8,8 @@ import { QuantityRenderer } from "@formbox/renderer/component/question/fhir/quan
 import type { IQuestionNode } from "@formbox/renderer/types.ts";
 import { strings } from "@formbox/renderer/strings.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 function getQuantityQuestion(form: FormStore, linkId: string) {
   const node = form.scope.lookupNode(linkId);
   expect(node && isQuestionNode(node)).toBe(true);
@@ -32,7 +33,7 @@ describe("type.quantity", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = getQuantityQuestion(form, "volume");
 
     const { container } = render(<QuantityRenderer node={question} />);
@@ -64,7 +65,7 @@ describe("type.quantity", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = getQuantityQuestion(form, "volume");
 
     render(<QuantityRenderer node={question} />);

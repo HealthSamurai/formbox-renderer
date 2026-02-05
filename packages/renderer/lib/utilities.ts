@@ -27,10 +27,9 @@ import type {
   QuestionnaireItem,
   QuestionnaireItemAnswerOption,
   QuestionnaireItemEnableWhen,
-  QuestionnaireResponseItem,
   Reference,
-} from "fhir/r5";
-import r5 from "fhirpath/fhir-context/r5";
+} from "./fhir/generated-types.ts";
+import type { IFhirAdapter } from "./fhir/fhir-adapter.ts";
 import { UcumLhcUtils } from "@lhncbc/ucum-lhc";
 
 export type ExtractPlaceholders<T extends string> =
@@ -295,8 +294,11 @@ export function findExtensions(element: Element, url: string): Extension[] {
   return element.extension?.filter((extension) => extension.url === url) ?? [];
 }
 
-export function shouldCreateStore(item: QuestionnaireItem): boolean {
-  if (item.type !== "display") {
+export function shouldCreateStore(
+  item: QuestionnaireItem,
+  adapter: IFhirAdapter,
+): boolean {
+  if (adapter.questionnaireItem.getType(item) !== "display") {
     return true;
   }
 
@@ -315,13 +317,14 @@ export function shouldCreateStore(item: QuestionnaireItem): boolean {
 export function findDisplayItemByControl(
   container: QuestionnaireItem,
   code: ItemControl,
+  adapter: IFhirAdapter,
 ): QuestionnaireItem | undefined {
   if (!container.item || container.item.length === 0) {
     return undefined;
   }
 
   return container.item.find((child) => {
-    return child.type === "display"
+    return adapter.questionnaireItem.getType(child) === "display"
       ? code === getItemControlCode(child)
       : false;
   });
@@ -394,6 +397,28 @@ export function parseNumber(value: unknown): number | undefined {
   }
 
   return undefined;
+}
+
+export function estimateBase64Size(
+  data: string | undefined,
+): number | undefined {
+  if (typeof data !== "string") {
+    return undefined;
+  }
+
+  const length = data.length;
+  if (length === 0) {
+    return 0;
+  }
+
+  let padding = 0;
+  if (data.endsWith("==")) {
+    padding = 2;
+  } else if (data.endsWith("=")) {
+    padding = 1;
+  }
+
+  return Math.floor((length * 3) / 4) - padding;
 }
 
 export function parseBoolean(value: unknown): boolean | undefined {
@@ -486,16 +511,13 @@ export function omit<T extends object, K extends keyof T>(
 
 export function estimateAttachmentSize(
   attachment: Attachment,
+  adapter: IFhirAdapter,
 ): number | undefined {
-  if (typeof attachment.size === "number") {
-    return attachment.size;
-  }
+  const size = adapter.attachment.getSize(attachment);
 
-  if (typeof attachment.size === "string") {
-    const parsed = Number(attachment.size);
-    if (!Number.isNaN(parsed)) {
-      return parsed;
-    }
+  const parsed = Number(size);
+  if (!Number.isNaN(parsed)) {
+    return parsed;
   }
 
   if (typeof attachment.data === "string") {
@@ -518,6 +540,7 @@ export function estimateAttachmentSize(
 
 export async function prepareAttachmentFromFile(
   file: File,
+  adapter: IFhirAdapter,
 ): Promise<Attachment | undefined> {
   const result = await new Promise<string | ArrayBuffer | undefined>(
     (resolve) => {
@@ -534,12 +557,14 @@ export async function prepareAttachmentFromFile(
   }
 
   const [, base64] = result.split(",");
-  return {
+  const attachment: Attachment = {
     data: base64 ?? undefined,
     title: file.name,
-    size: String(file.size),
     contentType: file.type,
   };
+
+  adapter.attachment.setSize(attachment, String(file.size));
+  return attachment;
 }
 
 export function groupHasResponses(group: IGroupNode): boolean {
@@ -650,13 +675,15 @@ export const DATA_TYPE_TO_SUFFIX: { [K in DataType]: DataTypeToSuffix<K> } = {
   "Age": "Age",
   "Annotation": "Annotation",
   "Attachment": "Attachment",
-  "CodeableConcept": "CodeableConcept",
   "CodeableReference": "CodeableReference",
+  "CodeableConcept": "CodeableConcept",
   "Coding": "Coding",
   "ContactPoint": "ContactPoint",
   "Count": "Count",
   "Distance": "Distance",
   "Duration": "Duration",
+  "Availability": "Availability",
+  "ExtendedContactDetail": "ExtendedContactDetail",
   "HumanName": "HumanName",
   "Identifier": "Identifier",
   "Money": "Money",
@@ -671,14 +698,12 @@ export const DATA_TYPE_TO_SUFFIX: { [K in DataType]: DataTypeToSuffix<K> } = {
   "Timing": "Timing",
   "ContactDetail": "ContactDetail",
   "DataRequirement": "DataRequirement",
+  "Dosage": "Dosage",
   "Expression": "Expression",
   "ParameterDefinition": "ParameterDefinition",
   "RelatedArtifact": "RelatedArtifact",
   "TriggerDefinition": "TriggerDefinition",
   "UsageContext": "UsageContext",
-  "Availability": "Availability",
-  "ExtendedContactDetail": "ExtendedContactDetail",
-  "Dosage": "Dosage",
   "Meta": "Meta",
 } as const;
 
@@ -1607,12 +1632,15 @@ export function valuesEqual(
     case "Address":
     case "Age":
     case "Annotation":
-    case "CodeableConcept":
+    case "Availability":
     case "CodeableReference":
+    case "CodeableConcept":
     case "ContactPoint":
     case "Count":
     case "Distance":
+    case "Dosage":
     case "Duration":
+    case "ExtendedContactDetail":
     case "HumanName":
     case "Identifier":
     case "Money":
@@ -1630,9 +1658,6 @@ export function valuesEqual(
     case "RelatedArtifact":
     case "TriggerDefinition":
     case "UsageContext":
-    case "Availability":
-    case "ExtendedContactDetail":
-    case "Dosage":
     case "Meta": {
       throw new Error('Not implemented yet: "Meta" case');
     }
@@ -1684,14 +1709,17 @@ export function compareValues(
     case "Address":
     case "Age":
     case "Annotation":
+    case "Availability":
     case "Attachment":
-    case "CodeableConcept":
     case "CodeableReference":
+    case "CodeableConcept":
     case "Coding":
     case "ContactPoint":
     case "Count":
     case "Distance":
+    case "Dosage":
     case "Duration":
+    case "ExtendedContactDetail":
     case "HumanName":
     case "Identifier":
     case "Money":
@@ -1710,9 +1738,6 @@ export function compareValues(
     case "RelatedArtifact":
     case "TriggerDefinition":
     case "UsageContext":
-    case "Availability":
-    case "ExtendedContactDetail":
-    case "Dosage":
     case "Meta": {
       throw new Error('Not implemented yet: "Meta" case');
     }
@@ -1783,7 +1808,6 @@ function normalizeReferenceKey(value: Reference) {
 type AttachmentKey = {
   contentType: string | undefined;
   url: string | undefined;
-  size: number | string | undefined;
   hash: string | undefined;
   creation: string | undefined;
   language: string | undefined;
@@ -1794,7 +1818,6 @@ function normalizeAttachmentKey(value: Attachment): AttachmentKey {
   const normalized: AttachmentKey = {
     contentType: value.contentType,
     url: value.url,
-    size: value.size,
     hash: value.hash,
     creation: value.creation,
     language: value.language,
@@ -2007,12 +2030,15 @@ export function areValuesEqual<T extends DataType>(
     case "Address":
     case "Age":
     case "Annotation":
-    case "CodeableConcept":
+    case "Availability":
     case "CodeableReference":
+    case "CodeableConcept":
     case "ContactPoint":
     case "Count":
     case "Distance":
+    case "Dosage":
     case "Duration":
+    case "ExtendedContactDetail":
     case "HumanName":
     case "Identifier":
     case "Money":
@@ -2030,9 +2056,6 @@ export function areValuesEqual<T extends DataType>(
     case "RelatedArtifact":
     case "TriggerDefinition":
     case "UsageContext":
-    case "Availability":
-    case "ExtendedContactDetail":
-    case "Dosage":
     case "Meta": {
       throw new Error('Not implemented yet: "Meta" case');
     }
@@ -2111,26 +2134,4 @@ export function coerceExpressionValue<T extends AnswerType>(
       return undefined;
     }
   }
-}
-
-export function withQuestionnaireResponseItemMeta(
-  item: QuestionnaireResponseItem,
-): QuestionnaireResponseItem {
-  if (!Object.hasOwn(item, "__path__")) {
-    Object.defineProperty(item, "__path__", {
-      enumerable: false,
-      configurable: false,
-      writable: false,
-      value: {
-        model: r5,
-        fhirNodeDataType: "QuestionnaireResponse.item",
-        propName: "item",
-        path: "QuestionnaireResponse.item",
-        parentResNode: undefined,
-        index: undefined,
-      },
-    });
-  }
-
-  return item;
 }

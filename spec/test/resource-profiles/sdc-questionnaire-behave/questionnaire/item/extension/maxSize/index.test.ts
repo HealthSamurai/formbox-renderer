@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { assertDefined } from "@formbox/renderer/utilities.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+import type { Attachment } from "@formbox/renderer/fhir/generated-types.ts";
+type Questionnaire = QuestionnaireOf<"r5">;
 const mimeTypeExtension = (code: string) => ({
   url: "http://hl7.org/fhir/StructureDefinition/mimeType",
   valueCode: code,
@@ -34,7 +36,7 @@ describe("maxSize", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("photo");
     assertQuestionNode(question);
     const answer = question.answers[0];
@@ -42,10 +44,11 @@ describe("maxSize", () => {
 
     const oversizedAnswer = question.answers[0];
     assertDefined(oversizedAnswer);
-    oversizedAnswer.setValueByUser({
+    const oversizedAttachment = {
       contentType: "image/png",
       size: "1024",
-    });
+    } as unknown as Attachment;
+    oversizedAnswer.setValueByUser(oversizedAttachment);
     expect(form.validateAll()).toBe(false);
     expect(
       answer.issues.some((issue) =>
@@ -55,10 +58,11 @@ describe("maxSize", () => {
 
     const okAnswer = question.answers[0];
     assertDefined(okAnswer);
-    okAnswer.setValueByUser({
+    const okAttachment = {
       contentType: "image/jpeg",
       size: "256",
-    });
+    } as unknown as Attachment;
+    okAnswer.setValueByUser(okAttachment);
     expect(form.validateAll()).toBe(true);
     expect(answer.issues).toHaveLength(0);
   });
@@ -77,7 +81,7 @@ describe("maxSize", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("document");
     assertQuestionNode(question);
     const answer = question.answers[0];

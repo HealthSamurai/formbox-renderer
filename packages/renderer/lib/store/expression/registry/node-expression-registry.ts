@@ -7,7 +7,10 @@ import {
   INodeExpressionRegistry,
   IScope,
 } from "../../../types.ts";
-import type { QuestionnaireItem, QuestionnaireItemAnswerOption } from "fhir/r5";
+import type {
+  QuestionnaireItem,
+  QuestionnaireItemAnswerOption,
+} from "../../../fhir/generated-types.ts";
 import {
   ANSWER_TYPE_TO_DATA_TYPE,
   asAnswerFragment,

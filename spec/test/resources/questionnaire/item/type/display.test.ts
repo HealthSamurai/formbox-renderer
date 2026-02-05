@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import {
@@ -7,6 +6,8 @@ import {
   isDisplayNode,
 } from "@formbox/renderer/store/display/display-store.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 describe("type.display", () => {
   const questionnaire: Questionnaire = {
     resourceType: "Questionnaire",
@@ -14,7 +15,8 @@ describe("type.display", () => {
     item: [{ linkId: "intro", text: "Welcome", type: "display" }],
   };
 
-  const createStore = () => new FormStore(questionnaire);
+  const createStore = () =>
+    new FormStore("r5", questionnaire, undefined, undefined);
 
   it("creates a display store for display items", () => {
     const form = createStore();
@@ -50,7 +52,12 @@ describe("type.display", () => {
       ],
     };
 
-    const form = new FormStore(questionnaireWithChild);
+    const form = new FormStore(
+      "r5",
+      questionnaireWithChild,
+      undefined,
+      undefined,
+    );
     expect(form.scope.lookupNode("child")).toBeUndefined();
   });
 });

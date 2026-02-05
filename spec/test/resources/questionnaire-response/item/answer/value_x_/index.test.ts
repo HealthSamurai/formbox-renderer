@@ -1,16 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type {
-  Attachment,
-  Coding,
-  Element,
-  Quantity,
-  Questionnaire,
-  QuestionnaireItem,
-  QuestionnaireItemAnswerOption,
-  QuestionnaireResponse,
-  QuestionnaireResponseItemAnswer,
-  Reference,
-} from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import type {
@@ -27,7 +15,7 @@ import {
   areValuesEqual,
   compareQuantities,
   countDecimalPlaces,
-  estimateAttachmentSize,
+  estimateBase64Size,
   extractExtensionValue,
   getValue,
   normalizeExpressionValues,
@@ -35,7 +23,32 @@ import {
   tokenify,
   assertDefined,
 } from "@formbox/renderer/utilities.ts";
+import { createFhirAdapter } from "@formbox/renderer/fhir/fhir-adapter.ts";
+import type {
+  Attachment as CommonAttachment,
+  Coding as CommonCoding,
+  Element as CommonElement,
+  Quantity as CommonQuantity,
+  Reference as CommonReference,
+} from "@formbox/renderer/fhir/generated-types.ts";
 
+import type {
+  QuestionnaireOf,
+  QuestionnaireItemOf,
+  QuestionnaireItemAnswerOptionOf,
+  QuestionnaireResponseOf,
+  QuestionnaireResponseItemAnswerOf,
+} from "@formbox/renderer";
+type Attachment = CommonAttachment;
+type Coding = CommonCoding;
+type Element = CommonElement;
+type Quantity = CommonQuantity;
+type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireItem = QuestionnaireItemOf<"r5">;
+type QuestionnaireItemAnswerOption = QuestionnaireItemAnswerOptionOf<"r5">;
+type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
+type QuestionnaireResponseItemAnswer = QuestionnaireResponseItemAnswerOf<"r5">;
+type Reference = CommonReference;
 describe("item.answer.value[x]", () => {
   const scenarios: Array<{
     title: string;
@@ -136,7 +149,7 @@ describe("item.answer.value[x]", () => {
         ],
       };
 
-      const form = new FormStore(questionnaire, response);
+      const form = new FormStore("r5", questionnaire, response, undefined);
       const question = form.scope.lookupNode(linkId);
       expect(question && isQuestionNode(question)).toBe(true);
       assertQuestionNode(question);
@@ -286,7 +299,7 @@ describe("item.answer.value[x]", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = form.scope.lookupNode("answer");
         expect(question && isQuestionNode(question)).toBe(true);
         assertQuestionNode(question);
@@ -387,25 +400,34 @@ describe("countDecimalPlaces", () => {
   });
 });
 
-describe("estimateAttachmentSize", () => {
+describe("getAttachmentSize", () => {
+  const r4Adapter = createFhirAdapter("r4");
+  const r5Adapter = createFhirAdapter("r5");
+
   it("returns provided numeric size", () => {
     const attachment = { size: 512 } as unknown as Attachment;
-    expect(estimateAttachmentSize(attachment)).toBe(512);
+    expect(r4Adapter.attachment.getSize(attachment)).toBe("512");
   });
 
   it("parses string size", () => {
-    const attachment: Attachment = { size: "1024" };
-    expect(estimateAttachmentSize(attachment)).toBe(1024);
+    const attachment = { size: "1024" } as unknown as Attachment;
+    expect(r5Adapter.attachment.getSize(attachment)).toBe("1024");
   });
 
-  it("estimates base64 payload size", () => {
+  it("does not infer size from base64 payload", () => {
     const attachment: Attachment = { data: "TQ==" };
-    expect(estimateAttachmentSize(attachment)).toBe(1);
+    expect(r5Adapter.attachment.getSize(attachment)).toBeUndefined();
   });
 
   it("returns undefined when metadata is missing", () => {
     const attachment: Attachment = {};
-    expect(estimateAttachmentSize(attachment)).toBeUndefined();
+    expect(r5Adapter.attachment.getSize(attachment)).toBeUndefined();
+  });
+});
+
+describe("estimateBase64Size", () => {
+  it("estimates base64 payload size", () => {
+    expect(estimateBase64Size("TQ==")).toBe(1);
   });
 });
 

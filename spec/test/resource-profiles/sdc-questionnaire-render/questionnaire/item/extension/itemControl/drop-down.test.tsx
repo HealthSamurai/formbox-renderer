@@ -8,11 +8,6 @@ import {
   within,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import type {
-  Questionnaire,
-  QuestionnaireItemAnswerOption,
-  QuestionnaireResponse,
-} from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -21,6 +16,14 @@ import { EXT } from "@formbox/renderer/utilities.ts";
 import { strings } from "@formbox/renderer/strings.ts";
 import { DropdownSelectRenderer } from "@formbox/renderer/component/question/renderer/dropdown-select-renderer.tsx";
 
+import type {
+  QuestionnaireOf,
+  QuestionnaireItemAnswerOptionOf,
+  QuestionnaireResponseOf,
+} from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireItemAnswerOption = QuestionnaireItemAnswerOptionOf<"r5">;
+type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
 const valueDisplayOverrides = vi.hoisted(
   () => new Map<AnswerType, (properties: { value: unknown }) => ReactNode>(),
 );
@@ -148,7 +151,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire, response);
+        const form = new FormStore("r5", questionnaire, response, undefined);
         const question = getQuestion(form, "color");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -193,7 +196,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "call-sign");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -243,7 +246,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "color");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -268,7 +271,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "consent");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -315,7 +318,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "color");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -362,7 +365,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire, response);
+        const form = new FormStore("r5", questionnaire, response, undefined);
         const question = getQuestion(form, "call-sign");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -426,7 +429,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "dose");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -480,7 +483,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire, response);
+        const form = new FormStore("r5", questionnaire, response, undefined);
         const question = getQuestion(form, "color");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -519,7 +522,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "color");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -575,7 +578,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "color");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -615,7 +618,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "color");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -659,7 +662,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "dose");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -736,7 +739,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire, response);
+        const form = new FormStore("r5", questionnaire, response, undefined);
         const question = getQuestion(form, "dose");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -773,7 +776,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "allergy");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -804,7 +807,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "allergy");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -840,7 +843,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "allergy");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -920,7 +923,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire, response);
+        const form = new FormStore("r5", questionnaire, response, undefined);
         const question = getQuestion(form, "dose");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -952,7 +955,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "color");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -1014,7 +1017,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire, response);
+        const form = new FormStore("r5", questionnaire, response, undefined);
         const question = getQuestion(form, "call-sign");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -1060,7 +1063,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire, response);
+        const form = new FormStore("r5", questionnaire, response, undefined);
         const question = getQuestion(form, "dose");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -1092,7 +1095,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "dose");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -1141,7 +1144,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "dose");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -1189,7 +1192,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "dose");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -1235,7 +1238,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "dose");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -1274,7 +1277,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "call-sign");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -1304,7 +1307,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "call-sign");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -1355,7 +1358,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "call-sign");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -1386,7 +1389,7 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore(questionnaire);
+        const form = new FormStore("r5", questionnaire, undefined, undefined);
         const question = getQuestion(form, "call-sign");
 
         render(<DropdownSelectRenderer node={question} />);

@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { assertGroupNode } from "@formbox/renderer/store/group/group-store.ts";
@@ -11,6 +10,8 @@ import {
   makeVariable,
 } from "../../../../../../../../utilities.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 describe("readOnlyExpression", () => {
   it("toggles question interactivity based on expressions on _readOnly", () => {
     const questionnaire: Questionnaire = {
@@ -45,7 +46,7 @@ describe("readOnlyExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const lock = form.scope.lookupNode("lock");
     const detail = form.scope.lookupNode("detail");
 
@@ -99,7 +100,7 @@ describe("readOnlyExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const section = form.scope.lookupNode("section");
     const lock = form.scope.lookupNode("lock");
     const child = form.scope.lookupNode("child");
@@ -138,7 +139,7 @@ describe("readOnlyExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const detail = form.scope.lookupNode("detail");
 
     assertQuestionNode(detail);

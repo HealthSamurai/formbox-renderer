@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { assertDefined } from "@formbox/renderer/utilities.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 const minValueDate = (value: string) => ({
   url: "http://hl7.org/fhir/StructureDefinition/minValue",
   valueDate: value,
@@ -49,7 +50,7 @@ describe("maxValue", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const birth = form.scope.lookupNode("birth");
     assertQuestionNode(birth);
     const checkIn = form.scope.lookupNode("check-in");

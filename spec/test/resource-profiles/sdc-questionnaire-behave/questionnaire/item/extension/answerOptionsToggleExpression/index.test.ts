@@ -1,9 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type {
-  Coding,
-  Questionnaire,
-  QuestionnaireItemAnswerOption,
-} from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -14,6 +9,14 @@ import {
   makeVariable,
 } from "../../../../../../utilities.ts";
 
+import type {
+  CodingOf,
+  QuestionnaireOf,
+  QuestionnaireItemAnswerOptionOf,
+} from "@formbox/renderer";
+type Coding = CodingOf<"r5">;
+type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireItemAnswerOption = QuestionnaireItemAnswerOptionOf<"r5">;
 const RED_CODING: QuestionnaireItemAnswerOption = {
   valueCoding: {
     system: "http://example.org/colors",
@@ -71,7 +74,7 @@ describe("answerOptionsToggleExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const toggle = form.scope.lookupNode("toggle");
     const color = form.scope.lookupNode("color");
 
@@ -129,7 +132,7 @@ describe("answerOptionsToggleExpression", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const color = form.scope.lookupNode("color");
 
     assertQuestionNode(color);

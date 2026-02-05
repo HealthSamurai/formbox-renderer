@@ -1,11 +1,13 @@
-import type {
-  Extension,
-  Quantity,
-  QuestionnaireItemAnswerOption,
-} from "fhir/r5";
-
 import { EXT } from "@formbox/renderer/utilities.ts";
 
+import type {
+  ExtensionOf,
+  QuantityOf,
+  QuestionnaireItemAnswerOptionOf,
+} from "@formbox/renderer";
+type Extension = ExtensionOf<"r5">;
+type Quantity = QuantityOf<"r5">;
+type QuestionnaireItemAnswerOption = QuestionnaireItemAnswerOptionOf<"r5">;
 export function makeVariable(name: string, expression: string): Extension {
   return {
     url: "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-variable",

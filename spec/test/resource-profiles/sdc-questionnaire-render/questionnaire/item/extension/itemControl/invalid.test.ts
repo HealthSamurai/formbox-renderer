@@ -1,11 +1,12 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { isGroupNode } from "@formbox/renderer/store/group/group-store.ts";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { EXT, ITEM_CONTROL_SYSTEM } from "@formbox/renderer/utilities.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 describe("itemControl invalid configurations", () => {
   it("ignores itemControl extensions with an unexpected code system", () => {
     const questionnaire: Questionnaire = {
@@ -33,7 +34,7 @@ describe("itemControl invalid configurations", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const node = form.scope.lookupNode("color");
     expect(node && isQuestionNode(node)).toBe(true);
     if (!node || !isQuestionNode(node)) {
@@ -69,7 +70,7 @@ describe("itemControl invalid configurations", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const node = form.scope.lookupNode("question");
     expect(node && isQuestionNode(node)).toBe(true);
     if (!node || !isQuestionNode(node)) {
@@ -112,7 +113,7 @@ describe("itemControl invalid configurations", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const node = form.scope.lookupNode("section");
     expect(node && isGroupNode(node)).toBe(true);
     if (!node || !isGroupNode(node)) {

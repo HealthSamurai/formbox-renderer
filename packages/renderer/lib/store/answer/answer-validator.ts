@@ -1,5 +1,5 @@
 import { computed, makeObservable } from "mobx";
-import type { OperationOutcomeIssue } from "fhir/r5";
+import type { OperationOutcomeIssue } from "../../fhir/generated-types.ts";
 
 import {
   compareDateTimeValues,
@@ -274,7 +274,10 @@ export class AnswerValidator<
 
           const maxAttachmentSize = this.question.maxSize;
           if (maxAttachmentSize != undefined) {
-            const effectiveSize = estimateAttachmentSize(attachment);
+            const effectiveSize = estimateAttachmentSize(
+              attachment,
+              this.question.adapter,
+            );
             if (
               effectiveSize != undefined &&
               effectiveSize > maxAttachmentSize

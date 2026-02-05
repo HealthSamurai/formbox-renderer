@@ -1,21 +1,27 @@
-import type { Coding, ValueSet } from "fhir/r5";
+import type { Coding, ValueSet } from "../../fhir/generated-types.ts";
 import type { ExpansionCache, IValueSetExpander } from "../../types.ts";
 import { dedupe, hasHttpStatus } from "../../utilities.ts";
-
-const DEFAULT_TERMINOLOGY_SERVER = "https://tx.fhir.org/r5";
 
 export class ValueSetExpander implements IValueSetExpander {
   private readonly caches = new Map<string, ExpansionCache>();
 
-  constructor(
-    private readonly defaultServer: string = DEFAULT_TERMINOLOGY_SERVER,
-  ) {}
+  constructor(private readonly defaultServer?: string) {}
 
   async expand(
     canonical: string,
     preferredServers: ReadonlyArray<string>,
   ): Promise<Coding[]> {
-    const attempts = dedupe([...preferredServers, this.defaultServer]);
+    const attempts = dedupe(
+      this.defaultServer
+        ? [...preferredServers, this.defaultServer]
+        : [...preferredServers],
+    );
+
+    if (attempts.length === 0) {
+      throw new Error(
+        `No terminology servers available to expand ValueSet (${canonical}).`,
+      );
+    }
 
     let lastError: unknown;
 

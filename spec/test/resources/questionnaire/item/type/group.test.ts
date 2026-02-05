@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import {
@@ -7,6 +6,8 @@ import {
   isGroupNode,
 } from "@formbox/renderer/store/group/group-store.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 describe("type.group", () => {
   it("creates a group node with child items", () => {
     const questionnaire: Questionnaire = {
@@ -28,7 +29,7 @@ describe("type.group", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const group = form.scope.lookupNode("section");
     expect(group && isGroupNode(group)).toBe(true);
     assertGroupNode(group);

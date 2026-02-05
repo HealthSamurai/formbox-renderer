@@ -255,6 +255,7 @@ function makeStory<T extends AnswerType>(
 
       return (
         <Renderer
+          fhirVersion="r5"
           questionnaire={questionnaire}
           storyId={context.id}
           mode="node"

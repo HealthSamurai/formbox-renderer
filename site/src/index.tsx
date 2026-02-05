@@ -70,7 +70,7 @@ export default function Landing() {
             <div className="container grid gap-12 px-4 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:px-8">
               <div className="space-y-6">
                 <span className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-muted/60 px-4 py-1 text-[0.72rem] uppercase tracking-[0.2em] text-muted-foreground animate-fade-up motion-reduce:animate-none [animation-delay:0ms]">
-                  Open-source · FHIR R5 · React
+                  Open-source · FHIR R4 + R5 · React
                 </span>
                 <SplitText
                   text={heroHeadline}
@@ -84,7 +84,7 @@ export default function Landing() {
                   className="block font-display text-4xl leading-tight text-foreground sm:text-5xl lg:text-6xl"
                 />
                 <p className="text-lg text-muted-foreground animate-fade-up motion-reduce:animate-none [animation-delay:240ms]">
-                  Formbox Renderer is a typed React renderer for FHIR R5
+                  Formbox Renderer is a typed React renderer for FHIR R4 and R5
                   Questionnaires. Build clinical forms once, then ship them with
                   pluggable themes, predictable state, and Storybook-ready
                   previews.
@@ -129,7 +129,7 @@ export default function Landing() {
                     4 official themes
                   </span>
                   <span className="rounded-full border border-border/60 bg-muted/60 px-3 py-1 text-muted-foreground">
-                    FHIR R5 ready
+                    FHIR R4 + R5 ready
                   </span>
                   <span className="rounded-full border border-border/60 bg-muted/60 px-3 py-1 text-muted-foreground">
                     MIT license
@@ -146,7 +146,7 @@ export default function Landing() {
                     Quick install
                   </span>
                   <span className="rounded-full border border-border/60 bg-muted/60 px-2 py-1 text-[0.65rem] font-semibold text-foreground">
-                    FHIR R5
+                    FHIR R4 + R5
                   </span>
                 </div>
                 <h2 className="mt-4 font-display text-lg text-foreground">
@@ -169,7 +169,7 @@ export default function Landing() {
                     import { Renderer } from "@formbox/renderer";
                     import { theme } from "@formbox/hs-theme";
 
-                    <Renderer questionnaire={questionnaire} theme={theme} />
+                    <Renderer fhirVersion="r5" questionnaire={questionnaire} theme={theme} />
                   `}
                 />
                 <div className="mt-5 space-y-3 text-sm text-muted-foreground">
@@ -202,8 +202,9 @@ export default function Landing() {
                   Everything you need to render at scale
                 </h2>
                 <p className="mt-3 text-base text-muted-foreground">
-                  Purpose-built for FHIR R5 Questionnaires with a fully typed
-                  renderer, tested helpers, and predictable state management.
+                  Purpose-built for FHIR R4 and R5 Questionnaires with a fully
+                  typed renderer, tested helpers, and predictable state
+                  management.
                 </p>
               </div>
               <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-6 lg:grid-cols-12">
@@ -235,7 +236,7 @@ export default function Landing() {
                   <div className="mt-4 space-y-2 text-sm text-muted-foreground">
                     <div className="flex items-center gap-2">
                       <span className="h-1.5 w-1.5 rounded-full bg-primary"></span>
-                      <span>FHIR R5 Questionnaire ready</span>
+                      <span>FHIR R4 + R5 Questionnaire ready</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="h-1.5 w-1.5 rounded-full bg-primary"></span>
@@ -782,7 +783,7 @@ export default function Landing() {
                       <CodeBlock
                         className="mt-3"
                         language="tsx"
-                        code="<Renderer questionnaire={questionnaire} theme={theme} />"
+                        code='<Renderer fhirVersion="r5" questionnaire={questionnaire} theme={theme} />'
                       />
                     </div>
                   </div>
@@ -807,7 +808,7 @@ export default function Landing() {
                       import { Renderer } from "@formbox/renderer";
                       import { theme } from "@formbox/hs-theme";
 
-                      <Renderer questionnaire={questionnaire} theme={theme} />
+                      <Renderer fhirVersion="r5" questionnaire={questionnaire} theme={theme} />
                     `}
                   />
                   <div className="mt-6 grid gap-3 sm:grid-cols-2">

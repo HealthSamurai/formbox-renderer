@@ -27,6 +27,6 @@ import Renderer from "@formbox/renderer";
 import { Provider, theme } from "@formbox/mantine-theme";
 
 <Provider>
-  <Renderer questionnaire={questionnaire} theme={theme} />
+  <Renderer fhirVersion="r5" questionnaire={questionnaire} theme={theme} />
 </Provider>;
 ```

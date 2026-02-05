@@ -15,6 +15,7 @@ import type {
   Dosage,
   Duration,
   Expression,
+  FhirVersion,
   ExtendedContactDetail,
   HumanName,
   Identifier,
@@ -40,11 +41,12 @@ import type {
   Timing,
   TriggerDefinition,
   UsageContext,
-} from "fhir/r5";
+} from "./fhir/generated-types.ts";
 import type { ComponentType, HTMLAttributes, ReactNode } from "react";
 import { PolyCarrierFor, PolyKeyFor } from "./utilities.ts";
 import type { FormPagination, OptionItem } from "@formbox/theme";
 import type { RendererRegistry } from "./renderer-registry.ts";
+import type { IFhirAdapter } from "./fhir/fhir-adapter.ts";
 
 export type OperationOutcomeIssueCode =
   | "business-rule" // Expression cycles / logic conflicts
@@ -184,6 +186,7 @@ export type ExpressionEnvironment = Record<string, unknown> &
 
 export interface IExpressionEnvironmentProvider {
   expressionEnvironment: ExpressionEnvironment;
+  readonly adapter: IFhirAdapter;
 }
 
 export interface IScope {
@@ -197,10 +200,27 @@ export interface IScope {
   mergeEnvironment(initial: ExpressionEnvironment): ExpressionEnvironment;
 }
 
-export type AnswerType = Exclude<
-  QuestionnaireItem["type"],
-  "group" | "display" | "question"
->;
+export const ITEM_TYPES = [
+  "group",
+  "display",
+  "question",
+  "boolean",
+  "decimal",
+  "integer",
+  "date",
+  "dateTime",
+  "time",
+  "string",
+  "text",
+  "url",
+  "coding",
+  "attachment",
+  "reference",
+  "quantity",
+] as const;
+
+export type ItemType = (typeof ITEM_TYPES)[number];
+export type AnswerType = Exclude<ItemType, "group" | "display" | "question">;
 
 export type AnswerToken = string;
 export type OptionToken = string;
@@ -441,8 +461,10 @@ export interface IssueSource {
 
 export interface IPresentableNode {
   readonly template: QuestionnaireItem;
+  readonly type: ItemType;
 
   readonly form: IForm;
+  readonly adapter: IFhirAdapter;
   readonly scope: IScope;
   readonly token: string;
   readonly parentStore: INode | undefined;
@@ -618,9 +640,14 @@ export interface IOptionSelection<T extends AnswerType = AnswerType> {
 export interface IAnswerOptions<T extends AnswerType = AnswerType> {
   readonly issues: OperationOutcomeIssue[];
   readonly inherentOptions: ReadonlyArray<AnswerOption<T>>;
-  readonly constraint: QuestionnaireItem["answerConstraint"];
+  readonly constraint: AnswerConstraint;
   readonly select: IOptionSelection<T>;
 }
+
+export type AnswerConstraint =
+  | "optionsOnly"
+  | "optionsOrType"
+  | "optionsOrString";
 
 export type QuestionRendererProperties<T extends AnswerType = AnswerType> = {
   node: IQuestionNode<T>;
@@ -694,6 +721,8 @@ export interface IValueSetExpander {
 }
 
 export interface IForm extends IssueSource {
+  readonly fhirVersion: FhirVersion;
+  readonly adapter: IFhirAdapter;
   questionnaire: Questionnaire;
   response: QuestionnaireResponse | undefined;
   nodes: Array<IPresentableNode>;

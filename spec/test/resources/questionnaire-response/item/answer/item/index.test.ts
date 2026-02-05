@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire, QuestionnaireResponse } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import {
@@ -12,6 +11,12 @@ import {
 } from "@formbox/renderer/store/question/question-store.ts";
 import { assertDefined } from "@formbox/renderer/utilities.ts";
 
+import type {
+  QuestionnaireOf,
+  QuestionnaireResponseOf,
+} from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
 describe("item.answer.item", () => {
   describe("nested child answers", () => {
     const questionnaire: Questionnaire = {
@@ -55,7 +60,8 @@ describe("item.answer.item", () => {
       ],
     };
 
-    const createStore = () => new FormStore(questionnaire, response);
+    const createStore = () =>
+      new FormStore("r5", questionnaire, response, undefined);
 
     const getParentStore = () => {
       const form = createStore();
@@ -120,7 +126,12 @@ describe("item.answer.item", () => {
       };
 
       const createNoParentAnswerStore = () =>
-        new FormStore(questionnaireNoParentAnswer, responseNoParentAnswer);
+        new FormStore(
+          "r5",
+          questionnaireNoParentAnswer,
+          responseNoParentAnswer,
+          undefined,
+        );
 
       it("creates a placeholder answer with nested children", () => {
         const form = createNoParentAnswerStore();
@@ -192,7 +203,12 @@ describe("item.answer.item", () => {
       };
 
       const createDeepStore = () =>
-        new FormStore(questionnaireDeepNesting, responseDeepNesting);
+        new FormStore(
+          "r5",
+          questionnaireDeepNesting,
+          responseDeepNesting,
+          undefined,
+        );
 
       it("creates node stores for each nested level", () => {
         const form = createDeepStore();
@@ -269,7 +285,12 @@ describe("item.answer.item", () => {
       ],
     };
 
-    const form = new FormStore(nestedQuestionnaire, nestedResponse);
+    const form = new FormStore(
+      "r5",
+      nestedQuestionnaire,
+      nestedResponse,
+      undefined,
+    );
     expect(form.scope.lookupNode("follow-up")).toBeUndefined();
     const question = form.scope.lookupNode("repeating-question");
     expect(question && isQuestionNode(question)).toBe(true);
@@ -310,7 +331,7 @@ describe("item.answer.item", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("follow-up");
     expect(question && isQuestionNode(question)).toBe(true);
     assertQuestionNode(question);

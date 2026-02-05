@@ -1,6 +1,6 @@
 # @formbox/renderer
 
-React renderer for FHIR R5 Questionnaires. You must provide a theme package.
+React renderer for FHIR R4 and R5 Questionnaires. You must provide a theme package.
 
 ## Install
 
@@ -27,8 +27,22 @@ import Renderer from "@formbox/renderer";
 import { theme } from "@formbox/hs-theme";
 import "@formbox/hs-theme/style.css";
 
-<Renderer questionnaire={questionnaire} theme={theme} />;
+<Renderer fhirVersion="r5" questionnaire={questionnaire} theme={theme} />;
 ```
+
+If you want strong typing, use the versioned type helpers from the renderer:
+
+```ts
+import type { QuestionnaireOf } from "@formbox/renderer";
+
+const questionnaire: QuestionnaireOf<"r5"> = {
+  resourceType: "Questionnaire",
+  status: "active",
+  item: [{ linkId: "first", text: "First name", type: "string" }],
+};
+```
+
+These types map directly to `fhir/r4` or `fhir/r5` based on the version you pass.
 
 ## Renderer props
 
@@ -38,6 +52,7 @@ import "@formbox/hs-theme/style.css";
 - `onChange`: Called on every response change.
 - `onSubmit`: Called after validation passes.
 - `terminologyServerUrl`: Base URL for ValueSet `$expand` requests.
+- `fhirVersion`: `"r4"` or `"r5"` (required).
 
 ## Themes and custom themes
 

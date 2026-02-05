@@ -13,14 +13,16 @@ import {
   IGrid,
   ITable,
 } from "../../types.ts";
-import type { QuestionnaireItem, QuestionnaireResponseItem } from "fhir/r5";
+import type {
+  QuestionnaireItem,
+  QuestionnaireResponseItem,
+} from "../../fhir/generated-types.ts";
 
 import { AbstractActualNodeStore } from "../base/abstract-actual-node-store.ts";
 import {
   getItemControlCode,
   makeIssue,
   shouldCreateStore,
-  withQuestionnaireResponseItemMeta,
 } from "../../utilities.ts";
 import { GroupValidator } from "./group-validator.ts";
 import { NodeExpressionRegistry } from "../expression/registry/node-expression-registry.ts";
@@ -58,12 +60,12 @@ export class GroupStore extends AbstractActualNodeStore implements IGroupNode {
       this.scope,
       this,
       template,
-      this.template.type as AnswerType,
+      this.adapter.questionnaireItem.getType(template) as AnswerType,
     );
 
     this.nodes.replace(
       (this.template.item ?? [])
-        .filter((item) => shouldCreateStore(item))
+        .filter((item) => shouldCreateStore(item, this.adapter))
         .map((item) =>
           this.form.createNodeStore(
             item,
@@ -128,7 +130,7 @@ export class GroupStore extends AbstractActualNodeStore implements IGroupNode {
       return [];
     }
 
-    const item = withQuestionnaireResponseItemMeta({
+    const item = this.adapter.withQuestionnaireResponseItemMeta({
       linkId: this.linkId,
       text: kind === "expression" ? this.template.text : this.text,
     });
@@ -187,7 +189,7 @@ export class GroupStore extends AbstractActualNodeStore implements IGroupNode {
           this.form.reportRenderingIssue(
             makeIssue(
               "structure",
-              `Tab container "${this.linkId}" can only contain group items, but child "${child.linkId}" is type '${child.template.type}'.`,
+              `Tab container "${this.linkId}" can only contain group items, but child "${child.linkId}" is type '${this.adapter.questionnaireItem.getType(child.template)}'.`,
             ),
           );
           return;
@@ -210,7 +212,7 @@ export class GroupStore extends AbstractActualNodeStore implements IGroupNode {
           this.form.reportRenderingIssue(
             makeIssue(
               "structure",
-              `Grid group "${this.linkId}" expects child rows to be groups, but "${child.linkId}" is type '${child.template.type}'.`,
+              `Grid group "${this.linkId}" expects child rows to be groups, but "${child.linkId}" is type '${this.adapter.questionnaireItem.getType(child.template)}'.`,
             ),
           );
         }

@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { Extension, QuestionnaireItem } from "fhir/r5";
 import type {
   AnswerType,
   AnswerTypeToDataType,
@@ -16,6 +15,9 @@ import {
 } from "../helpers.tsx";
 import { Renderer } from "../renderer.tsx";
 
+import type { ExtensionOf, QuestionnaireItemOf } from "@formbox/renderer";
+type Extension = ExtensionOf<"r5">;
+type QuestionnaireItem = QuestionnaireItemOf<"r5">;
 type GroupItemConfig = {
   linkId: string;
   text?: string | undefined;
@@ -627,6 +629,7 @@ function makeStory(item: QuestionnaireItem): StoryObj {
   return {
     render: (_arguments, context) => (
       <Renderer
+        fhirVersion="r5"
         questionnaire={buildQuestionnaire(item)}
         storyId={context.id}
         mode="node"
@@ -851,6 +854,7 @@ export const TableGroupRenderer = {
     });
     return (
       <Renderer
+        fhirVersion="r5"
         questionnaire={buildQuestionnaire(item)}
         storyId={context.id}
         mode="node"
@@ -902,6 +906,7 @@ export const GridGroupRenderer = {
     });
     return (
       <Renderer
+        fhirVersion="r5"
         questionnaire={buildQuestionnaire(item)}
         storyId={context.id}
         mode="node"
@@ -947,6 +952,7 @@ export const HeaderGroupRenderer: StoryObj = {
   name: "Header",
   render: (_arguments, context) => (
     <Renderer
+      fhirVersion="r5"
       questionnaire={{
         resourceType: "Questionnaire",
         status: "active",
@@ -986,6 +992,7 @@ export const FooterGroupRenderer: StoryObj = {
   name: "Footer",
   render: (_arguments, context) => (
     <Renderer
+      fhirVersion="r5"
       questionnaire={{
         resourceType: "Questionnaire",
         status: "active",
@@ -1019,6 +1026,7 @@ export const PageGroupRenderer: StoryObj = {
   name: "Page",
   render: (_arguments, context) => (
     <Renderer
+      fhirVersion="r5"
       questionnaire={{
         resourceType: "Questionnaire",
         status: "active",
@@ -1060,6 +1068,7 @@ export const TabContainerGroupRenderer = {
 
     return (
       <Renderer
+        fhirVersion="r5"
         questionnaire={buildQuestionnaire(item)}
         storyId={context.id}
         mode="node"

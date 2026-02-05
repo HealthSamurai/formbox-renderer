@@ -4,7 +4,7 @@ order: 1
 icon: rocket
 ---
 
-Formbox Renderer is a React renderer for HL7 FHIR R5 Questionnaires. It is headless. You must pass a theme object and include the theme CSS.
+Formbox Renderer is a React renderer for HL7 FHIR R4 and R5 Questionnaires. It is headless. You must pass a theme object and include the theme CSS.
 
 ## Install
 
@@ -39,25 +39,34 @@ const questionnaire = {
   ],
 };
 
-<Renderer questionnaire={questionnaire} theme={theme} />;
+<Renderer fhirVersion="r5" questionnaire={questionnaire} theme={theme} />;
 ```
 
-If you want strong typing, import FHIR types from `fhir/r5` and add `@types/fhir` as a dev dependency if your editor cannot resolve the module.
+If you want strong typing, use the versioned type helpers from the renderer.
 
 ```ts
-import type { Questionnaire, QuestionnaireResponse } from "fhir/r5";
+import type { QuestionnaireOf } from "@formbox/renderer";
+
+const questionnaire: QuestionnaireOf<"r5"> = {
+  resourceType: "Questionnaire",
+  status: "active",
+  item: [{ linkId: "first", text: "First name", type: "string" }],
+};
 ```
+
+These types map directly to `fhir/r4` or `fhir/r5` based on the version you pass.
 
 ## Renderer props
 
-| Prop                   | Type                                        | Required | Description                                               |
-| ---------------------- | ------------------------------------------- | -------- | --------------------------------------------------------- |
-| `questionnaire`        | `Questionnaire`                             | Yes      | FHIR Questionnaire resource that drives the form.         |
-| `theme`                | `Theme`                                     | Yes      | Theme contract implementation.                            |
-| `initialResponse`      | `QuestionnaireResponse`                     | No       | Seed response used to initialize answers.                 |
-| `onChange`             | `(response: QuestionnaireResponse) => void` | No       | Called with the latest response whenever state changes.   |
-| `onSubmit`             | `(response: QuestionnaireResponse) => void` | No       | Called after validation passes and the form is submitted. |
-| `terminologyServerUrl` | `string`                                    | No       | Base URL for ValueSet `$expand` requests.                 |
+| Prop                   | Type                                             | Required | Description                                               |
+| ---------------------- | ------------------------------------------------ | -------- | --------------------------------------------------------- |
+| `questionnaire`        | `QuestionnaireOf<V>`                             | Yes      | FHIR Questionnaire resource that drives the form.         |
+| `theme`                | `Theme`                                          | Yes      | Theme contract implementation.                            |
+| `initialResponse`      | `QuestionnaireResponseOf<V>`                     | No       | Seed response used to initialize answers.                 |
+| `onChange`             | `(response: QuestionnaireResponseOf<V>) => void` | No       | Called with the latest response whenever state changes.   |
+| `onSubmit`             | `(response: QuestionnaireResponseOf<V>) => void` | No       | Called after validation passes and the form is submitted. |
+| `terminologyServerUrl` | `string`                                         | No       | Base URL for ValueSet `$expand` requests.                 |
+| `fhirVersion`          | `"r4" \| "r5"`                                   | Yes      | FHIR version for Questionnaire parsing.                   |
 
 ## Validation and submit
 
@@ -65,7 +74,7 @@ import type { Questionnaire, QuestionnaireResponse } from "fhir/r5";
 
 ## ValueSet expansion
 
-When a question references a ValueSet, the renderer expands it through a terminology server. If you do not pass `terminologyServerUrl`, the default server is `https://tx.fhir.org/r5`.
+When a question references a ValueSet, the renderer expands it through a terminology server. If you do not pass `terminologyServerUrl`, the default server is `https://tx.fhir.org/r4` for R4 and `https://tx.fhir.org/r5` for R5.
 
 ## Themes
 

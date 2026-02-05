@@ -1,11 +1,17 @@
-import type { Attachment } from "fhir/r5";
-import type { Attachment as ThemeAttachment } from "@formbox/theme";
 import { useCallback, useMemo } from "react";
-import { prepareAttachmentFromFile } from "../../../../utilities.ts";
+import type { Attachment as ThemeAttachment } from "@formbox/theme";
+
+import type { Attachment } from "../../../../fhir/generated-types.ts";
+import type { IFhirAdapter } from "../../../../fhir/fhir-adapter.ts";
+import {
+  parseNumber,
+  prepareAttachmentFromFile,
+} from "../../../../utilities.ts";
 import { useTheme } from "../../../../ui/theme.tsx";
 
 export type AttachmentInputProperties = {
   value: Attachment | undefined;
+  adapter: IFhirAdapter;
   onChange: (value?: Attachment) => void;
   id: string;
   ariaLabelledBy: string;
@@ -16,6 +22,7 @@ export type AttachmentInputProperties = {
 
 export function AttachmentInput({
   value,
+  adapter,
   onChange,
   id,
   ariaLabelledBy,
@@ -28,22 +35,22 @@ export function AttachmentInput({
   const handleFileChange = useCallback(
     async (file: File | undefined) => {
       if (file) {
-        onChange(await prepareAttachmentFromFile(file));
+        onChange(await prepareAttachmentFromFile(file, adapter));
       } else {
         onChange();
       }
     },
-    [onChange],
+    [adapter, onChange],
   );
 
   const themeValue = useMemo<ThemeAttachment | undefined>(() => {
     return (
       value && {
         ...value,
-        size: Number(value.size),
+        size: parseNumber(adapter.attachment.getSize(value)),
       }
     );
-  }, [value]);
+  }, [adapter, value]);
 
   return (
     <ThemedFileInput

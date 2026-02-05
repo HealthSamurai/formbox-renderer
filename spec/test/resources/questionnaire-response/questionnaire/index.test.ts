@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import {
@@ -8,6 +7,8 @@ import {
 } from "@formbox/renderer/store/question/question-store.ts";
 import { assertDefined } from "@formbox/renderer/utilities.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 describe("questionnaire", () => {
   it("falls back to a local Questionnaire reference when canonical URL is absent", () => {
     const questionnaire: Questionnaire = {
@@ -23,7 +24,7 @@ describe("questionnaire", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("nickname");
     expect(question && isQuestionNode(question)).toBe(true);
     assertQuestionNode(question);

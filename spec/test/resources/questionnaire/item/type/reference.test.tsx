@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import type { Questionnaire } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
@@ -8,6 +7,8 @@ import { ReferenceRenderer } from "@formbox/renderer/component/question/fhir/ref
 import type { IQuestionNode } from "@formbox/renderer/types.ts";
 import { strings } from "@formbox/renderer/strings.ts";
 
+import type { QuestionnaireOf } from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
 function getReferenceQuestion(form: FormStore, linkId: string) {
   const node = form.scope.lookupNode(linkId);
   expect(node && isQuestionNode(node)).toBe(true);
@@ -31,7 +32,7 @@ describe("type.reference", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = getReferenceQuestion(form, "patient");
 
     render(<ReferenceRenderer node={question} />);
@@ -57,7 +58,7 @@ describe("type.reference", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const question = getReferenceQuestion(form, "patient");
 
     render(<ReferenceRenderer node={question} />);

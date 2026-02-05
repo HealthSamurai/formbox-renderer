@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { Questionnaire, QuestionnaireResponse } from "fhir/r5";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import {
@@ -13,6 +12,12 @@ import {
 import { isDisplayNode } from "@formbox/renderer/store/display/display-store.ts";
 import { assertDefined } from "@formbox/renderer/utilities.ts";
 
+import type {
+  QuestionnaireOf,
+  QuestionnaireResponseOf,
+} from "@formbox/renderer";
+type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
 describe("item.item", () => {
   const questionnaire: Questionnaire = {
     resourceType: "Questionnaire",
@@ -55,7 +60,8 @@ describe("item.item", () => {
     ],
   };
 
-  const createStore = () => new FormStore(questionnaire, response);
+  const createStore = () =>
+    new FormStore("r5", questionnaire, response, undefined);
 
   const getGroupStore = () => {
     const form = createStore();
@@ -113,7 +119,7 @@ describe("item.item", () => {
       ],
     };
 
-    const form = new FormStore(questionnaire);
+    const form = new FormStore("r5", questionnaire, undefined, undefined);
     const group = form.scope.lookupNode("demographics");
     expect(group && isGroupNode(group)).toBe(true);
     assertGroupNode(group);
@@ -172,7 +178,12 @@ describe("item.item", () => {
     };
 
     const createMissingGroupStore = () =>
-      new FormStore(questionnaireMissingResponse, responseMissingGroup);
+      new FormStore(
+        "r5",
+        questionnaireMissingResponse,
+        responseMissingGroup,
+        undefined,
+      );
 
     it("materializes child nodes from the template", () => {
       const form = createMissingGroupStore();
