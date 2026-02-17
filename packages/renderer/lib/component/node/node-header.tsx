@@ -68,6 +68,7 @@ export const NodeHeader = observer(function NodeHeader({
   return (
     <ThemedLabel
       prefix={node.prefix}
+      shortText={node.shortText}
       id={getNodeLabelId(node)}
       htmlFor={htmlFor}
       required={node.required}

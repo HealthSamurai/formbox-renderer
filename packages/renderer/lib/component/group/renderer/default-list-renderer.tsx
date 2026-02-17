@@ -10,9 +10,10 @@ export const DefaultListRenderer = observer(function DefaultListRenderer({
   node,
 }: GroupListRendererProperties) {
   const { GroupList: ThemedGroupList } = useTheme();
-  const header = node.template.text ? (
-    <NodeHeader node={node} as="legend" />
-  ) : undefined;
+  const header =
+    node.text || node.shortText ? (
+      <NodeHeader node={node} as="legend" />
+    ) : undefined;
   return (
     <ThemedGroupList
       linkId={node.linkId}

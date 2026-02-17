@@ -1,9 +1,11 @@
 import type { LabelProperties } from "@formbox/theme";
 import { Space, Typography } from "antd";
 import type { CSSProperties } from "react";
+import { useMediaQuery } from "../use-media-query.ts";
 
 export function Label({
   prefix,
+  shortText,
   children,
   id,
   htmlFor,
@@ -13,6 +15,7 @@ export function Label({
   flyover,
   as = "label",
 }: LabelProperties) {
+  const useShortText = useMediaQuery("(max-width: 40rem)");
   const WrapperTag = as === "label" ? "label" : "div";
   const labelProperties = as === "label" ? { htmlFor } : undefined;
   const isEmphasized = as !== "text";
@@ -32,7 +35,7 @@ export function Label({
               {prefix}
             </span>
           )}
-          {children}
+          {useShortText ? shortText : children}
           {required && (
             <span
               aria-hidden

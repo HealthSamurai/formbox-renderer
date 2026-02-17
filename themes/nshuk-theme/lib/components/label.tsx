@@ -1,8 +1,10 @@
 import type { LabelProperties } from "@formbox/theme";
 import type { ReactNode } from "react";
+import { useMediaQuery } from "../use-media-query.ts";
 
 export function Label({
   prefix,
+  shortText,
   children,
   id,
   htmlFor,
@@ -12,14 +14,13 @@ export function Label({
   flyover,
   as = "label",
 }: LabelProperties) {
-  if (!children) {
-    return;
-  }
+  const useShortText = useMediaQuery("(max-width: 40rem)");
+  const text = useShortText ? shortText : children;
 
   const content = (
     <>
       {prefix && <Prefix>{prefix}</Prefix>}
-      {children}
+      {text}
       {required && <span aria-hidden="true"> *</span>}
     </>
   );

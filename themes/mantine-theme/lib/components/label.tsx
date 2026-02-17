@@ -1,8 +1,10 @@
 import { Box, Group, Text } from "@mantine/core";
 import type { LabelProperties } from "@formbox/theme";
+import { useMediaQuery } from "../use-media-query.ts";
 
 export function Label({
   prefix,
+  shortText,
   children,
   id,
   htmlFor,
@@ -12,6 +14,7 @@ export function Label({
   flyover,
   as = "label",
 }: LabelProperties) {
+  const useShortText = useMediaQuery("(max-width: 40rem)");
   const wrapperTag = as === "label" ? "label" : "div";
   const wrapperProperties =
     wrapperTag === "label" && htmlFor ? { htmlFor } : {};
@@ -33,7 +36,7 @@ export function Label({
               {prefix}
             </Text>
           ) : undefined}
-          {children}
+          {useShortText ? shortText : children}
           {required ? (
             <Text component="span" c="red" aria-hidden>
               *

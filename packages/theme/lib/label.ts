@@ -4,6 +4,7 @@ export type LabelAs = "legend" | "label" | "text";
 
 export type LabelProperties = {
   prefix?: ReactNode;
+  shortText?: string | undefined;
   children: ReactNode;
   id: string;
   htmlFor?: string | undefined;

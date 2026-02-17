@@ -1,8 +1,10 @@
 import { styled } from "@linaria/react";
 import type { LabelProperties } from "@formbox/theme";
+import { useMediaQuery } from "../use-media-query.ts";
 
 export function Label({
   prefix,
+  shortText,
   children,
   id,
   htmlFor,
@@ -12,12 +14,15 @@ export function Label({
   flyover,
   as = "label",
 }: LabelProperties) {
+  const useShortText = useMediaQuery("(max-width: 40rem)");
   const labelTag = as === "label" ? "label" : "div";
   const labelFor = labelTag === "label" ? htmlFor : undefined;
   const labelRowTag = labelTag === "div" ? "div" : "span";
   const labelTextTag = labelTag === "div" ? "div" : "span";
   const isEmphasized = as !== "text";
   const isLegend = as === "legend";
+
+  const text = useShortText ? shortText : children;
 
   return (
     <Wrapper as={labelTag} htmlFor={labelFor}>
@@ -29,7 +34,7 @@ export function Label({
           data-size={isLegend ? "legend" : undefined}
         >
           {prefix && <Prefix>{prefix}</Prefix>}
-          {children}
+          {text}
           {required && <Required aria-hidden>*</Required>}
         </LabelText>
         {help}

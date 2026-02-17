@@ -486,6 +486,7 @@ export interface IPresentableNode {
 
   readonly linkId: string;
   readonly text: string | undefined;
+  readonly shortText: string | undefined;
   readonly prefix: string | undefined;
   readonly help: string | undefined;
   readonly legal: string | undefined;

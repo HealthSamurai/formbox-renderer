@@ -56,6 +56,11 @@ export abstract class AbstractPresentableNode implements IPresentableNode {
   }
 
   @computed
+  get shortText() {
+    return findExtension(this.template, EXT.SDC_SHORT_TEXT)?.valueString;
+  }
+
+  @computed
   get prefix() {
     return this.template.prefix;
   }

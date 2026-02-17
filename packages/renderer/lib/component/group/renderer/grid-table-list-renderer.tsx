@@ -10,9 +10,10 @@ export const GridTableListRenderer = observer(function GridTableListRenderer({
   node,
 }: GroupListRendererProperties) {
   const { GroupScaffold: ThemedGroupScaffold } = useTheme();
-  const header = node.template.text ? (
-    <NodeHeader node={node} as="legend" />
-  ) : undefined;
+  const header =
+    node.text || node.shortText ? (
+      <NodeHeader node={node} as="legend" />
+    ) : undefined;
 
   return (
     <ThemedGroupScaffold header={header} errors={renderErrors(node)}>
