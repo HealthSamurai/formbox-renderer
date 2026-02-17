@@ -1,5 +1,5 @@
 // This file is auto-generated. Do not edit directly.
-// Run: pnpm --filter @formbox/renderer gen:fhir-types
+// Run: pnpm --filter @formbox/fhir generate-types
 
 export type FhirVersion = "r4" | "r5";
 

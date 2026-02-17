@@ -34,6 +34,7 @@ export default defineConfig(async ({ mode, isSsrBuild }) => {
       alias: {
         "@": siteRoot,
         "@mdx-js/react": mdxReactPath,
+        "@formbox/fhir": path.resolve(repoRoot, "packages/fhir/lib"),
         "@formbox/renderer": path.resolve(repoRoot, "packages/renderer/lib"),
         "@formbox/theme": path.resolve(repoRoot, "packages/theme/lib"),
         "@formbox/hs-theme": path.resolve(repoRoot, "themes/hs-theme/lib"),

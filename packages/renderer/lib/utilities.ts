@@ -5,6 +5,7 @@ import {
   DataTypeToSuffix,
   DataTypeToType,
   IAnswer,
+  IFhirAdapter,
   IGroupNode,
   IPresentableNode,
   IQuestionNode,
@@ -28,8 +29,7 @@ import type {
   QuestionnaireItemAnswerOption,
   QuestionnaireItemEnableWhen,
   Reference,
-} from "./fhir/generated-types.ts";
-import type { IFhirAdapter } from "./fhir/fhir-adapter.ts";
+} from "@formbox/fhir";
 import { UcumLhcUtils } from "@lhncbc/ucum-lhc";
 
 export type ExtractPlaceholders<T extends string> =

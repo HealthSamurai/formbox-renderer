@@ -1,24 +1,25 @@
 import {
   ExpressionEnvironment,
+  GroupListRendererDefinition,
+  GroupRendererDefinition,
   IExpressionEnvironmentProvider,
   IExpressionRegistry,
+  IFhirAdapter,
   IForm,
-  IGroupNode,
   IGroupList,
+  IGroupNode,
   INode,
   IPresentableNode,
   IQuestionNode,
   IScope,
   IValueSetExpander,
-  GroupListRendererDefinition,
-  GroupRendererDefinition,
   QuestionRendererDefinition,
   SnapshotKind,
 } from "../../types.ts";
 import { RendererRegistry } from "../../renderer-registry.ts";
 import {
-  groups as defaultGroupRenderers,
   groupLists as defaultGroupListRenderers,
+  groups as defaultGroupRenderers,
   questions as defaultQuestionRenderers,
 } from "../../renderer-definitions.ts";
 import {
@@ -28,20 +29,16 @@ import {
   observable,
   runInAction,
 } from "mobx";
-import type {
-  FhirVersion,
-  OperationOutcomeIssue,
-  Questionnaire,
-  QuestionnaireItem,
-  QuestionnaireResponse,
-  QuestionnaireResponseItem,
-} from "../../fhir/generated-types.ts";
-import type {
-  QuestionnaireOf,
-  QuestionnaireResponseOf,
-} from "../../fhir/public-types.ts";
-import { createFhirAdapter } from "../../fhir/fhir-adapter.ts";
-import type { IFhirAdapter } from "../../fhir/fhir-adapter.ts";
+import {
+  type FhirVersion,
+  type OperationOutcomeIssue,
+  type Questionnaire,
+  type QuestionnaireItem,
+  type QuestionnaireOf,
+  type QuestionnaireResponse,
+  type QuestionnaireResponseItem,
+  type QuestionnaireResponseOf,
+} from "@formbox/fhir";
 import { isQuestionNode, QuestionStore } from "../question/question-store.ts";
 import { GroupStore, isGroupNode } from "../group/group-store.ts";
 import { DisplayStore } from "../display/display-store.ts";
@@ -50,18 +47,20 @@ import { EvaluationCoordinator } from "../expression/runtime/evaluation-coordina
 import { Scope } from "../expression/runtime/scope.ts";
 import { BaseExpressionRegistry } from "../expression/registry/base-expression-registry.ts";
 import {
+  buildId,
   clamp,
   EXT,
   extractExtensionsValues,
   getIssueMessage,
   getItemControlCode,
-  buildId,
   makeIssue,
   randomToken,
   shouldCreateStore,
 } from "../../utilities.ts";
 import { ValueSetExpander } from "../option/valueset-expander.ts";
 import type { FormPagination } from "@formbox/theme";
+import { R4Adapter } from "../../fhir/r4-adapter.ts";
+import { R5Adapter } from "../../fhir/r5-adapter.ts";
 
 export class FormStore<V extends FhirVersion = FhirVersion>
   implements IForm, IExpressionEnvironmentProvider
@@ -127,7 +126,8 @@ export class FormStore<V extends FhirVersion = FhirVersion>
 
     this.questionnaire = questionnaire as Questionnaire;
     this.initialResponse = response as QuestionnaireResponse | undefined;
-    this.adapter = createFhirAdapter(this.fhirVersion);
+    this.adapter =
+      this.fhirVersion === "r4" ? new R4Adapter() : new R5Adapter();
     this.valueSetExpander = new ValueSetExpander(
       terminologyServerUrl ?? this.adapter.getDefaultTerminologyServer(),
     );

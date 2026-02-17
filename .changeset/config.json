@@ -2,10 +2,12 @@
   "$schema": "https://unpkg.com/@changesets/config@3.1.2/schema.json",
   "changelog": [
     "@changesets/changelog-github",
-    { "repo": "HealthSamurai/formbox-renderer" }
+    {
+      "repo": "HealthSamurai/formbox-renderer"
+    }
   ],
   "commit": true,
-  "fixed": [["@formbox/renderer", "@formbox/theme"]],
+  "fixed": [["@formbox/renderer", "@formbox/theme", "@formbox/fhir"]],
   "linked": [],
   "access": "public",
   "baseBranch": "master",

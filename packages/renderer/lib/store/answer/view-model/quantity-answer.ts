@@ -1,5 +1,5 @@
 import { action, computed, makeObservable, observable } from "mobx";
-import type { Coding, Quantity } from "../../../fhir/generated-types.ts";
+import type { Coding, Quantity } from "@formbox/fhir";
 import type { IAnswer, IQuantityAnswer, OptionItem } from "../../../types.ts";
 import {
   areCodingsEqual,

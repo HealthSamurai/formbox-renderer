@@ -1,4 +1,4 @@
-import type { Coding } from "../../../../fhir/generated-types.ts";
+import type { Coding } from "@formbox/fhir";
 import { useTheme } from "../../../../ui/theme.tsx";
 import { strings } from "../../../../strings.ts";
 import { buildId } from "../../../../utilities.ts";

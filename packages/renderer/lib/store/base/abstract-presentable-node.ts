@@ -5,7 +5,7 @@ import type {
   OperationOutcomeIssue,
   QuestionnaireItem,
   QuestionnaireResponseItem,
-} from "../../fhir/generated-types.ts";
+} from "@formbox/fhir";
 import {
   dedupe,
   EXT,

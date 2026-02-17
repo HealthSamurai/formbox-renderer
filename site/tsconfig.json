@@ -4,6 +4,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
+      "@formbox/fhir": ["../packages/fhir/lib"],
+      "@formbox/fhir/*": ["../packages/fhir/lib/*"],
       "@formbox/theme": ["../packages/theme/lib"],
       "@formbox/antd-theme": ["../themes/antd-theme/lib"],
       "@formbox/mantine-theme": ["../themes/mantine-theme/lib"],

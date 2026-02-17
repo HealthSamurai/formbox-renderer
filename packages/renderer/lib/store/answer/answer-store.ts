@@ -16,7 +16,7 @@ import type {
   OperationOutcomeIssue,
   QuestionnaireResponseItem,
   QuestionnaireResponseItemAnswer,
-} from "../../fhir/generated-types.ts";
+} from "@formbox/fhir";
 import {
   ANSWER_TYPE_TO_DATA_TYPE,
   asAnswerFragment,

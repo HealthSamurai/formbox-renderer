@@ -1,4 +1,4 @@
-import type { Reference } from "../../../../fhir/generated-types.ts";
+import type { Reference } from "@formbox/fhir";
 import { useTheme } from "../../../../ui/theme.tsx";
 import { strings } from "../../../../strings.ts";
 import { buildId } from "../../../../utilities.ts";

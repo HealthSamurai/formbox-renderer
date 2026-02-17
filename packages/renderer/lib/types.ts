@@ -15,10 +15,13 @@ import type {
   Dosage,
   Duration,
   Expression,
-  FhirVersion,
   ExtendedContactDetail,
+  FhirVersion,
   HumanName,
+  IAttachmentAdapter,
   Identifier,
+  IQuestionnaireItemAdapter,
+  IQuestionnaireResponseAdapter,
   Meta,
   Money,
   OperationOutcomeIssue,
@@ -41,12 +44,12 @@ import type {
   Timing,
   TriggerDefinition,
   UsageContext,
-} from "./fhir/generated-types.ts";
+} from "@formbox/fhir";
 import type { ComponentType, HTMLAttributes, ReactNode } from "react";
 import { PolyCarrierFor, PolyKeyFor } from "./utilities.ts";
 import type { FormPagination, OptionItem } from "@formbox/theme";
 import type { RendererRegistry } from "./renderer-registry.ts";
-import type { IFhirAdapter } from "./fhir/fhir-adapter.ts";
+import type { Model } from "fhirpath";
 
 export type OperationOutcomeIssueCode =
   | "business-rule" // Expression cycles / logic conflicts
@@ -183,6 +186,18 @@ export interface IExpressionSlot {
 
 export type ExpressionEnvironment = Record<string, unknown> &
   Record<"context", unknown>;
+
+export interface IFhirAdapter {
+  readonly version: FhirVersion;
+  readonly attachment: IAttachmentAdapter;
+  readonly questionnaireItem: IQuestionnaireItemAdapter;
+  readonly questionnaireResponse: IQuestionnaireResponseAdapter;
+  getFhirpathModel(): Model;
+  getDefaultTerminologyServer(): string;
+  withQuestionnaireResponseItemMeta(
+    item: QuestionnaireResponseItem,
+  ): QuestionnaireResponseItem;
+}
 
 export interface IExpressionEnvironmentProvider {
   expressionEnvironment: ExpressionEnvironment;

@@ -7,11 +7,7 @@ import {
   IScope,
   TargetConstraintDefinition,
 } from "../../../types.ts";
-import type {
-  Element,
-  Expression,
-  OperationOutcomeIssue,
-} from "../../../fhir/generated-types.ts";
+import type { Element, Expression, OperationOutcomeIssue } from "@formbox/fhir";
 import {
   EXT,
   extractExtensionsValues,

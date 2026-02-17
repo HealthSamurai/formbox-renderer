@@ -7,6 +7,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   resolve: {
     alias: {
+      "@formbox/fhir": path.resolve(__dirname, "../packages/fhir/lib"),
       "@formbox/theme": path.resolve(__dirname, "../packages/theme/lib"),
       "@formbox/hs-theme": path.resolve(__dirname, "../themes/hs-theme/lib"),
       "@formbox/renderer": path.resolve(__dirname, "../packages/renderer/lib"),

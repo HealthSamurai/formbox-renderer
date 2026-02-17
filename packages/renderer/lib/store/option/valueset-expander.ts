@@ -1,4 +1,4 @@
-import type { Coding, ValueSet } from "../../fhir/generated-types.ts";
+import type { Coding, ValueSet } from "@formbox/fhir";
 import type { ExpansionCache, IValueSetExpander } from "../../types.ts";
 import { dedupe, hasHttpStatus } from "../../utilities.ts";
 

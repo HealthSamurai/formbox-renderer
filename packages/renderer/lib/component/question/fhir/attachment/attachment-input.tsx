@@ -1,13 +1,13 @@
 import { useCallback, useMemo } from "react";
 import type { Attachment as ThemeAttachment } from "@formbox/theme";
 
-import type { Attachment } from "../../../../fhir/generated-types.ts";
-import type { IFhirAdapter } from "../../../../fhir/fhir-adapter.ts";
+import type { Attachment } from "@formbox/fhir";
 import {
   parseNumber,
   prepareAttachmentFromFile,
 } from "../../../../utilities.ts";
 import { useTheme } from "../../../../ui/theme.tsx";
+import type { IFhirAdapter } from "../../../../types.ts";
 
 export type AttachmentInputProperties = {
   value: Attachment | undefined;

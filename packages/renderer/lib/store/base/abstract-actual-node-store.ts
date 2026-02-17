@@ -18,7 +18,7 @@ import type {
   OperationOutcomeIssue,
   QuestionnaireItem,
   QuestionnaireItemEnableWhen,
-} from "../../fhir/generated-types.ts";
+} from "@formbox/fhir";
 import { NodeExpressionRegistry } from "../expression/registry/node-expression-registry.ts";
 import {
   booleanify,

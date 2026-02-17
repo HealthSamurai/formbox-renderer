@@ -1,7 +1,4 @@
-import type {
-  Expression,
-  OperationOutcomeIssue,
-} from "../../../fhir/generated-types.ts";
+import type { Expression, OperationOutcomeIssue } from "@formbox/fhir";
 import { action, computed, makeObservable, observable } from "mobx";
 import {
   ExpressionSlotKind,

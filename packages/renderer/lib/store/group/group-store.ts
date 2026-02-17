@@ -16,7 +16,7 @@ import {
 import type {
   QuestionnaireItem,
   QuestionnaireResponseItem,
-} from "../../fhir/generated-types.ts";
+} from "@formbox/fhir";
 
 import { AbstractActualNodeStore } from "../base/abstract-actual-node-store.ts";
 import {

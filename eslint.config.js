@@ -81,17 +81,17 @@ export default tseslint.config(
     },
   },
   {
-    files: ["packages/renderer/lib/fhir/generated-types.ts"],
+    files: ["packages/fhir/lib/generated-types.ts"],
     rules: {
       "unicorn/prevent-abbreviations": "off",
     },
   },
   {
     files: [
-      "packages/renderer/lib/fhir/fhir-adapter.ts",
-      "packages/renderer/lib/fhir/public-types.ts",
-      "packages/renderer/lib/fhir/r4/**/*.{ts,tsx}",
-      "packages/renderer/lib/fhir/r5/**/*.{ts,tsx}",
+      "packages/renderer/lib/fhir/r4-adapter.ts",
+      "packages/renderer/lib/fhir/r5-adapter.ts",
+      "packages/fhir/lib/r4/**/*.{ts,tsx}",
+      "packages/fhir/lib/r5/**/*.{ts,tsx}",
     ],
     rules: {
       "no-restricted-imports": "off",

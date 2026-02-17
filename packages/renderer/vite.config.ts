@@ -17,6 +17,7 @@ export default defineConfig({
       pathsToAliases: false,
       compilerOptions: {
         paths: {
+          "@formbox/fhir": ["packages/fhir/lib"],
           "@formbox/theme": ["packages/theme/lib"],
         },
       },

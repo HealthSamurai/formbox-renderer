@@ -9,7 +9,7 @@ import type { IQuestionNode } from "@formbox/renderer/types.ts";
 import { assertDefined } from "@formbox/renderer/utilities.ts";
 
 import type { QuestionnaireOf } from "@formbox/renderer";
-import type { Attachment } from "@formbox/renderer/fhir/generated-types.ts";
+import type { Attachment } from "@formbox/fhir";
 type Questionnaire = QuestionnaireOf<"r5">;
 const mimeTypeExtension = (code: string) => ({
   url: "http://hl7.org/fhir/StructureDefinition/mimeType",

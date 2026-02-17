@@ -2,7 +2,7 @@ import type {
   FhirVersion,
   QuestionnaireOf,
   QuestionnaireResponseOf,
-} from "./fhir/public-types.ts";
+} from "@formbox/fhir";
 import { FormStore } from "./store/form/form-store.ts";
 import { Form } from "./component/form/form.tsx";
 import { useCallback, useEffect, useMemo } from "react";
@@ -71,6 +71,9 @@ function Renderer<V extends FhirVersion>({
 
 export default Renderer;
 
+export { R4Adapter } from "./fhir/r4-adapter.ts";
+export { R5Adapter } from "./fhir/r5-adapter.ts";
+
 export type {
   AttachmentOf,
   CodingOf,
@@ -89,4 +92,4 @@ export type {
   QuestionnaireResponseItemOf,
   QuestionnaireResponseOf,
   ReferenceOf,
-} from "./fhir/public-types.ts";
+} from "@formbox/fhir";

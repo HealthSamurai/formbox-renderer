@@ -1,5 +1,5 @@
 import { computed, makeObservable } from "mobx";
-import type { OperationOutcomeIssue } from "../../fhir/generated-types.ts";
+import type { OperationOutcomeIssue } from "@formbox/fhir";
 
 import { formatString, groupHasResponses, makeIssue } from "../../utilities.ts";
 import type { INodeValidator, IGroupList } from "../../types.ts";

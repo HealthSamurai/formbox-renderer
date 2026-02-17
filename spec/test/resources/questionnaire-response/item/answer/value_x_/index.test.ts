@@ -13,6 +13,7 @@ import {
 import {
   answerify,
   areValuesEqual,
+  assertDefined,
   compareQuantities,
   countDecimalPlaces,
   estimateBase64Size,
@@ -21,24 +22,25 @@ import {
   normalizeExpressionValues,
   stringifyValue,
   tokenify,
-  assertDefined,
 } from "@formbox/renderer/utilities.ts";
-import { createFhirAdapter } from "@formbox/renderer/fhir/fhir-adapter.ts";
-import type {
-  Attachment as CommonAttachment,
-  Coding as CommonCoding,
-  Element as CommonElement,
-  Quantity as CommonQuantity,
-  Reference as CommonReference,
-} from "@formbox/renderer/fhir/generated-types.ts";
+import {
+  type Attachment as CommonAttachment,
+  type Coding as CommonCoding,
+  type Element as CommonElement,
+  type Quantity as CommonQuantity,
+  type Reference as CommonReference,
+} from "@formbox/fhir";
 
-import type {
-  QuestionnaireOf,
-  QuestionnaireItemOf,
-  QuestionnaireItemAnswerOptionOf,
-  QuestionnaireResponseOf,
-  QuestionnaireResponseItemAnswerOf,
+import {
+  R4Adapter,
+  R5Adapter,
+  type QuestionnaireItemAnswerOptionOf,
+  type QuestionnaireItemOf,
+  type QuestionnaireOf,
+  type QuestionnaireResponseItemAnswerOf,
+  type QuestionnaireResponseOf,
 } from "@formbox/renderer";
+
 type Attachment = CommonAttachment;
 type Coding = CommonCoding;
 type Element = CommonElement;
@@ -401,8 +403,8 @@ describe("countDecimalPlaces", () => {
 });
 
 describe("getAttachmentSize", () => {
-  const r4Adapter = createFhirAdapter("r4");
-  const r5Adapter = createFhirAdapter("r5");
+  const r4Adapter = new R4Adapter();
+  const r5Adapter = new R5Adapter();
 
   it("returns provided numeric size", () => {
     const attachment = { size: 512 } as unknown as Attachment;

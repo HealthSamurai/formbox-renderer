@@ -16,7 +16,7 @@ import type {
   OperationOutcomeIssue,
   QuestionnaireItem,
   QuestionnaireResponseItem,
-} from "../../fhir/generated-types.ts";
+} from "@formbox/fhir";
 import { AbstractPresentableNode } from "../base/abstract-presentable-node.ts";
 import { GroupListValidator } from "./group-list-validator.ts";
 import {

@@ -9,6 +9,7 @@
     "test": "vitest"
   },
   "devDependencies": {
+    "@formbox/fhir": "workspace:*",
     "@formbox/renderer": "workspace:*",
     "@formbox/theme": "workspace:*",
     "@formbox/hs-theme": "workspace:*",

@@ -12,7 +12,7 @@ import type {
   Coding,
   OperationOutcomeIssue,
   QuestionnaireItemAnswerOption,
-} from "../../fhir/generated-types.ts";
+} from "@formbox/fhir";
 import {
   answerify,
   areValuesEqual,
