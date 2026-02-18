@@ -10,6 +10,7 @@ import {
 import {
   AnswerLifecycle,
   AnswerType,
+  ChoiceOrientation,
   type AnswerTypeToDataType,
   DataTypeToType,
   IAnswer,
@@ -195,6 +196,16 @@ export class QuestionStore<T extends AnswerType = AnswerType>
     };
 
     return coding?.code ? keyboardMap[coding.code] : undefined;
+  }
+
+  @computed
+  get choiceOrientation(): ChoiceOrientation | undefined {
+    const code = extractExtensionValue(
+      "code",
+      this.template,
+      EXT.CHOICE_ORIENTATION,
+    );
+    return code as ChoiceOrientation | undefined;
   }
 
   @computed({ keepAlive: true })

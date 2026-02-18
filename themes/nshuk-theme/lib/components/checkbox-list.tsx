@@ -5,6 +5,7 @@ import { LoadingSpinner } from "./loading-spinner.tsx";
 export function CheckboxList({
   options,
   selectedOptions,
+  orientation = "vertical",
   onSelect,
   onDeselect,
   specifyOtherOption,
@@ -73,7 +74,9 @@ export function CheckboxList({
   return (
     <div
       id={id}
-      className="nhsuk-checkboxes nhsuk-checkboxes--small"
+      className={`nhsuk-checkboxes nhsuk-checkboxes--small ${
+        orientation === "horizontal" ? "nhsuk-checkboxes--inline" : ""
+      }`}
       role="group"
       aria-labelledby={ariaLabelledBy}
       aria-describedby={ariaDescribedBy}

@@ -5,6 +5,7 @@ import { LoadingSpinner } from "./loading-spinner.tsx";
 export function CheckboxList({
   options,
   selectedOptions,
+  orientation = "vertical",
   onSelect,
   onDeselect,
   specifyOtherOption,
@@ -27,7 +28,11 @@ export function CheckboxList({
         aria-labelledby={ariaLabelledBy}
         aria-describedby={ariaDescribedBy}
       >
-        <Space orientation="vertical" size="small">
+        <Space
+          orientation={orientation}
+          size="small"
+          wrap={orientation === "horizontal"}
+        >
           {entries.map((entry) => {
             const isChecked = selectedTokens.has(entry.token);
             return (

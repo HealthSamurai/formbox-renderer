@@ -5,6 +5,7 @@ import { LoadingSpinner } from "./loading-spinner.tsx";
 export function RadioButtonList({
   options,
   selectedOption,
+  orientation = "vertical",
   onChange,
   specifyOtherOption,
   customOptionForm,
@@ -42,7 +43,9 @@ export function RadioButtonList({
   return (
     <div
       id={id}
-      className="nhsuk-radios nhsuk-radios--small nhsuk-u-width-full"
+      className={`nhsuk-radios nhsuk-radios--small nhsuk-u-width-full ${
+        orientation === "horizontal" ? "nhsuk-radios--inline" : ""
+      }`}
       role="radiogroup"
       aria-labelledby={ariaLabelledBy}
       aria-describedby={ariaDescribedBy}

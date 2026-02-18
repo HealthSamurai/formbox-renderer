@@ -5,6 +5,7 @@ import { LoadingSpinner } from "./loading-spinner.tsx";
 export function CheckboxList({
   options,
   selectedOptions,
+  orientation = "vertical",
   specifyOtherOption,
   customOptionForm,
   onSelect,
@@ -28,6 +29,7 @@ export function CheckboxList({
   return (
     <Stack
       id={id}
+      data-orientation={orientation}
       data-disabled={disabled}
       aria-busy={isLoading || undefined}
       role="group"
@@ -35,7 +37,7 @@ export function CheckboxList({
       aria-describedby={ariaDescribedBy}
     >
       {hasOptions && (
-        <OptionsList>
+        <OptionsList data-orientation={orientation}>
           {displayOptions.map((option, index) => {
             const optionId = `${id}-option-${index}`;
             const selectedOption = selectedByToken.get(option.token);
@@ -96,6 +98,12 @@ const OptionsList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+
+  &[data-orientation="horizontal"] {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+  }
 `;
 
 const CheckboxOption = styled.div`

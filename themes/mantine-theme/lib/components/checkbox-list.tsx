@@ -1,5 +1,6 @@
-import { Box, Checkbox, Loader, Stack } from "@mantine/core";
+import { Box, Checkbox, Group, Loader, Stack } from "@mantine/core";
 import type { CheckboxListProperties } from "@formbox/theme";
+import type { ReactNode } from "react";
 
 function joinIds(...parts: Array<string | undefined>) {
   const value = parts.filter(Boolean).join(" ").trim();
@@ -9,6 +10,7 @@ function joinIds(...parts: Array<string | undefined>) {
 export function CheckboxList({
   options,
   selectedOptions,
+  orientation = "vertical",
   specifyOtherOption,
   customOptionForm,
   onSelect,
@@ -41,7 +43,7 @@ export function CheckboxList({
       {...groupDescribedByProperties}
     >
       {displayOptions.length > 0 ? (
-        <Stack gap={4}>
+        <ChoicesContainer orientation={orientation}>
           {displayOptions.map((option) => {
             const selectedOption = selectedByToken.get(option.token);
             const isSpecifyOtherOption = option.token === specifyOtherToken;
@@ -84,11 +86,29 @@ export function CheckboxList({
               </Box>
             );
           })}
-        </Stack>
+        </ChoicesContainer>
       ) : undefined}
 
       {isLoading ? <Loader size="xs" /> : undefined}
       {customOptionForm ? <Box>{customOptionForm}</Box> : undefined}
     </Stack>
   );
+}
+
+function ChoicesContainer({
+  orientation,
+  children,
+}: {
+  orientation: "horizontal" | "vertical";
+  children: ReactNode;
+}) {
+  if (orientation === "horizontal") {
+    return (
+      <Group gap="md" wrap="wrap" align="flex-start">
+        {children}
+      </Group>
+    );
+  }
+
+  return <Stack gap={4}>{children}</Stack>;
 }

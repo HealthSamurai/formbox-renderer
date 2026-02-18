@@ -87,6 +87,7 @@ export const SingleListSelectControl = observer(
       <RadioButtonList
         options={options}
         selectedOption={selectedOption}
+        orientation={node.choiceOrientation}
         onChange={(token) => store.selectOptionForAnswer(answer, token)}
         specifyOtherOption={specifyOtherOption}
         customOptionForm={customOptionForm}

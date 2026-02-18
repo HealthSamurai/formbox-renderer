@@ -119,6 +119,8 @@ export const QUESTION_ITEM_CONTROLS = [
 
 export type QuestionItemControl = (typeof QUESTION_ITEM_CONTROLS)[number];
 
+export type ChoiceOrientation = "horizontal" | "vertical";
+
 export type ExpressionSlotKind =
   | "variable"
   | "enable-when"
@@ -702,6 +704,7 @@ export interface IQuestionNode<
   readonly repeats: boolean;
   readonly isRepeatingWithoutChildren: boolean;
   readonly answerOption: IAnswerOptions<T>;
+  readonly choiceOrientation: ChoiceOrientation | undefined;
   readonly keyboardType: HTMLAttributes<Element>["inputMode"] | undefined;
   readonly answers: Array<IAnswer<T>>;
   readonly renderer: QuestionRendererComponent<T> | undefined;

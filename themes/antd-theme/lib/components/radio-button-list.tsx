@@ -5,6 +5,7 @@ import { LoadingSpinner } from "./loading-spinner.tsx";
 export function RadioButtonList({
   options,
   selectedOption,
+  orientation = "vertical",
   onChange,
   specifyOtherOption,
   customOptionForm,
@@ -29,7 +30,11 @@ export function RadioButtonList({
         aria-describedby={ariaDescribedBy}
         disabled={disabled}
       >
-        <Space orientation="vertical" size="small">
+        <Space
+          orientation={orientation}
+          size="small"
+          wrap={orientation === "horizontal"}
+        >
           {entries.map((entry) => (
             <Radio
               key={entry.token}

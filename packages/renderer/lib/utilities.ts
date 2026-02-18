@@ -169,6 +169,7 @@ export const EXT = {
   SDC_MAX_QUANTITY:              "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-maxQuantity",
   HIDDEN:                        "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
   ITEM_CONTROL:                  "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+  CHOICE_ORIENTATION:            "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
   QUESTIONNAIRE_UNIT:            "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
   QUESTIONNAIRE_UNIT_OPTION:     "http://hl7.org/fhir/StructureDefinition/questionnaire-unitOption",
   SDC_ENABLE_WHEN_EXPR:          "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-enableWhenExpression",

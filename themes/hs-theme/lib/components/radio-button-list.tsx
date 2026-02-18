@@ -5,6 +5,7 @@ import { LoadingSpinner } from "./loading-spinner.tsx";
 export function RadioButtonList({
   options,
   selectedOption,
+  orientation = "vertical",
   onChange,
   specifyOtherOption,
   customOptionForm,
@@ -25,6 +26,7 @@ export function RadioButtonList({
       {hasOptions && (
         <RadioGroupContainer
           role="radiogroup"
+          data-orientation={orientation}
           aria-labelledby={ariaLabelledBy}
           aria-describedby={ariaDescribedBy}
           aria-busy={isLoading || undefined}
@@ -62,6 +64,12 @@ const RadioGroupContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+
+  &[data-orientation="horizontal"] {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+  }
 `;
 
 const RadioOption = styled.div`

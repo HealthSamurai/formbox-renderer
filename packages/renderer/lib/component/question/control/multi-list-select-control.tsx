@@ -78,6 +78,7 @@ export const MultiListSelectControl = observer(function MultiListSelectControl<
       options={options}
       onSelect={store.selectOption}
       onDeselect={store.deselectOption}
+      orientation={node.choiceOrientation}
       specifyOtherOption={specifyOtherOption}
       id={buildId(node.token, "multi-select")}
       ariaLabelledBy={ariaLabelledBy}
