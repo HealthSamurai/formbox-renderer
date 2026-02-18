@@ -1,0 +1,76 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "choice-orientation",
+  "status": "active",
+  "title": "choiceOrientation",
+  "description": "Demonstrates horizontal and vertical orientation for radio-button and check-box list controls.",
+  "item": [
+    {
+      "linkId": "horizontal-radio",
+      "type": "string",
+      "text": "Preferred appointment slot (horizontal radio list)",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "radio-button"
+              }
+            ]
+          }
+        },
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+          "valueCode": "horizontal"
+        }
+      ],
+      "answerOption": [
+        {
+          "valueString": "Morning"
+        },
+        {
+          "valueString": "Afternoon"
+        },
+        {
+          "valueString": "Evening"
+        }
+      ]
+    },
+    {
+      "linkId": "vertical-checkbox",
+      "type": "string",
+      "repeats": true,
+      "text": "Symptoms observed (vertical checkbox list)",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "check-box"
+              }
+            ]
+          }
+        },
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+          "valueCode": "vertical"
+        }
+      ],
+      "answerOption": [
+        {
+          "valueString": "Headache"
+        },
+        {
+          "valueString": "Fatigue"
+        },
+        {
+          "valueString": "Nausea"
+        }
+      ]
+    }
+  ]
+}

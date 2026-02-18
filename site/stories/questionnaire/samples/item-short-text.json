@@ -1,0 +1,36 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "item-short-text",
+  "status": "active",
+  "title": "itemShortText",
+  "description": "Demonstrates shortText labels for compact layouts. Switch to a narrow viewport to see short labels replace primary text.",
+  "item": [
+    {
+      "linkId": "intro",
+      "type": "display",
+      "text": "Resize the Storybook preview to mobile width (below 40rem) to see shortText in action."
+    },
+    {
+      "linkId": "systolic",
+      "type": "integer",
+      "text": "Systolic blood pressure (mmHg)",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-shortText",
+          "valueString": "Systolic BP"
+        }
+      ]
+    },
+    {
+      "linkId": "diastolic",
+      "type": "integer",
+      "text": "Diastolic blood pressure (mmHg)",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-shortText",
+          "valueString": "Diastolic BP"
+        }
+      ]
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import answerExpression from "./samples/answer-expression.json" with { type: "js
 import answerOptions from "./samples/answer-options.json" with { type: "json" };
 import answerValueSet from "./samples/answer-valueset.json" with { type: "json" };
 import booleanGating from "./samples/boolean-gating.json" with { type: "json" };
+import choiceOrientation from "./samples/choice-orientation.json" with { type: "json" };
 import expressionCalculated from "./samples/expression-calculated.json" with { type: "json" };
 import expressionDynamicBehavior from "./samples/expression-dynamic-behavior.json" with { type: "json" };
 import expressionDynamicBounds from "./samples/expression-dynamic-bounds.json" with { type: "json" };
@@ -13,6 +14,8 @@ import expressionEnableWhen from "./samples/expression-enable-when.json" with { 
 import expressionInitial from "./samples/expression-initial.json" with { type: "json" };
 import itemControlHelp from "./samples/item-control-help.json" with { type: "json" };
 import itemControlMatrix from "./samples/item-control-matrix.json" with { type: "json" };
+import itemMedia from "./samples/item-media.json" with { type: "json" };
+import itemShortText from "./samples/item-short-text.json" with { type: "json" };
 import nestedFollowUps from "./samples/nested-follow-ups.json" with { type: "json" };
 import numericThresholds from "./samples/numeric-thresholds.json" with { type: "json" };
 import numericUnits from "./samples/numeric-units.json" with { type: "json" };
@@ -153,4 +156,13 @@ export const AnswerValueSet = makeStory(
 export const ItemControlMatrix = makeStory(
   "Item control + constraint matrix",
   itemControlMatrix as Questionnaire,
+);
+export const ItemShortText = makeStory(
+  "Item shortText",
+  itemShortText as Questionnaire,
+);
+export const ItemMedia = makeStory("Item media", itemMedia as Questionnaire);
+export const ChoiceOrientation = makeStory(
+  "Choice orientation",
+  choiceOrientation as Questionnaire,
 );

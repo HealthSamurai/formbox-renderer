@@ -1,0 +1,69 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "item-media",
+  "status": "active",
+  "title": "itemMedia",
+  "description": "Demonstrates item-level media rendered near labels (image, audio, video, and non-media link fallback).",
+  "item": [
+    {
+      "linkId": "photo-note",
+      "type": "string",
+      "text": "Describe what you see in the reference image",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemMedia",
+          "valueAttachment": {
+            "title": "Reference image",
+            "contentType": "image/png",
+            "url": "https://picsum.photos/536/354"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "audio-note",
+      "type": "text",
+      "text": "Write a short summary after listening",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemMedia",
+          "valueAttachment": {
+            "title": "Audio prompt",
+            "contentType": "audio/mpeg",
+            "url": "https://download.samplelib.com/mp3/sample-6s.mp3"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "policy-confirmation",
+      "type": "boolean",
+      "text": "I have reviewed the policy document",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemMedia",
+          "valueAttachment": {
+            "title": "Policy document (PDF)",
+            "contentType": "application/pdf",
+            "url": "https://example.org/docs/policy.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "video-note",
+      "type": "text",
+      "text": "Summarize the key message from the short video",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemMedia",
+          "valueAttachment": {
+            "title": "Video prompt",
+            "contentType": "video/mp4",
+            "url": "https://lorem.video/720p"
+          }
+        }
+      ]
+    }
+  ]
+}
