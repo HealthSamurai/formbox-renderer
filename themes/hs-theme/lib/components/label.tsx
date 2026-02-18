@@ -1,10 +1,12 @@
 import { styled } from "@linaria/react";
 import type { LabelProperties } from "@formbox/theme";
 import { useMediaQuery } from "../use-media-query.ts";
+import { Media } from "./item-media.tsx";
 
 export function Label({
   prefix,
   shortText,
+  itemMedia,
   children,
   id,
   htmlFor,
@@ -41,6 +43,11 @@ export function Label({
         {legal}
         {flyover}
       </LabelRow>
+      {itemMedia && (
+        <MediaContainer>
+          <Media attachment={itemMedia} />
+        </MediaContainer>
+      )}
     </Wrapper>
   );
 }
@@ -78,4 +85,9 @@ const Prefix = styled.span`
 
 const Required = styled.span`
   color: #e53e3e;
+`;
+
+const MediaContainer = styled.span`
+  display: block;
+  margin-top: 0.5rem;
 `;

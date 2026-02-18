@@ -1,10 +1,12 @@
 import type { LabelProperties } from "@formbox/theme";
 import type { ReactNode } from "react";
 import { useMediaQuery } from "../use-media-query.ts";
+import { Media } from "./item-media.tsx";
 
 export function Label({
   prefix,
   shortText,
+  itemMedia,
   children,
   id,
   htmlFor,
@@ -16,6 +18,11 @@ export function Label({
 }: LabelProperties) {
   const useShortText = useMediaQuery("(max-width: 40rem)");
   const text = useShortText ? shortText : children;
+  const itemMediaNode = itemMedia && (
+    <div className="nhsuk-u-margin-top-2">
+      <Media attachment={itemMedia} />
+    </div>
+  );
 
   const content = (
     <>
@@ -37,6 +44,7 @@ export function Label({
         {help}
         {legal}
         {flyover}
+        {itemMediaNode}
       </>
     );
   }
@@ -54,6 +62,7 @@ export function Label({
         {help}
         {legal}
         {flyover}
+        {itemMediaNode}
       </>
     );
   }
@@ -66,6 +75,7 @@ export function Label({
       {help}
       {legal}
       {flyover}
+      {itemMediaNode}
     </>
   );
 }

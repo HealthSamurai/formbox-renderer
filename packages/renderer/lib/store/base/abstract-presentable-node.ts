@@ -1,6 +1,7 @@
 import { computed, makeObservable } from "mobx";
 import { IForm, INode, IPresentableNode, IScope } from "../../types.ts";
 import type {
+  Attachment,
   Coding,
   OperationOutcomeIssue,
   QuestionnaireItem,
@@ -58,6 +59,11 @@ export abstract class AbstractPresentableNode implements IPresentableNode {
   @computed
   get shortText() {
     return findExtension(this.template, EXT.SDC_SHORT_TEXT)?.valueString;
+  }
+
+  @computed
+  get itemMedia(): Attachment | undefined {
+    return findExtension(this.template, EXT.SDC_ITEM_MEDIA)?.valueAttachment;
   }
 
   @computed
