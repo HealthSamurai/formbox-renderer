@@ -1,0 +1,101 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "open-label",
+  "status": "active",
+  "title": "openLabel",
+  "description": "Demonstrates custom openLabel text for unrestricted 'other' entry in open-choice style questions.",
+  "item": [
+    {
+      "linkId": "symptom-radio",
+      "type": "coding",
+      "text": "Primary symptom",
+      "answerConstraint": "optionsOrString",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "radio-button"
+              }
+            ]
+          }
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-openLabel",
+          "valueString": "Other symptom, please specify"
+        }
+      ],
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "25064002",
+            "display": "Headache"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "386661006",
+            "display": "Fever"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "49727002",
+            "display": "Cough"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "trigger-dropdown",
+      "type": "coding",
+      "text": "Most likely trigger",
+      "answerConstraint": "optionsOrString",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "drop-down"
+              }
+            ]
+          }
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-openLabel",
+          "valueString": "Other trigger, please specify"
+        }
+      ],
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "419199007",
+            "display": "Viral infection"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "66493003",
+            "display": "Allergic reaction"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "271807003",
+            "display": "Stress"
+          }
+        }
+      ]
+    }
+  ]
+}

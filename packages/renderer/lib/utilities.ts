@@ -181,6 +181,7 @@ export const EXT = {
   SDC_KEYBOARD:                  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-keyboard",
   SDC_ITEM_MEDIA:                "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemMedia",
   SDC_SHORT_TEXT:                "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-shortText",
+  SDC_OPEN_LABEL:                "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-openLabel",
   CQF_EXPRESSION:                "http://hl7.org/fhir/StructureDefinition/cqf-expression",
   CQF_CALCULATED_VALUE:          "http://hl7.org/fhir/uv/cql/StructureDefinition/cqf-calculatedValue",
   TARGET_CONSTRAINT:             "http://hl7.org/fhir/StructureDefinition/targetConstraint",

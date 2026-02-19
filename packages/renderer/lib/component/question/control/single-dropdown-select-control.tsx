@@ -64,7 +64,7 @@ export const SingleDropdownSelectControl = observer(
     const specifyOtherOption = store.allowCustom
       ? {
           token: store.specifyOtherToken,
-          label: strings.selection.specifyOther,
+          label: node.openLabel ?? strings.selection.specifyOther,
           disabled: store.isLoading,
         }
       : undefined;

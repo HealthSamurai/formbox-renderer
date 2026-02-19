@@ -199,6 +199,11 @@ export class QuestionStore<T extends AnswerType = AnswerType>
   }
 
   @computed
+  get openLabel(): string | undefined {
+    return extractExtensionValue("string", this.template, EXT.SDC_OPEN_LABEL);
+  }
+
+  @computed
   get choiceOrientation(): ChoiceOrientation | undefined {
     const code = extractExtensionValue(
       "code",

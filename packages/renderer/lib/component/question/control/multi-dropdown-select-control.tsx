@@ -70,7 +70,7 @@ export const MultiDropdownSelectControl = observer(
     const specifyOtherOption = store.allowCustom
       ? {
           token: store.specifyOtherToken,
-          label: strings.selection.specifyOther,
+          label: node.openLabel ?? strings.selection.specifyOther,
           disabled: !store.canAddSelection || store.isLoading,
         }
       : undefined;
