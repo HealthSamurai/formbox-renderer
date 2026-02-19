@@ -12,7 +12,7 @@ export const SelectionTableControl = observer(function SelectionTableControl({
 }: {
   node: IGroupNode;
 }) {
-  const { Table, Label } = useTheme();
+  const { Table, Label, OptionDisplay } = useTheme();
 
   return node.control === "htable" ? (
     <Table
@@ -26,7 +26,9 @@ export const SelectionTableControl = observer(function SelectionTableControl({
         token: option.token,
         content: (
           <Label id={buildId(node.token, option.token)}>
-            <ValueDisplay type={option.answerType} value={option.value} />
+            <OptionDisplay prefix={option.prefix}>
+              <ValueDisplay type={option.answerType} value={option.value} />
+            </OptionDisplay>
           </Label>
         ),
         cells: node.table.questions.map((question) => ({
@@ -48,7 +50,9 @@ export const SelectionTableControl = observer(function SelectionTableControl({
         token: option.token,
         content: (
           <Label id={buildId(node.token, option.token)}>
-            <ValueDisplay type={option.answerType} value={option.value} />
+            <OptionDisplay prefix={option.prefix}>
+              <ValueDisplay type={option.answerType} value={option.value} />
+            </OptionDisplay>
           </Label>
         ),
       }))}

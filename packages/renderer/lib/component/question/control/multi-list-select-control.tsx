@@ -17,12 +17,16 @@ import {
 export const MultiListSelectControl = observer(function MultiListSelectControl<
   T extends AnswerType,
 >({ node }: { node: IQuestionNode<T> }) {
-  const { CheckboxList, CustomOptionForm } = useTheme();
+  const { CheckboxList, CustomOptionForm, OptionDisplay } = useTheme();
   const store = node.answerOption.select;
   const CustomControl = getValueControl(store.customType);
   const selectedOptions = store.selectedOptions.map((selection) => ({
     token: selection.token,
-    label: <ValueDisplay type={selection.answerType} value={selection.value} />,
+    label: (
+      <OptionDisplay prefix={selection.prefix}>
+        <ValueDisplay type={selection.answerType} value={selection.value} />
+      </OptionDisplay>
+    ),
     ariaDescribedBy: getIssueErrorId(selection.answer),
     errors: renderErrors(selection.answer),
     disabled: selection.disabled,
@@ -61,9 +65,13 @@ export const MultiListSelectControl = observer(function MultiListSelectControl<
     return store.filteredOptions.map((entry) => ({
       token: entry.token,
       disabled: entry.disabled,
-      label: <ValueDisplay type={entry.answerType} value={entry.value} />,
+      label: (
+        <OptionDisplay prefix={entry.prefix}>
+          <ValueDisplay type={entry.answerType} value={entry.value} />
+        </OptionDisplay>
+      ),
     }));
-  }, [store.filteredOptions]);
+  }, [OptionDisplay, store.filteredOptions]);
 
   const specifyOtherOption = store.allowCustom
     ? {

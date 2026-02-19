@@ -263,6 +263,7 @@ export type AnswerOption<T extends AnswerType> = {
   readonly value: DataTypeToType<AnswerTypeToDataType<T>> | undefined;
   readonly disabled: boolean;
   readonly answerType: AnswerType;
+  readonly prefix?: string | undefined;
 };
 
 export type ValueDisplayProperties<T extends AnswerType> = {

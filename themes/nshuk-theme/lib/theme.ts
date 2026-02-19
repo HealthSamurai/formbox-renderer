@@ -7,6 +7,7 @@ import { DateTimeInput } from "./components/date-time-input.tsx";
 import { TimeInput } from "./components/time-input.tsx";
 import { SliderInput } from "./components/slider-input.tsx";
 import { SpinnerInput } from "./components/spinner-input.tsx";
+import { OptionDisplay } from "./components/option-display.tsx";
 import { SelectInput } from "./components/select-input.tsx";
 import { RadioButton } from "./components/radio-button.tsx";
 import { RadioButtonList } from "./components/radio-button-list.tsx";
@@ -41,6 +42,7 @@ export { TextArea } from "./components/text-area.tsx";
 export { NumberInput } from "./components/number-input.tsx";
 export { TabContainer } from "./components/tab-container.tsx";
 export { DisplayRenderer } from "./components/display-renderer.tsx";
+export { OptionDisplay } from "./components/option-display.tsx";
 export { Link } from "./components/link.tsx";
 export { Provider } from "./provider.tsx";
 
@@ -53,6 +55,7 @@ export const theme: Theme = {
   TimeInput,
   SliderInput,
   SpinnerInput,
+  OptionDisplay,
   SelectInput,
   RadioButton,
   RadioButtonList,

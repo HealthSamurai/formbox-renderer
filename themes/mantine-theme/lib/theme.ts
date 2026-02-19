@@ -6,6 +6,7 @@ export { DateTimeInput } from "./components/date-time-input.tsx";
 export { TimeInput } from "./components/time-input.tsx";
 export { SliderInput } from "./components/slider-input.tsx";
 export { SpinnerInput } from "./components/spinner-input.tsx";
+export { OptionDisplay } from "./components/option-display.tsx";
 export { SelectInput } from "./components/select-input.tsx";
 export { RadioButton } from "./components/radio-button.tsx";
 export { RadioButtonList } from "./components/radio-button-list.tsx";
@@ -45,6 +46,7 @@ import { DateTimeInput } from "./components/date-time-input.tsx";
 import { TimeInput } from "./components/time-input.tsx";
 import { SliderInput } from "./components/slider-input.tsx";
 import { SpinnerInput } from "./components/spinner-input.tsx";
+import { OptionDisplay } from "./components/option-display.tsx";
 import { SelectInput } from "./components/select-input.tsx";
 import { RadioButton } from "./components/radio-button.tsx";
 import { RadioButtonList } from "./components/radio-button-list.tsx";
@@ -83,6 +85,7 @@ export const theme: Theme = {
   TimeInput,
   SliderInput,
   SpinnerInput,
+  OptionDisplay,
   SelectInput,
   RadioButton,
   RadioButtonList,

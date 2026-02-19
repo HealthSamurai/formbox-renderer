@@ -18,6 +18,8 @@ import {
   areValuesEqual,
   booleanify,
   buildId,
+  EXT,
+  extractExtensionValue,
   getValue,
   OPTIONS_ISSUE_EXPRESSION,
   tokenify,
@@ -112,12 +114,14 @@ export class AnswerOptionStore<
           value: true,
           disabled: false,
           answerType: "boolean",
+          prefix: undefined,
         },
         {
           token: buildId(this.question.token, "false"),
           value: false,
           disabled: false,
           answerType: "boolean",
+          prefix: undefined,
         },
         ...(this.question.repeats
           ? []
@@ -127,6 +131,7 @@ export class AnswerOptionStore<
                 value: undefined,
                 disabled: false,
                 answerType: "boolean",
+                prefix: undefined,
               },
             ]),
       ] as AnswerOption<T>[];
@@ -153,6 +158,7 @@ export class AnswerOptionStore<
           value,
           disabled,
           answerType: this.question.type,
+          prefix: extractExtensionValue("string", option, EXT.OPTION_PREFIX),
         } satisfies AnswerOption<T>,
       ];
     });

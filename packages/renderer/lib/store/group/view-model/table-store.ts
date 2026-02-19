@@ -38,6 +38,7 @@ export class TableStore implements ITable {
             token: option.token,
             answerType: question.type,
             value: option.value,
+            prefix: option.prefix,
           });
         }
       });

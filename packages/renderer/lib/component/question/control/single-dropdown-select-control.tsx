@@ -18,7 +18,7 @@ export const SingleDropdownSelectControl = observer(
     ariaLabelledBy,
     id,
   }: ValueControlProperties<T>) {
-    const { SelectInput, CustomOptionForm } = useTheme();
+    const { SelectInput, CustomOptionForm, OptionDisplay } = useTheme();
     const node = answer.question;
     const store = node.answerOption.select;
 
@@ -56,10 +56,14 @@ export const SingleDropdownSelectControl = observer(
     const options = useMemo<OptionItem[]>(() => {
       return store.filteredOptions.map((entry) => ({
         token: entry.token,
-        label: <ValueDisplay type={entry.answerType} value={entry.value} />,
+        label: (
+          <OptionDisplay prefix={entry.prefix}>
+            <ValueDisplay type={entry.answerType} value={entry.value} />
+          </OptionDisplay>
+        ),
         disabled: entry.disabled,
       }));
-    }, [store.filteredOptions]);
+    }, [OptionDisplay, store.filteredOptions]);
 
     const specifyOtherOption = store.allowCustom
       ? {
@@ -80,7 +84,9 @@ export const SingleDropdownSelectControl = observer(
         token: selection.token,
         disabled: selection.disabled,
         label: (
-          <ValueDisplay type={selection.answerType} value={selection.value} />
+          <OptionDisplay prefix={selection.prefix}>
+            <ValueDisplay type={selection.answerType} value={selection.value} />
+          </OptionDisplay>
         ),
       };
     })();

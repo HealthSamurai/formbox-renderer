@@ -20,6 +20,7 @@ import nestedFollowUps from "./samples/nested-follow-ups.json" with { type: "jso
 import numericThresholds from "./samples/numeric-thresholds.json" with { type: "json" };
 import numericUnits from "./samples/numeric-units.json" with { type: "json" };
 import openLabel from "./samples/open-label.json" with { type: "json" };
+import optionPrefix from "./samples/option-prefix.json" with { type: "json" };
 import quantityUnitOptions from "./samples/quantity-unit-options.json" with { type: "json" };
 import repeatingGroup from "./samples/repeating-group.json" with { type: "json" };
 import repeatingQuestion from "./samples/repeating-question.json" with { type: "json" };
@@ -168,3 +169,7 @@ export const ChoiceOrientation = makeStory(
   choiceOrientation as Questionnaire,
 );
 export const OpenLabel = makeStory("Open label", openLabel as Questionnaire);
+export const OptionPrefix = makeStory(
+  "Option prefix",
+  optionPrefix as Questionnaire,
+);

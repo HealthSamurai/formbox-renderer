@@ -1,0 +1,287 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "option-prefix",
+  "status": "active",
+  "title": "optionPrefix",
+  "description": "Demonstrates questionnaire-optionPrefix on single-select, multi-select, and selection-table controls.",
+  "item": [
+    {
+      "linkId": "severity",
+      "type": "string",
+      "text": "Severity",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "radio-button"
+              }
+            ]
+          }
+        }
+      ],
+      "answerOption": [
+        {
+          "valueString": "Mild",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "(a)"
+            }
+          ]
+        },
+        {
+          "valueString": "Moderate",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "(b)"
+            }
+          ]
+        },
+        {
+          "valueString": "Severe",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "(c)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "priority",
+      "type": "string",
+      "text": "Priority",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "drop-down"
+              }
+            ]
+          }
+        }
+      ],
+      "answerOption": [
+        {
+          "valueString": "Low",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "1."
+            }
+          ]
+        },
+        {
+          "valueString": "Medium",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "2."
+            }
+          ]
+        },
+        {
+          "valueString": "High",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "3."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "symptoms",
+      "type": "string",
+      "repeats": true,
+      "text": "Symptoms (multi list select)",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "check-box"
+              }
+            ]
+          }
+        }
+      ],
+      "answerOption": [
+        {
+          "valueString": "Fever",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "A)"
+            }
+          ]
+        },
+        {
+          "valueString": "Cough",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "B)"
+            }
+          ]
+        },
+        {
+          "valueString": "Fatigue",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "C)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "alerts",
+      "type": "string",
+      "repeats": true,
+      "text": "Alert channels (multi dropdown select)",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "drop-down"
+              }
+            ]
+          }
+        }
+      ],
+      "answerOption": [
+        {
+          "valueString": "Email",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "I."
+            }
+          ]
+        },
+        {
+          "valueString": "SMS",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "II."
+            }
+          ]
+        },
+        {
+          "valueString": "Phone call",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "III."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "impact-matrix",
+      "type": "group",
+      "text": "Impact matrix (selection table)",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "table"
+              }
+            ]
+          }
+        }
+      ],
+      "item": [
+        {
+          "linkId": "impact-mobility",
+          "type": "string",
+          "text": "Mobility impact",
+          "answerOption": [
+            {
+              "valueString": "Low",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "1."
+                }
+              ]
+            },
+            {
+              "valueString": "Medium",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "2."
+                }
+              ]
+            },
+            {
+              "valueString": "High",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "3."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "impact-work",
+          "type": "string",
+          "text": "Work impact",
+          "answerOption": [
+            {
+              "valueString": "Low",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "1."
+                }
+              ]
+            },
+            {
+              "valueString": "Medium",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "2."
+                }
+              ]
+            },
+            {
+              "valueString": "High",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "3."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

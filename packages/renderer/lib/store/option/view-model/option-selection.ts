@@ -83,27 +83,38 @@ export class OptionSelection<
 
   @computed
   private get matchedOptionsByAnswerToken() {
-    return this.inherentOptions.reduce((matches, option) => {
-      const match = this.question.answers.find((answer) => {
-        if (
-          answer.token === this.pendingCustomOptionForm?.answer.token ||
-          this.customAnswerTokens.has(answer.token)
-        ) {
-          return false;
+    return this.inherentOptions.reduce(
+      (matches, option) => {
+        const match = this.question.answers.find((answer) => {
+          if (
+            answer.token === this.pendingCustomOptionForm?.answer.token ||
+            this.customAnswerTokens.has(answer.token)
+          ) {
+            return false;
+          }
+          return areValuesEqual(
+            this.question.dataType,
+            answer.value,
+            option.value,
+          );
+        });
+        return match
+          ? matches.set(match.token, {
+              token: option.token,
+              disabled: option.disabled,
+              prefix: option.prefix,
+            })
+          : matches;
+      },
+      new Map<
+        AnswerToken,
+        {
+          token: OptionToken;
+          disabled: boolean;
+          prefix?: string | undefined;
         }
-        return areValuesEqual(
-          this.question.dataType,
-          answer.value,
-          option.value,
-        );
-      });
-      return match
-        ? matches.set(match.token, {
-            token: option.token,
-            disabled: option.disabled,
-          })
-        : matches;
-    }, new Map<AnswerToken, { token: OptionToken; disabled: boolean }>());
+      >(),
+    );
   }
 
   @computed
@@ -120,6 +131,7 @@ export class OptionSelection<
           answer,
           value: answer.value,
           answerType: this.question.type,
+          prefix: matchedOption.prefix,
           disabled:
             (this.question.isRepeatingWithoutChildren
               ? false
@@ -139,6 +151,7 @@ export class OptionSelection<
         answer,
         value: answer.value,
         answerType: this.allowCustom ? this.customType : this.question.type,
+        prefix: undefined,
         disabled:
           !this.allowCustom ||
           (this.question.isRepeatingWithoutChildren &&
@@ -339,6 +352,7 @@ export class OptionSelection<
       value: cloned,
       answerType: this.customType,
       disabled: false,
+      prefix: undefined,
     } as AnswerOption<T> | AnswerOption<"string">);
   }
 
@@ -359,6 +373,7 @@ export class OptionSelection<
       value: structuredClone(value) as DataTypeToType<AnswerTypeToDataType<T>>,
       answerType: this.question.type,
       disabled: true,
+      prefix: undefined,
     });
   }
 
@@ -467,6 +482,7 @@ export class OptionSelection<
           value: selection.value,
           disabled: selection.disabled,
           answerType: selection.answerType,
+          prefix: selection.prefix,
         } as AnswerOption<T> | AnswerOption<"string">,
       ];
     });
