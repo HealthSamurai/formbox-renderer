@@ -1,5 +1,6 @@
 import { computed, makeObservable } from "mobx";
 import { IForm, INode, IPresentableNode, IScope } from "../../types.ts";
+import type { Hyperlink } from "@formbox/theme";
 import type {
   Attachment,
   Coding,
@@ -13,6 +14,7 @@ import {
   extractExtensionsValues,
   findDisplayItemByControl,
   findExtension,
+  findExtensions,
 } from "../../utilities.ts";
 
 export abstract class AbstractPresentableNode implements IPresentableNode {
@@ -59,6 +61,27 @@ export abstract class AbstractPresentableNode implements IPresentableNode {
   @computed
   get shortText() {
     return findExtension(this.template, EXT.SDC_SHORT_TEXT)?.valueString;
+  }
+
+  @computed
+  get supportHyperlinks(): Hyperlink[] {
+    return [
+      ...findExtensions(this.template, EXT.SUPPORT_HYPERLINK).flatMap(
+        (extension) => {
+          const link = findExtension(extension, "link");
+          const label = findExtension(extension, "label");
+
+          return link?.valueUri
+            ? [{ href: link.valueUri, label: label?.valueString }]
+            : [];
+        },
+      ),
+      ...findExtensions(this.template, EXT.SUPPORT_LINK).flatMap((extension) =>
+        extension.valueUri
+          ? [{ href: extension.valueUri, label: undefined }]
+          : [],
+      ),
+    ];
   }
 
   @computed

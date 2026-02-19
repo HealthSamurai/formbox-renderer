@@ -2,10 +2,12 @@ import { styled } from "@linaria/react";
 import type { LabelProperties } from "@formbox/theme";
 import { useMediaQuery } from "../use-media-query.ts";
 import { Media } from "./item-media.tsx";
+import { Link } from "./link.tsx";
 
 export function Label({
   prefix,
   shortText,
+  supportHyperlinks,
   itemMedia,
   children,
   id,
@@ -24,7 +26,7 @@ export function Label({
   const isEmphasized = as !== "text";
   const isLegend = as === "legend";
 
-  const text = useShortText ? shortText : children;
+  const text = useShortText && shortText != undefined ? shortText : children;
 
   return (
     <Wrapper as={labelTag} htmlFor={labelFor}>
@@ -43,6 +45,21 @@ export function Label({
         {legal}
         {flyover}
       </LabelRow>
+      {supportHyperlinks?.length ? (
+        <SupportLinks>
+          {supportHyperlinks.map((supportHyperlink, index) => (
+            <SupportLink key={`${supportHyperlink.href}-${index}`}>
+              <Link
+                href={supportHyperlink.href}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {`${supportHyperlink.label ?? supportHyperlink.href} ↗`}
+              </Link>
+            </SupportLink>
+          ))}
+        </SupportLinks>
+      ) : undefined}
       {itemMedia && (
         <MediaContainer>
           <Media attachment={itemMedia} />
@@ -85,6 +102,16 @@ const Prefix = styled.span`
 
 const Required = styled.span`
   color: #e53e3e;
+`;
+
+const SupportLink = styled.span`
+  display: inline-flex;
+`;
+
+const SupportLinks = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 `;
 
 const MediaContainer = styled.span`

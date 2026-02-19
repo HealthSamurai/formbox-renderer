@@ -27,7 +27,7 @@ export function Media({ attachment }: { attachment: Attachment }) {
       <img
         src={source}
         alt={label}
-        style={{ maxWidth: "100%", height: "auto", borderRadius: "0.375rem" }}
+        style={{ maxWidth: "100%", height: "auto" }}
       />
     );
   }

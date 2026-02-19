@@ -2,13 +2,18 @@
   "resourceType": "Questionnaire",
   "id": "item-media",
   "status": "active",
-  "title": "itemMedia",
+  "title": "Item Media",
   "description": "Demonstrates item-level media rendered near labels (image, audio, video, and non-media link fallback).",
   "item": [
     {
-      "linkId": "photo-note",
+      "linkId": "item-media-intro",
+      "type": "display",
+      "text": "Each question includes media attached at the item level."
+    },
+    {
+      "linkId": "reference-image-observation",
       "type": "string",
-      "text": "Describe what you see in the reference image",
+      "text": "Describe what you see in the reference image.",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemMedia",
@@ -21,9 +26,9 @@
       ]
     },
     {
-      "linkId": "audio-note",
+      "linkId": "audio-summary",
       "type": "text",
-      "text": "Write a short summary after listening",
+      "text": "Write a short summary after listening to the audio prompt.",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemMedia",
@@ -36,7 +41,7 @@
       ]
     },
     {
-      "linkId": "policy-confirmation",
+      "linkId": "policy-review",
       "type": "boolean",
       "text": "I have reviewed the policy document",
       "extension": [
@@ -51,7 +56,7 @@
       ]
     },
     {
-      "linkId": "video-note",
+      "linkId": "video-summary",
       "type": "text",
       "text": "Summarize the key message from the short video",
       "extension": [

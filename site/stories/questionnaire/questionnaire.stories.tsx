@@ -25,6 +25,7 @@ import quantityUnitOptions from "./samples/quantity-unit-options.json" with { ty
 import repeatingGroup from "./samples/repeating-group.json" with { type: "json" };
 import repeatingQuestion from "./samples/repeating-question.json" with { type: "json" };
 import staticInitials from "./samples/static-initials.json" with { type: "json" };
+import supportLinks from "./samples/support-hyperlink.json" with { type: "json" };
 import targetConstraint from "./samples/target-constraint.json" with { type: "json" };
 import textControls from "./samples/text-controls.json" with { type: "json" };
 import validation from "./samples/validation.json" with { type: "json" };
@@ -172,4 +173,8 @@ export const OpenLabel = makeStory("Open label", openLabel as Questionnaire);
 export const OptionPrefix = makeStory(
   "Option prefix",
   optionPrefix as Questionnaire,
+);
+export const SupportLinks = makeStory(
+  "Support links",
+  supportLinks as Questionnaire,
 );

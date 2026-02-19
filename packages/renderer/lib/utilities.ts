@@ -181,6 +181,8 @@ export const EXT = {
   SDC_KEYBOARD:                  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-keyboard",
   SDC_ITEM_MEDIA:                "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemMedia",
   SDC_SHORT_TEXT:                "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-shortText",
+  SUPPORT_LINK:                  "http://hl7.org/fhir/StructureDefinition/questionnaire-supportLink",
+  SUPPORT_HYPERLINK:             "http://hl7.org/fhir/StructureDefinition/questionnaire-supportHyperlink",
   SDC_OPEN_LABEL:                "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-openLabel",
   OPTION_PREFIX:                 "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
   CQF_EXPRESSION:                "http://hl7.org/fhir/StructureDefinition/cqf-expression",

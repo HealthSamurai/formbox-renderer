@@ -47,7 +47,7 @@ import type {
 } from "@formbox/fhir";
 import type { ComponentType, HTMLAttributes, ReactNode } from "react";
 import { PolyCarrierFor, PolyKeyFor } from "./utilities.ts";
-import type { FormPagination, OptionItem } from "@formbox/theme";
+import type { FormPagination, Hyperlink, OptionItem } from "@formbox/theme";
 import type { RendererRegistry } from "./renderer-registry.ts";
 import type { Model } from "fhirpath";
 
@@ -490,6 +490,7 @@ export interface IPresentableNode {
   readonly linkId: string;
   readonly text: string | undefined;
   readonly shortText: string | undefined;
+  readonly supportHyperlinks: ReadonlyArray<Hyperlink>;
   readonly itemMedia: Attachment | undefined;
   readonly prefix: string | undefined;
   readonly help: string | undefined;

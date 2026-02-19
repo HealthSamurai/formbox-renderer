@@ -117,4 +117,32 @@ describe("itemShortText", () => {
       restoreMatchMedia();
     }
   });
+
+  it("keeps regular item text on small screens when shortText is not present", () => {
+    const restoreMatchMedia = mockMatchMedia(true);
+    try {
+      const questionnaire: Questionnaire = {
+        resourceType: "Questionnaire",
+        status: "active",
+        item: [
+          {
+            linkId: "age",
+            text: "How old are you in completed years?",
+            type: "string",
+          },
+        ],
+      };
+
+      const form = new FormStore("r5", questionnaire, undefined, undefined);
+      const question = getStringQuestion(form, "age");
+
+      render(<StringRenderer node={question} />);
+
+      expect(
+        screen.getByLabelText("How old are you in completed years?"),
+      ).toBeInTheDocument();
+    } finally {
+      restoreMatchMedia();
+    }
+  });
 });

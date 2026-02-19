@@ -2,13 +2,18 @@
   "resourceType": "Questionnaire",
   "id": "option-prefix",
   "status": "active",
-  "title": "optionPrefix",
+  "title": "Option Prefix",
   "description": "Demonstrates questionnaire-optionPrefix on single-select, multi-select, and selection-table controls.",
   "item": [
     {
-      "linkId": "severity",
+      "linkId": "option-prefix-notes",
+      "type": "display",
+      "text": "Option prefixes are shown before labels across list, dropdown, and table controls."
+    },
+    {
+      "linkId": "symptom-severity",
       "type": "string",
-      "text": "Severity",
+      "text": "Symptom severity",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
@@ -53,9 +58,9 @@
       ]
     },
     {
-      "linkId": "priority",
+      "linkId": "triage-priority",
       "type": "string",
-      "text": "Priority",
+      "text": "Triage priority",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
@@ -100,10 +105,10 @@
       ]
     },
     {
-      "linkId": "symptoms",
+      "linkId": "observed-symptoms",
       "type": "string",
       "repeats": true,
-      "text": "Symptoms (multi list select)",
+      "text": "Symptoms observed",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
@@ -148,10 +153,10 @@
       ]
     },
     {
-      "linkId": "alerts",
+      "linkId": "alert-channels",
       "type": "string",
       "repeats": true,
-      "text": "Alert channels (multi dropdown select)",
+      "text": "Preferred alert channels",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
@@ -198,7 +203,7 @@
     {
       "linkId": "impact-matrix",
       "type": "group",
-      "text": "Impact matrix (selection table)",
+      "text": "Daily activity impact",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",

@@ -69,6 +69,7 @@ export const NodeHeader = observer(function NodeHeader({
     <ThemedLabel
       prefix={node.prefix}
       shortText={node.shortText}
+      supportHyperlinks={node.supportHyperlinks}
       itemMedia={node.itemMedia}
       id={getNodeLabelId(node)}
       htmlFor={htmlFor}

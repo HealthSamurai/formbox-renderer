@@ -2,18 +2,18 @@
   "resourceType": "Questionnaire",
   "id": "item-short-text",
   "status": "active",
-  "title": "itemShortText",
+  "title": "Item Short Text",
   "description": "Demonstrates shortText labels for compact layouts. Switch to a narrow viewport to see short labels replace primary text.",
   "item": [
     {
       "linkId": "intro",
       "type": "display",
-      "text": "Resize the Storybook preview to mobile width (below 40rem) to see shortText in action."
+      "text": "On narrow screens, labels switch to their shortText form."
     },
     {
-      "linkId": "systolic",
+      "linkId": "blood-pressure-systolic",
       "type": "integer",
-      "text": "Systolic blood pressure (mmHg)",
+      "text": "Systolic blood pressure",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-shortText",
@@ -22,9 +22,9 @@
       ]
     },
     {
-      "linkId": "diastolic",
+      "linkId": "blood-pressure-diastolic",
       "type": "integer",
-      "text": "Diastolic blood pressure (mmHg)",
+      "text": "Diastolic blood pressure",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-shortText",

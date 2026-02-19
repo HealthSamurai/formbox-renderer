@@ -2,11 +2,16 @@
   "resourceType": "Questionnaire",
   "id": "open-label",
   "status": "active",
-  "title": "openLabel",
+  "title": "Open Label",
   "description": "Demonstrates custom openLabel text for unrestricted 'other' entry in open-choice style questions.",
   "item": [
     {
-      "linkId": "symptom-radio",
+      "linkId": "open-label-notes",
+      "type": "display",
+      "text": "Both questions allow unrestricted answers with custom openLabel text."
+    },
+    {
+      "linkId": "primary-symptom",
       "type": "coding",
       "text": "Primary symptom",
       "answerConstraint": "optionsOrString",
@@ -52,7 +57,7 @@
       ]
     },
     {
-      "linkId": "trigger-dropdown",
+      "linkId": "likely-trigger",
       "type": "coding",
       "text": "Most likely trigger",
       "answerConstraint": "optionsOrString",

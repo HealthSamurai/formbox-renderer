@@ -2,13 +2,18 @@
   "resourceType": "Questionnaire",
   "id": "choice-orientation",
   "status": "active",
-  "title": "choiceOrientation",
+  "title": "Choice Orientation",
   "description": "Demonstrates horizontal and vertical orientation for radio-button and check-box list controls.",
   "item": [
     {
-      "linkId": "horizontal-radio",
+      "linkId": "orientation-notes",
+      "type": "display",
+      "text": "The first question uses horizontal layout. The second uses vertical layout."
+    },
+    {
+      "linkId": "appointment-slot",
       "type": "string",
-      "text": "Preferred appointment slot (horizontal radio list)",
+      "text": "Preferred appointment slot",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
@@ -39,10 +44,10 @@
       ]
     },
     {
-      "linkId": "vertical-checkbox",
+      "linkId": "observed-symptoms",
       "type": "string",
       "repeats": true,
-      "text": "Symptoms observed (vertical checkbox list)",
+      "text": "Symptoms observed",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",

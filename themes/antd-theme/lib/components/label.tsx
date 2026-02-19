@@ -3,10 +3,12 @@ import { Space, Typography } from "antd";
 import type { CSSProperties } from "react";
 import { useMediaQuery } from "../use-media-query.ts";
 import { Media } from "./item-media.tsx";
+import { Link } from "./link.tsx";
 
 export function Label({
   prefix,
   shortText,
+  supportHyperlinks,
   itemMedia,
   children,
   id,
@@ -27,10 +29,11 @@ export function Label({
     fontWeight: isEmphasized ? 600 : undefined,
     fontSize: isLegend ? "1.25rem" : undefined,
   };
+  const text = useShortText && shortText != undefined ? shortText : children;
 
   return (
     <WrapperTag style={{ display: "block" }} {...labelProperties}>
-      <Space direction="vertical" size={4}>
+      <Space orientation="vertical" size={0}>
         <Space align="center" size="small" wrap>
           <Typography.Text id={id} style={textStyle}>
             {prefix && (
@@ -38,7 +41,7 @@ export function Label({
                 {prefix}
               </span>
             )}
-            {useShortText ? shortText : children}
+            {text}
             {required && (
               <span
                 aria-hidden
@@ -52,6 +55,20 @@ export function Label({
           {legal}
           {flyover}
         </Space>
+        {supportHyperlinks?.length ? (
+          <Space size="small" wrap>
+            {supportHyperlinks.map((supportHyperlink, index) => (
+              <Link
+                key={`${supportHyperlink.href}-${index}`}
+                href={supportHyperlink.href}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {`${supportHyperlink.label ?? supportHyperlink.href} ↗`}
+              </Link>
+            ))}
+          </Space>
+        ) : undefined}
         {itemMedia && <Media attachment={itemMedia} />}
       </Space>
     </WrapperTag>

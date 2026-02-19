@@ -3,9 +3,15 @@ import type { Attachment } from "./file-input.ts";
 
 export type LabelAs = "legend" | "label" | "text";
 
+export type Hyperlink = {
+  href: string;
+  label: string | undefined;
+};
+
 export type LabelProperties = {
   prefix?: ReactNode;
   shortText?: string | undefined;
+  supportHyperlinks?: ReadonlyArray<Hyperlink> | undefined;
   itemMedia?: Attachment | undefined;
   children: ReactNode;
   id: string;

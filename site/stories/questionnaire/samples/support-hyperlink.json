@@ -1,0 +1,105 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "support-links",
+  "status": "active",
+  "title": "Support Links",
+  "description": "Demonstrates preferred supportHyperlink (labeled links) and deprecated supportLink (URI-only link).",
+  "item": [
+    {
+      "linkId": "support-links-notes",
+      "type": "display",
+      "text": "Labeled links use supportHyperlink. One item below uses deprecated URI-only supportLink."
+    },
+    {
+      "linkId": "travel-history",
+      "type": "string",
+      "text": "Have you traveled outside the country in the last 14 days?",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-supportHyperlink",
+          "extension": [
+            {
+              "url": "label",
+              "valueString": "More info"
+            },
+            {
+              "url": "link",
+              "valueUri": "https://example.com/help/travel-history"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "medication-reconciliation",
+      "type": "string",
+      "text": "Medication reconciliation",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-supportHyperlink",
+          "extension": [
+            {
+              "url": "label",
+              "valueString": "Dosing guide"
+            },
+            {
+              "url": "link",
+              "valueUri": "https://example.com/help/dosing"
+            }
+          ]
+        },
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-supportHyperlink",
+          "extension": [
+            {
+              "url": "label",
+              "valueString": "Contraindications"
+            },
+            {
+              "url": "link",
+              "valueUri": "https://example.com/help/contraindications"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "additional-instructions",
+      "type": "string",
+      "text": "Additional instructions",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-supportLink",
+          "valueUri": "https://example.com/help/legacy-instructions"
+        }
+      ]
+    },
+    {
+      "linkId": "consent-section",
+      "type": "group",
+      "text": "Consent details",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-supportHyperlink",
+          "extension": [
+            {
+              "url": "label",
+              "valueString": "Policy details"
+            },
+            {
+              "url": "link",
+              "valueUri": "https://example.com/help/consent-policy"
+            }
+          ]
+        }
+      ],
+      "item": [
+        {
+          "linkId": "consent-question",
+          "type": "boolean",
+          "text": "Do you agree to participate?"
+        }
+      ]
+    }
+  ]
+}

@@ -2,10 +2,12 @@ import { Box, Group, Text } from "@mantine/core";
 import type { LabelProperties } from "@formbox/theme";
 import { useMediaQuery } from "../use-media-query.ts";
 import { Media } from "./item-media.tsx";
+import { Link } from "./link.tsx";
 
 export function Label({
   prefix,
   shortText,
+  supportHyperlinks,
   itemMedia,
   children,
   id,
@@ -22,6 +24,7 @@ export function Label({
     wrapperTag === "label" && htmlFor ? { htmlFor } : {};
   const emphasize = as !== "text";
   const legend = as === "legend";
+  const text = useShortText && shortText != undefined ? shortText : children;
 
   return (
     <Box component={wrapperTag} {...wrapperProperties} style={{ margin: 0 }}>
@@ -38,7 +41,7 @@ export function Label({
               {prefix}
             </Text>
           ) : undefined}
-          {useShortText ? shortText : children}
+          {text}
           {required ? (
             <Text component="span" c="red" aria-hidden>
               *
@@ -49,6 +52,20 @@ export function Label({
         {legal}
         {flyover}
       </Group>
+      {supportHyperlinks?.length ? (
+        <Group gap={8} wrap="wrap">
+          {supportHyperlinks.map((supportHyperlink, index) => (
+            <Link
+              key={`${supportHyperlink.href}-${index}`}
+              href={supportHyperlink.href}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {`${supportHyperlink.label ?? supportHyperlink.href} ↗`}
+            </Link>
+          ))}
+        </Group>
+      ) : undefined}
       {itemMedia && (
         <Box mt={6}>
           <Media attachment={itemMedia} />
