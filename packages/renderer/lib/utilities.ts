@@ -183,6 +183,7 @@ export const EXT = {
   SDC_ITEM_ANSWER_MEDIA:         "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemAnswerMedia",
   SDC_COLLAPSIBLE:               "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-collapsible",
   SDC_SHORT_TEXT:                "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-shortText",
+  SDC_WIDTH:                     "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-width",
   SUPPORT_LINK:                  "http://hl7.org/fhir/StructureDefinition/questionnaire-supportLink",
   SUPPORT_HYPERLINK:             "http://hl7.org/fhir/StructureDefinition/questionnaire-supportHyperlink",
   SDC_OPEN_LABEL:                "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-openLabel",

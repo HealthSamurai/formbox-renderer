@@ -710,6 +710,7 @@ export interface IQuestionNode<
   readonly repeats: boolean;
   readonly isRepeatingWithoutChildren: boolean;
   readonly openLabel: string | undefined;
+  readonly columnWidth: string | undefined;
   readonly answerOption: IAnswerOptions<T>;
   readonly choiceOrientation: ChoiceOrientation | undefined;
   readonly keyboardType: HTMLAttributes<Element>["inputMode"] | undefined;

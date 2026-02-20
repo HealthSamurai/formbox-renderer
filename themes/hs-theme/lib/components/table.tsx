@@ -23,7 +23,11 @@ export function Table({
           <tr>
             {hasRowHeader && <Header scope="col" aria-hidden="true" />}
             {columns.map((column) => (
-              <Header key={column.token} scope="col">
+              <Header
+                key={column.token}
+                scope="col"
+                style={{ width: column.width }}
+              >
                 {renderHeaderContent(column.content, column)}
               </Header>
             ))}
@@ -38,8 +42,10 @@ export function Table({
                   {renderHeaderContent(row.content, row)}
                 </RowHeader>
               )}
-              {row.cells.map((cell) => (
-                <Cell key={cell.token}>{cell.content}</Cell>
+              {row.cells.map((cell, index) => (
+                <Cell key={cell.token} style={{ width: columns[index]?.width }}>
+                  {cell.content}
+                </Cell>
               ))}
               {hasRowAction && (
                 <Cell>

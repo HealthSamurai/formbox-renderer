@@ -49,7 +49,11 @@ export function Table({ columns, rows }: TableProperties) {
           <MantineTable.Tr>
             {hasRowHeader ? <MantineTable.Th aria-hidden="true" /> : undefined}
             {columns.map((column) => (
-              <MantineTable.Th key={column.token} scope="col">
+              <MantineTable.Th
+                key={column.token}
+                scope="col"
+                style={{ width: column.width }}
+              >
                 {renderHeaderContent(column.content, column)}
               </MantineTable.Th>
             ))}
@@ -64,8 +68,11 @@ export function Table({ columns, rows }: TableProperties) {
                   {renderHeaderContent(row.content, row)}
                 </MantineTable.Th>
               ) : undefined}
-              {row.cells.map((cell) => (
-                <MantineTable.Td key={cell.token}>
+              {row.cells.map((cell, index) => (
+                <MantineTable.Td
+                  key={cell.token}
+                  style={{ width: columns[index]?.width }}
+                >
                   {cell.content}
                 </MantineTable.Td>
               ))}

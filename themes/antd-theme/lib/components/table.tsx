@@ -18,7 +18,7 @@ export function Table({ columns, rows }: TableProperties) {
           <tr>
             {hasRowHeader && <th aria-hidden="true" />}
             {columns.map((column) => (
-              <th key={column.token}>
+              <th key={column.token} style={{ width: column.width }}>
                 {renderHeaderContent(column.content, column)}
               </th>
             ))}
@@ -33,8 +33,10 @@ export function Table({ columns, rows }: TableProperties) {
                   {renderHeaderContent(row.content, row)}
                 </th>
               )}
-              {row.cells.map((cell) => (
-                <td key={cell.token}>{cell.content}</td>
+              {row.cells.map((cell, index) => (
+                <td key={cell.token} style={{ width: columns[index]?.width }}>
+                  {cell.content}
+                </td>
               ))}
               {hasRowAction && (
                 <td>

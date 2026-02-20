@@ -1,0 +1,154 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "width",
+  "status": "active",
+  "title": "Width",
+  "description": "Demonstrates sdc-questionnaire-width for questions rendered as table columns in htable and gtable controls.",
+  "item": [
+    {
+      "linkId": "width-intro",
+      "type": "display",
+      "text": "Column widths are applied when questions render as table columns."
+    },
+    {
+      "linkId": "width-htable",
+      "type": "group",
+      "text": "Selection table (htable)",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "htable"
+              }
+            ]
+          }
+        }
+      ],
+      "item": [
+        {
+          "linkId": "width-htable-priority",
+          "type": "string",
+          "text": "Priority",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-width",
+              "valueQuantity": {
+                "value": 220
+              }
+            }
+          ],
+          "answerOption": [
+            {
+              "valueString": "Routine"
+            },
+            {
+              "valueString": "Urgent"
+            },
+            {
+              "valueString": "Stat"
+            }
+          ]
+        },
+        {
+          "linkId": "width-htable-disposition",
+          "type": "string",
+          "text": "Disposition",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-width",
+              "valueQuantity": {
+                "value": 35,
+                "code": "%",
+                "system": "http://unitsofmeasure.org"
+              }
+            }
+          ],
+          "answerOption": [
+            {
+              "valueString": "Discharge"
+            },
+            {
+              "valueString": "Observe"
+            },
+            {
+              "valueString": "Admit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "width-gtable-note",
+      "type": "display",
+      "text": "The same extension applies to repeating group table columns (gtable)."
+    },
+    {
+      "linkId": "width-gtable",
+      "type": "group",
+      "repeats": true,
+      "required": true,
+      "text": "Repeating group table (gtable)",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "gtable"
+              }
+            ]
+          }
+        }
+      ],
+      "item": [
+        {
+          "linkId": "width-gtable-observation",
+          "type": "string",
+          "text": "Observation",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-width",
+              "valueQuantity": {
+                "value": 180
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "width-gtable-days",
+          "type": "integer",
+          "text": "Days",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-width",
+              "valueQuantity": {
+                "value": 20,
+                "code": "%",
+                "system": "http://unitsofmeasure.org"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "width-gtable-notes",
+          "type": "text",
+          "text": "Notes",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-width",
+              "valueQuantity": {
+                "value": 40,
+                "code": "%",
+                "system": "http://unitsofmeasure.org"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -16,11 +16,11 @@ export const GridTableControl = observer(function GridTableControl({
   const columns = list.grid.columns.map((question) => ({
     token: question.linkId,
     content: <NodeHeader node={question} as="text" />,
+    width: question.columnWidth,
   }));
 
   const rows = list.grid.rows.map((row) => ({
     token: row.group.token,
-    content: <NodeHeader node={row.group} as="text" />,
     onRemove: () => list.removeNode(row.group),
     canRemove: list.canRemove,
     removeLabel: strings.group.removeSection,

@@ -5,11 +5,13 @@ import { NodeHeader } from "../../node/node-header.tsx";
 import { useTheme } from "../../../ui/theme.tsx";
 import { GridTableControl } from "../control/grid-table-control.tsx";
 import { renderErrors } from "../../node/errors.tsx";
+import { strings } from "../../../strings.ts";
 
 export const GridTableListRenderer = observer(function GridTableListRenderer({
   node,
 }: GroupListRendererProperties) {
-  const { GroupScaffold: ThemedGroupScaffold } = useTheme();
+  const { GroupScaffold: ThemedGroupScaffold, GroupList: ThemedGroupList } =
+    useTheme();
   const header =
     node.text || node.shortText ? (
       <NodeHeader node={node} as="legend" />
@@ -21,7 +23,14 @@ export const GridTableListRenderer = observer(function GridTableListRenderer({
       isExpanded={node.isExpanded}
       errors={renderErrors(node)}
     >
-      <GridTableControl list={node} />
+      <ThemedGroupList
+        linkId={node.linkId}
+        onAdd={() => node.addNode()}
+        canAdd={node.canAdd}
+        addLabel={strings.group.addSection}
+      >
+        <GridTableControl list={node} />
+      </ThemedGroupList>
     </ThemedGroupScaffold>
   );
 });

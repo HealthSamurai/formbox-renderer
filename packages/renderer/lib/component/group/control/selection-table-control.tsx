@@ -19,6 +19,7 @@ export const SelectionTableControl = observer(function SelectionTableControl({
       columns={node.table.questions.map((question) => ({
         token: question.token,
         content: <NodeHeader node={question} as="text" />,
+        width: question.columnWidth,
         isLoading: question.answerOption.select.isLoading,
         errors: renderErrors(question),
       }))}
@@ -58,6 +59,9 @@ export const SelectionTableControl = observer(function SelectionTableControl({
       }))}
       rows={node.table.questions.map((question) => ({
         token: question.token,
+        // SDC width applies when questions render as table columns.
+        // In this non-htable branch, questions render as row headers, so
+        // question.columnWidth is intentionally ignored.
         content: <NodeHeader node={question} as="text" />,
         isLoading: question.answerOption.select.isLoading,
         errors: renderErrors(question),

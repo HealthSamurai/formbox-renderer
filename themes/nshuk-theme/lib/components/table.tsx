@@ -18,7 +18,7 @@ export function Table({
 
   return (
     <Container>
-      <table className="nhsuk-table">
+      <table className="nhsuk-table nhsuk-u-margin-bottom-0">
         <thead className="nhsuk-table__head">
           <tr className="nhsuk-table__row">
             {hasRowHeader && (
@@ -33,6 +33,7 @@ export function Table({
                 key={column.token}
                 scope="col"
                 className="nhsuk-table__header"
+                style={{ width: column.width }}
               >
                 {renderHeaderContent(column.content, column)}
               </th>
@@ -54,8 +55,12 @@ export function Table({
                   {renderHeaderContent(row.content, row)}
                 </th>
               )}
-              {row.cells.map((cell) => (
-                <td key={cell.token} className="nhsuk-table__cell">
+              {row.cells.map((cell, index) => (
+                <td
+                  key={cell.token}
+                  className="nhsuk-table__cell"
+                  style={{ width: columns[index]?.width }}
+                >
                   {cell.content}
                 </td>
               ))}

@@ -30,6 +30,7 @@ import supportLinks from "./samples/support-hyperlink.json" with { type: "json" 
 import targetConstraint from "./samples/target-constraint.json" with { type: "json" };
 import textControls from "./samples/text-controls.json" with { type: "json" };
 import validation from "./samples/validation.json" with { type: "json" };
+import width from "./samples/width.json" with { type: "json" };
 
 import type { QuestionnaireOf } from "@formbox/renderer";
 type Questionnaire = QuestionnaireOf<"r5">;
@@ -183,3 +184,4 @@ export const SupportLinks = makeStory(
   "Support links",
   supportLinks as Questionnaire,
 );
+export const ColumnWidth = makeStory("Column Width", width as Questionnaire);

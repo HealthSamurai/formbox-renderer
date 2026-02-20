@@ -174,12 +174,14 @@ export class GroupStore extends AbstractActualNodeStore implements IGroupNode {
     }
 
     if (control === "gtable") {
-      this.form.reportRenderingIssue(
-        makeIssue(
-          "structure",
-          `Group "${this.linkId}" uses 'gtable' but is not marked as repeating.`,
-        ),
-      );
+      if (!isGroupListStore(this.parentStore)) {
+        this.form.reportRenderingIssue(
+          makeIssue(
+            "structure",
+            `Group "${this.linkId}" uses 'gtable' but is not marked as repeating.`,
+          ),
+        );
+      }
       return;
     }
 

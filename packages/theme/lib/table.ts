@@ -3,6 +3,7 @@ import type { ComponentType, ReactNode } from "react";
 export type TableColumn = {
   token: string;
   content: ReactNode;
+  width?: string | undefined;
   errors?: ReactNode | undefined;
   isLoading?: boolean | undefined;
 };
@@ -14,7 +15,7 @@ export type TableCell = {
 
 export type TableRow = {
   token: string;
-  content: ReactNode;
+  content?: ReactNode | undefined;
   errors?: ReactNode | undefined;
   isLoading?: boolean | undefined;
 
