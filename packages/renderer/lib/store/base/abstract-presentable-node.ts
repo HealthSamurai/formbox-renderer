@@ -1,4 +1,4 @@
-import { computed, makeObservable } from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
 import { IForm, INode, IPresentableNode, IScope } from "../../types.ts";
 import type { Hyperlink } from "@formbox/theme";
 import type {
@@ -21,17 +21,19 @@ export abstract class AbstractPresentableNode implements IPresentableNode {
   readonly form: IForm;
   readonly template: QuestionnaireItem;
   readonly parentStore: INode | undefined;
+  @observable
+  private expanded: boolean | undefined = undefined;
 
   protected constructor(
     form: IForm,
     template: QuestionnaireItem,
     parentStore: INode | undefined,
   ) {
-    makeObservable(this);
-
     this.form = form;
     this.template = template;
     this.parentStore = parentStore;
+
+    makeObservable(this);
   }
 
   @computed
@@ -82,6 +84,35 @@ export abstract class AbstractPresentableNode implements IPresentableNode {
           : [],
       ),
     ];
+  }
+
+  @computed
+  get isExpandable(): boolean {
+    return (
+      findExtension(this.template, EXT.SDC_COLLAPSIBLE)?.valueCode !== undefined
+    );
+  }
+
+  @computed
+  get isExpanded(): boolean {
+    if (!this.isExpandable) {
+      return true;
+    }
+
+    return (
+      this.expanded ??
+      findExtension(this.template, EXT.SDC_COLLAPSIBLE)?.valueCode !==
+        "default-closed"
+    );
+  }
+
+  @action.bound
+  toggleExpanded(): void {
+    if (!this.isExpandable) {
+      return;
+    }
+
+    this.expanded = !this.isExpanded;
   }
 
   @computed

@@ -23,6 +23,7 @@ export const QuestionScaffold = observer(function QuestionScaffold({
       header={
         node.isHeaderless ? undefined : <NodeHeader node={node} as="label" />
       }
+      isExpanded={node.isExpanded}
       errors={renderErrors(node)}
     >
       {children}

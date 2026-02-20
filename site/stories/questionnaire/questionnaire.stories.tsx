@@ -6,6 +6,7 @@ import answerOptions from "./samples/answer-options.json" with { type: "json" };
 import answerValueSet from "./samples/answer-valueset.json" with { type: "json" };
 import booleanGating from "./samples/boolean-gating.json" with { type: "json" };
 import choiceOrientation from "./samples/choice-orientation.json" with { type: "json" };
+import collapsible from "./samples/collapsible.json" with { type: "json" };
 import expressionCalculated from "./samples/expression-calculated.json" with { type: "json" };
 import expressionDynamicBehavior from "./samples/expression-dynamic-behavior.json" with { type: "json" };
 import expressionDynamicBounds from "./samples/expression-dynamic-bounds.json" with { type: "json" };
@@ -168,6 +169,10 @@ export const ItemAnswerMedia = makeStory(
 export const ChoiceOrientation = makeStory(
   "Choice orientation",
   choiceOrientation as Questionnaire,
+);
+export const Collapsible = makeStory(
+  "Collapsible",
+  collapsible as Questionnaire,
 );
 export const OpenLabel = makeStory("Open label", openLabel as Questionnaire);
 export const OptionPrefix = makeStory(

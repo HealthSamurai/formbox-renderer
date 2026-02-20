@@ -1,10 +1,12 @@
 import type { QuestionScaffoldProperties } from "@formbox/theme";
+import { Collapsible } from "./collapsible.tsx";
 
 export function QuestionScaffold({
   linkId,
   header,
   children,
   errors,
+  isExpanded,
 }: QuestionScaffoldProperties) {
   const className = errors
     ? "nhsuk-form-group nhsuk-form-group--error"
@@ -14,7 +16,7 @@ export function QuestionScaffold({
     <div className={className} data-linkid={linkId}>
       {header}
       {errors}
-      {children}
+      <Collapsible isExpanded={isExpanded}>{children}</Collapsible>
     </div>
   );
 }

@@ -507,6 +507,9 @@ export interface IPresentableNode {
   readonly unitOptions: ReadonlyArray<Coding>;
   readonly isEnabled: boolean;
   readonly preferredTerminologyServers: ReadonlyArray<string>;
+  readonly isExpandable: boolean;
+  readonly isExpanded: boolean;
+  toggleExpanded(): void;
 
   readonly hasErrors: boolean;
   markDirty(): void;

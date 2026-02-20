@@ -52,6 +52,10 @@ export const strings = {
       "No answer options available for horizontal table layout.",
     noAnswerOptions: "No answer options available for table layout.",
   },
+  collapsible: {
+    expand: "Expand",
+    collapse: "Collapse",
+  },
   tab: {
     empty: "No tab content",
   },

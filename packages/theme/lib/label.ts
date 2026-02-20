@@ -13,6 +13,10 @@ export type LabelProperties = {
   shortText?: string | undefined;
   supportHyperlinks?: ReadonlyArray<Hyperlink> | undefined;
   media?: Attachment | undefined;
+  isExpanded: boolean;
+  onToggleExpanded?: (() => void) | undefined;
+  expandLabel?: string | undefined;
+  collapseLabel?: string | undefined;
   children: ReactNode;
   id: string;
   htmlFor?: string | undefined;

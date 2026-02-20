@@ -25,7 +25,7 @@ export const SelectionTableControl = observer(function SelectionTableControl({
       rows={node.table.optionAxis.map((option) => ({
         token: option.token,
         content: (
-          <Label id={buildId(node.token, option.token)}>
+          <Label id={buildId(node.token, option.token)} isExpanded={true}>
             <OptionDisplay prefix={option.prefix} media={option.media}>
               <ValueDisplay type={option.answerType} value={option.value} />
             </OptionDisplay>
@@ -49,7 +49,7 @@ export const SelectionTableControl = observer(function SelectionTableControl({
       columns={node.table.optionAxis.map((option) => ({
         token: option.token,
         content: (
-          <Label id={buildId(node.token, option.token)}>
+          <Label id={buildId(node.token, option.token)} isExpanded={true}>
             <OptionDisplay prefix={option.prefix} media={option.media}>
               <ValueDisplay type={option.answerType} value={option.value} />
             </OptionDisplay>

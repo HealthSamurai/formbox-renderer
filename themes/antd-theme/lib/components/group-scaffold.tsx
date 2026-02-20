@@ -1,10 +1,12 @@
 import type { GroupScaffoldProperties } from "@formbox/theme";
 import { Button, Space } from "antd";
+import { Collapsible } from "./collapsible.tsx";
 
 export function GroupScaffold({
   header,
   children,
   errors,
+  isExpanded,
   onRemove,
   canRemove,
   removeLabel,
@@ -12,7 +14,7 @@ export function GroupScaffold({
   return (
     <Space orientation="vertical" size="middle" style={{ width: "100%" }}>
       {header}
-      {children}
+      <Collapsible isExpanded={isExpanded}>{children}</Collapsible>
       {errors}
       {onRemove && (
         <div style={{ display: "flex", justifyContent: "flex-end" }}>

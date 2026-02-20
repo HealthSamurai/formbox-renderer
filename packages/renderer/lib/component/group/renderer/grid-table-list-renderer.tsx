@@ -16,7 +16,11 @@ export const GridTableListRenderer = observer(function GridTableListRenderer({
     ) : undefined;
 
   return (
-    <ThemedGroupScaffold header={header} errors={renderErrors(node)}>
+    <ThemedGroupScaffold
+      header={header}
+      isExpanded={node.isExpanded}
+      errors={renderErrors(node)}
+    >
       <GridTableControl list={node} />
     </ThemedGroupScaffold>
   );

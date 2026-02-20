@@ -1,9 +1,11 @@
 import type { GroupScaffoldProperties } from "@formbox/theme";
+import { Collapsible } from "./collapsible.tsx";
 
 export function GroupScaffold({
   header,
   children,
   errors,
+  isExpanded,
   onRemove,
   canRemove,
   removeLabel,
@@ -11,7 +13,7 @@ export function GroupScaffold({
   return (
     <div className="nhsuk-form-group">
       {header}
-      {children}
+      <Collapsible isExpanded={isExpanded}>{children}</Collapsible>
       {errors}
       {onRemove && (
         <div className="nhsuk-button-group">

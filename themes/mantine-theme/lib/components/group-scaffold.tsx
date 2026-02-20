@@ -1,11 +1,13 @@
 import { Button, Group, Stack } from "@mantine/core";
 import { Children } from "react";
 import type { GroupScaffoldProperties } from "@formbox/theme";
+import { Collapsible } from "./collapsible.tsx";
 
 export function GroupScaffold({
   header,
   children,
   errors,
+  isExpanded,
   onRemove,
   canRemove,
   removeLabel,
@@ -16,9 +18,13 @@ export function GroupScaffold({
   return (
     <Stack gap="md">
       {header}
-      {content.length > 0 ? <Stack gap="md">{content}</Stack> : undefined}
+      {content.length > 0 && (
+        <Collapsible isExpanded={isExpanded}>
+          <Stack gap="md">{content}</Stack>
+        </Collapsible>
+      )}
       {errors}
-      {onRemove ? (
+      {onRemove && (
         <Group justify="flex-end">
           <Button
             type="button"
@@ -30,7 +36,7 @@ export function GroupScaffold({
             {removeText}
           </Button>
         </Group>
-      ) : undefined}
+      )}
     </Stack>
   );
 }

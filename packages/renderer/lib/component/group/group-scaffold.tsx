@@ -26,6 +26,7 @@ export const GroupScaffold = observer(function GroupScaffold({
   return (
     <ThemedGroupScaffold
       header={header}
+      isExpanded={node.isExpanded}
       errors={renderErrors(node)}
       onRemove={onRemove}
       canRemove={canRemove}

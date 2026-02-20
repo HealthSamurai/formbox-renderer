@@ -5,6 +5,7 @@ export type QuestionScaffoldProperties = {
   header?: ReactNode;
   children: ReactNode;
   errors?: ReactNode;
+  isExpanded: boolean;
 };
 
 export type QuestionScaffoldComponent =

@@ -1,5 +1,6 @@
-import { Box, Group, Text } from "@mantine/core";
+import { ActionIcon, Box, Group, Text } from "@mantine/core";
 import type { LabelProperties } from "@formbox/theme";
+import { styled } from "@linaria/react";
 import { useMediaQuery } from "../use-media-query.ts";
 import { Media } from "./media.tsx";
 import { Link } from "./link.tsx";
@@ -9,6 +10,10 @@ export function Label({
   shortText,
   supportHyperlinks,
   media,
+  isExpanded,
+  onToggleExpanded,
+  expandLabel,
+  collapseLabel,
   children,
   id,
   htmlFor,
@@ -27,8 +32,23 @@ export function Label({
   const text = useShortText && shortText != undefined ? shortText : children;
 
   return (
-    <Box component={wrapperTag} {...wrapperProperties} style={{ margin: 0 }}>
+    <Box component={wrapperTag} {...wrapperProperties} m={0}>
       <Group gap={6} wrap="nowrap" align="center">
+        {!!onToggleExpanded && (
+          <ToggleButton
+            type="button"
+            variant="subtle"
+            color="gray"
+            radius="sm"
+            size="sm"
+            onClick={onToggleExpanded}
+            aria-label={isExpanded ? collapseLabel : expandLabel}
+            aria-expanded={isExpanded}
+            title={isExpanded ? collapseLabel : expandLabel}
+          >
+            <ToggleTriangle data-expanded={isExpanded ? "true" : undefined} />
+          </ToggleButton>
+        )}
         <Text
           id={id}
           component="span"
@@ -36,23 +56,23 @@ export function Label({
           size={legend ? "lg" : "sm"}
           style={{ display: "inline-flex", alignItems: "center", gap: 4 }}
         >
-          {prefix ? (
+          {prefix && (
             <Text component="span" fw={600}>
               {prefix}
             </Text>
-          ) : undefined}
+          )}
           {text}
-          {required ? (
+          {required && (
             <Text component="span" c="red" aria-hidden>
               *
             </Text>
-          ) : undefined}
+          )}
         </Text>
         {help}
         {legal}
         {flyover}
       </Group>
-      {supportHyperlinks?.length ? (
+      {supportHyperlinks && supportHyperlinks.length > 0 && (
         <Group gap={8} wrap="wrap">
           {supportHyperlinks.map((supportHyperlink, index) => (
             <Link
@@ -65,7 +85,7 @@ export function Label({
             </Link>
           ))}
         </Group>
-      ) : undefined}
+      )}
       {media && (
         <Box mt={6}>
           <Media attachment={media} />
@@ -74,3 +94,22 @@ export function Label({
     </Box>
   );
 }
+
+const ToggleButton = styled(ActionIcon)`
+  flex: 0 0 auto;
+`;
+
+const ToggleTriangle = styled.span`
+  inline-size: 0;
+  block-size: 0;
+  border-top: 0.3rem solid transparent;
+  border-bottom: 0.3rem solid transparent;
+  border-left: 0.4rem solid currentColor;
+  transform-origin: 35% 50%;
+  transition: transform 200ms ease;
+  transform: rotate(0deg);
+
+  &[data-expanded="true"] {
+    transform: rotate(90deg);
+  }
+`;

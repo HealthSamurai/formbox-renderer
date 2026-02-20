@@ -2,12 +2,14 @@ import type { GroupScaffoldProperties } from "@formbox/theme";
 import { styled } from "@linaria/react";
 import { Children } from "react";
 import { Trash } from "../icons/trash.tsx";
+import { Collapsible } from "./collapsible.tsx";
 import { IconButton } from "./icon-button.tsx";
 
 export function GroupScaffold({
   header,
   children,
   errors,
+  isExpanded,
   onRemove,
   canRemove,
   removeLabel,
@@ -17,12 +19,15 @@ export function GroupScaffold({
   return (
     <Container>
       {header}
-      {content.length > 0 &&
-        (onRemove ? (
-          <ItemContent>{content}</ItemContent>
-        ) : (
-          <GroupContent>{content}</GroupContent>
-        ))}
+      {content.length > 0 && (
+        <Collapsible isExpanded={isExpanded}>
+          {onRemove ? (
+            <ItemContent>{content}</ItemContent>
+          ) : (
+            <GroupContent>{content}</GroupContent>
+          )}
+        </Collapsible>
+      )}
       {errors}
       {onRemove && (
         <Toolbar>
