@@ -1,4 +1,4 @@
-import type { GroupScaffoldProperties } from "@formbox/theme";
+import { useStrings, type GroupScaffoldProperties } from "@formbox/theme";
 import { Button, Space } from "antd";
 import { Collapsible } from "./collapsible.tsx";
 
@@ -9,8 +9,9 @@ export function GroupScaffold({
   isExpanded,
   onRemove,
   canRemove,
-  removeLabel,
 }: GroupScaffoldProperties) {
+  const strings = useStrings();
+
   return (
     <Space orientation="vertical" size="middle" style={{ width: "100%" }}>
       {header}
@@ -24,7 +25,7 @@ export function GroupScaffold({
             onClick={onRemove}
             disabled={canRemove === false}
           >
-            {removeLabel ?? "Remove"}
+            {strings.group.removeSection}
           </Button>
         </div>
       )}

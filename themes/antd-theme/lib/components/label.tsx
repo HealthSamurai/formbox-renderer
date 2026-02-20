@@ -1,4 +1,4 @@
-import type { LabelProperties } from "@formbox/theme";
+import { useStrings, type LabelProperties } from "@formbox/theme";
 import { Button, Space, Typography } from "antd";
 import { styled } from "@linaria/react";
 import { useMediaQuery } from "../use-media-query.ts";
@@ -12,8 +12,6 @@ export function Label({
   media,
   isExpanded,
   onToggleExpanded,
-  expandLabel,
-  collapseLabel,
   children,
   id,
   htmlFor,
@@ -23,6 +21,7 @@ export function Label({
   flyover,
   as = "label",
 }: LabelProperties) {
+  const strings = useStrings();
   const useShortText = useMediaQuery("(max-width: 40rem)");
   const isEmphasized = as !== "text";
   const isLegend = as === "legend";
@@ -36,9 +35,17 @@ export function Label({
             size="small"
             htmlType="button"
             onClick={onToggleExpanded}
-            aria-label={isExpanded ? collapseLabel : expandLabel}
+            aria-label={
+              isExpanded
+                ? strings.collapsible.collapse
+                : strings.collapsible.expand
+            }
             aria-expanded={isExpanded}
-            title={isExpanded ? collapseLabel : expandLabel}
+            title={
+              isExpanded
+                ? strings.collapsible.collapse
+                : strings.collapsible.expand
+            }
           >
             <ToggleTriangle data-expanded={isExpanded ? "true" : undefined} />
           </ToggleButton>

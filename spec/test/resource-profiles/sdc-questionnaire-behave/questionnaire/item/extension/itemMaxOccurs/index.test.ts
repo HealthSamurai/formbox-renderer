@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import {
   assertGroupListStore,
   isGroupListStore,
@@ -67,7 +68,7 @@ describe("itemMaxOccurs", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const gate = form.scope.lookupNode("gate");
     const target = form.scope.lookupNode("target");
 
@@ -141,7 +142,7 @@ describe("itemMaxOccurs", () => {
     };
 
     const createEmptyGroupStore = () =>
-      new FormStore("r5", questionnaire, responseWithoutItems, undefined);
+      new FormStore(en, "r5", questionnaire, responseWithoutItems, undefined);
 
     const getEmptyGroupList = () => {
       const form = createEmptyGroupStore();
@@ -206,7 +207,7 @@ describe("itemMaxOccurs", () => {
     };
 
     const createMaxGroupStore = () =>
-      new FormStore("r5", questionnaireAtMax, responseAtMax, undefined);
+      new FormStore(en, "r5", questionnaireAtMax, responseAtMax, undefined);
 
     it("prevents adding new nodes when maxOccurs reached", () => {
       const form = createMaxGroupStore();
@@ -248,6 +249,7 @@ describe("itemMaxOccurs", () => {
       };
 
       const form = new FormStore(
+        en,
         "r5",
         questionnaireMissingAnswers,
         responseMissingAnswers,
@@ -285,7 +287,7 @@ describe("itemMaxOccurs", () => {
     };
 
     const createAtMaxStore = () =>
-      new FormStore("r5", questionnaireAtMax, responseAtMax, undefined);
+      new FormStore(en, "r5", questionnaireAtMax, responseAtMax, undefined);
 
     it("prevents adding new answers beyond maxOccurs", () => {
       const form = createAtMaxStore();

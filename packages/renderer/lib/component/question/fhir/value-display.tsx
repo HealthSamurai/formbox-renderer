@@ -1,10 +1,10 @@
+import { useStrings } from "@formbox/theme";
 import type {
   AnswerType,
   AnswerTypeToDataType,
   DataTypeToType,
   ValueDisplayComponent,
 } from "../../../types.ts";
-import { strings } from "../../../strings.ts";
 import { StringDisplay } from "./string/string-display.tsx";
 import { TextDisplay } from "./text/text-display.tsx";
 import { IntegerDisplay } from "./integer/integer-display.tsx";
@@ -46,6 +46,8 @@ export function ValueDisplay<T extends AnswerType>({
   type,
   value,
 }: ValueDisplayProperties<T>) {
+  const strings = useStrings();
+
   if (value == undefined) {
     return strings.value.undefined;
   } else {

@@ -1,4 +1,4 @@
-import type { GroupListProperties } from "@formbox/theme";
+import { useStrings, type GroupListProperties } from "@formbox/theme";
 import { Children } from "react";
 import { interpose } from "../utilities.ts";
 
@@ -8,9 +8,8 @@ export function GroupList({
   children,
   onAdd,
   canAdd,
-  addLabel,
 }: GroupListProperties) {
-  const addText = addLabel ?? "Add";
+  const strings = useStrings();
   return (
     <div data-linkid={linkId}>
       {header}
@@ -26,7 +25,7 @@ export function GroupList({
             disabled={canAdd === false}
             className="nhsuk-button nhsuk-button--secondary nhsuk-button--small"
           >
-            {addText}
+            {strings.group.addSection}
           </button>
         </div>
       )}

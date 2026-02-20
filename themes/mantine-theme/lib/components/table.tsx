@@ -6,7 +6,7 @@ import {
   Table as MantineTable,
   Text,
 } from "@mantine/core";
-import type { TableProperties } from "@formbox/theme";
+import { useStrings, type TableProperties } from "@formbox/theme";
 import type { ReactNode } from "react";
 
 type TableMeta = {
@@ -31,6 +31,8 @@ function renderHeaderContent(content: ReactNode, meta: TableMeta) {
 }
 
 export function Table({ columns, rows }: TableProperties) {
+  const strings = useStrings();
+
   if (rows.length === 0 || columns.length === 0) {
     return (
       <Text size="sm" c="dimmed" style={{ fontStyle: "italic" }}>
@@ -86,7 +88,7 @@ export function Table({ columns, rows }: TableProperties) {
                       onClick={row.onRemove}
                       disabled={row.canRemove === false}
                     >
-                      {row.removeLabel ?? "Remove"}
+                      {strings.group.removeSection}
                     </Button>
                   ) : undefined}
                 </MantineTable.Td>

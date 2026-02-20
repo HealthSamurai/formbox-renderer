@@ -1,10 +1,16 @@
 import { styled } from "@linaria/react";
-import type { FlyoverProperties } from "@formbox/theme";
+import { useStrings, type FlyoverProperties } from "@formbox/theme";
 
-export function Flyover({ id, children, ariaLabel }: FlyoverProperties) {
+export function Flyover({ id, children }: FlyoverProperties) {
+  const strings = useStrings();
+
   return (
     <Wrapper>
-      <FlyoverButton type="button" aria-describedby={id} aria-label={ariaLabel}>
+      <FlyoverButton
+        type="button"
+        aria-describedby={id}
+        aria-label={strings.aria.flyover}
+      >
         i
       </FlyoverButton>
       <Tooltip role="tooltip" aria-hidden="true">

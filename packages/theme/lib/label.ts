@@ -15,8 +15,6 @@ export type LabelProperties = {
   media?: Attachment | undefined;
   isExpanded: boolean;
   onToggleExpanded?: (() => void) | undefined;
-  expandLabel?: string | undefined;
-  collapseLabel?: string | undefined;
   children: ReactNode;
   id: string;
   htmlFor?: string | undefined;

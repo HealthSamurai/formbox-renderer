@@ -1,11 +1,11 @@
 import { observer } from "mobx-react-lite";
 import { useMemo } from "react";
+import { useStrings } from "@formbox/theme";
 import type { AnswerType, IQuestionNode, OptionItem } from "../../../types.ts";
 import { useTheme } from "../../../ui/theme.tsx";
 import { renderErrors } from "../../node/errors.tsx";
 import { getValueControl } from "../fhir/value-control.ts";
 import { ValueDisplay } from "../fhir/value-display.tsx";
-import { strings } from "../../../strings.ts";
 import {
   buildId,
   concatIds,
@@ -17,6 +17,7 @@ import {
 export const MultiListSelectControl = observer(function MultiListSelectControl<
   T extends AnswerType,
 >({ node }: { node: IQuestionNode<T> }) {
+  const strings = useStrings();
   const { CheckboxList, CustomOptionForm, OptionDisplay } = useTheme();
   const store = node.answerOption.select;
   const CustomControl = getValueControl(store.customType);
@@ -49,15 +50,9 @@ export const MultiListSelectControl = observer(function MultiListSelectControl<
         />
       }
       errors={renderErrors(formState.answer)}
-      cancel={{
-        label: strings.dialog.cancel,
-        onClick: store.cancelCustomOptionForm,
-      }}
-      submit={{
-        label: strings.dialog.add,
-        onClick: store.submitCustomOptionForm,
-        disabled: !formState.canSubmit,
-      }}
+      onCancel={store.cancelCustomOptionForm}
+      onSubmit={store.submitCustomOptionForm}
+      canSubmit={!node.readOnly && formState.canSubmit}
     />
   ) : undefined;
 

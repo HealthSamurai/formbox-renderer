@@ -7,8 +7,14 @@ import { FormStore } from "./store/form/form-store.ts";
 import { Form } from "./component/form/form.tsx";
 import { useCallback, useEffect, useMemo } from "react";
 import { autorun } from "mobx";
-import type { Theme } from "@formbox/theme";
+import en from "@formbox/strings/en";
+import {
+  StringsContext,
+  type Theme,
+  type StringsOverride,
+} from "@formbox/theme";
 import { ThemeProvider } from "./ui/theme.tsx";
+import { deepMerge } from "./utilities.ts";
 
 type RendererProperties<V extends FhirVersion> = {
   questionnaire: QuestionnaireOf<V>;
@@ -16,6 +22,7 @@ type RendererProperties<V extends FhirVersion> = {
   onChange?: ((response: QuestionnaireResponseOf<V>) => void) | undefined;
   onSubmit?: ((response: QuestionnaireResponseOf<V>) => void) | undefined;
   terminologyServerUrl?: string | undefined;
+  strings?: StringsOverride | undefined;
   fhirVersion: V;
   theme: Theme;
 };
@@ -26,12 +33,19 @@ function Renderer<V extends FhirVersion>({
   onSubmit,
   onChange,
   terminologyServerUrl,
+  strings: stringsOverride,
   fhirVersion,
   theme,
 }: RendererProperties<V>) {
+  const strings = useMemo(
+    () => (stringsOverride == undefined ? en : deepMerge(en, stringsOverride)),
+    [stringsOverride],
+  );
+
   const store = useMemo(
     () =>
       new FormStore(
+        en,
         fhirVersion,
         questionnaire,
         initialResponse,
@@ -41,6 +55,10 @@ function Renderer<V extends FhirVersion>({
   );
 
   useEffect(() => () => store.dispose(), [store]);
+
+  useEffect(() => {
+    store.setStrings(strings);
+  }, [store, strings]);
 
   useEffect(() => {
     if (!onChange) {
@@ -64,7 +82,9 @@ function Renderer<V extends FhirVersion>({
 
   return (
     <ThemeProvider theme={theme}>
-      <Form store={store} onSubmit={handleSubmit} />
+      <StringsContext.Provider value={strings}>
+        <Form store={store} onSubmit={handleSubmit} />
+      </StringsContext.Provider>
     </ThemeProvider>
   );
 }
@@ -93,3 +113,5 @@ export type {
   QuestionnaireResponseOf,
   ReferenceOf,
 } from "@formbox/fhir";
+
+export type { Strings, StringsOverride } from "@formbox/theme";

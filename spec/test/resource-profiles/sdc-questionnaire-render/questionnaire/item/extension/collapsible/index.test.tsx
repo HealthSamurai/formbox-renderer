@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { isGroupNode } from "@formbox/renderer/store/group/group-store.ts";
 import { DefaultRenderer } from "@formbox/renderer/component/group/renderer/default-renderer.tsx";
@@ -34,15 +35,6 @@ function getStringQuestion(
   return node as IQuestionNode<"string">;
 }
 
-function expectCollapsedState(element: HTMLElement, collapsed: boolean): void {
-  const collapsedAncestor = element.closest('[aria-hidden="true"]');
-  if (collapsed) {
-    expect(collapsedAncestor).toBeTruthy();
-  } else {
-    expect(collapsedAncestor).toBeNull();
-  }
-}
-
 describe("collapsible", () => {
   it("collapses and expands group children based on extension value", async () => {
     const questionnaire: Questionnaire = {
@@ -70,7 +62,7 @@ describe("collapsible", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const group = getGroup(form, "demographics");
     const user = userEvent.setup();
 
@@ -79,15 +71,15 @@ describe("collapsible", () => {
 
     render(<DefaultRenderer node={group} />);
 
-    expectCollapsedState(screen.getByLabelText("Nickname"), true);
+    expect(screen.queryByLabelText("Nickname")).toBeNull();
 
     await user.click(screen.getByRole("button", { name: "Expand" }));
     expect(group.isExpanded).toBe(true);
-    expectCollapsedState(screen.getByLabelText("Nickname"), false);
+    expect(screen.getByLabelText("Nickname")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Collapse" }));
     expect(group.isExpanded).toBe(false);
-    expectCollapsedState(screen.getByLabelText("Nickname"), true);
+    expect(screen.queryByLabelText("Nickname")).toBeNull();
   });
 
   it("collapses and expands question child items through answer rendering path", async () => {
@@ -116,7 +108,7 @@ describe("collapsible", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getStringQuestion(form, "symptom");
     const user = userEvent.setup();
 
@@ -125,13 +117,13 @@ describe("collapsible", () => {
 
     render(<StringRenderer node={question} />);
 
-    expectCollapsedState(screen.getByLabelText("Primary symptom"), true);
-    expectCollapsedState(screen.getByLabelText("Symptom note"), true);
+    expect(screen.queryByLabelText("Primary symptom")).toBeNull();
+    expect(screen.queryByLabelText("Symptom note")).toBeNull();
 
     await user.click(screen.getByRole("button", { name: "Expand" }));
     expect(question.isExpanded).toBe(true);
-    expectCollapsedState(screen.getByLabelText("Primary symptom"), false);
-    expectCollapsedState(screen.getByLabelText("Symptom note"), false);
+    expect(screen.getByLabelText("Primary symptom")).toBeInTheDocument();
+    expect(screen.getByLabelText("Symptom note")).toBeInTheDocument();
   });
 
   it("shares collapsible state across repeated answers of the same question", async () => {
@@ -162,7 +154,7 @@ describe("collapsible", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getStringQuestion(form, "issue");
     const user = userEvent.setup();
 
@@ -181,10 +173,8 @@ describe("collapsible", () => {
 
     expect(question.isExpanded).toBe(false);
     expect(question.answers).toHaveLength(2);
-    expectCollapsedState(screen.getByTitle("Add another"), true);
-    screen
-      .getAllByLabelText("Issue note")
-      .forEach((field) => expectCollapsedState(field, true));
+    expect(screen.queryByTitle("Add another")).toBeNull();
+    expect(screen.queryByLabelText("Issue note")).toBeNull();
   });
 
   it("treats any collapsible code as expandable", () => {
@@ -213,7 +203,7 @@ describe("collapsible", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getStringQuestion(form, "invalid");
 
     expect(question.isExpandable).toBe(true);

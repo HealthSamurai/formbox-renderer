@@ -47,7 +47,12 @@ import type {
 } from "@formbox/fhir";
 import type { ComponentType, HTMLAttributes, ReactNode } from "react";
 import { PolyCarrierFor, PolyKeyFor } from "./utilities.ts";
-import type { FormPagination, Hyperlink, OptionItem } from "@formbox/theme";
+import type {
+  FormPagination,
+  Hyperlink,
+  OptionItem,
+  Strings,
+} from "@formbox/theme";
 import type { RendererRegistry } from "./renderer-registry.ts";
 import type { Model } from "fhirpath";
 
@@ -751,6 +756,7 @@ export interface IValueSetExpander {
 export interface IForm extends IssueSource {
   readonly fhirVersion: FhirVersion;
   readonly adapter: IFhirAdapter;
+  readonly strings: Strings;
   questionnaire: Questionnaire;
   response: QuestionnaireResponse | undefined;
   nodes: Array<IPresentableNode>;

@@ -2,6 +2,7 @@ import { useEffect, useMemo } from "react";
 import type { CSSProperties } from "react";
 import type { IPresentableNode } from "@formbox/renderer/types.ts";
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { Form } from "@formbox/renderer/component/form/form.tsx";
 import { Node } from "@formbox/renderer/component/node/node.tsx";
 import {
@@ -26,7 +27,7 @@ export function Renderer<V extends FhirVersion = "r5">({
   mode,
 }: RendererProperties<V>) {
   const store = useMemo(
-    () => new FormStore(fhirVersion, questionnaire, undefined, undefined),
+    () => new FormStore(en, fhirVersion, questionnaire, undefined, undefined),
     [fhirVersion, questionnaire],
   );
 

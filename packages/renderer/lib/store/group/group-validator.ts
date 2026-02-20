@@ -3,7 +3,6 @@ import type { OperationOutcomeIssue } from "@formbox/fhir";
 
 import { makeIssue } from "../../utilities.ts";
 import type { IGroupNode, INodeValidator } from "../../types.ts";
-import { strings } from "../../strings.ts";
 
 export class GroupValidator implements INodeValidator {
   private readonly group: IGroupNode;
@@ -32,6 +31,7 @@ export class GroupValidator implements INodeValidator {
       return [];
     }
 
+    const strings = this.group.form.strings;
     return [makeIssue("required", strings.validation.group.atLeastOneAnswer)];
   }
 }

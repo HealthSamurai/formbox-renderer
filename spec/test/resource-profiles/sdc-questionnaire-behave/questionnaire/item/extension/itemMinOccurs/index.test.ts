@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import type { IGroupNode } from "@formbox/renderer/types.ts";
 import {
   assertGroupListStore,
@@ -68,7 +69,7 @@ describe("itemMinOccurs", () => {
     };
 
     const createEmptyGroupStore = () =>
-      new FormStore("r5", questionnaire, responseWithoutItems, undefined);
+      new FormStore(en, "r5", questionnaire, responseWithoutItems, undefined);
 
     const getEmptyGroupList = () => {
       const form = createEmptyGroupStore();
@@ -123,6 +124,7 @@ describe("itemMinOccurs", () => {
 
     const createMissingAnswersStore = () =>
       new FormStore(
+        en,
         "r5",
         questionnaireMissingAnswers,
         responseMissingAnswers,
@@ -187,7 +189,7 @@ describe("itemMinOccurs", () => {
         ],
       };
 
-      const form = new FormStore("r5", questionnaire, undefined, undefined);
+      const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
       const gate = form.scope.lookupNode("gate");
       const target = form.scope.lookupNode("target");
 
@@ -231,7 +233,7 @@ describe("itemMinOccurs", () => {
         ],
       };
 
-      const form = new FormStore("r5", questionnaire, undefined, undefined);
+      const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
       const question = form.scope.lookupNode("symptom");
       assertQuestionNode(question);
 
@@ -279,7 +281,7 @@ describe("itemMinOccurs", () => {
         ],
       };
 
-      const form = new FormStore("r5", questionnaire, undefined, undefined);
+      const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
       const group = form.scope.lookupNode("family-history");
       expect(group && isGroupListStore(group)).toBe(true);
       assertGroupListStore(group);
@@ -324,7 +326,7 @@ describe("itemMinOccurs", () => {
         ],
       };
 
-      const form = new FormStore("r5", questionnaire, undefined, undefined);
+      const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
       const group = form.scope.lookupNode("lifestyle");
       expect(group && isGroupNode(group)).toBe(true);
       assertGroupNode(group);

@@ -3,7 +3,6 @@ import type { IGroupList } from "../../../types.ts";
 import { Node } from "../../node/node.tsx";
 import { NodeHeader } from "../../node/node-header.tsx";
 import { useTheme } from "../../../ui/theme.tsx";
-import { strings } from "../../../strings.ts";
 import { buildId } from "../../../utilities.ts";
 
 export const GridTableControl = observer(function GridTableControl({
@@ -23,7 +22,6 @@ export const GridTableControl = observer(function GridTableControl({
     token: row.group.token,
     onRemove: () => list.removeNode(row.group),
     canRemove: list.canRemove,
-    removeLabel: strings.group.removeSection,
     cells: columns.map((column, index) => {
       const cellQuestion = row.questions[index];
       return {

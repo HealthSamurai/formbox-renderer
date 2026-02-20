@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { AttachmentRenderer } from "@formbox/renderer/component/question/fhir/attachment/attachment-renderer.tsx";
 import { EXT } from "@formbox/renderer/utilities.ts";
@@ -39,7 +40,7 @@ describe("type.attachment", () => {
         },
       ],
     };
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getAttachmentQuestion(form, "report");
 
     render(<AttachmentRenderer node={question} />);
@@ -72,7 +73,7 @@ describe("type.attachment", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getAttachmentQuestion(form, "upload");
 
     const { container } = render(<AttachmentRenderer node={question} />);

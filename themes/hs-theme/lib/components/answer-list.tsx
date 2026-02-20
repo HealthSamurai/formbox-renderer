@@ -1,17 +1,13 @@
 import { styled } from "@linaria/react";
 import { Children } from "react";
-import type { AnswerListProperties } from "@formbox/theme";
+import { useStrings, type AnswerListProperties } from "@formbox/theme";
 import { Plus } from "../icons/plus.tsx";
 import { IconButton } from "./icon-button.tsx";
 
-export function AnswerList({
-  children,
-  onAdd,
-  canAdd,
-  addLabel,
-}: AnswerListProperties) {
+export function AnswerList({ children, onAdd, canAdd }: AnswerListProperties) {
+  const strings = useStrings();
   const items = Children.toArray(children);
-  const addText = addLabel ?? "Add";
+
   return (
     <Container>
       {items.length > 0 && <List>{items}</List>}
@@ -21,7 +17,7 @@ export function AnswerList({
             icon={<Plus size={15} />}
             onClick={onAdd}
             disabled={canAdd === false}
-            label={addText}
+            label={strings.selection.addAnother}
           />
         </Toolbar>
       )}

@@ -1,9 +1,8 @@
 import { ActionIcon, Tooltip, VisuallyHidden } from "@mantine/core";
-import type { FlyoverProperties } from "@formbox/theme";
+import { useStrings, type FlyoverProperties } from "@formbox/theme";
 
-export function Flyover({ id, children, ariaLabel }: FlyoverProperties) {
-  const ariaLabelProperties =
-    ariaLabel == undefined ? {} : { "aria-label": ariaLabel };
+export function Flyover({ id, children }: FlyoverProperties) {
+  const strings = useStrings();
 
   return (
     <Tooltip label={children} withArrow>
@@ -12,7 +11,7 @@ export function Flyover({ id, children, ariaLabel }: FlyoverProperties) {
           variant="subtle"
           size="sm"
           aria-describedby={id}
-          {...ariaLabelProperties}
+          aria-label={strings.aria.flyover}
         >
           i
         </ActionIcon>

@@ -1,32 +1,30 @@
 import { Button, Group, Stack } from "@mantine/core";
-import type { CustomOptionFormProperties } from "@formbox/theme";
+import { useStrings, type CustomOptionFormProperties } from "@formbox/theme";
 
 export function CustomOptionForm({
   content,
   errors,
-  submit,
-  cancel,
+  onCancel,
+  onSubmit,
+  canSubmit,
 }: CustomOptionFormProperties) {
+  const strings = useStrings();
+
   return (
     <Stack gap="xs">
       <div>{content}</div>
       {errors}
       <Group gap="xs">
-        <Button
-          type="button"
-          variant="default"
-          onClick={cancel.onClick}
-          disabled={cancel.disabled === true}
-        >
-          {cancel.label}
+        <Button type="button" variant="default" onClick={onCancel}>
+          {strings.dialog.cancel}
         </Button>
         <Button
           type="button"
           color="green"
-          onClick={submit.onClick}
-          disabled={submit.disabled === true}
+          onClick={onSubmit}
+          disabled={canSubmit === false}
         >
-          {submit.label}
+          {strings.dialog.add}
         </Button>
       </Group>
     </Stack>

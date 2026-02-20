@@ -1,8 +1,8 @@
 import type { FlyoverProperties } from "@formbox/theme";
 
-export function Flyover({ id, children, ariaLabel }: FlyoverProperties) {
+export function Flyover({ id, children }: FlyoverProperties) {
   return (
-    <div className="nhsuk-hint" id={id} aria-label={ariaLabel}>
+    <div className="nhsuk-hint" id={id}>
       {children}
     </div>
   );

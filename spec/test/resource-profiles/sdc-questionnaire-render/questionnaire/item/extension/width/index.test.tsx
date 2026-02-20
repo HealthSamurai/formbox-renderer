@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { isGroupNode } from "@formbox/renderer/store/group/group-store.ts";
 import { isGroupListStore } from "@formbox/renderer/store/group/group-list-store.ts";
@@ -89,7 +90,7 @@ describe("width", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getQuestion(form, "q-px");
 
     expect(question.columnWidth).toBe("180px");
@@ -109,7 +110,7 @@ describe("width", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getQuestion(form, "q-percent");
 
     expect(question.columnWidth).toBe("35%");
@@ -151,7 +152,7 @@ describe("width", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const group = getGroup(form, "htable-group");
 
     render(<SelectionTableControl node={group} />);
@@ -194,7 +195,7 @@ describe("width", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const list = getGroupList(form, "gtable-group");
 
     render(<GridTableControl list={list} />);

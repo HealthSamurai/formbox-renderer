@@ -9,12 +9,12 @@ import {
 import userEvent from "@testing-library/user-event";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { QuantityRenderer } from "@formbox/renderer/component/question/fhir/quantity/quantity-renderer.tsx";
 import { ListSelectRenderer } from "@formbox/renderer/component/question/renderer/list-select-renderer.tsx";
 import type { IQuestionNode } from "@formbox/renderer/types.ts";
 import { EXT } from "@formbox/renderer/utilities.ts";
-import { strings } from "@formbox/renderer/strings.ts";
 
 import type {
   QuestionnaireOf,
@@ -101,7 +101,7 @@ describe("unitOption", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getQuantityQuestion(form, "dosage");
 
     render(<QuantityRenderer node={question} />);
@@ -110,9 +110,7 @@ describe("unitOption", () => {
     const user = userEvent.setup();
 
     expect(combobox).toBeInTheDocument();
-    expect(getComboboxValue(combobox)).toBe(
-      strings.selection.selectPlaceholder,
-    );
+    expect(getComboboxValue(combobox)).toBe(en.selection.selectPlaceholder);
 
     await selectComboboxOption(user, combobox, "mg");
 
@@ -163,7 +161,7 @@ describe("unitOption", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, response, undefined);
+    const form = new FormStore(en, "r5", questionnaire, response, undefined);
     const question = getQuantityQuestion(form, "weight");
 
     render(<QuantityRenderer node={question} />);
@@ -195,7 +193,7 @@ describe("unitOption", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getQuantityQuestion(form, "volume");
 
     const { getByRole } = render(<QuantityRenderer node={question} />);
@@ -217,7 +215,7 @@ describe("unitOption", () => {
     expect(numberInput.value).toBe("");
     await waitFor(() =>
       expect(getComboboxValue(getByRole("combobox") as HTMLElement)).toBe(
-        strings.selection.selectPlaceholder,
+        en.selection.selectPlaceholder,
       ),
     );
   });
@@ -245,7 +243,7 @@ describe("unitOption", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getQuantityQuestion(form, "temp");
 
     const { container } = render(<QuantityRenderer node={question} />);
@@ -295,16 +293,14 @@ describe("unitOption", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getQuantityQuestion(form, "temp");
 
     const { getByRole } = render(<QuantityRenderer node={question} />);
 
     const combobox = getByRole("combobox") as HTMLElement;
     await waitFor(() =>
-      expect(getComboboxValue(combobox)).toBe(
-        strings.selection.selectPlaceholder,
-      ),
+      expect(getComboboxValue(combobox)).toBe(en.selection.selectPlaceholder),
     );
     const temporaryInput = screen.getByRole("spinbutton", {
       name: /temperature/i,
@@ -364,7 +360,7 @@ describe("unitOption", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, response, undefined);
+    const form = new FormStore(en, "r5", questionnaire, response, undefined);
     const question = getQuantityQuestion(form, "rate");
 
     const { getByRole } = render(<QuantityRenderer node={question} />);
@@ -438,7 +434,7 @@ describe("unitOption", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, response, undefined);
+    const form = new FormStore(en, "r5", questionnaire, response, undefined);
     const question = getQuantityQuestion(form, "rate");
 
     const { getByRole } = render(<QuantityRenderer node={question} />);
@@ -465,7 +461,7 @@ describe("unitOption", () => {
     expect(rateInput.value).toBe("50");
     await waitFor(() =>
       expect(getComboboxValue(getByRole("combobox") as HTMLElement)).toBe(
-        strings.selection.selectPlaceholder,
+        en.selection.selectPlaceholder,
       ),
     );
   });
@@ -502,7 +498,7 @@ describe("unitOption", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getQuantityQuestion(form, "dosage");
 
     render(<ListSelectRenderer node={question} />);

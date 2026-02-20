@@ -2,11 +2,11 @@ import { describe, expect, it } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { ListSelectRenderer } from "@formbox/renderer/component/question/renderer/list-select-renderer.tsx";
 import type { AnswerType, IQuestionNode } from "@formbox/renderer/types.ts";
 import { EXT } from "@formbox/renderer/utilities.ts";
-import { strings } from "@formbox/renderer/strings.ts";
 
 import type {
   QuestionnaireOf,
@@ -52,7 +52,13 @@ describe("itemControl.check-box", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "color");
 
         render(<ListSelectRenderer node={question} />);
@@ -108,7 +114,13 @@ describe("itemControl.check-box", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, response, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          response,
+          undefined,
+        );
         const question = getQuestion(form, "call-sign");
 
         render(<ListSelectRenderer node={question} />);
@@ -150,7 +162,13 @@ describe("itemControl.check-box", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "allergy");
 
         render(<ListSelectRenderer node={question} />);
@@ -200,7 +218,13 @@ describe("itemControl.check-box", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "allergy");
 
         render(<ListSelectRenderer node={question} />);
@@ -233,9 +257,7 @@ describe("itemControl.check-box", () => {
         expect(getStringAnswers(question).toSorted()).toEqual(["Cats", "Dust"]);
         assertOptionsEnabled();
 
-        fireEvent.click(
-          screen.getByRole("button", { name: strings.dialog.add }),
-        );
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
         expect(specifyOther).not.toBeChecked();
         expect(screen.queryByRole("textbox", { name: "Allergy" })).toBeNull();
         expect(screen.getByRole("checkbox", { name: /cats/i })).toBeChecked();
@@ -300,7 +322,13 @@ describe("itemControl.check-box", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, response, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          response,
+          undefined,
+        );
         const question = getQuestion(form, "dose");
 
         render(<ListSelectRenderer node={question} />);
@@ -348,7 +376,13 @@ describe("itemControl.check-box", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "color");
 
         render(<ListSelectRenderer node={question} />);
@@ -411,7 +445,13 @@ describe("itemControl.check-box", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, response, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          response,
+          undefined,
+        );
         const question = getQuestion(form, "dose");
 
         render(<ListSelectRenderer node={question} />);
@@ -452,7 +492,13 @@ describe("itemControl.check-box", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "dose");
 
         render(<ListSelectRenderer node={question} />);
@@ -487,9 +533,7 @@ describe("itemControl.check-box", () => {
         ).toEqual([1, 5]);
         assertOptionsEnabled();
 
-        fireEvent.click(
-          screen.getByRole("button", { name: strings.dialog.add }),
-        );
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
         expect(specifyOther).not.toBeChecked();
         expect(screen.queryByRole("spinbutton", { name: /dose/i })).toBeNull();
         expect(
@@ -536,7 +580,13 @@ describe("itemControl.check-box", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "dose");
 
         render(<ListSelectRenderer node={question} />);
@@ -563,9 +613,7 @@ describe("itemControl.check-box", () => {
         fireEvent.change(screen.getByRole("spinbutton", { name: /dose/i }), {
           target: { value: "5" },
         });
-        fireEvent.click(
-          screen.getByRole("button", { name: strings.dialog.add }),
-        );
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
         expect(specifyOther).not.toBeChecked();
         expect(screen.queryByRole("spinbutton", { name: /dose/i })).toBeNull();
         assertOptionsEnabled();
@@ -611,7 +659,13 @@ describe("itemControl.check-box", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "call-sign");
 
         render(<ListSelectRenderer node={question} />);
@@ -679,7 +733,13 @@ describe("itemControl.check-box", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "call-sign");
 
         render(<ListSelectRenderer node={question} />);
@@ -705,9 +765,7 @@ describe("itemControl.check-box", () => {
         expect(option).not.toBeChecked();
         assertOptionsEnabled();
 
-        fireEvent.click(
-          screen.getByRole("button", { name: strings.dialog.add }),
-        );
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
         expect(specifyOther).not.toBeChecked();
         expect(option).not.toBeChecked();
         expect(
@@ -720,9 +778,7 @@ describe("itemControl.check-box", () => {
           name: "Call sign",
         }) as HTMLInputElement;
         fireEvent.change(customInput, { target: { value: "Zulu" } });
-        fireEvent.click(
-          screen.getByRole("button", { name: strings.dialog.add }),
-        );
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
         expect(specifyOther).not.toBeChecked();
         expect(option).not.toBeChecked();
         expect(screen.getByRole("checkbox", { name: /zulu/i })).toBeChecked();

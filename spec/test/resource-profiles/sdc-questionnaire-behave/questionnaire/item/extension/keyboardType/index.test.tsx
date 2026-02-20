@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { StringRenderer } from "@formbox/renderer/component/question/fhir/string/string-renderer.tsx";
 import { EXT } from "@formbox/renderer/utilities.ts";
@@ -41,7 +42,7 @@ describe("keyboardType", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getQuestion(form, "contact-phone");
 
     expect(question.keyboardType).toBe("tel");
@@ -74,7 +75,7 @@ describe("keyboardType", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getQuestion(form, "chat-text");
 
     expect(question.keyboardType).toBe("text");
@@ -108,7 +109,7 @@ describe("keyboardType", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getQuestion(form, "other");
 
     expect(question.keyboardType).toBeUndefined();
@@ -148,7 +149,7 @@ describe("keyboardType", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const child = getQuestion(form, "child");
 
     expect(child.keyboardType).toBeUndefined();

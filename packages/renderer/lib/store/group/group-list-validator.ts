@@ -3,7 +3,6 @@ import type { OperationOutcomeIssue } from "@formbox/fhir";
 
 import { formatString, groupHasResponses, makeIssue } from "../../utilities.ts";
 import type { INodeValidator, IGroupList } from "../../types.ts";
-import { strings } from "../../strings.ts";
 
 export class GroupListValidator implements INodeValidator {
   private readonly list: IGroupList;
@@ -27,6 +26,7 @@ export class GroupListValidator implements INodeValidator {
     }
 
     const occurs = list.nodes.filter((node) => groupHasResponses(node)).length;
+    const strings = list.form.strings;
     const issues: OperationOutcomeIssue[] = [];
 
     if (list.minOccurs > 0 && occurs < list.minOccurs) {

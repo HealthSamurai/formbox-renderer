@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { assertDefined } from "@formbox/renderer/utilities.ts";
 
@@ -43,7 +44,7 @@ describe("requiredExpression", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const gate = form.scope.lookupNode("gate");
     const detail = form.scope.lookupNode("detail");
 

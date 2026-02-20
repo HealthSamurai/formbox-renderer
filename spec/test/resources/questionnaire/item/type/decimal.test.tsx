@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { DecimalRenderer } from "@formbox/renderer/component/question/fhir/decimal/decimal-renderer.tsx";
 import { EXT } from "@formbox/renderer/utilities.ts";
@@ -42,7 +43,7 @@ describe("type.decimal", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getDecimalQuestion(form, "weight");
 
     expect(question.unitDisplay).toBe("kg");
@@ -81,7 +82,7 @@ describe("type.decimal", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getDecimalQuestion(form, "dosage");
 
     render(<DecimalRenderer node={question} />);
@@ -110,7 +111,7 @@ describe("type.decimal", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getDecimalQuestion(form, "glucose");
 
     render(<DecimalRenderer node={question} />);

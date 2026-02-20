@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 
 import type { QuestionnaireOf } from "@formbox/renderer";
 type Questionnaire = QuestionnaireOf<"r5">;
@@ -19,7 +20,7 @@ describe("itemControl.footer", () => {
       ],
     };
 
-    const store = new FormStore("r5", questionnaire, undefined, undefined);
+    const store = new FormStore(en, "r5", questionnaire, undefined, undefined);
 
     expect(
       store.issues.some((issue) =>

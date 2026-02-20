@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { assertGroupNode } from "@formbox/renderer/store/group/group-store.ts";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { assertDefined } from "@formbox/renderer/utilities.ts";
@@ -46,7 +47,7 @@ describe("readOnlyExpression", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const lock = form.scope.lookupNode("lock");
     const detail = form.scope.lookupNode("detail");
 
@@ -100,7 +101,7 @@ describe("readOnlyExpression", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const section = form.scope.lookupNode("section");
     const lock = form.scope.lookupNode("lock");
     const child = form.scope.lookupNode("child");
@@ -139,7 +140,7 @@ describe("readOnlyExpression", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const detail = form.scope.lookupNode("detail");
 
     assertQuestionNode(detail);

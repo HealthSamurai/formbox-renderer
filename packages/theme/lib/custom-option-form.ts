@@ -1,16 +1,11 @@
 import type { ComponentType, ReactNode } from "react";
 
-export type CustomOptionAction = {
-  label: string;
-  onClick: () => void;
-  disabled?: boolean | undefined;
-};
-
 export type CustomOptionFormProperties = {
   content: ReactNode;
-  errors?: ReactNode;
-  submit: CustomOptionAction;
-  cancel: CustomOptionAction;
+  errors?: ReactNode | undefined;
+  onCancel: () => void;
+  onSubmit: () => void;
+  canSubmit?: boolean | undefined;
 };
 
 export type CustomOptionFormComponent =

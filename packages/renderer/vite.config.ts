@@ -18,6 +18,8 @@ export default defineConfig({
       compilerOptions: {
         paths: {
           "@formbox/fhir": ["packages/fhir/lib"],
+          "@formbox/strings": ["packages/strings/lib"],
+          "@formbox/strings/*": ["packages/strings/lib/*"],
           "@formbox/theme": ["packages/theme/lib"],
         },
       },
@@ -32,6 +34,8 @@ export default defineConfig({
     rollupOptions: {
       external: [
         "react/jsx-runtime",
+        "@formbox/strings",
+        "@formbox/theme",
         ...peerDependencies,
         ...peerDependencies
           .filter((dep) => !dep.includes("/"))

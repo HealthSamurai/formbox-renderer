@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { IntegerRenderer } from "@formbox/renderer/component/question/fhir/integer/integer-renderer.tsx";
 import { EXT } from "@formbox/renderer/utilities.ts";
@@ -32,7 +33,7 @@ describe("type.integer", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getIntegerQuestion(form, "count");
 
     render(<IntegerRenderer node={question} />);
@@ -64,7 +65,7 @@ describe("type.integer", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getIntegerQuestion(form, "pills");
 
     render(<IntegerRenderer node={question} />);

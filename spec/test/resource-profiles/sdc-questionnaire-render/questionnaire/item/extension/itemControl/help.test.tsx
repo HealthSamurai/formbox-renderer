@@ -3,6 +3,7 @@ import { render } from "@testing-library/react";
 
 import { NodeHelp } from "@formbox/renderer/component/node/node-help.tsx";
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 
 import type { QuestionnaireItemOf } from "@formbox/renderer";
@@ -40,6 +41,7 @@ function makeQuestionnaireItem(helpText?: string): QuestionnaireItem {
 describe("itemControl.help", () => {
   it("renders nothing when the node has no help text", () => {
     const form = new FormStore(
+      en,
       "r5",
       {
         resourceType: "Questionnaire",
@@ -61,6 +63,7 @@ describe("itemControl.help", () => {
 
   it("renders help badge and tooltip when help is present", () => {
     const form = new FormStore(
+      en,
       "r5",
       {
         resourceType: "Questionnaire",

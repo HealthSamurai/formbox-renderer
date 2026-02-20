@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { assertDefined } from "@formbox/renderer/utilities.ts";
 
@@ -74,7 +75,7 @@ describe("answerOptionsToggleExpression", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const toggle = form.scope.lookupNode("toggle");
     const color = form.scope.lookupNode("color");
 
@@ -132,7 +133,7 @@ describe("answerOptionsToggleExpression", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const color = form.scope.lookupNode("color");
 
     assertQuestionNode(color);

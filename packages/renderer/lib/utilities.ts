@@ -16,8 +16,8 @@ import {
   ValueCarrierFor,
   ValueKeyFor,
 } from "./types.ts";
-import { strings } from "./strings.ts";
 import { Hashery } from "hashery";
+import type { Strings } from "@formbox/theme";
 import type {
   Attachment,
   Coding,
@@ -46,6 +46,28 @@ export function formatString<T extends string>(
     const value = mapped[key];
     return value === undefined ? "" : String(value);
   });
+}
+
+export function deepMerge<T extends object, P extends object>(
+  base: T,
+  patch: P,
+): T & P {
+  const result = { ...base } as Record<string, unknown>;
+
+  for (const key in patch) {
+    const patchValue = (patch as Record<string, unknown>)[key];
+    if (patchValue === undefined) {
+      continue;
+    }
+
+    const baseValue = result[key];
+    result[key] =
+      isMergeableObject(baseValue) && isMergeableObject(patchValue)
+        ? deepMerge(baseValue, patchValue)
+        : patchValue;
+  }
+
+  return result as T & P;
 }
 
 export function buildId(
@@ -122,6 +144,10 @@ export function assertDefined<T>(
 
 export function hasHttpStatus(error: unknown): error is { status: number } {
   return typeof (error as { status?: unknown }).status === "number";
+}
+
+function isMergeableObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 export const ITEM_CONTROL_SYSTEM =
@@ -1924,22 +1950,22 @@ export function tokenify<T extends DataType>(
 export function stringifyValue<T extends DataType>(
   type: T,
   value: DataTypeToType<T> | undefined,
-  fallback: string = "",
+  strings: Strings,
 ): string {
   if (value == undefined) {
-    return fallback;
+    return "";
   }
 
   if (type === "date" && typeof value === "string") {
-    return formatDateForDisplay(value) ?? fallback;
+    return formatDateForDisplay(value) ?? "";
   }
 
   if (type === "dateTime" && typeof value === "string") {
-    return formatDateTimeForDisplay(value) ?? fallback;
+    return formatDateTimeForDisplay(value) ?? "";
   }
 
   if (type === "time" && typeof value === "string") {
-    return formatTimeValue(value) ?? fallback;
+    return formatTimeValue(value) ?? "";
   }
 
   if (typeof value === "string") {
@@ -1955,7 +1981,7 @@ export function stringifyValue<T extends DataType>(
   }
 
   if (type === "Coding" && isCoding(value)) {
-    return value.display ?? value.code ?? fallback;
+    return value.display ?? value.code ?? "";
   }
 
   if (type === "Quantity" && isQuantity(value)) {
@@ -1964,12 +1990,12 @@ export function stringifyValue<T extends DataType>(
       quantity.value == undefined ? undefined : String(quantity.value),
       quantity.unit,
     ].filter(Boolean);
-    return pieces.join(" ") || fallback;
+    return pieces.join(" ") || "";
   }
 
   if (type === "Reference") {
     const reference = value as Reference;
-    return reference.display ?? reference.reference ?? fallback;
+    return reference.display ?? reference.reference ?? "";
   }
 
   if (type === "Attachment") {
@@ -1977,13 +2003,11 @@ export function stringifyValue<T extends DataType>(
     return (
       attachment.title ??
       attachment.url ??
-      (attachment.contentType
-        ? `${attachment.contentType} attachment`
-        : fallback)
+      (attachment.contentType ? `${attachment.contentType} attachment` : "")
     );
   }
 
-  return fallback;
+  return "";
 }
 
 export function areValuesEqual<T extends DataType>(

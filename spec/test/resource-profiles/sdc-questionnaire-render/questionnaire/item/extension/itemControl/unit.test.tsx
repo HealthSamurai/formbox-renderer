@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import {
   assertQuestionNode,
   isQuestionNode,
@@ -59,7 +60,7 @@ describe("itemControl.unit", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const node = form.scope.lookupNode("lab-value");
     expect(node && isQuestionNode(node)).toBe(true);
     assertQuestionNode(node);
@@ -110,7 +111,7 @@ describe("itemControl.unit", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getIntegerQuestion(form, "dose-count");
 
     const child = question.template.item?.[0];

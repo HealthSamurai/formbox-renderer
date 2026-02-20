@@ -1,8 +1,7 @@
 import { observer } from "mobx-react-lite";
-import { IPresentableNode } from "../../types.ts";
+import type { IPresentableNode } from "../../types.ts";
 import { getNodeFlyoverId } from "../../utilities.ts";
 import { useTheme } from "../../ui/theme.tsx";
-import { strings } from "../../strings.ts";
 
 export const NodeFlyover = observer(function NodeFlyover({
   node,
@@ -16,9 +15,5 @@ export const NodeFlyover = observer(function NodeFlyover({
     return;
   }
 
-  return (
-    <ThemedFlyover id={flyoverId} ariaLabel={strings.aria.flyover}>
-      {node.flyover}
-    </ThemedFlyover>
-  );
+  return <ThemedFlyover id={flyoverId}>{node.flyover}</ThemedFlyover>;
 });

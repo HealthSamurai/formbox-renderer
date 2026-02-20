@@ -1,4 +1,4 @@
-import type { GroupListProperties } from "@formbox/theme";
+import { useStrings, type GroupListProperties } from "@formbox/theme";
 import { Button, Space } from "antd";
 
 export function GroupList({
@@ -7,8 +7,9 @@ export function GroupList({
   children,
   onAdd,
   canAdd,
-  addLabel,
 }: GroupListProperties) {
+  const strings = useStrings();
+
   return (
     <div data-linkid={linkId}>
       <Space orientation="vertical" size="middle" style={{ width: "100%" }}>
@@ -16,7 +17,7 @@ export function GroupList({
         {children}
         {onAdd && (
           <Button onClick={onAdd} disabled={canAdd === false}>
-            {addLabel ?? "Add"}
+            {strings.group.addSection}
           </Button>
         )}
       </Space>

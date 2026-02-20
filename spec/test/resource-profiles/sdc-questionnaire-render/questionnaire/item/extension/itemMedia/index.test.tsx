@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { StringRenderer } from "@formbox/renderer/component/question/fhir/string/string-renderer.tsx";
 import { EXT } from "@formbox/renderer/utilities.ts";
@@ -54,7 +55,7 @@ describe("itemMedia", () => {
       data: "AAAA",
     });
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getStringQuestion(form, "q1");
 
     render(<StringRenderer node={question} />);
@@ -72,7 +73,7 @@ describe("itemMedia", () => {
       url: "https://example.com/prompt.mp3",
     });
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getStringQuestion(form, "q1");
 
     const { container } = render(<StringRenderer node={question} />);
@@ -89,7 +90,7 @@ describe("itemMedia", () => {
       url: "https://example.com/prompt.mp4",
     });
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getStringQuestion(form, "q1");
 
     const { container } = render(<StringRenderer node={question} />);
@@ -106,7 +107,7 @@ describe("itemMedia", () => {
       url: "https://example.com/instructions.pdf",
     });
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getStringQuestion(form, "q1");
 
     render(<StringRenderer node={question} />);
@@ -123,7 +124,7 @@ describe("itemMedia", () => {
       contentType: "application/json",
     });
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getStringQuestion(form, "q1");
 
     render(<StringRenderer node={question} />);

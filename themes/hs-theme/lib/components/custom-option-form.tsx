@@ -1,30 +1,29 @@
 import { styled } from "@linaria/react";
-import type { CustomOptionFormProperties } from "@formbox/theme";
+import { useStrings, type CustomOptionFormProperties } from "@formbox/theme";
 
 export function CustomOptionForm({
   content,
   errors,
-  submit,
-  cancel,
+  onCancel,
+  onSubmit,
+  canSubmit,
 }: CustomOptionFormProperties) {
+  const strings = useStrings();
+
   return (
     <Stack>
       <div>{content}</div>
       {errors ?? undefined}
       <Actions>
-        <CancelButton
-          type="button"
-          onClick={cancel.onClick}
-          disabled={cancel.disabled}
-        >
-          {cancel.label}
+        <CancelButton type="button" onClick={onCancel}>
+          {strings.dialog.cancel}
         </CancelButton>
         <SubmitButton
           type="button"
-          onClick={submit.onClick}
-          disabled={submit.disabled}
+          onClick={onSubmit}
+          disabled={canSubmit === false}
         >
-          {submit.label}
+          {strings.dialog.add}
         </SubmitButton>
       </Actions>
     </Stack>

@@ -1,11 +1,10 @@
 import { ActionIcon, Box, Popover, Text, VisuallyHidden } from "@mantine/core";
 import { useState } from "react";
-import type { LegalProperties } from "@formbox/theme";
+import { useStrings, type LegalProperties } from "@formbox/theme";
 
-export function Legal({ id, children, ariaLabel }: LegalProperties) {
+export function Legal({ id, children }: LegalProperties) {
   const [opened, setOpened] = useState(false);
-  const ariaLabelProperties =
-    ariaLabel == undefined ? {} : { "aria-label": ariaLabel };
+  const strings = useStrings();
 
   return (
     <Popover opened={opened} onChange={setOpened} width={320} withArrow>
@@ -16,7 +15,7 @@ export function Legal({ id, children, ariaLabel }: LegalProperties) {
             color="orange"
             size="sm"
             aria-describedby={id}
-            {...ariaLabelProperties}
+            aria-label={strings.aria.legal}
             onClick={() => setOpened((value) => !value)}
           >
             §

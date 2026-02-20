@@ -1,12 +1,15 @@
-import type { CustomOptionFormProperties } from "@formbox/theme";
+import { useStrings, type CustomOptionFormProperties } from "@formbox/theme";
 import { Button, Card, Space } from "antd";
 
 export function CustomOptionForm({
   content,
   errors,
-  submit,
-  cancel,
+  onCancel,
+  onSubmit,
+  canSubmit,
 }: CustomOptionFormProperties) {
+  const strings = useStrings();
+
   return (
     <Card size="small">
       <Space orientation="vertical" size="middle" style={{ width: "100%" }}>
@@ -15,14 +18,12 @@ export function CustomOptionForm({
         <Space wrap>
           <Button
             type="primary"
-            onClick={submit.onClick}
-            disabled={submit.disabled === true}
+            onClick={onSubmit}
+            disabled={canSubmit === false}
           >
-            {submit.label}
+            {strings.dialog.add}
           </Button>
-          <Button onClick={cancel.onClick} disabled={cancel.disabled === true}>
-            {cancel.label}
-          </Button>
+          <Button onClick={onCancel}>{strings.dialog.cancel}</Button>
         </Space>
       </Space>
     </Card>

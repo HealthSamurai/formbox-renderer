@@ -85,6 +85,12 @@ importers:
       '@formbox/fhir':
         specifier: workspace:*
         version: link:../fhir
+      '@formbox/strings':
+        specifier: workspace:*
+        version: link:../strings
+      '@formbox/theme':
+        specifier: workspace:*
+        version: link:../theme
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
@@ -107,9 +113,6 @@ importers:
         specifier: ^6.1.1
         version: 6.1.1(mobx@6.15.0)
     devDependencies:
-      '@formbox/theme':
-        specifier: workspace:*
-        version: link:../theme
       '@lhncbc/ucum-lhc':
         specifier: 7.1.3
         version: 7.1.3
@@ -125,6 +128,31 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^5.1.0
         version: 5.1.2(vite@7.3.1(@types/node@25.0.7)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2))
+      react:
+        specifier: 19.2.3
+        version: 19.2.3
+      react-dom:
+        specifier: 19.2.3
+        version: 19.2.3(react@19.2.3)
+      typescript:
+        specifier: ~5.9.3
+        version: 5.9.3
+      vite:
+        specifier: ^7.3.1
+        version: 7.3.1(@types/node@25.0.7)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2)
+      vite-plugin-dts:
+        specifier: ^4.5.4
+        version: 4.5.4(@types/node@25.0.7)(rollup@4.55.1)(typescript@5.9.3)(vite@7.3.1(@types/node@25.0.7)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2))
+
+  packages/strings:
+    dependencies:
+      '@formbox/theme':
+        specifier: workspace:*
+        version: link:../theme
+    devDependencies:
+      '@types/react':
+        specifier: ^19.2.8
+        version: 19.2.8
       react:
         specifier: 19.2.3
         version: 19.2.3
@@ -185,6 +213,9 @@ importers:
       '@formbox/renderer':
         specifier: workspace:*
         version: link:../packages/renderer
+      '@formbox/strings':
+        specifier: workspace:*
+        version: link:../packages/strings
       '@gsap/react':
         specifier: ^2.1.2
         version: 2.1.2(gsap@3.14.2)(react@19.2.3)
@@ -352,6 +383,9 @@ importers:
       '@formbox/renderer':
         specifier: workspace:*
         version: link:../packages/renderer
+      '@formbox/strings':
+        specifier: workspace:*
+        version: link:../packages/strings
       '@formbox/theme':
         specifier: workspace:*
         version: link:../packages/theme

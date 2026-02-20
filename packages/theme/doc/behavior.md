@@ -40,7 +40,7 @@ All inputs are controlled; callbacks receive values, not DOM events.
 - `SelectedOptionItem.label` may not match the current options list (legacy or custom values). Render it as provided.
 - The renderer may include disabled legacy options in `options` to keep stored answers visible. Treat them as normal options, but disabled.
 - `specifyOtherOption` is an extra option row. When the user selects it, the renderer enters a custom-entry state and provides `customOptionForm`.
-- `customOptionForm` is present only while custom entry is active. Render it near the options list or in place of it. Use its `submit` and `cancel` actions to finish or return to the list.
+- `customOptionForm` is present only while custom entry is active. Render it near the options list or in place of it. Use `onSubmit` to commit and `onCancel` to return to the list; respect `canSubmit` when rendering submit controls.
 - `isLoading` can be true while options fetch. The renderer may also render `OptionsLoading` in the question scaffold; handle both without duplicating spinners.
 
 ## Repeating items contract

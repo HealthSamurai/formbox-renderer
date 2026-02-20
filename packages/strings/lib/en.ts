@@ -1,4 +1,6 @@
-export const strings = {
+import type { Strings } from "@formbox/theme";
+
+const strings: Strings = {
   aria: {
     help: "More information",
     legal: "Legal information",
@@ -60,7 +62,7 @@ export const strings = {
     empty: "No tab content",
   },
   unsupported: {
-    typePrefix: "Unsupported type:",
+    itemType: "Unsupported type:",
   },
   validation: {
     group: {
@@ -96,4 +98,6 @@ export const strings = {
       attachmentSizeMax: "Attachment must not exceed {maxSize} bytes.",
     },
   },
-} as const;
+};
+
+export default strings;

@@ -1,9 +1,8 @@
 import { ActionIcon, Tooltip, VisuallyHidden } from "@mantine/core";
-import type { HelpProperties } from "@formbox/theme";
+import { useStrings, type HelpProperties } from "@formbox/theme";
 
-export function Help({ id, children, ariaLabel }: HelpProperties) {
-  const ariaLabelProperties =
-    ariaLabel == undefined ? {} : { "aria-label": ariaLabel };
+export function Help({ id, children }: HelpProperties) {
+  const strings = useStrings();
 
   return (
     <Tooltip label={children} withArrow>
@@ -12,7 +11,7 @@ export function Help({ id, children, ariaLabel }: HelpProperties) {
           variant="subtle"
           size="sm"
           aria-describedby={id}
-          {...ariaLabelProperties}
+          aria-label={strings.aria.help}
         >
           ?
         </ActionIcon>

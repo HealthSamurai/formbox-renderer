@@ -1,10 +1,10 @@
 import { computed, makeObservable } from "mobx";
 import type {
+  AnswerConstraint,
   AnswerOption,
   AnswerType,
-  AnswerConstraint,
-  IOptionSelection,
   IAnswerOptions,
+  IOptionSelection,
   IQuestionNode,
   OptionToken,
 } from "../../types.ts";
@@ -26,21 +26,26 @@ import {
 } from "../../utilities.ts";
 import type { IPromiseBasedObservable } from "mobx-utils";
 import { fromPromise } from "mobx-utils";
-import { strings } from "../../strings.ts";
 import { OptionSelection } from "./view-model/option-selection.ts";
 
-function getOptionsErrorMessage(error: unknown): string {
+function getOptionsErrorMessage(
+  error: unknown,
+  unknownErrorMessage: string,
+): string {
   if (error instanceof Error) {
     return error.message;
   }
   if (error == undefined) {
-    return strings.errors.unknown;
+    return unknownErrorMessage;
   }
   return String(error);
 }
 
-function toOptionsIssue(error: unknown): OperationOutcomeIssue {
-  const message = getOptionsErrorMessage(error);
+function toOptionsIssue(
+  error: unknown,
+  unknownErrorMessage: string,
+): OperationOutcomeIssue {
+  const message = getOptionsErrorMessage(error, unknownErrorMessage);
   return {
     severity: "error",
     code: "invalid",
@@ -100,7 +105,9 @@ export class AnswerOptionStore<
   get issues() {
     return (
       this.expansion?.case({
-        rejected: (error) => [toOptionsIssue(error)],
+        rejected: (error) => [
+          toOptionsIssue(error, this.question.form.strings.errors.unknown),
+        ],
       }) ?? []
     );
   }

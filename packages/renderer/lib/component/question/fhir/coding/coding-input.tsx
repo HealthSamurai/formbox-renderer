@@ -1,6 +1,6 @@
 import type { Coding } from "@formbox/fhir";
+import { useStrings } from "@formbox/theme";
 import { useTheme } from "../../../../ui/theme.tsx";
-import { strings } from "../../../../strings.ts";
 import { buildId } from "../../../../utilities.ts";
 
 export type CodingInputProperties = {
@@ -20,6 +20,7 @@ export function CodingInput({
   ariaDescribedBy,
   disabled,
 }: CodingInputProperties) {
+  const strings = useStrings();
   const { InputGroup, TextInput } = useTheme();
   const coding = value ?? {};
   const handleChange = (field: keyof Coding, nextValue: string) => {

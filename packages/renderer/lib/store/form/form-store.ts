@@ -58,7 +58,7 @@ import {
   shouldCreateStore,
 } from "../../utilities.ts";
 import { ValueSetExpander } from "../option/valueset-expander.ts";
-import type { FormPagination } from "@formbox/theme";
+import type { FormPagination, Strings } from "@formbox/theme";
 import { R4Adapter } from "../../fhir/r4-adapter.ts";
 import { R5Adapter } from "../../fhir/r5-adapter.ts";
 
@@ -107,7 +107,11 @@ export class FormStore<V extends FhirVersion = FhirVersion>
   readonly valueSetExpander: IValueSetExpander;
   readonly adapter: IFhirAdapter;
 
+  @observable.ref
+  private stringsState: Strings;
+
   constructor(
+    strings: Strings,
     readonly fhirVersion: V,
     questionnaire: QuestionnaireOf<V>,
     response?: QuestionnaireResponseOf<V>,
@@ -126,6 +130,7 @@ export class FormStore<V extends FhirVersion = FhirVersion>
 
     this.questionnaire = questionnaire as Questionnaire;
     this.initialResponse = response as QuestionnaireResponse | undefined;
+    this.stringsState = strings;
     this.adapter =
       this.fhirVersion === "r4" ? new R4Adapter() : new R5Adapter();
     this.valueSetExpander = new ValueSetExpander(
@@ -164,6 +169,16 @@ export class FormStore<V extends FhirVersion = FhirVersion>
       questionnaire: this.questionnaire,
       context: this.expressionResponse,
     });
+  }
+
+  @computed
+  get strings(): Strings {
+    return this.stringsState;
+  }
+
+  @action
+  setStrings(strings: Strings): void {
+    this.stringsState = strings;
   }
 
   @computed

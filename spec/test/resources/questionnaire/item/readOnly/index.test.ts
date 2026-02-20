@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import {
   assertQuestionNode,
   isQuestionNode,
@@ -40,7 +41,7 @@ describe("readOnly", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, response, undefined);
+    const form = new FormStore(en, "r5", questionnaire, response, undefined);
     const node = form.scope.lookupNode("readonly");
     expect(node && isQuestionNode(node)).toBe(true);
     assertQuestionNode(node);
@@ -65,7 +66,7 @@ describe("readOnly", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     expect(form.validateAll()).toBe(true);
     const question = form.scope.lookupNode("readonly-question");
     assertQuestionNode(question);

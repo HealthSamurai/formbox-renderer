@@ -1,11 +1,12 @@
+import { useStrings } from "@formbox/theme";
 import { QuestionScaffold } from "../question-scaffold.tsx";
 import type { QuestionRendererProperties } from "../../../types.ts";
-import { strings } from "../../../strings.ts";
 
 export function UnsupportedRenderer({ node }: QuestionRendererProperties) {
+  const strings = useStrings();
   return (
     <QuestionScaffold node={node}>
-      {strings.unsupported.typePrefix} {node.type}
+      {strings.unsupported.itemType} {node.type}
     </QuestionScaffold>
   );
 }

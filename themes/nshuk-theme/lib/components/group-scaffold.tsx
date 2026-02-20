@@ -1,4 +1,4 @@
-import type { GroupScaffoldProperties } from "@formbox/theme";
+import { useStrings, type GroupScaffoldProperties } from "@formbox/theme";
 import { Collapsible } from "./collapsible.tsx";
 
 export function GroupScaffold({
@@ -8,8 +8,8 @@ export function GroupScaffold({
   isExpanded,
   onRemove,
   canRemove,
-  removeLabel,
 }: GroupScaffoldProperties) {
+  const strings = useStrings();
   return (
     <div className="nhsuk-form-group">
       {header}
@@ -23,7 +23,7 @@ export function GroupScaffold({
             disabled={canRemove === false}
             className="nhsuk-button nhsuk-button--secondary nhsuk-button--small"
           >
-            {removeLabel ?? "Remove"}
+            {strings.group.removeSection}
           </button>
         </div>
       )}

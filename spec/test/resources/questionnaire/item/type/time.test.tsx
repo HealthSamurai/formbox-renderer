@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { TimeRenderer } from "@formbox/renderer/component/question/fhir/time/time-renderer.tsx";
 import { EXT } from "@formbox/renderer/utilities.ts";
@@ -48,7 +49,7 @@ describe("type.time", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, response, undefined);
+    const form = new FormStore(en, "r5", questionnaire, response, undefined);
     const question = getTimeQuestion(form, "dose-time");
 
     render(<TimeRenderer node={question} />);
@@ -75,7 +76,7 @@ describe("type.time", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getTimeQuestion(form, "dose-time");
 
     render(<TimeRenderer node={question} />);

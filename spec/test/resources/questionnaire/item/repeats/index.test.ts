@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import type { IGroupNode } from "@formbox/renderer/types.ts";
 import {
   assertGroupListStore,
@@ -60,7 +61,7 @@ describe("repeats", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const list = form.scope.lookupNode("repeating-group");
     const toggle = form.scope.lookupNode("toggle");
 
@@ -136,7 +137,7 @@ describe("repeats", () => {
     };
 
     const createStore = () =>
-      new FormStore("r5", questionnaire, response, undefined);
+      new FormStore(en, "r5", questionnaire, response, undefined);
 
     const getGroupList = () => {
       const form = createStore();
@@ -239,7 +240,7 @@ describe("repeats", () => {
     };
 
     const createStore = () =>
-      new FormStore("r5", questionnaire, response, undefined);
+      new FormStore(en, "r5", questionnaire, response, undefined);
 
     const getQuestionStore = () => {
       const form = createStore();

@@ -1,4 +1,4 @@
-import type { GroupListProperties } from "@formbox/theme";
+import { useStrings, type GroupListProperties } from "@formbox/theme";
 import { styled } from "@linaria/react";
 import { Plus } from "../icons/plus.tsx";
 import { IconButton } from "./icon-button.tsx";
@@ -9,9 +9,9 @@ export function GroupList({
   children,
   onAdd,
   canAdd,
-  addLabel,
 }: GroupListProperties) {
-  const addText = addLabel ?? "Add";
+  const strings = useStrings();
+
   return (
     <Container data-linkid={linkId}>
       {header}
@@ -22,7 +22,7 @@ export function GroupList({
             icon={<Plus size={16} />}
             onClick={onAdd}
             disabled={canAdd === false}
-            label={addText}
+            label={strings.group.addSection}
           />
         </Toolbar>
       )}

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { ValueSetExpander } from "@formbox/renderer/store/option/valueset-expander.ts";
 import { EXT } from "@formbox/renderer/utilities.ts";
 
@@ -46,7 +47,7 @@ describe("terminologyServer", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const node = form.scope.lookupNode("root-question");
     expect(node?.preferredTerminologyServers).toEqual([
       "https://terminology.example/questionnaire",

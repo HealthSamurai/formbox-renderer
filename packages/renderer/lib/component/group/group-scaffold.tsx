@@ -10,13 +10,11 @@ export const GroupScaffold = observer(function GroupScaffold({
   children,
   onRemove,
   canRemove,
-  removeLabel,
 }: {
   node: IGroupNode;
   children?: ReactNode;
   onRemove?: (() => void) | undefined;
   canRemove?: boolean | undefined;
-  removeLabel?: string | undefined;
 }) {
   const { GroupScaffold: ThemedGroupScaffold } = useTheme();
 
@@ -30,7 +28,6 @@ export const GroupScaffold = observer(function GroupScaffold({
       errors={renderErrors(node)}
       onRemove={onRemove}
       canRemove={canRemove}
-      removeLabel={removeLabel}
     >
       {children}
     </ThemedGroupScaffold>

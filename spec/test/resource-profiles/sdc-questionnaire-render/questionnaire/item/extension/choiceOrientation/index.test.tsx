@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { ListSelectRenderer } from "@formbox/renderer/component/question/renderer/list-select-renderer.tsx";
 import type { AnswerType, IQuestionNode } from "@formbox/renderer/types.ts";
@@ -54,7 +55,7 @@ describe("choiceOrientation", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getQuestion(form, "color");
 
     render(<ListSelectRenderer node={question} />);
@@ -97,7 +98,7 @@ describe("choiceOrientation", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getQuestion(form, "fruit");
 
     render(<ListSelectRenderer node={question} />);
@@ -141,7 +142,7 @@ describe("choiceOrientation", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getQuestion(form, "allergy");
 
     render(<ListSelectRenderer node={question} />);

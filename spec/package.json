@@ -11,6 +11,7 @@
   "devDependencies": {
     "@formbox/fhir": "workspace:*",
     "@formbox/renderer": "workspace:*",
+    "@formbox/strings": "workspace:*",
     "@formbox/theme": "workspace:*",
     "@formbox/hs-theme": "workspace:*",
     "@lhncbc/ucum-lhc": "7.1.3",

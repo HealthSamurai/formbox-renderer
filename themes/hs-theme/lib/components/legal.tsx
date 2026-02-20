@@ -1,10 +1,16 @@
 import { styled } from "@linaria/react";
-import type { LegalProperties } from "@formbox/theme";
+import { useStrings, type LegalProperties } from "@formbox/theme";
 
-export function Legal({ id, children, ariaLabel }: LegalProperties) {
+export function Legal({ id, children }: LegalProperties) {
+  const strings = useStrings();
+
   return (
     <Wrapper>
-      <LegalButton type="button" aria-describedby={id} aria-label={ariaLabel}>
+      <LegalButton
+        type="button"
+        aria-describedby={id}
+        aria-label={strings.aria.legal}
+      >
         §
       </LegalButton>
       <Tooltip role="dialog" aria-hidden="true">

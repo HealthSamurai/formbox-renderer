@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import type { QuestionnaireOf } from "@formbox/renderer";
 
 describe("fhirVersion.r4", () => {
@@ -17,7 +18,7 @@ describe("fhirVersion.r4", () => {
       ],
     };
 
-    const form = new FormStore("r4", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r4", questionnaire, undefined, undefined);
     const item = form.expressionResponse.item?.[0];
     expect(item).toBeDefined();
 

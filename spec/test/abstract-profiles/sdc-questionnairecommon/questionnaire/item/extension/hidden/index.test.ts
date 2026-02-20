@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import {
   assertQuestionNode,
   isQuestionNode,
@@ -30,7 +31,7 @@ describe("hidden", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const flag = form.scope.lookupNode("internal-flag");
     expect(flag && isQuestionNode(flag)).toBe(true);
     assertQuestionNode(flag);

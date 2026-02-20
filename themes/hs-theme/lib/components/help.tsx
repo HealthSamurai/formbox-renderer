@@ -1,10 +1,16 @@
 import { styled } from "@linaria/react";
-import type { HelpProperties } from "@formbox/theme";
+import { useStrings, type HelpProperties } from "@formbox/theme";
 
-export function Help({ id, children, ariaLabel }: HelpProperties) {
+export function Help({ id, children }: HelpProperties) {
+  const strings = useStrings();
+
   return (
     <Wrapper>
-      <HelpButton type="button" aria-describedby={id} aria-label={ariaLabel}>
+      <HelpButton
+        type="button"
+        aria-describedby={id}
+        aria-label={strings.aria.help}
+      >
         ?
       </HelpButton>
       <Tooltip role="tooltip" aria-hidden="true">

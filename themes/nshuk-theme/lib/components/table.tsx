@@ -1,4 +1,4 @@
-import type { TableProperties } from "@formbox/theme";
+import { useStrings, type TableProperties } from "@formbox/theme";
 import type { ReactElement, ReactNode } from "react";
 import { styled } from "@linaria/react";
 import { LoadingSpinner } from "./loading-spinner.tsx";
@@ -7,6 +7,8 @@ export function Table({
   columns,
   rows,
 }: TableProperties): ReactElement | undefined {
+  const strings = useStrings();
+
   if (rows.length === 0 || columns.length === 0) {
     return (
       <p className="nhsuk-body-s nhsuk-u-secondary-text">Nothing to display.</p>
@@ -73,7 +75,7 @@ export function Table({
                       disabled={row.canRemove === false}
                       className="nhsuk-button nhsuk-button--secondary nhsuk-button--small nhsuk-u-margin-bottom-0"
                     >
-                      {row.removeLabel ?? "Remove"}
+                      {strings.group.removeSection}
                     </button>
                   )}
                 </td>

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { assertDefined } from "@formbox/renderer/utilities.ts";
 
@@ -22,7 +23,7 @@ describe("questionnaire variable extension", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
 
     const collision = form.issues.find((issue) => {
       const diagnostics = issue.diagnostics?.toLowerCase();
@@ -50,7 +51,7 @@ describe("questionnaire variable extension", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const rootVariable = form.scope.lookupExpression("globalValue");
     assertDefined(rootVariable);
 
@@ -76,7 +77,7 @@ describe("questionnaire variable extension", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const slot = form.scope.lookupExpression("badVar");
     assertDefined(slot);
 

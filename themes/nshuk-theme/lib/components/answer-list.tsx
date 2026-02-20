@@ -1,13 +1,8 @@
 import { styled } from "@linaria/react";
-import type { AnswerListProperties } from "@formbox/theme";
+import { useStrings, type AnswerListProperties } from "@formbox/theme";
 
-export function AnswerList({
-  children,
-  onAdd,
-  canAdd,
-  addLabel,
-}: AnswerListProperties) {
-  const addText = addLabel ?? "Add";
+export function AnswerList({ children, onAdd, canAdd }: AnswerListProperties) {
+  const strings = useStrings();
   return (
     <Container>
       {children}
@@ -19,7 +14,7 @@ export function AnswerList({
             disabled={canAdd === false}
             className="nhsuk-button nhsuk-button--secondary nhsuk-button--small"
           >
-            {addText}
+            {strings.selection.addAnother}
           </button>
         </div>
       )}

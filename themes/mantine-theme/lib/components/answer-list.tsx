@@ -1,22 +1,17 @@
 import { Button, Stack } from "@mantine/core";
 import { Children } from "react";
-import type { AnswerListProperties } from "@formbox/theme";
+import { useStrings, type AnswerListProperties } from "@formbox/theme";
 
-export function AnswerList({
-  children,
-  onAdd,
-  canAdd,
-  addLabel,
-}: AnswerListProperties) {
+export function AnswerList({ children, onAdd, canAdd }: AnswerListProperties) {
+  const strings = useStrings();
   const items = Children.toArray(children);
-  const addText = addLabel ?? "Add";
 
   return (
     <Stack gap="sm">
       {items.length > 0 ? <Stack gap="sm">{items}</Stack> : undefined}
       {onAdd ? (
         <Button type="button" onClick={onAdd} disabled={canAdd === false}>
-          {addText}
+          {strings.selection.addAnother}
         </Button>
       ) : undefined}
     </Stack>

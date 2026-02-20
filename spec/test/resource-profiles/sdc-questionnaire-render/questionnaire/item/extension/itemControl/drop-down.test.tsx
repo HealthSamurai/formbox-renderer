@@ -10,10 +10,10 @@ import {
 import userEvent from "@testing-library/user-event";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import type { AnswerType, IQuestionNode } from "@formbox/renderer/types.ts";
 import { EXT } from "@formbox/renderer/utilities.ts";
-import { strings } from "@formbox/renderer/strings.ts";
 import { DropdownSelectRenderer } from "@formbox/renderer/component/question/renderer/dropdown-select-renderer.tsx";
 
 import type {
@@ -151,7 +151,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, response, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          response,
+          undefined,
+        );
         const question = getQuestion(form, "color");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -196,7 +202,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "call-sign");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -246,16 +258,20 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "color");
 
         render(<DropdownSelectRenderer node={question} />);
 
         const input = getCombobox("Favorite color");
         expect(input).toHaveAttribute("aria-disabled", "true");
-        expect(getComboboxValue(input)).toBe(
-          strings.selection.selectPlaceholder,
-        );
+        expect(getComboboxValue(input)).toBe(en.selection.selectPlaceholder);
       });
 
       it("renders boolean tri-state options and clears to undefined", () => {
@@ -271,19 +287,25 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "consent");
 
         render(<DropdownSelectRenderer node={question} />);
 
         let input = screen.getByRole("combobox") as HTMLElement;
-        expect(getComboboxValue(input)).toBe(strings.value.undefined);
+        expect(getComboboxValue(input)).toBe(en.value.undefined);
 
         fireEvent.click(input);
         let listbox = getListbox(input);
         fireEvent.click(
           within(listbox).getByRole("option", {
-            name: strings.value.yes,
+            name: en.value.yes,
           }),
         );
         expect(getAnswerValues(question)).toEqual([true]);
@@ -293,7 +315,7 @@ describe("itemControl.drop-down", () => {
         listbox = getListbox(input);
         fireEvent.click(
           within(listbox).getByRole("option", {
-            name: strings.value.undefined,
+            name: en.value.undefined,
           }),
         );
         expect(getAnswerValues(question)).toEqual([undefined]);
@@ -318,7 +340,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "color");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -365,7 +393,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, response, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          response,
+          undefined,
+        );
         const question = getQuestion(form, "call-sign");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -429,7 +463,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "dose");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -439,9 +479,7 @@ describe("itemControl.drop-down", () => {
           name: "Dose",
         }) as HTMLInputElement;
         fireEvent.change(customInput, { target: { value: "custom-dose" } });
-        fireEvent.click(
-          screen.getByRole("button", { name: strings.dialog.add }),
-        );
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
 
         expect(screen.getByText("String: custom-dose")).toBeInTheDocument();
         expect(screen.queryByText("Quantity: custom-dose")).toBeNull();
@@ -483,7 +521,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, response, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          response,
+          undefined,
+        );
         const question = getQuestion(form, "color");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -501,7 +545,7 @@ describe("itemControl.drop-down", () => {
         expect(customInput.value).toBe("");
         const cancelButton = screen.getByRole("button", { name: "Cancel" });
         const addButton = screen.getByRole("button", {
-          name: strings.dialog.add,
+          name: en.dialog.add,
         });
         expect(cancelButton).not.toBeDisabled();
         expect(addButton).toBeDisabled();
@@ -522,7 +566,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "color");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -578,7 +628,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "color");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -591,9 +647,7 @@ describe("itemControl.drop-down", () => {
         fireEvent.change(customInput, { target: { value: "Magenta" } });
         expect(customInput).toHaveValue("Magenta");
 
-        fireEvent.click(
-          screen.getByRole("button", { name: strings.dialog.add }),
-        );
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
 
         expect(
           screen.queryByRole("textbox", { name: "Favorite color" }),
@@ -618,7 +672,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "color");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -628,9 +688,7 @@ describe("itemControl.drop-down", () => {
           name: "Favorite color",
         }) as HTMLInputElement;
         fireEvent.change(customInput, { target: { value: "Green" } });
-        fireEvent.click(
-          screen.getByRole("button", { name: strings.dialog.add }),
-        );
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
 
         expect(getComboboxValue(getCombobox("Favorite color"))).toBe("Green");
 
@@ -662,7 +720,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "dose");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -674,9 +738,7 @@ describe("itemControl.drop-down", () => {
         fireEvent.change(customInput, {
           target: { value: "custom-dose" },
         });
-        fireEvent.click(
-          screen.getByRole("button", { name: strings.dialog.add }),
-        );
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
 
         expect(getStringAnswers(question)).toEqual(["custom-dose"]);
         expect(getComboboxValue(getCombobox("Dose"))).toContain("custom-dose");
@@ -739,7 +801,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, response, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          response,
+          undefined,
+        );
         const question = getQuestion(form, "dose");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -776,7 +844,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "allergy");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -807,7 +881,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "allergy");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -843,7 +923,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "allergy");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -858,9 +944,7 @@ describe("itemControl.drop-down", () => {
         expect(customInput.value).toBe("");
 
         fireEvent.change(customInput, { target: { value: "Cats" } });
-        fireEvent.click(
-          screen.getByRole("button", { name: strings.dialog.add }),
-        );
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
         expect(getStringAnswers(question).toSorted()).toEqual(["Cats", "Dust"]);
         expect(screen.queryByRole("textbox", { name: "Allergy" })).toBeNull();
 
@@ -923,7 +1007,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, response, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          response,
+          undefined,
+        );
         const question = getQuestion(form, "dose");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -955,7 +1045,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "color");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -1017,7 +1113,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, response, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          response,
+          undefined,
+        );
         const question = getQuestion(form, "call-sign");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -1028,7 +1130,7 @@ describe("itemControl.drop-down", () => {
         expect(screen.queryByRole("textbox", { name: "Call sign" })).toBeNull();
         expect(screen.queryByRole("button", { name: "Cancel" })).toBeNull();
         expect(
-          screen.queryByRole("button", { name: strings.dialog.add }),
+          screen.queryByRole("button", { name: en.dialog.add }),
         ).toBeNull();
       });
     });
@@ -1063,7 +1165,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, response, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          response,
+          undefined,
+        );
         const question = getQuestion(form, "dose");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -1095,7 +1203,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "dose");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -1144,7 +1258,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "dose");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -1157,9 +1277,7 @@ describe("itemControl.drop-down", () => {
           name: "Dose",
         }) as HTMLInputElement;
         fireEvent.change(customInput, { target: { value: "5" } });
-        fireEvent.click(
-          screen.getByRole("button", { name: strings.dialog.add }),
-        );
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
         expect(screen.queryByRole("spinbutton", { name: "Dose" })).toBeNull();
         expect(getAnswerValues(question).toSorted()).toEqual([1, 5]);
 
@@ -1192,7 +1310,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "dose");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -1202,9 +1326,7 @@ describe("itemControl.drop-down", () => {
           name: "Dose",
         }) as HTMLInputElement;
         fireEvent.change(customInput, { target: { value: "3" } });
-        fireEvent.click(
-          screen.getByRole("button", { name: strings.dialog.add }),
-        );
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
 
         fireEvent.click(getChipButton("3"));
 
@@ -1238,7 +1360,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "dose");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -1250,9 +1378,7 @@ describe("itemControl.drop-down", () => {
         fireEvent.change(customInput, {
           target: { value: "5" },
         });
-        fireEvent.click(
-          screen.getByRole("button", { name: strings.dialog.add }),
-        );
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
 
         expect(screen.queryByRole("spinbutton", { name: "Dose" })).toBeNull();
         expect(getComboboxValue(getCombobox("Dose"))).toContain("5");
@@ -1277,7 +1403,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "call-sign");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -1307,7 +1439,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "call-sign");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -1317,9 +1455,7 @@ describe("itemControl.drop-down", () => {
           name: "Call sign",
         }) as HTMLInputElement;
         fireEvent.change(customInput, { target: { value: "Echo" } });
-        fireEvent.click(
-          screen.getByRole("button", { name: strings.dialog.add }),
-        );
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
 
         expect(getChipButton("Echo")).toBeInTheDocument();
         expect(screen.getAllByRole("button", { name: "Remove" })).toHaveLength(
@@ -1358,7 +1494,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "call-sign");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -1389,7 +1531,13 @@ describe("itemControl.drop-down", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "call-sign");
 
         render(<DropdownSelectRenderer node={question} />);
@@ -1399,18 +1547,14 @@ describe("itemControl.drop-down", () => {
           name: "Call sign",
         }) as HTMLInputElement;
         fireEvent.change(customInput, { target: { value: "Echo" } });
-        fireEvent.click(
-          screen.getByRole("button", { name: strings.dialog.add }),
-        );
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
 
         selectOption("Call sign", /specify other/i);
         customInput = screen.getByRole("textbox", {
           name: "Call sign",
         }) as HTMLInputElement;
         fireEvent.change(customInput, { target: { value: "Echoless" } });
-        fireEvent.click(
-          screen.getByRole("button", { name: strings.dialog.add }),
-        );
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
 
         expect(screen.getAllByRole("button", { name: "Remove" })).toHaveLength(
           2,

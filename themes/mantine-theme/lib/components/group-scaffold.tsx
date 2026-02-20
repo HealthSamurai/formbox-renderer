@@ -1,6 +1,6 @@
 import { Button, Group, Stack } from "@mantine/core";
 import { Children } from "react";
-import type { GroupScaffoldProperties } from "@formbox/theme";
+import { useStrings, type GroupScaffoldProperties } from "@formbox/theme";
 import { Collapsible } from "./collapsible.tsx";
 
 export function GroupScaffold({
@@ -10,10 +10,9 @@ export function GroupScaffold({
   isExpanded,
   onRemove,
   canRemove,
-  removeLabel,
 }: GroupScaffoldProperties) {
+  const strings = useStrings();
   const content = Children.toArray(children);
-  const removeText = removeLabel ?? "Remove";
 
   return (
     <Stack gap="md">
@@ -33,7 +32,7 @@ export function GroupScaffold({
             onClick={onRemove}
             disabled={canRemove === false}
           >
-            {removeText}
+            {strings.group.removeSection}
           </Button>
         </Group>
       )}

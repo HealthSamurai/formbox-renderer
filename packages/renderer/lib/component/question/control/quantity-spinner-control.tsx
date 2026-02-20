@@ -1,8 +1,8 @@
 import { observer } from "mobx-react-lite";
+import { useStrings } from "@formbox/theme";
 import type { ValueControlProperties } from "../../../types.ts";
 import { useTheme } from "../../../ui/theme.tsx";
 import { getNumericValue, buildId } from "../../../utilities.ts";
-import { strings } from "../../../strings.ts";
 
 export const QuantitySpinnerControl = observer(function QuantitySpinnerControl({
   answer,
@@ -10,6 +10,7 @@ export const QuantitySpinnerControl = observer(function QuantitySpinnerControl({
   ariaLabelledBy,
   ariaDescribedBy,
 }: ValueControlProperties<"quantity">) {
+  const strings = useStrings();
   const { InputGroup, SpinnerInput, SelectInput, TextInput } = useTheme();
   const unitValue = answer.quantity.isUnitFreeForm
     ? (answer.value?.unit ?? "")

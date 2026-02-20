@@ -25,7 +25,6 @@ import type {
   IQuestionNode,
   ValueBounds,
 } from "../../types.ts";
-import { strings } from "../../strings.ts";
 
 export class AnswerValidator<
   T extends AnswerType = AnswerType,
@@ -52,7 +51,10 @@ export class AnswerValidator<
 
     const type = this.question.type;
     const value = this.answer.value;
+
+    const strings = this.question.form.strings;
     let issues: OperationOutcomeIssue[];
+
     switch (type) {
       case "string":
       case "text": {
@@ -189,7 +191,11 @@ export class AnswerValidator<
           if (quantityMin) {
             const diff = compareQuantities(quantityValue, quantityMin);
             if (diff === undefined || diff < 0) {
-              const formattedMin = stringifyValue("Quantity", quantityMin);
+              const formattedMin = stringifyValue(
+                "Quantity",
+                quantityMin,
+                strings,
+              );
               quantityIssues.push(
                 makeIssue(
                   "invalid",
@@ -204,7 +210,11 @@ export class AnswerValidator<
           if (quantityMax) {
             const diff = compareQuantities(quantityValue, quantityMax);
             if (diff === undefined || diff > 0) {
-              const formattedMax = stringifyValue("Quantity", quantityMax);
+              const formattedMax = stringifyValue(
+                "Quantity",
+                quantityMax,
+                strings,
+              );
               quantityIssues.push(
                 makeIssue(
                   "invalid",
@@ -320,10 +330,11 @@ export class AnswerValidator<
       return [];
     }
 
+    const strings = this.question.form.strings;
     const issues: OperationOutcomeIssue[] = [];
 
     if (min != undefined && value < min) {
-      const formattedMin = stringifyValue(type, min);
+      const formattedMin = stringifyValue(type, min, strings);
       issues.push(
         makeIssue(
           "invalid",
@@ -335,7 +346,7 @@ export class AnswerValidator<
     }
 
     if (max != undefined && value > max) {
-      const formattedMax = stringifyValue(type, max);
+      const formattedMax = stringifyValue(type, max, strings);
       issues.push(
         makeIssue(
           "invalid",
@@ -440,6 +451,7 @@ export class AnswerValidator<
     }
 
     const issues: OperationOutcomeIssue[] = [];
+    const strings = this.question.form.strings;
 
     if (value.trim().length === 0) {
       issues.push(makeIssue("invalid", strings.validation.answer.blank));
@@ -480,7 +492,11 @@ export class AnswerValidator<
         constraints.comparableMin,
       );
       if (comparison != undefined && comparison < 0) {
-        const formattedMin = stringifyValue(type, constraints.comparableMin);
+        const formattedMin = stringifyValue(
+          type,
+          constraints.comparableMin,
+          strings,
+        );
         issues.push(
           makeIssue(
             "invalid",
@@ -499,7 +515,11 @@ export class AnswerValidator<
         constraints.comparableMax,
       );
       if (comparison != undefined && comparison > 0) {
-        const formattedMax = stringifyValue(type, constraints.comparableMax);
+        const formattedMax = stringifyValue(
+          type,
+          constraints.comparableMax,
+          strings,
+        );
         issues.push(
           makeIssue(
             "invalid",

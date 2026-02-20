@@ -8,6 +8,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@formbox/fhir": path.resolve(__dirname, "../packages/fhir/lib"),
+      "@formbox/strings": path.resolve(__dirname, "../packages/strings/lib"),
       "@formbox/theme": path.resolve(__dirname, "../packages/theme/lib"),
       "@formbox/hs-theme": path.resolve(__dirname, "../themes/hs-theme/lib"),
       "@formbox/renderer": path.resolve(__dirname, "../packages/renderer/lib"),

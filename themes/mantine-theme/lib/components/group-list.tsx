@@ -1,5 +1,5 @@
 import { Box, Button, Stack } from "@mantine/core";
-import type { GroupListProperties } from "@formbox/theme";
+import { useStrings, type GroupListProperties } from "@formbox/theme";
 
 export function GroupList({
   linkId,
@@ -7,9 +7,8 @@ export function GroupList({
   children,
   onAdd,
   canAdd,
-  addLabel,
 }: GroupListProperties) {
-  const addText = addLabel ?? "Add";
+  const strings = useStrings();
 
   return (
     <Stack data-linkid={linkId} gap="md">
@@ -18,7 +17,7 @@ export function GroupList({
       {onAdd ? (
         <Box>
           <Button type="button" onClick={onAdd} disabled={canAdd === false}>
-            {addText}
+            {strings.group.addSection}
           </Button>
         </Box>
       ) : undefined}

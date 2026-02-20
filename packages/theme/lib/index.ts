@@ -74,6 +74,7 @@ export * from "./file-input.ts";
 export * from "./display-renderer.ts";
 export * from "./tab-container.ts";
 export * from "./link.ts";
+export * from "./strings.ts";
 
 export type Theme = {
   TextInput: TextInputComponent;

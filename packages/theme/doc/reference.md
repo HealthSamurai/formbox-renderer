@@ -15,7 +15,7 @@ This reference lists every component in the Theme contract and the props the ren
 
 ## Shared types
 
-`OptionItem`, `SelectedOptionItem`, `CustomOptionAction`, and `Attachment` are exported by `@formbox/theme`. Import them when you need to type your components or helpers.
+`OptionItem`, `SelectedOptionItem`, and `Attachment` are exported by `@formbox/theme`. Import them when you need to type your components or helpers.
 
 ## Component reference
 
@@ -382,14 +382,15 @@ selection so per-selection errors can be announced.
 
 Layout wrapper for custom option entry flows. Use it to present the custom input along with submit/cancel actions.
 
-| Prop      | Type                 | Optional | Description                                                             |
-| --------- | -------------------- | -------- | ----------------------------------------------------------------------- |
-| `content` | `ReactNode`          | No       | Render the custom input control.                                        |
-| `errors`  | `ReactNode`          | Yes      | Render validation or error content associated with the custom input.    |
-| `submit`  | `CustomOptionAction` | No       | Configure the primary submit action (label, handler, disabled state).   |
-| `cancel`  | `CustomOptionAction` | No       | Configure the secondary cancel action (label, handler, disabled state). |
+| Prop        | Type         | Optional | Description                                                          |
+| ----------- | ------------ | -------- | -------------------------------------------------------------------- |
+| `content`   | `ReactNode`  | No       | Render the custom input control.                                     |
+| `errors`    | `ReactNode`  | Yes      | Render validation or error content associated with the custom input. |
+| `onSubmit`  | `() => void` | No       | Call when the user confirms the custom option value.                 |
+| `onCancel`  | `() => void` | No       | Call when the user exits custom entry and returns to options.        |
+| `canSubmit` | `boolean`    | Yes      | When false, render the submit action disabled.                       |
 
-Use `cancel` as the "back to options" action and `submit` to commit the custom value.
+Use `onCancel` as the "back to options" action and `onSubmit` to commit the custom value.
 
 ### FileInput
 
@@ -611,14 +612,6 @@ Represents a selected option rendered as a chip or a single selection.
 | `disabled`        | `boolean`   | Yes      | When true, render the selection as unavailable.                                          |
 | `ariaDescribedBy` | `string`    | Yes      | Forward to aria-describedby on the focusable element for this selection.                 |
 | `errors`          | `ReactNode` | Yes      | Render as error content associated with this selection, near the option.                 |
-
-### CustomOptionAction
-
-| Field      | Type         | Optional | Description                                                    |
-| ---------- | ------------ | -------- | -------------------------------------------------------------- |
-| `label`    | `string`     | No       | Render as the action label.                                    |
-| `onClick`  | `() => void` | No       | Call when the action is activated.                             |
-| `disabled` | `boolean`    | Yes      | When true, render the action disabled and prevent interaction. |
 
 ### Attachment
 

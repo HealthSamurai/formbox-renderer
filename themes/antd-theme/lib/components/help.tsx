@@ -1,7 +1,9 @@
-import type { HelpProperties } from "@formbox/theme";
+import { useStrings, type HelpProperties } from "@formbox/theme";
 import { Button, Tooltip } from "antd";
 
-export function Help({ id, children, ariaLabel }: HelpProperties) {
+export function Help({ id, children }: HelpProperties) {
+  const strings = useStrings();
+
   return (
     <span style={{ display: "inline-flex", alignItems: "center" }}>
       <Tooltip title={children} placement="top">
@@ -9,7 +11,7 @@ export function Help({ id, children, ariaLabel }: HelpProperties) {
           type="text"
           size="small"
           shape="circle"
-          aria-label={ariaLabel}
+          aria-label={strings.aria.help}
           aria-describedby={id}
         >
           ?

@@ -36,6 +36,7 @@ export default defineConfig(async ({ mode, isSsrBuild }) => {
         "@mdx-js/react": mdxReactPath,
         "@formbox/fhir": path.resolve(repoRoot, "packages/fhir/lib"),
         "@formbox/renderer": path.resolve(repoRoot, "packages/renderer/lib"),
+        "@formbox/strings": path.resolve(repoRoot, "packages/strings/lib"),
         "@formbox/theme": path.resolve(repoRoot, "packages/theme/lib"),
         "@formbox/hs-theme": path.resolve(repoRoot, "themes/hs-theme/lib"),
         "@formbox/nshuk-theme": path.resolve(

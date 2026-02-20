@@ -4,7 +4,6 @@ import type { GroupListRendererProperties } from "../../../types.ts";
 import { NodeHeader } from "../../node/node-header.tsx";
 import { GroupScaffold } from "../group-scaffold.tsx";
 import { useTheme } from "../../../ui/theme.tsx";
-import { strings } from "../../../strings.ts";
 
 export const DefaultListRenderer = observer(function DefaultListRenderer({
   node,
@@ -20,7 +19,6 @@ export const DefaultListRenderer = observer(function DefaultListRenderer({
       header={header}
       onAdd={() => node.addNode()}
       canAdd={node.canAdd}
-      addLabel={strings.group.addSection}
     >
       {node.visibleNodes.map((child) => {
         const Renderer = child.renderer;
@@ -34,7 +32,6 @@ export const DefaultListRenderer = observer(function DefaultListRenderer({
             node={child}
             onRemove={node.canRemove ? () => node.removeNode(child) : undefined}
             canRemove={node.canRemove}
-            removeLabel={strings.group.removeSection}
           >
             <Renderer node={child} />
           </GroupScaffold>

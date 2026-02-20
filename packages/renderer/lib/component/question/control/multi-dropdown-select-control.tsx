@@ -1,11 +1,11 @@
 import { observer } from "mobx-react-lite";
 import { useMemo } from "react";
+import { useStrings } from "@formbox/theme";
 import type { AnswerType, IQuestionNode, OptionItem } from "../../../types.ts";
 import { useTheme } from "../../../ui/theme.tsx";
 import { renderErrors } from "../../node/errors.tsx";
 import { getValueControl } from "../fhir/value-control.ts";
 import { ValueDisplay } from "../fhir/value-display.tsx";
-import { strings } from "../../../strings.ts";
 import {
   buildId,
   concatIds,
@@ -20,6 +20,7 @@ export const MultiDropdownSelectControl = observer(
   }: {
     node: IQuestionNode<T>;
   }) {
+    const strings = useStrings();
     const { MultiSelectInput, CustomOptionForm, OptionDisplay } = useTheme();
     const store = node.answerOption.select;
     const CustomControl = getValueControl(store.customType);
@@ -49,15 +50,9 @@ export const MultiDropdownSelectControl = observer(
           />
         }
         errors={renderErrors(formState.answer)}
-        cancel={{
-          label: strings.dialog.cancel,
-          onClick: store.cancelCustomOptionForm,
-        }}
-        submit={{
-          label: strings.dialog.add,
-          onClick: store.submitCustomOptionForm,
-          disabled: !formState.canSubmit,
-        }}
+        onCancel={store.cancelCustomOptionForm}
+        onSubmit={store.submitCustomOptionForm}
+        canSubmit={!node.readOnly && formState.canSubmit}
       />
     ) : undefined;
 

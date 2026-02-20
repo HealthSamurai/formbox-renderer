@@ -2,10 +2,10 @@ import { describe, expect, it } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { CodingRenderer } from "@formbox/renderer/component/question/fhir/coding/coding-renderer.tsx";
 import type { IQuestionNode } from "@formbox/renderer/types.ts";
-import { strings } from "@formbox/renderer/strings.ts";
 
 import type { QuestionnaireOf } from "@formbox/renderer";
 type Questionnaire = QuestionnaireOf<"r5">;
@@ -32,19 +32,19 @@ describe("type.coding", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getCodingQuestion(form, "diagnosis");
 
     render(<CodingRenderer node={question} />);
 
     expect(
-      screen.getByPlaceholderText(strings.inputs.codingSystemPlaceholder),
+      screen.getByPlaceholderText(en.inputs.codingSystemPlaceholder),
     ).toBeInTheDocument();
     expect(
-      screen.getByPlaceholderText(strings.inputs.codingCodePlaceholder),
+      screen.getByPlaceholderText(en.inputs.codingCodePlaceholder),
     ).toBeInTheDocument();
     expect(
-      screen.getByPlaceholderText(strings.inputs.codingDisplayPlaceholder),
+      screen.getByPlaceholderText(en.inputs.codingDisplayPlaceholder),
     ).toBeInTheDocument();
   });
 
@@ -61,16 +61,16 @@ describe("type.coding", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getCodingQuestion(form, "diagnosis");
 
     render(<CodingRenderer node={question} />);
 
     const systemInput = screen.getByPlaceholderText(
-      strings.inputs.codingSystemPlaceholder,
+      en.inputs.codingSystemPlaceholder,
     );
     const codeInput = screen.getByPlaceholderText(
-      strings.inputs.codingCodePlaceholder,
+      en.inputs.codingCodePlaceholder,
     );
 
     fireEvent.change(systemInput, { target: { value: "http://loinc.org" } });

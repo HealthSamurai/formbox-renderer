@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { AttachmentRenderer } from "@formbox/renderer/component/question/fhir/attachment/attachment-renderer.tsx";
 import { ListSelectRenderer } from "@formbox/renderer/component/question/renderer/list-select-renderer.tsx";
@@ -40,7 +41,7 @@ describe("mimeType", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("photo");
     assertQuestionNode(question);
     const answer = question.answers[0];
@@ -88,7 +89,7 @@ describe("mimeType", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("document");
     assertQuestionNode(question);
 
@@ -122,7 +123,7 @@ describe("mimeType", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("upload");
     assertQuestionNode(question);
 
@@ -157,7 +158,7 @@ describe("mimeType", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("notes");
     assertQuestionNode(question);
 

@@ -7,7 +7,6 @@ export type GroupScaffoldProperties = {
   isExpanded: boolean;
   onRemove?: (() => void) | undefined;
   canRemove?: boolean | undefined;
-  removeLabel?: string | undefined;
 };
 
 export type GroupScaffoldComponent = ComponentType<GroupScaffoldProperties>;

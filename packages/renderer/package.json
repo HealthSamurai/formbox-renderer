@@ -31,7 +31,6 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@formbox/theme": "workspace:*",
     "@lhncbc/ucum-lhc": "7.1.3",
     "@types/fuzzy-search": "^2.1.5",
     "@types/react": "^19.2.8",
@@ -55,6 +54,8 @@
   },
   "dependencies": {
     "@formbox/fhir": "workspace:*",
+    "@formbox/strings": "workspace:*",
+    "@formbox/theme": "workspace:*",
     "fuzzy-search": "^3.2.1",
     "hashery": "^1.4.0"
   }

@@ -1,9 +1,11 @@
-import type { TableProperties } from "@formbox/theme";
+import { useStrings, type TableProperties } from "@formbox/theme";
 import type { ReactNode } from "react";
 import { Button, Empty, Space } from "antd";
 import { LoadingSpinner } from "./loading-spinner.tsx";
 
 export function Table({ columns, rows }: TableProperties) {
+  const strings = useStrings();
+
   if (rows.length === 0 || columns.length === 0) {
     return <Empty description="Nothing to display." />;
   }
@@ -47,7 +49,7 @@ export function Table({ columns, rows }: TableProperties) {
                       onClick={row.onRemove}
                       disabled={row.canRemove === false}
                     >
-                      {row.removeLabel ?? "Remove"}
+                      {strings.group.removeSection}
                     </Button>
                   )}
                 </td>

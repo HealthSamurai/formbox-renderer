@@ -1,4 +1,4 @@
-import type { GroupScaffoldProperties } from "@formbox/theme";
+import { useStrings, type GroupScaffoldProperties } from "@formbox/theme";
 import { styled } from "@linaria/react";
 import { Children } from "react";
 import { Trash } from "../icons/trash.tsx";
@@ -12,10 +12,10 @@ export function GroupScaffold({
   isExpanded,
   onRemove,
   canRemove,
-  removeLabel,
 }: GroupScaffoldProperties) {
+  const strings = useStrings();
   const content = Children.toArray(children);
-  const removeText = removeLabel ?? "Remove";
+
   return (
     <Container>
       {header}
@@ -35,7 +35,7 @@ export function GroupScaffold({
             icon={<Trash />}
             onClick={onRemove}
             disabled={canRemove === false}
-            label={removeText}
+            label={strings.group.removeSection}
           />
         </Toolbar>
       )}

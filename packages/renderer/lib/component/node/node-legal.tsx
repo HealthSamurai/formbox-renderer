@@ -1,8 +1,7 @@
 import { observer } from "mobx-react-lite";
-import { IPresentableNode } from "../../types.ts";
+import type { IPresentableNode } from "../../types.ts";
 import { getNodeLegalId } from "../../utilities.ts";
 import { useTheme } from "../../ui/theme.tsx";
-import { strings } from "../../strings.ts";
 
 export const NodeLegal = observer(function NodeLegal({
   node,
@@ -17,9 +16,5 @@ export const NodeLegal = observer(function NodeLegal({
 
   const legalId = getNodeLegalId(node);
 
-  return (
-    <ThemedLegal id={legalId} ariaLabel={strings.aria.legal}>
-      {node.legal}
-    </ThemedLegal>
-  );
+  return <ThemedLegal id={legalId}>{node.legal}</ThemedLegal>;
 });

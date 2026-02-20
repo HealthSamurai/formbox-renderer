@@ -1,6 +1,6 @@
 import type { Reference } from "@formbox/fhir";
+import { useStrings } from "@formbox/theme";
 import { useTheme } from "../../../../ui/theme.tsx";
-import { strings } from "../../../../strings.ts";
 import { buildId } from "../../../../utilities.ts";
 
 export type ReferenceInputProperties = {
@@ -22,6 +22,7 @@ export function ReferenceInput({
   placeholder,
   disabled,
 }: ReferenceInputProperties) {
+  const strings = useStrings();
   const { InputGroup, TextInput } = useTheme();
   const reference = value ?? {};
   const setField = (field: keyof Reference, nextValue: string) => {

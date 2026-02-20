@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { useMemo } from "react";
+import { useStrings } from "@formbox/theme";
 import {
   AnswerType,
   OptionItem,
@@ -8,7 +9,6 @@ import {
 import { useTheme } from "../../../ui/theme.tsx";
 import { getValueControl } from "../fhir/value-control.ts";
 import { ValueDisplay } from "../fhir/value-display.tsx";
-import { strings } from "../../../strings.ts";
 import { renderErrors } from "../../node/errors.tsx";
 
 export const SingleListSelectControl = observer(
@@ -18,6 +18,7 @@ export const SingleListSelectControl = observer(
     ariaLabelledBy,
     id,
   }: ValueControlProperties<T>) {
+    const strings = useStrings();
     const { CustomOptionForm, OptionDisplay, RadioButtonList } = useTheme();
     const node = answer.question;
     const store = node.answerOption.select;
@@ -40,16 +41,9 @@ export const SingleListSelectControl = observer(
             />
           }
           errors={renderErrors(answer)}
-          cancel={{
-            label: strings.dialog.cancel,
-            onClick: store.cancelCustomOptionForm,
-            disabled: node.readOnly,
-          }}
-          submit={{
-            label: strings.dialog.add,
-            onClick: store.submitCustomOptionForm,
-            disabled: node.readOnly || !store.customOptionFormState.canSubmit,
-          }}
+          onCancel={store.cancelCustomOptionForm}
+          onSubmit={store.submitCustomOptionForm}
+          canSubmit={!node.readOnly && store.customOptionFormState.canSubmit}
         />
       ) : undefined;
 

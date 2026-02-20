@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import type { AnswerType, EnableWhenAnswer } from "@formbox/renderer/types.ts";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { assertDefined } from "@formbox/renderer/utilities.ts";
@@ -103,7 +104,7 @@ function createForm(
     ],
   };
 
-  const form = new FormStore("r5", questionnaire, undefined, undefined);
+  const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
   const control = form.scope.lookupNode("control");
   const dependent = form.scope.lookupNode("dependent");
 

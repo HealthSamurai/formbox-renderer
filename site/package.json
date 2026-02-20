@@ -20,6 +20,7 @@
     "@formbox/mantine-theme": "workspace:*",
     "@formbox/nshuk-theme": "workspace:*",
     "@formbox/renderer": "workspace:*",
+    "@formbox/strings": "workspace:*",
     "@fontsource/geist-mono": "^5.2.7",
     "@fontsource/geist-sans": "^5.2.5",
     "@gsap/react": "^2.1.2",

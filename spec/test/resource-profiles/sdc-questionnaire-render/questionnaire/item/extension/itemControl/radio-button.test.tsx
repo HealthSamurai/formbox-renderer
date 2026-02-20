@@ -3,11 +3,11 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { ListSelectRenderer } from "@formbox/renderer/component/question/renderer/list-select-renderer.tsx";
 import type { AnswerType, IQuestionNode } from "@formbox/renderer/types.ts";
 import { EXT } from "@formbox/renderer/utilities.ts";
-import { strings } from "@formbox/renderer/strings.ts";
 
 import type {
   QuestionnaireOf,
@@ -111,7 +111,13 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, response, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          response,
+          undefined,
+        );
         const question = getQuestion(form, "color");
 
         render(<ListSelectRenderer node={question} />);
@@ -138,7 +144,13 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "color");
 
         render(<ListSelectRenderer node={question} />);
@@ -168,19 +180,25 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "consent");
 
         render(<ListSelectRenderer node={question} />);
 
         const yes = screen.getByRole("radio", {
-          name: strings.value.yes,
+          name: en.value.yes,
         }) as HTMLInputElement;
         const no = screen.getByRole("radio", {
-          name: strings.value.no,
+          name: en.value.no,
         }) as HTMLInputElement;
         const unanswered = screen.getByRole("radio", {
-          name: strings.value.undefined,
+          name: en.value.undefined,
         }) as HTMLInputElement;
 
         expect(unanswered).toBeChecked();
@@ -230,7 +248,13 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "note");
 
         render(<ListSelectRenderer node={question} />);
@@ -288,7 +312,13 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, response, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          response,
+          undefined,
+        );
         const question = getQuestion(form, "dose");
 
         render(<ListSelectRenderer node={question} />);
@@ -321,7 +351,13 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "color");
 
         render(<ListSelectRenderer node={question} />);
@@ -331,9 +367,7 @@ describe("itemControl.radio-button", () => {
           name: "Favorite color",
         }) as HTMLInputElement;
         fireEvent.change(customInput, { target: { value: "Green" } });
-        fireEvent.click(
-          screen.getByRole("button", { name: strings.dialog.add }),
-        );
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
 
         expect(screen.getByRole("radio", { name: "Green" })).toBeChecked();
 
@@ -368,7 +402,13 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, response, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          response,
+          undefined,
+        );
         const question = getQuestion(form, "color");
 
         render(<ListSelectRenderer node={question} />);
@@ -410,7 +450,13 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "color");
 
         render(<ListSelectRenderer node={question} />);
@@ -480,7 +526,13 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "color");
 
         render(<ListSelectRenderer node={question} />);
@@ -490,9 +542,7 @@ describe("itemControl.radio-button", () => {
           name: "Favorite color",
         }) as HTMLInputElement;
         fireEvent.change(customInput, { target: { value: "Magenta" } });
-        fireEvent.click(
-          screen.getByRole("button", { name: strings.dialog.add }),
-        );
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
 
         expect(
           screen.queryByRole("textbox", { name: "Favorite color" }),
@@ -534,7 +584,13 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, response, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          response,
+          undefined,
+        );
         const question = getQuestion(form, "call-sign");
 
         render(<ListSelectRenderer node={question} />);
@@ -588,7 +644,13 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, response, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          response,
+          undefined,
+        );
         const question = getQuestion(form, "dose");
 
         render(<ListSelectRenderer node={question} />);
@@ -623,7 +685,13 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "dose");
 
         render(<ListSelectRenderer node={question} />);
@@ -695,7 +763,13 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "dose");
 
         render(<ListSelectRenderer node={question} />);
@@ -707,9 +781,7 @@ describe("itemControl.radio-button", () => {
         fireEvent.change(customInput, {
           target: { value: "5" },
         });
-        fireEvent.click(
-          screen.getByRole("button", { name: strings.dialog.add }),
-        );
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
 
         expect(screen.queryByRole("spinbutton", { name: "Dose" })).toBeNull();
         const customValue = screen.getByRole("radio", {
@@ -744,7 +816,13 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "call-sign");
 
         render(<ListSelectRenderer node={question} />);
@@ -816,7 +894,13 @@ describe("itemControl.radio-button", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = getQuestion(form, "call-sign");
 
         render(<ListSelectRenderer node={question} />);

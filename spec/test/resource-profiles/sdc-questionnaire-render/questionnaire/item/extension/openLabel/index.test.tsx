@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { ListSelectRenderer } from "@formbox/renderer/component/question/renderer/list-select-renderer.tsx";
 import { EXT } from "@formbox/renderer/utilities.ts";
@@ -78,7 +79,7 @@ describe("openLabel", () => {
   it("uses openLabel for unrestricted entry option", () => {
     const questionnaire = buildQuestionnaire("Other, please specify");
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getCodingQuestion(form, "symptom");
 
     render(<ListSelectRenderer node={question} />);
@@ -90,7 +91,7 @@ describe("openLabel", () => {
   it("falls back to default unrestricted entry label when openLabel is absent", () => {
     const questionnaire = buildQuestionnaire();
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getCodingQuestion(form, "symptom");
 
     render(<ListSelectRenderer node={question} />);

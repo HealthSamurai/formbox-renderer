@@ -22,7 +22,6 @@ export type TableRow = {
   cells: TableCell[];
   onRemove?: (() => void) | undefined;
   canRemove?: boolean | undefined;
-  removeLabel?: string | undefined;
 };
 
 export type TableProperties = {

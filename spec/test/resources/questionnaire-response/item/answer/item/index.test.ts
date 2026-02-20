@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import {
   assertGroupNode,
   isGroupNode,
@@ -61,7 +62,7 @@ describe("item.answer.item", () => {
     };
 
     const createStore = () =>
-      new FormStore("r5", questionnaire, response, undefined);
+      new FormStore(en, "r5", questionnaire, response, undefined);
 
     const getParentStore = () => {
       const form = createStore();
@@ -127,6 +128,7 @@ describe("item.answer.item", () => {
 
       const createNoParentAnswerStore = () =>
         new FormStore(
+          en,
           "r5",
           questionnaireNoParentAnswer,
           responseNoParentAnswer,
@@ -204,6 +206,7 @@ describe("item.answer.item", () => {
 
       const createDeepStore = () =>
         new FormStore(
+          en,
           "r5",
           questionnaireDeepNesting,
           responseDeepNesting,
@@ -286,6 +289,7 @@ describe("item.answer.item", () => {
     };
 
     const form = new FormStore(
+      en,
       "r5",
       nestedQuestionnaire,
       nestedResponse,
@@ -331,7 +335,7 @@ describe("item.answer.item", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("follow-up");
     expect(question && isQuestionNode(question)).toBe(true);
     assertQuestionNode(question);

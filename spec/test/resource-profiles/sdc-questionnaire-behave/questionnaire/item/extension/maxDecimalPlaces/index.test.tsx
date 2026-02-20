@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { DecimalRenderer } from "@formbox/renderer/component/question/fhir/decimal/decimal-renderer.tsx";
 import { ListSelectRenderer } from "@formbox/renderer/component/question/renderer/list-select-renderer.tsx";
@@ -31,7 +32,7 @@ describe("maxDecimalPlaces", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("amount");
     assertQuestionNode(question);
     const answer = question.answers[0];
@@ -64,7 +65,7 @@ describe("maxDecimalPlaces", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("amount");
     assertQuestionNode(question);
     const answer = question.answers[0];
@@ -97,7 +98,7 @@ describe("maxDecimalPlaces", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("concentration");
     assertQuestionNode(question);
 
@@ -123,7 +124,7 @@ describe("maxDecimalPlaces", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("dose");
     assertQuestionNode(question);
 
@@ -160,7 +161,7 @@ describe("maxDecimalPlaces", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("dose");
     assertQuestionNode(question);
 
@@ -189,7 +190,7 @@ describe("maxDecimalPlaces", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("glucose");
     assertQuestionNode(question);
 

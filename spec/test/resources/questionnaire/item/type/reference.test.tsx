@@ -2,10 +2,10 @@ import { describe, expect, it } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { ReferenceRenderer } from "@formbox/renderer/component/question/fhir/reference/reference-renderer.tsx";
 import type { IQuestionNode } from "@formbox/renderer/types.ts";
-import { strings } from "@formbox/renderer/strings.ts";
 
 import type { QuestionnaireOf } from "@formbox/renderer";
 type Questionnaire = QuestionnaireOf<"r5">;
@@ -32,16 +32,16 @@ describe("type.reference", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getReferenceQuestion(form, "patient");
 
     render(<ReferenceRenderer node={question} />);
 
     expect(
-      screen.getByPlaceholderText(strings.inputs.referencePlaceholder),
+      screen.getByPlaceholderText(en.inputs.referencePlaceholder),
     ).toBeInTheDocument();
     expect(
-      screen.getByPlaceholderText(strings.inputs.referenceDisplayPlaceholder),
+      screen.getByPlaceholderText(en.inputs.referenceDisplayPlaceholder),
     ).toBeInTheDocument();
   });
 
@@ -58,16 +58,16 @@ describe("type.reference", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getReferenceQuestion(form, "patient");
 
     render(<ReferenceRenderer node={question} />);
 
     const referenceInput = screen.getByPlaceholderText(
-      strings.inputs.referencePlaceholder,
+      en.inputs.referencePlaceholder,
     );
     const displayInput = screen.getByPlaceholderText(
-      strings.inputs.referenceDisplayPlaceholder,
+      en.inputs.referenceDisplayPlaceholder,
     );
 
     fireEvent.change(referenceInput, {

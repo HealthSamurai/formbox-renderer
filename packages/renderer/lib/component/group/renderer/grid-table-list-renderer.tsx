@@ -5,7 +5,6 @@ import { NodeHeader } from "../../node/node-header.tsx";
 import { useTheme } from "../../../ui/theme.tsx";
 import { GridTableControl } from "../control/grid-table-control.tsx";
 import { renderErrors } from "../../node/errors.tsx";
-import { strings } from "../../../strings.ts";
 
 export const GridTableListRenderer = observer(function GridTableListRenderer({
   node,
@@ -27,7 +26,6 @@ export const GridTableListRenderer = observer(function GridTableListRenderer({
         linkId={node.linkId}
         onAdd={() => node.addNode()}
         canAdd={node.canAdd}
-        addLabel={strings.group.addSection}
       >
         <GridTableControl list={node} />
       </ThemedGroupList>

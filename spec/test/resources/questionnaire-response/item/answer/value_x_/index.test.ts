@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import type {
   DataType,
   DataTypeToType,
@@ -51,6 +52,12 @@ type QuestionnaireItemAnswerOption = QuestionnaireItemAnswerOptionOf<"r5">;
 type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
 type QuestionnaireResponseItemAnswer = QuestionnaireResponseItemAnswerOf<"r5">;
 type Reference = CommonReference;
+
+const stringify = <T extends DataType>(
+  type: T,
+  value: DataTypeToType<T> | undefined,
+) => stringifyValue(type, value, en);
+
 describe("item.answer.value[x]", () => {
   const scenarios: Array<{
     title: string;
@@ -151,7 +158,7 @@ describe("item.answer.value[x]", () => {
         ],
       };
 
-      const form = new FormStore("r5", questionnaire, response, undefined);
+      const form = new FormStore(en, "r5", questionnaire, response, undefined);
       const question = form.scope.lookupNode(linkId);
       expect(question && isQuestionNode(question)).toBe(true);
       assertQuestionNode(question);
@@ -301,7 +308,13 @@ describe("item.answer.value[x]", () => {
           ],
         };
 
-        const form = new FormStore("r5", questionnaire, undefined, undefined);
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
         const question = form.scope.lookupNode("answer");
         expect(question && isQuestionNode(question)).toBe(true);
         assertQuestionNode(question);
@@ -452,43 +465,39 @@ describe("extractExtension", () => {
 describe("stringifyValue", () => {
   describe("coding", () => {
     it("prefers the coding display when present", () => {
-      expect(stringifyValue("Coding", { code: "m", display: "Moderate" })).toBe(
+      expect(stringify("Coding", { code: "m", display: "Moderate" })).toBe(
         "Moderate",
       );
     });
 
     it("uses the coding display when only display is present", () => {
-      expect(stringifyValue("Coding", { display: "Moderate" })).toBe(
-        "Moderate",
-      );
+      expect(stringify("Coding", { display: "Moderate" })).toBe("Moderate");
     });
 
     it("falls back to the coding code when display is missing", () => {
-      expect(stringifyValue("Coding", { code: "m" })).toBe("m");
+      expect(stringify("Coding", { code: "m" })).toBe("m");
     });
 
     it("returns fallback when coding has no labels", () => {
-      expect(
-        stringifyValue("Coding", { system: "sys" } as Coding, "fallback"),
-      ).toBe("fallback");
+      expect(stringify("Coding", { system: "sys" } as Coding)).toBe("");
     });
   });
 
   describe("string", () => {
     it("returns the string value", () => {
-      expect(stringifyValue("string", "hello")).toBe("hello");
+      expect(stringify("string", "hello")).toBe("hello");
     });
   });
 
   describe("text", () => {
     it("returns the text value", () => {
-      expect(stringifyValue("string", "note")).toBe("note");
+      expect(stringify("string", "note")).toBe("note");
     });
   });
 
   describe("url", () => {
     it("returns the url value", () => {
-      expect(stringifyValue("url", "https://example.org")).toBe(
+      expect(stringify("url", "https://example.org")).toBe(
         "https://example.org",
       );
     });
@@ -496,50 +505,48 @@ describe("stringifyValue", () => {
 
   describe("integer", () => {
     it("stringifies the integer value", () => {
-      expect(stringifyValue("integer", 42)).toBe("42");
+      expect(stringify("integer", 42)).toBe("42");
     });
   });
 
   describe("decimal", () => {
     it("stringifies the decimal value", () => {
-      expect(stringifyValue("decimal", 3.5)).toBe("3.5");
+      expect(stringify("decimal", 3.5)).toBe("3.5");
     });
   });
 
   describe("boolean", () => {
     it("returns Yes for true", () => {
-      expect(stringifyValue("boolean", true)).toBe("Yes");
+      expect(stringify("boolean", true)).toBe("Yes");
     });
 
     it("returns No for false", () => {
-      expect(stringifyValue("boolean", false)).toBe("No");
+      expect(stringify("boolean", false)).toBe("No");
     });
   });
 
   describe("quantity", () => {
     it("formats the quantity value", () => {
-      expect(stringifyValue("Quantity", { value: 55, unit: "kg" })).toBe(
-        "55 kg",
-      );
+      expect(stringify("Quantity", { value: 55, unit: "kg" })).toBe("55 kg");
     });
 
     it("uses fallback when value is missing", () => {
-      expect(stringifyValue("Quantity", {}, "fallback")).toBe("fallback");
+      expect(stringify("Quantity", {})).toBe("");
     });
 
     it("returns unit when only unit is provided", () => {
-      expect(stringifyValue("Quantity", { unit: "kg" })).toBe("kg");
+      expect(stringify("Quantity", { unit: "kg" })).toBe("kg");
     });
 
     it("returns value when only value is provided", () => {
-      expect(stringifyValue("Quantity", { value: 12 })).toBe("12");
+      expect(stringify("Quantity", { value: 12 })).toBe("12");
     });
   });
 
   describe("reference", () => {
     it("prefers the display value", () => {
       expect(
-        stringifyValue("Reference", {
+        stringify("Reference", {
           reference: "Patient/1",
           display: "Alice",
         }),
@@ -547,7 +554,7 @@ describe("stringifyValue", () => {
     });
 
     it("returns the reference when display is absent", () => {
-      expect(stringifyValue("Reference", { reference: "Patient/2" })).toBe(
+      expect(stringify("Reference", { reference: "Patient/2" })).toBe(
         "Patient/2",
       );
     });
@@ -555,17 +562,17 @@ describe("stringifyValue", () => {
 
   describe("attachment", () => {
     it("prefers the title", () => {
-      expect(stringifyValue("Attachment", { title: "MRI" })).toBe("MRI");
+      expect(stringify("Attachment", { title: "MRI" })).toBe("MRI");
     });
 
     it("falls back to content type", () => {
-      expect(stringifyValue("Attachment", { contentType: "image/png" })).toBe(
+      expect(stringify("Attachment", { contentType: "image/png" })).toBe(
         "image/png attachment",
       );
     });
 
     it("falls back to url when title and content type are absent", () => {
-      expect(stringifyValue("Attachment", { url: "https://file" })).toBe(
+      expect(stringify("Attachment", { url: "https://file" })).toBe(
         "https://file",
       );
     });
@@ -1154,25 +1161,21 @@ describe("normalizeExpressionValues", () => {
 
 describe("date", () => {
   it("formats date values for display", () => {
-    const formatted = stringifyValue("date", "2025-11-03", "fallback");
+    const formatted = stringify("date", "2025-11-03");
     expect(formatted).toContain("November 3, 2025");
   });
 });
 
 describe("dateTime", () => {
   it("formats dateTime values in local style", () => {
-    const formatted = stringifyValue(
-      "dateTime",
-      "2025-11-03T10:00:00-05:00",
-      "fallback",
-    );
+    const formatted = stringify("dateTime", "2025-11-03T10:00:00-05:00");
     expect(formatted).toContain("November 3, 2025");
   });
 });
 
 describe("time formatting", () => {
   it("formats time values using locale", () => {
-    const formatted = stringifyValue("time", "13:30:00", "fallback");
+    const formatted = stringify("time", "13:30:00");
     expect(formatted).toMatch(/1:30/);
   });
 });

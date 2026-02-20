@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { StringRenderer } from "@formbox/renderer/component/question/fhir/string/string-renderer.tsx";
 import type { IQuestionNode } from "@formbox/renderer/types.ts";
@@ -47,7 +48,7 @@ describe("type.text", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, response, undefined);
+    const form = new FormStore(en, "r5", questionnaire, response, undefined);
     const question = getTextQuestion(form, "notes");
 
     render(<StringRenderer node={question} />);

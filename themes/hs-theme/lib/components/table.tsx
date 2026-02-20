@@ -1,4 +1,4 @@
-import type { TableProperties } from "@formbox/theme";
+import { useStrings, type TableProperties } from "@formbox/theme";
 import type { ReactElement, ReactNode } from "react";
 import { styled } from "@linaria/react";
 import { Trash } from "../icons/trash.tsx";
@@ -9,6 +9,8 @@ export function Table({
   columns,
   rows,
 }: TableProperties): ReactElement | undefined {
+  const strings = useStrings();
+
   if (rows.length === 0 || columns.length === 0) {
     return <Empty>Nothing to display.</Empty>;
   }
@@ -54,7 +56,7 @@ export function Table({
                       icon={<Trash />}
                       onClick={row.onRemove}
                       disabled={row.canRemove === false}
-                      label={row.removeLabel ?? "Remove"}
+                      label={strings.group.removeSection}
                     />
                   )}
                 </Cell>

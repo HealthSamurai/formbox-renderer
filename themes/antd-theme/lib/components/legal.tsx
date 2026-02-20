@@ -1,7 +1,9 @@
-import type { LegalProperties } from "@formbox/theme";
+import { useStrings, type LegalProperties } from "@formbox/theme";
 import { Button, Tooltip } from "antd";
 
-export function Legal({ id, children, ariaLabel }: LegalProperties) {
+export function Legal({ id, children }: LegalProperties) {
+  const strings = useStrings();
+
   return (
     <span style={{ display: "inline-flex", alignItems: "center" }}>
       <Tooltip title={children} placement="top">
@@ -9,7 +11,7 @@ export function Legal({ id, children, ariaLabel }: LegalProperties) {
           type="text"
           size="small"
           shape="circle"
-          aria-label={ariaLabel}
+          aria-label={strings.aria.legal}
           aria-describedby={id}
         >
           i

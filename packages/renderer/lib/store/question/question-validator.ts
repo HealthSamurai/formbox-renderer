@@ -3,7 +3,6 @@ import type { OperationOutcomeIssue } from "@formbox/fhir";
 
 import { answerHasContent, formatString, makeIssue } from "../../utilities.ts";
 import type { INodeValidator, IQuestionNode } from "../../types.ts";
-import { strings } from "../../strings.ts";
 
 export class QuestionValidator implements INodeValidator {
   private readonly question: IQuestionNode;
@@ -16,6 +15,8 @@ export class QuestionValidator implements INodeValidator {
 
   @computed
   get issues(): OperationOutcomeIssue[] {
+    const strings = this.question.form.strings;
+
     if (this.question.readOnly || !this.question.isEnabled) {
       return [];
     }

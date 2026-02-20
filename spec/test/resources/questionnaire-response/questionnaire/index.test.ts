@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import {
   assertQuestionNode,
   isQuestionNode,
@@ -24,7 +25,7 @@ describe("questionnaire", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = form.scope.lookupNode("nickname");
     expect(question && isQuestionNode(question)).toBe(true);
     assertQuestionNode(question);

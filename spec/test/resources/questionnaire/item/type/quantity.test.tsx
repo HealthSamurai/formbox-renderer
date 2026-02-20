@@ -3,10 +3,10 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import { isQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
 import { QuantityRenderer } from "@formbox/renderer/component/question/fhir/quantity/quantity-renderer.tsx";
 import type { IQuestionNode } from "@formbox/renderer/types.ts";
-import { strings } from "@formbox/renderer/strings.ts";
 
 import type { QuestionnaireOf } from "@formbox/renderer";
 type Questionnaire = QuestionnaireOf<"r5">;
@@ -33,7 +33,7 @@ describe("type.quantity", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getQuantityQuestion(form, "volume");
 
     const { container } = render(<QuantityRenderer node={question} />);
@@ -65,7 +65,7 @@ describe("type.quantity", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getQuantityQuestion(form, "volume");
 
     render(<QuantityRenderer node={question} />);
@@ -74,8 +74,6 @@ describe("type.quantity", () => {
       name: /volume/i,
     }) as HTMLInputElement;
 
-    expect(valueInput.placeholder).toBe(
-      strings.inputs.quantityValuePlaceholder,
-    );
+    expect(valueInput.placeholder).toBe(en.inputs.quantityValuePlaceholder);
   });
 });

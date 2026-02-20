@@ -1,8 +1,8 @@
 import { observer } from "mobx-react-lite";
+import { useStrings } from "@formbox/theme";
 
 import type { IAnswer } from "../../../../types.ts";
 import { useTheme } from "../../../../ui/theme.tsx";
-import { strings } from "../../../../strings.ts";
 import { buildId } from "../../../../utilities.ts";
 
 export type QuantityInputProperties = {
@@ -23,6 +23,7 @@ export const QuantityInput = observer(function QuantityInput({
   placeholder,
   disabled,
 }: QuantityInputProperties) {
+  const strings = useStrings();
   const { InputGroup, NumberInput, SelectInput, TextInput } = useTheme();
   const { min, max } = answer.bounds;
 

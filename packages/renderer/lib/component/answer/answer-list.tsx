@@ -3,7 +3,6 @@ import { observer } from "mobx-react-lite";
 import type { AnswerType, IQuestionNode } from "../../types.ts";
 import { useTheme } from "../../ui/theme.tsx";
 import { AnswerScaffold, AnswerRenderCallback } from "./answer-scaffold.tsx";
-import { strings } from "../../strings.ts";
 
 export const AnswerList = observer(function AnswerList<T extends AnswerType>({
   node,
@@ -17,10 +16,9 @@ export const AnswerList = observer(function AnswerList<T extends AnswerType>({
   const addAnswer = useCallback(() => node.addAnswer(), [node]);
   const onAdd = node.repeats ? addAnswer : undefined;
   const canAdd = node.repeats ? node.canAdd : undefined;
-  const addLabel = node.repeats ? strings.selection.addAnother : undefined;
 
   return (
-    <ThemedAnswerList onAdd={onAdd} canAdd={canAdd} addLabel={addLabel}>
+    <ThemedAnswerList onAdd={onAdd} canAdd={canAdd}>
       {answers.map((answer) => (
         <AnswerScaffold key={answer.token} answer={answer} control={control} />
       ))}

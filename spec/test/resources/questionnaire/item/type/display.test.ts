@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import {
   assertDisplayNode,
   isDisplayNode,
@@ -16,7 +17,7 @@ describe("type.display", () => {
   };
 
   const createStore = () =>
-    new FormStore("r5", questionnaire, undefined, undefined);
+    new FormStore(en, "r5", questionnaire, undefined, undefined);
 
   it("creates a display store for display items", () => {
     const form = createStore();
@@ -53,6 +54,7 @@ describe("type.display", () => {
     };
 
     const form = new FormStore(
+      en,
       "r5",
       questionnaireWithChild,
       undefined,

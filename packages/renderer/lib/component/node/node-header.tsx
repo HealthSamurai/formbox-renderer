@@ -7,7 +7,6 @@ import { useTheme } from "../../ui/theme.tsx";
 import { buildId, getNodeLabelId } from "../../utilities.ts";
 import type { LabelAs } from "@formbox/theme";
 import { isQuestionNode } from "../../store/question/question-store.ts";
-import { strings } from "../../strings.ts";
 
 function hasOptions(node: {
   template: { answerOption?: unknown; answerValueSet?: unknown };
@@ -74,8 +73,6 @@ export const NodeHeader = observer(function NodeHeader({
       media={node.itemMedia}
       isExpanded={node.isExpanded}
       onToggleExpanded={node.isExpandable ? node.toggleExpanded : undefined}
-      expandLabel={strings.collapsible.expand}
-      collapseLabel={strings.collapsible.collapse}
       id={getNodeLabelId(node)}
       htmlFor={htmlFor}
       required={node.required}

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
+import en from "@formbox/strings/en";
 import {
   assertGroupNode,
   isGroupNode,
@@ -61,7 +62,7 @@ describe("item.item", () => {
   };
 
   const createStore = () =>
-    new FormStore("r5", questionnaire, response, undefined);
+    new FormStore(en, "r5", questionnaire, response, undefined);
 
   const getGroupStore = () => {
     const form = createStore();
@@ -119,7 +120,7 @@ describe("item.item", () => {
       ],
     };
 
-    const form = new FormStore("r5", questionnaire, undefined, undefined);
+    const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const group = form.scope.lookupNode("demographics");
     expect(group && isGroupNode(group)).toBe(true);
     assertGroupNode(group);
@@ -179,6 +180,7 @@ describe("item.item", () => {
 
     const createMissingGroupStore = () =>
       new FormStore(
+        en,
         "r5",
         questionnaireMissingResponse,
         responseMissingGroup,

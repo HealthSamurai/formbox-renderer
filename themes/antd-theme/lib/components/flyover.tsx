@@ -1,7 +1,9 @@
-import type { FlyoverProperties } from "@formbox/theme";
+import { useStrings, type FlyoverProperties } from "@formbox/theme";
 import { Button, Tooltip } from "antd";
 
-export function Flyover({ id, children, ariaLabel }: FlyoverProperties) {
+export function Flyover({ id, children }: FlyoverProperties) {
+  const strings = useStrings();
+
   return (
     <span style={{ display: "inline-flex", alignItems: "center" }}>
       <Tooltip title={children} placement="top">
@@ -9,7 +11,7 @@ export function Flyover({ id, children, ariaLabel }: FlyoverProperties) {
           type="text"
           size="small"
           shape="circle"
-          aria-label={ariaLabel}
+          aria-label={strings.aria.flyover}
           aria-describedby={id}
         >
           !
