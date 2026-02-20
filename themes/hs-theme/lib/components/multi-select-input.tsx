@@ -495,7 +495,7 @@ const ChipColumn = styled.div`
   gap: 0.125rem;
 `;
 
-const Chip = styled.div`
+export const Chip = styled.div`
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;

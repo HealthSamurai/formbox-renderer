@@ -26,7 +26,7 @@ export const SelectionTableControl = observer(function SelectionTableControl({
         token: option.token,
         content: (
           <Label id={buildId(node.token, option.token)}>
-            <OptionDisplay prefix={option.prefix}>
+            <OptionDisplay prefix={option.prefix} media={option.media}>
               <ValueDisplay type={option.answerType} value={option.value} />
             </OptionDisplay>
           </Label>
@@ -50,7 +50,7 @@ export const SelectionTableControl = observer(function SelectionTableControl({
         token: option.token,
         content: (
           <Label id={buildId(node.token, option.token)}>
-            <OptionDisplay prefix={option.prefix}>
+            <OptionDisplay prefix={option.prefix} media={option.media}>
               <ValueDisplay type={option.answerType} value={option.value} />
             </OptionDisplay>
           </Label>

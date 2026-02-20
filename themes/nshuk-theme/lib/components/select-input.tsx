@@ -404,7 +404,7 @@ const Input = styled.input`
   }
 `;
 
-const Display = styled.div`
+export const Display = styled.div`
   display: flex;
   align-items: center;
   cursor: text;

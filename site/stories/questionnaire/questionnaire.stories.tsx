@@ -13,7 +13,7 @@ import expressionDynamicQuantity from "./samples/expression-dynamic-quantity.jso
 import expressionEnableWhen from "./samples/expression-enable-when.json" with { type: "json" };
 import expressionInitial from "./samples/expression-initial.json" with { type: "json" };
 import itemControlHelp from "./samples/item-control-help.json" with { type: "json" };
-import itemControlMatrix from "./samples/item-control-matrix.json" with { type: "json" };
+import itemAnswerMedia from "./samples/item-answer-media.json" with { type: "json" };
 import itemMedia from "./samples/item-media.json" with { type: "json" };
 import itemShortText from "./samples/item-short-text.json" with { type: "json" };
 import nestedFollowUps from "./samples/nested-follow-ups.json" with { type: "json" };
@@ -156,15 +156,15 @@ export const AnswerValueSet = makeStory(
   "Answer ValueSet",
   answerValueSet as Questionnaire,
 );
-export const ItemControlMatrix = makeStory(
-  "Item control + constraint matrix",
-  itemControlMatrix as Questionnaire,
-);
 export const ItemShortText = makeStory(
   "Item shortText",
   itemShortText as Questionnaire,
 );
 export const ItemMedia = makeStory("Item media", itemMedia as Questionnaire);
+export const ItemAnswerMedia = makeStory(
+  "Item answer media",
+  itemAnswerMedia as Questionnaire,
+);
 export const ChoiceOrientation = makeStory(
   "Choice orientation",
   choiceOrientation as Questionnaire,

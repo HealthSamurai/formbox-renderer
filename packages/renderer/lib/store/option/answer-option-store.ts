@@ -159,6 +159,11 @@ export class AnswerOptionStore<
           disabled,
           answerType: this.question.type,
           prefix: extractExtensionValue("string", option, EXT.OPTION_PREFIX),
+          media: extractExtensionValue(
+            "Attachment",
+            option,
+            EXT.SDC_ITEM_ANSWER_MEDIA,
+          ),
         } satisfies AnswerOption<T>,
       ];
     });

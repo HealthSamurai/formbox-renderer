@@ -12,7 +12,7 @@ export type LabelProperties = {
   prefix?: ReactNode;
   shortText?: string | undefined;
   supportHyperlinks?: ReadonlyArray<Hyperlink> | undefined;
-  itemMedia?: Attachment | undefined;
+  media?: Attachment | undefined;
   children: ReactNode;
   id: string;
   htmlFor?: string | undefined;

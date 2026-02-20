@@ -264,6 +264,7 @@ export type AnswerOption<T extends AnswerType> = {
   readonly disabled: boolean;
   readonly answerType: AnswerType;
   readonly prefix?: string | undefined;
+  readonly media?: Attachment | undefined;
 };
 
 export type ValueDisplayProperties<T extends AnswerType> = {

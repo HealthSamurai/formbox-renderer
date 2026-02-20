@@ -2,14 +2,14 @@ import { styled } from "@linaria/react";
 import type { LabelProperties } from "@formbox/theme";
 import type { ReactNode } from "react";
 import { useMediaQuery } from "../use-media-query.ts";
-import { Media } from "./item-media.tsx";
+import { Media } from "./media.tsx";
 import { Link } from "./link.tsx";
 
 export function Label({
   prefix,
   shortText,
   supportHyperlinks,
-  itemMedia,
+  media,
   children,
   id,
   htmlFor,
@@ -21,9 +21,9 @@ export function Label({
 }: LabelProperties) {
   const useShortText = useMediaQuery("(max-width: 40rem)");
   const text = useShortText && shortText != undefined ? shortText : children;
-  const itemMediaNode = itemMedia && (
+  const mediaNode = media && (
     <div className="nhsuk-u-margin-top-2">
-      <Media attachment={itemMedia} />
+      <Media attachment={media} />
     </div>
   );
   const supportLinks =
@@ -55,7 +55,7 @@ export function Label({
         {legal}
         {flyover}
         {supportLinks}
-        {itemMediaNode}
+        {mediaNode}
       </div>
     );
   }
@@ -70,7 +70,7 @@ export function Label({
         {help}
         {legal}
         {flyover}
-        {itemMediaNode}
+        {mediaNode}
       </div>
     );
   }
@@ -82,7 +82,7 @@ export function Label({
       {help}
       {legal}
       {flyover}
-      {itemMediaNode}
+      {mediaNode}
     </div>
   );
 }

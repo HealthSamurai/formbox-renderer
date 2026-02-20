@@ -405,7 +405,7 @@ const ChipColumn = styled.div`
   gap: var(--nhsuk-border-width-form-element);
 `;
 
-const Chip = styled.button`
+export const Chip = styled.button`
   border: none;
   cursor: pointer;
   font: inherit;

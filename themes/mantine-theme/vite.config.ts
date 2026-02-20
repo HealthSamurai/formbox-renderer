@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import dts from "vite-plugin-dts";
+import linaria from "@wyw-in-js/vite";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import packageJson from "./package.json";
@@ -31,6 +32,20 @@ export default defineConfig(() => {
   return {
     plugins: [
       react(),
+      linaria({
+        include: ["lib/components/**/*.{ts,tsx}"],
+        babelOptions: {
+          presets: [
+            [
+              "@babel/preset-typescript",
+              {
+                allExtensions: true,
+                isTSX: true,
+              },
+            ],
+          ],
+        },
+      }),
       dts({
         rollupTypes: true,
         tsconfigPath: path.resolve(__dirname, "tsconfig.lib.json"),

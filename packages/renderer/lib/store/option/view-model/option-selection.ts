@@ -103,6 +103,7 @@ export class OptionSelection<
               token: option.token,
               disabled: option.disabled,
               prefix: option.prefix,
+              media: option.media,
             })
           : matches;
       },
@@ -112,6 +113,7 @@ export class OptionSelection<
           token: OptionToken;
           disabled: boolean;
           prefix?: string | undefined;
+          media?: AnswerOption<T>["media"];
         }
       >(),
     );
@@ -132,6 +134,7 @@ export class OptionSelection<
           value: answer.value,
           answerType: this.question.type,
           prefix: matchedOption.prefix,
+          media: matchedOption.media,
           disabled:
             (this.question.isRepeatingWithoutChildren
               ? false
@@ -152,6 +155,7 @@ export class OptionSelection<
         value: answer.value,
         answerType: this.allowCustom ? this.customType : this.question.type,
         prefix: undefined,
+        media: undefined,
         disabled:
           !this.allowCustom ||
           (this.question.isRepeatingWithoutChildren &&
@@ -353,6 +357,7 @@ export class OptionSelection<
       answerType: this.customType,
       disabled: false,
       prefix: undefined,
+      media: undefined,
     } as AnswerOption<T> | AnswerOption<"string">);
   }
 
@@ -374,6 +379,7 @@ export class OptionSelection<
       answerType: this.question.type,
       disabled: true,
       prefix: undefined,
+      media: undefined,
     });
   }
 
@@ -483,6 +489,7 @@ export class OptionSelection<
           disabled: selection.disabled,
           answerType: selection.answerType,
           prefix: selection.prefix,
+          media: selection.media,
         } as AnswerOption<T> | AnswerOption<"string">,
       ];
     });

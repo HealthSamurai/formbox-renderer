@@ -57,7 +57,7 @@ export const SingleDropdownSelectControl = observer(
       return store.filteredOptions.map((entry) => ({
         token: entry.token,
         label: (
-          <OptionDisplay prefix={entry.prefix}>
+          <OptionDisplay prefix={entry.prefix} media={entry.media}>
             <ValueDisplay type={entry.answerType} value={entry.value} />
           </OptionDisplay>
         ),
@@ -84,7 +84,7 @@ export const SingleDropdownSelectControl = observer(
         token: selection.token,
         disabled: selection.disabled,
         label: (
-          <OptionDisplay prefix={selection.prefix}>
+          <OptionDisplay prefix={selection.prefix} media={selection.media}>
             <ValueDisplay type={selection.answerType} value={selection.value} />
           </OptionDisplay>
         ),

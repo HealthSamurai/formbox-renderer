@@ -2,14 +2,14 @@ import type { LabelProperties } from "@formbox/theme";
 import { Space, Typography } from "antd";
 import type { CSSProperties } from "react";
 import { useMediaQuery } from "../use-media-query.ts";
-import { Media } from "./item-media.tsx";
+import { Media } from "./media.tsx";
 import { Link } from "./link.tsx";
 
 export function Label({
   prefix,
   shortText,
   supportHyperlinks,
-  itemMedia,
+  media,
   children,
   id,
   htmlFor,
@@ -69,7 +69,7 @@ export function Label({
             ))}
           </Space>
         ) : undefined}
-        {itemMedia && <Media attachment={itemMedia} />}
+        {media && <Media attachment={media} />}
       </Space>
     </WrapperTag>
   );

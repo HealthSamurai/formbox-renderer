@@ -1,7 +1,6 @@
 import type { StorybookConfig } from "@storybook/react-vite";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import linaria from "@wyw-in-js/vite";
 import type { Alias, AliasOptions } from "vite";
 import tsconfig from "../../tsconfig.base.json" with { type: "json" };
 
@@ -113,7 +112,7 @@ const config: StorybookConfig = {
     name: "@storybook/react-vite",
     options: {},
   },
-  async viteFinal(config, { configType }) {
+  async viteFinal(config) {
     const rootDirectory = getRepositoryRootDirectory(__dirname);
     const pathEntries = getTsconfigPathEntries();
     const exactPathAliases = buildExactAliasesForNonWildcardTsconfigPaths(
@@ -147,22 +146,6 @@ const config: StorybookConfig = {
       ...pathAliasEntries,
       ...wildcardAliases,
       localAlias,
-    ];
-
-    config.plugins = [
-      ...(config.plugins ?? []),
-      linaria({
-        include: [path.resolve(rootDirectory, "site/stories/**/*.tsx")],
-        exclude: ["**/dist/**", "**/node_modules/**"],
-        babelOptions: {
-          parserOpts: {
-            plugins: ["typescript", "jsx", "importAssertions"],
-          },
-        },
-        ...(configType === "DEVELOPMENT"
-          ? { classNameSlug: "[file]__[title]__[index]" }
-          : {}),
-      }),
     ];
 
     return config;

@@ -1,14 +1,14 @@
 import { Box, Group, Text } from "@mantine/core";
 import type { LabelProperties } from "@formbox/theme";
 import { useMediaQuery } from "../use-media-query.ts";
-import { Media } from "./item-media.tsx";
+import { Media } from "./media.tsx";
 import { Link } from "./link.tsx";
 
 export function Label({
   prefix,
   shortText,
   supportHyperlinks,
-  itemMedia,
+  media,
   children,
   id,
   htmlFor,
@@ -66,9 +66,9 @@ export function Label({
           ))}
         </Group>
       ) : undefined}
-      {itemMedia && (
+      {media && (
         <Box mt={6}>
-          <Media attachment={itemMedia} />
+          <Media attachment={media} />
         </Box>
       )}
     </Box>

@@ -34,6 +34,17 @@ export default defineConfig(() => {
       react(),
       linaria({
         include: ["lib/components/**/*.{ts,tsx}"],
+        babelOptions: {
+          presets: [
+            [
+              "@babel/preset-typescript",
+              {
+                allExtensions: true,
+                isTSX: true,
+              },
+            ],
+          ],
+        },
       }),
       dts({
         rollupTypes: true,

@@ -1,0 +1,343 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "item-answer-media",
+  "status": "active",
+  "title": "Item Answer Media",
+  "description": "Demonstrates answer-option media rendered with option labels across list, dropdown, and multi-select controls.",
+  "item": [
+    {
+      "linkId": "item-answer-media-intro",
+      "type": "display",
+      "text": "Answer options can carry media (image/audio/video/link) via itemAnswerMedia."
+    },
+    {
+      "linkId": "reference-source",
+      "type": "string",
+      "text": "Which reference source best matches the reported issue?",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "radio-button"
+              }
+            ]
+          }
+        }
+      ],
+      "answerOption": [
+        {
+          "valueString": "Reference image",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemAnswerMedia",
+              "valueAttachment": {
+                "title": "Skin condition reference",
+                "contentType": "image/png",
+                "url": "https://picsum.photos/seed/item-answer-media-image/320/200"
+              }
+            }
+          ]
+        },
+        {
+          "valueString": "Audio reference",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemAnswerMedia",
+              "valueAttachment": {
+                "title": "Respiratory sample",
+                "contentType": "audio/mpeg",
+                "url": "https://download.samplelib.com/mp3/sample-6s.mp3"
+              }
+            }
+          ]
+        },
+        {
+          "valueString": "Video reference",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemAnswerMedia",
+              "valueAttachment": {
+                "title": "Mobility sample clip",
+                "contentType": "video/mp4",
+                "url": "https://lorem.video/720p"
+              }
+            }
+          ]
+        },
+        {
+          "valueString": "Document reference",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemAnswerMedia",
+              "valueAttachment": {
+                "title": "Triage guidance PDF",
+                "contentType": "application/pdf",
+                "url": "https://example.org/docs/triage-guidance.pdf"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "preferred-follow-up-material",
+      "type": "string",
+      "text": "Preferred follow-up material",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "drop-down"
+              }
+            ]
+          }
+        }
+      ],
+      "answerOption": [
+        {
+          "valueString": "Quick visual checklist",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemAnswerMedia",
+              "valueAttachment": {
+                "title": "Checklist image",
+                "contentType": "image/png",
+                "url": "https://picsum.photos/seed/item-answer-media-dropdown/260/160"
+              }
+            }
+          ]
+        },
+        {
+          "valueString": "Step-by-step photo guide",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemAnswerMedia",
+              "valueAttachment": {
+                "title": "Photo guide",
+                "contentType": "image/png",
+                "url": "https://picsum.photos/seed/item-answer-media-dropdown-photo/260/160"
+              }
+            }
+          ]
+        },
+        {
+          "valueString": "Audio breathing tutorial",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemAnswerMedia",
+              "valueAttachment": {
+                "title": "Breathing tutorial",
+                "contentType": "audio/mpeg",
+                "url": "https://download.samplelib.com/mp3/sample-9s.mp3"
+              }
+            }
+          ]
+        },
+        {
+          "valueString": "Mobility demonstration clip",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemAnswerMedia",
+              "valueAttachment": {
+                "title": "Mobility demo",
+                "contentType": "video/mp4",
+                "url": "https://lorem.video/720p"
+              }
+            }
+          ]
+        },
+        {
+          "valueString": "Detailed written guide",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemAnswerMedia",
+              "valueAttachment": {
+                "title": "Detailed guide",
+                "contentType": "application/pdf",
+                "url": "https://example.org/docs/follow-up-guide.pdf"
+              }
+            }
+          ]
+        },
+        {
+          "valueString": "Community support contacts",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemAnswerMedia",
+              "valueAttachment": {
+                "title": "Support contacts",
+                "contentType": "application/pdf",
+                "url": "https://example.org/docs/support-contacts.pdf"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "supplementary-resources",
+      "type": "string",
+      "repeats": true,
+      "text": "Select supplementary resources to review",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "check-box"
+              }
+            ]
+          }
+        }
+      ],
+      "answerOption": [
+        {
+          "valueString": "Home-care infographic",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemAnswerMedia",
+              "valueAttachment": {
+                "title": "Home-care infographic",
+                "contentType": "image/png",
+                "url": "https://picsum.photos/seed/item-answer-media-check/300/180"
+              }
+            }
+          ]
+        },
+        {
+          "valueString": "Discharge instructions",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemAnswerMedia",
+              "valueAttachment": {
+                "title": "Discharge plan PDF",
+                "contentType": "application/pdf",
+                "url": "https://example.org/docs/discharge-instructions.pdf"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "item-answer-media-table",
+      "type": "group",
+      "text": "Selection table with media-backed options",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "table"
+              }
+            ]
+          }
+        }
+      ],
+      "item": [
+        {
+          "linkId": "impact-pain",
+          "type": "string",
+          "text": "Pain impact",
+          "answerOption": [
+            {
+              "valueString": "Low",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemAnswerMedia",
+                  "valueAttachment": {
+                    "title": "Low impact visual",
+                    "contentType": "image/png",
+                    "url": "https://picsum.photos/seed/item-answer-media-table-low/220/130"
+                  }
+                }
+              ]
+            },
+            {
+              "valueString": "Medium",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemAnswerMedia",
+                  "valueAttachment": {
+                    "title": "Medium impact notes",
+                    "contentType": "application/pdf",
+                    "url": "https://example.org/docs/impact-medium.pdf"
+                  }
+                }
+              ]
+            },
+            {
+              "valueString": "High",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemAnswerMedia",
+                  "valueAttachment": {
+                    "title": "High impact clip",
+                    "contentType": "video/mp4",
+                    "url": "https://lorem.video/720p"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "impact-fatigue",
+          "type": "string",
+          "text": "Fatigue impact",
+          "answerOption": [
+            {
+              "valueString": "Low",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemAnswerMedia",
+                  "valueAttachment": {
+                    "title": "Low impact visual",
+                    "contentType": "image/png",
+                    "url": "https://picsum.photos/seed/item-answer-media-table-low/220/130"
+                  }
+                }
+              ]
+            },
+            {
+              "valueString": "Medium",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemAnswerMedia",
+                  "valueAttachment": {
+                    "title": "Medium impact notes",
+                    "contentType": "application/pdf",
+                    "url": "https://example.org/docs/impact-medium.pdf"
+                  }
+                }
+              ]
+            },
+            {
+              "valueString": "High",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemAnswerMedia",
+                  "valueAttachment": {
+                    "title": "High impact clip",
+                    "contentType": "video/mp4",
+                    "url": "https://lorem.video/720p"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

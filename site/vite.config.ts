@@ -58,6 +58,14 @@ export default defineConfig(async ({ mode, isSsrBuild }) => {
             repoRoot,
             "themes/nshuk-theme/lib/components/**/*.{ts,tsx}",
           ),
+          path.resolve(
+            repoRoot,
+            "themes/antd-theme/lib/components/**/*.{ts,tsx}",
+          ),
+          path.resolve(
+            repoRoot,
+            "themes/mantine-theme/lib/components/**/*.{ts,tsx}",
+          ),
         ],
         babelOptions: {
           presets: [
@@ -70,6 +78,9 @@ export default defineConfig(async ({ mode, isSsrBuild }) => {
             ],
           ],
         },
+        ...(mode === "development"
+          ? { classNameSlug: "[file]__[title]__[index]" }
+          : {}),
       }),
       tailwind(),
     ],

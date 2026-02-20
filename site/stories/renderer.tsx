@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react";
-import { styled } from "@linaria/react";
+import type { CSSProperties } from "react";
 import type { IPresentableNode } from "@formbox/renderer/types.ts";
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import { Form } from "@formbox/renderer/component/form/form.tsx";
@@ -37,9 +37,9 @@ export function Renderer<V extends FhirVersion = "r5">({
 
   if (mode === "form") {
     return (
-      <StoryFrame>
+      <div style={storyFrameStyle}>
         <Form store={store} onSubmit={() => store.validateAll()} />
-      </StoryFrame>
+      </div>
     );
   }
 
@@ -51,13 +51,13 @@ export function Renderer<V extends FhirVersion = "r5">({
 
   const node = store.nodes[0];
   return (
-    <StoryFrame>
+    <div style={storyFrameStyle}>
       <Node node={node as IPresentableNode} />
-    </StoryFrame>
+    </div>
   );
 }
 
-const StoryFrame = styled.div`
-  width: 100%;
-  padding: 24px;
-`;
+const storyFrameStyle: CSSProperties = {
+  width: "100%",
+  padding: "24px",
+};

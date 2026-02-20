@@ -180,6 +180,7 @@ export const EXT = {
   SDC_VARIABLE:                  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-variable",
   SDC_KEYBOARD:                  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-keyboard",
   SDC_ITEM_MEDIA:                "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemMedia",
+  SDC_ITEM_ANSWER_MEDIA:         "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemAnswerMedia",
   SDC_SHORT_TEXT:                "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-shortText",
   SUPPORT_LINK:                  "http://hl7.org/fhir/StructureDefinition/questionnaire-supportLink",
   SUPPORT_HYPERLINK:             "http://hl7.org/fhir/StructureDefinition/questionnaire-supportHyperlink",

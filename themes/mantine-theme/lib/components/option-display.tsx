@@ -1,17 +1,47 @@
 import type { OptionDisplayProperties } from "@formbox/theme";
-import { Text } from "@mantine/core";
+import { styled } from "@linaria/react";
+import { Media } from "./media.tsx";
 
-export function OptionDisplay({ children, prefix }: OptionDisplayProperties) {
-  if (!prefix) {
-    return children;
-  }
-
+export function OptionDisplay({
+  children,
+  prefix,
+  media,
+}: OptionDisplayProperties) {
   return (
-    <Text component="span" style={{ display: "inline-flex", gap: 4 }}>
-      <Text component="span" fw={600}>
-        {prefix}
-      </Text>
-      {children}
-    </Text>
+    <Wrapper>
+      <MediaSlot>{media && <Media attachment={media} />}</MediaSlot>
+      <Label>
+        {prefix && <Prefix>{prefix}</Prefix>}
+        {children}
+      </Label>
+    </Wrapper>
   );
 }
+
+const Wrapper = styled.span`
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  min-width: 0;
+`;
+
+const MediaSlot = styled.span`
+  max-inline-size: min(24rem, 100%);
+
+  &:empty,
+  .mantine-Input-input & {
+    display: none;
+  }
+`;
+
+const Label = styled.span`
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  min-width: 0;
+`;
+
+const Prefix = styled.span`
+  font-weight: 600;
+`;

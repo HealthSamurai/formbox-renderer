@@ -408,7 +408,7 @@ const SelectInputField = styled.input`
   }
 `;
 
-const DisplayField = styled.div`
+export const DisplayField = styled.div`
   display: flex;
   align-items: center;
 
