@@ -35,6 +35,7 @@ import type { FileInputComponent } from "./file-input.ts";
 import type { DisplayRendererComponent } from "./display-renderer.ts";
 import type { TabContainerComponent } from "./tab-container.ts";
 import type { LinkComponent } from "./link.ts";
+import type { LanguageSelectorComponent } from "./language-selector.ts";
 
 export * from "./text-input.ts";
 export * from "./text-area.ts";
@@ -74,6 +75,7 @@ export * from "./file-input.ts";
 export * from "./display-renderer.ts";
 export * from "./tab-container.ts";
 export * from "./link.ts";
+export * from "./language-selector.ts";
 export * from "./strings.ts";
 
 export type Theme = {
@@ -114,4 +116,5 @@ export type Theme = {
   DisplayRenderer: DisplayRendererComponent;
   TabContainer: TabContainerComponent;
   Link: LinkComponent;
+  LanguageSelector: LanguageSelectorComponent;
 };

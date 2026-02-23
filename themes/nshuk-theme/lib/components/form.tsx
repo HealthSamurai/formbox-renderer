@@ -8,6 +8,7 @@ export function Form({
   children,
   title,
   description,
+  languageSelector,
   errors,
   before,
   after,
@@ -35,7 +36,7 @@ export function Form({
   );
   const header =
     title || description ? (
-      <header className="nhsuk-u-margin-bottom-4">
+      <header>
         {Boolean(title) && (
           <h1 className="nhsuk-heading-l nhsuk-u-margin-bottom-1">{title}</h1>
         )}
@@ -43,6 +44,13 @@ export function Form({
           <span className="nhsuk-caption-l">{description}</span>
         )}
       </header>
+    ) : undefined;
+  const top =
+    header || languageSelector ? (
+      <TopRow>
+        {header && <HeaderSlot>{header}</HeaderSlot>}
+        {languageSelector && <LanguageSlot>{languageSelector}</LanguageSlot>}
+      </TopRow>
     ) : undefined;
 
   if (pagination) {
@@ -67,7 +75,7 @@ export function Form({
 
     return (
       <form onSubmit={handleSubmit}>
-        {header && <TitleSlot>{header}</TitleSlot>}
+        {top}
         {Boolean(errors) && <Slot>{errors}</Slot>}
         {Boolean(before) && <Slot>{before}</Slot>}
         {children}
@@ -154,7 +162,7 @@ export function Form({
 
   return (
     <form onSubmit={handleSubmit}>
-      {header}
+      {top}
       {errors}
       {before}
       {children}
@@ -254,10 +262,23 @@ function ActionButton({
   );
 }
 
-const TitleSlot = styled.div`
+const TopRow = styled.div`
   display: flex;
-  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: calc(var(--nhsuk-spacing-1) + var(--nhsuk-spacing-2));
+  flex-wrap: wrap;
+`;
+
+const HeaderSlot = styled.div`
+  flex: 1 1 20rem;
+  min-width: 0;
+`;
+
+const LanguageSlot = styled.div`
+  flex: 0 0 auto;
+  min-width: 0;
+  margin-left: auto;
 `;
 
 const Slot = styled.div`

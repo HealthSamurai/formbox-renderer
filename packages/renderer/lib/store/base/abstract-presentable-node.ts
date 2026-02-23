@@ -15,6 +15,7 @@ import {
   findDisplayItemByControl,
   findExtension,
   findExtensions,
+  getTranslated,
 } from "../../utilities.ts";
 
 export abstract class AbstractPresentableNode implements IPresentableNode {
@@ -57,12 +58,16 @@ export abstract class AbstractPresentableNode implements IPresentableNode {
 
   @computed
   get text() {
-    return this.template.text;
+    return getTranslated(this.template, "text", this.form.language);
   }
 
   @computed
   get shortText() {
-    return findExtension(this.template, EXT.SDC_SHORT_TEXT)?.valueString;
+    return getTranslated(
+      findExtension(this.template, EXT.SDC_SHORT_TEXT),
+      "valueString",
+      this.form.language,
+    );
   }
 
   @computed
@@ -70,12 +75,14 @@ export abstract class AbstractPresentableNode implements IPresentableNode {
     return [
       ...findExtensions(this.template, EXT.SUPPORT_HYPERLINK).flatMap(
         (extension) => {
-          const link = findExtension(extension, "link");
-          const label = findExtension(extension, "label");
+          const link = findExtension(extension, "link")?.valueUri;
+          const label = getTranslated(
+            findExtension(extension, "label"),
+            "valueString",
+            this.form.language,
+          );
 
-          return link?.valueUri
-            ? [{ href: link.valueUri, label: label?.valueString }]
-            : [];
+          return link ? [{ href: link, label: label }] : [];
         },
       ),
       ...findExtensions(this.template, EXT.SUPPORT_LINK).flatMap((extension) =>
@@ -122,41 +129,68 @@ export abstract class AbstractPresentableNode implements IPresentableNode {
 
   @computed
   get prefix() {
-    return this.template.prefix;
+    return getTranslated(this.template, "prefix", this.form.language);
   }
 
   @computed
   get help() {
-    return findDisplayItemByControl(this.template, "help", this.adapter)?.text;
+    return getTranslated(
+      findDisplayItemByControl(this.template, "help", this.adapter),
+      "text",
+      this.form.language,
+    );
   }
 
   @computed
   get legal() {
-    return findDisplayItemByControl(this.template, "legal", this.adapter)?.text;
+    return getTranslated(
+      findDisplayItemByControl(this.template, "legal", this.adapter),
+      "text",
+      this.form.language,
+    );
   }
 
   @computed
   get placeholder() {
     return (
-      findExtension(this.template, EXT.ENTRY_FORMAT)?.valueString ??
-      findDisplayItemByControl(this.template, "prompt", this.adapter)?.text
+      getTranslated(
+        findExtension(this.template, EXT.ENTRY_FORMAT),
+        "valueString",
+        this.form.language,
+      ) ??
+      getTranslated(
+        findDisplayItemByControl(this.template, "prompt", this.adapter),
+        "text",
+        this.form.language,
+      )
     );
   }
 
   @computed
   get flyover() {
-    return findDisplayItemByControl(this.template, "flyover", this.adapter)
-      ?.text;
+    return getTranslated(
+      findDisplayItemByControl(this.template, "flyover", this.adapter),
+      "text",
+      this.form.language,
+    );
   }
 
   @computed
   get upper() {
-    return findDisplayItemByControl(this.template, "upper", this.adapter)?.text;
+    return getTranslated(
+      findDisplayItemByControl(this.template, "upper", this.adapter),
+      "text",
+      this.form.language,
+    );
   }
 
   @computed
   get lower() {
-    return findDisplayItemByControl(this.template, "lower", this.adapter)?.text;
+    return getTranslated(
+      findDisplayItemByControl(this.template, "lower", this.adapter),
+      "text",
+      this.form.language,
+    );
   }
 
   @computed
@@ -213,8 +247,16 @@ export abstract class AbstractPresentableNode implements IPresentableNode {
     }
 
     return (
-      findDisplayItemByControl(this.template, "unit", this.adapter)?.text ??
-      findExtension(this.template, EXT.QUESTIONNAIRE_UNIT)?.valueCoding?.display
+      getTranslated(
+        findDisplayItemByControl(this.template, "unit", this.adapter),
+        "text",
+        this.form.language,
+      ) ??
+      getTranslated(
+        findExtension(this.template, EXT.QUESTIONNAIRE_UNIT)?.valueCoding,
+        "display",
+        this.form.language,
+      )
     );
   }
 

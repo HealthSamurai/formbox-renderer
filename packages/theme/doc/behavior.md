@@ -42,6 +42,7 @@ All inputs are controlled; callbacks receive values, not DOM events.
 - `specifyOtherOption` is an extra option row. When the user selects it, the renderer enters a custom-entry state and provides `customOptionForm`.
 - `customOptionForm` is present only while custom entry is active. Render it near the options list or in place of it. Use `onSubmit` to commit and `onCancel` to return to the list; respect `canSubmit` when rendering submit controls.
 - `isLoading` can be true while options fetch. The renderer may also render `OptionsLoading` in the question scaffold; handle both without duplicating spinners.
+- `orientation` on `RadioButtonList` and `CheckboxList` is optional. When provided, use it to switch between horizontal and vertical layouts.
 
 ## Repeating items contract
 
@@ -50,3 +51,8 @@ All inputs are controlled; callbacks receive values, not DOM events.
 - `AnswerScaffold.errors` is provided for per-answer validation; render it near the answer content.
 - `GroupList` renders a list of group instances (`GroupScaffold`) and can show an add control when `onAdd` is provided.
 - `GroupScaffold` should render a remove action when `onRemove` is provided; use `canRemove` to disable it.
+
+## Strings and localization
+
+- `useStrings()` returns translation strings for the currently selected language.
+- Use those strings instead of hardcoding text to make your themes multilingual.

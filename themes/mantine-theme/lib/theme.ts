@@ -35,6 +35,7 @@ export { FileInput } from "./components/file-input.tsx";
 export { DisplayRenderer } from "./components/display-renderer.tsx";
 export { TabContainer } from "./components/tab-container.tsx";
 export { Link } from "./components/link.tsx";
+export { LanguageSelector } from "./components/language-selector.tsx";
 export { MantineProvider as Provider } from "@mantine/core";
 
 import type { Theme } from "@formbox/theme";
@@ -75,6 +76,7 @@ import { FileInput } from "./components/file-input.tsx";
 import { DisplayRenderer } from "./components/display-renderer.tsx";
 import { TabContainer } from "./components/tab-container.tsx";
 import { Link } from "./components/link.tsx";
+import { LanguageSelector } from "./components/language-selector.tsx";
 
 export const theme: Theme = {
   TextInput,
@@ -114,4 +116,5 @@ export const theme: Theme = {
   DisplayRenderer,
   TabContainer,
   Link,
+  LanguageSelector,
 };

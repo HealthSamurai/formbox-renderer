@@ -50,6 +50,8 @@ The `Theme` type is strict. You must supply every component, either by building 
 - `ariaLabelledBy` and `ariaDescribedBy` are id strings. Forward them directly to the focusable element.
 - When `id` is provided, apply it to the primary focusable element.
 - `children` is the slot for rendered content. Option types use `label` for display content.
+- `useStrings()` returns translation strings for the currently selected language. Use those strings instead of hardcoding text to make your themes multilingual.
+- If present, render `Form.languageSelector` in your form layout to expose questionnaire language switching.
 - When a prop is optional, the renderer may omit it. Treat `undefined` as not provided.
 
 ## Renderer composition overview

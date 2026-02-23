@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "@formbox/theme": "workspace:*",
+    "@ant-design/icons": "^6.1.0",
     "antd": "^6.2.0"
   }
 }

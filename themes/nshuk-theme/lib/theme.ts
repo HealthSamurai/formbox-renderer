@@ -36,6 +36,7 @@ import { FileInput } from "./components/file-input.tsx";
 import { TabContainer } from "./components/tab-container.tsx";
 import { DisplayRenderer } from "./components/display-renderer.tsx";
 import { Link } from "./components/link.tsx";
+import { LanguageSelector } from "./components/language-selector.tsx";
 
 export { TextInput } from "./components/text-input.tsx";
 export { TextArea } from "./components/text-area.tsx";
@@ -44,6 +45,7 @@ export { TabContainer } from "./components/tab-container.tsx";
 export { DisplayRenderer } from "./components/display-renderer.tsx";
 export { OptionDisplay } from "./components/option-display.tsx";
 export { Link } from "./components/link.tsx";
+export { LanguageSelector } from "./components/language-selector.tsx";
 export { Provider } from "./provider.tsx";
 
 export const theme: Theme = {
@@ -84,4 +86,5 @@ export const theme: Theme = {
   TabContainer,
   DisplayRenderer,
   Link,
+  LanguageSelector,
 };

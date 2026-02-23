@@ -234,7 +234,7 @@ export abstract class AbstractActualNodeStore
     if (slot) {
       return normalizeExpressionValues("text", slot.value).at(0) ?? undefined;
     }
-    return this.template.text;
+    return super.text;
   }
 
   markDirty() {

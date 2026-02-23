@@ -7,6 +7,7 @@ export type FormProperties = {
   pagination?: FormPagination | undefined;
   title?: string | undefined;
   description?: string | undefined;
+  languageSelector?: ReactNode;
   errors?: ReactNode;
   before?: ReactNode;
   after?: ReactNode;

@@ -1,10 +1,14 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 import type { IPresentableNode } from "@formbox/renderer/types.ts";
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import en from "@formbox/strings/en";
+import es from "@formbox/strings/es";
+import fr from "@formbox/strings/fr";
+import de from "@formbox/strings/de";
 import { Form } from "@formbox/renderer/component/form/form.tsx";
 import { Node } from "@formbox/renderer/component/node/node.tsx";
+import { StringsContext, type Strings } from "@formbox/theme";
 import {
   useQuestionnaireBroadcaster,
   useQuestionnaireResponseBroadcaster,
@@ -20,27 +24,65 @@ type RendererProperties<V extends FhirVersion = "r5"> = {
   mode: RendererMode;
 };
 
+const STRINGS_BY_LANGUAGE = {
+  en,
+  es,
+  fr,
+  de,
+} as const satisfies Record<string, Strings>;
+type StoryLanguage = keyof typeof STRINGS_BY_LANGUAGE;
+
+function isStoryLanguage(value: string): value is StoryLanguage {
+  return value in STRINGS_BY_LANGUAGE;
+}
+
+function resolveStrings(language: string | undefined): Strings {
+  const primaryLanguage = language?.split("-")[0];
+  return primaryLanguage && isStoryLanguage(primaryLanguage)
+    ? STRINGS_BY_LANGUAGE[primaryLanguage]
+    : en;
+}
+
 export function Renderer<V extends FhirVersion = "r5">({
   questionnaire,
   fhirVersion,
   storyId,
   mode,
 }: RendererProperties<V>) {
+  const [language, setLanguage] = useState<string | undefined>(
+    questionnaire.language,
+  );
+  const strings = useMemo(
+    () => resolveStrings(language ?? questionnaire.language),
+    [language, questionnaire.language],
+  );
   const store = useMemo(
     () => new FormStore(en, fhirVersion, questionnaire, undefined, undefined),
     [fhirVersion, questionnaire],
   );
 
   useEffect(() => () => store.dispose(), [store]);
+  useEffect(() => {
+    store.setLanguage(language);
+  }, [store, language]);
+  useEffect(() => {
+    store.setStrings(strings);
+  }, [store, strings]);
 
   useQuestionnaireResponseBroadcaster(store, storyId);
   useQuestionnaireBroadcaster(questionnaire, storyId);
 
   if (mode === "form") {
     return (
-      <div style={storyFrameStyle}>
-        <Form store={store} onSubmit={() => store.validateAll()} />
-      </div>
+      <StringsContext.Provider value={strings}>
+        <div style={storyFrameStyle}>
+          <Form
+            store={store}
+            onSubmit={() => store.validateAll()}
+            onLanguageChange={setLanguage}
+          />
+        </div>
+      </StringsContext.Provider>
     );
   }
 
@@ -52,9 +94,11 @@ export function Renderer<V extends FhirVersion = "r5">({
 
   const node = store.nodes[0];
   return (
-    <div style={storyFrameStyle}>
-      <Node node={node as IPresentableNode} />
-    </div>
+    <StringsContext.Provider value={strings}>
+      <div style={storyFrameStyle}>
+        <Node node={node as IPresentableNode} />
+      </div>
+    </StringsContext.Provider>
   );
 }
 

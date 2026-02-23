@@ -9,6 +9,7 @@ export function Form({
   pagination,
   title,
   description,
+  languageSelector,
   errors,
   before,
   after,
@@ -20,12 +21,11 @@ export function Form({
 
   const handleCancel = onCancel ?? (() => {});
   const hasHeader = Boolean(title) || Boolean(description);
-
-  return (
-    <Box component="form" onSubmit={handleSubmit}>
-      <Stack gap="md">
+  const top =
+    hasHeader || languageSelector ? (
+      <Group justify="space-between" align="flex-start" wrap="wrap" gap="md">
         {hasHeader ? (
-          <Box>
+          <Box style={{ flex: 1, minWidth: 0 }}>
             {title ? (
               <Title order={2} size="h3">
                 {title}
@@ -38,7 +38,14 @@ export function Form({
             ) : undefined}
           </Box>
         ) : undefined}
+        {languageSelector ? <Box>{languageSelector}</Box> : undefined}
+      </Group>
+    ) : undefined;
 
+  return (
+    <Box component="form" onSubmit={handleSubmit}>
+      <Stack gap="md">
+        {top}
         {errors}
         {before}
         {children}

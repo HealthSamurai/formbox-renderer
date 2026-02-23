@@ -58,15 +58,20 @@ These types map directly to `fhir/r4` or `fhir/r5` based on the version you pass
 
 ## Renderer props
 
-| Prop                   | Type                                             | Required | Description                                               |
-| ---------------------- | ------------------------------------------------ | -------- | --------------------------------------------------------- |
-| `questionnaire`        | `QuestionnaireOf<V>`                             | Yes      | FHIR Questionnaire resource that drives the form.         |
-| `theme`                | `Theme`                                          | Yes      | Theme contract implementation.                            |
-| `initialResponse`      | `QuestionnaireResponseOf<V>`                     | No       | Seed response used to initialize answers.                 |
-| `onChange`             | `(response: QuestionnaireResponseOf<V>) => void` | No       | Called with the latest response whenever state changes.   |
-| `onSubmit`             | `(response: QuestionnaireResponseOf<V>) => void` | No       | Called after validation passes and the form is submitted. |
-| `terminologyServerUrl` | `string`                                         | No       | Base URL for ValueSet `$expand` requests.                 |
-| `fhirVersion`          | `"r4" \| "r5"`                                   | Yes      | FHIR version for Questionnaire parsing.                   |
+| Prop                   | Type                                             | Required | Description                                                      |
+| ---------------------- | ------------------------------------------------ | -------- | ---------------------------------------------------------------- |
+| `questionnaire`        | `QuestionnaireOf<V>`                             | Yes      | FHIR Questionnaire resource that drives the form.                |
+| `theme`                | `Theme`                                          | Yes      | Theme contract implementation.                                   |
+| `initialResponse`      | `QuestionnaireResponseOf<V>`                     | No       | Seed response used to initialize answers.                        |
+| `onChange`             | `(response: QuestionnaireResponseOf<V>) => void` | No       | Called with the latest response whenever state changes.          |
+| `onSubmit`             | `(response: QuestionnaireResponseOf<V>) => void` | No       | Called after validation passes and the form is submitted.        |
+| `terminologyServerUrl` | `string`                                         | No       | Base URL for ValueSet `$expand` requests.                        |
+| `language`             | `string`                                         | No       | Controlled language used for Questionnaire text translations.    |
+| `onLanguageChange`     | `(language: string \| undefined) => void`        | No       | Called when the user selects a different language.               |
+| `strings`              | `StringsOverride`                                | No       | Renderer/theme string override tree (or full locale dictionary). |
+| `fhirVersion`          | `"r4" \| "r5"`                                   | Yes      | FHIR version for Questionnaire parsing.                          |
+
+If `language` is omitted, renderer falls back to `questionnaire.language`.
 
 ## Validation and submit
 

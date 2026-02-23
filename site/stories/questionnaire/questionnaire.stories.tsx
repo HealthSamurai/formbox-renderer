@@ -17,6 +17,7 @@ import itemControlHelp from "./samples/item-control-help.json" with { type: "jso
 import itemAnswerMedia from "./samples/item-answer-media.json" with { type: "json" };
 import itemMedia from "./samples/item-media.json" with { type: "json" };
 import itemShortText from "./samples/item-short-text.json" with { type: "json" };
+import multilingual from "./samples/multilingual.json" with { type: "json" };
 import nestedFollowUps from "./samples/nested-follow-ups.json" with { type: "json" };
 import numericThresholds from "./samples/numeric-thresholds.json" with { type: "json" };
 import numericUnits from "./samples/numeric-units.json" with { type: "json" };
@@ -112,6 +113,10 @@ export const NestedFollowUps = makeStory(
 export const StaticInitials = makeStory(
   "Static initial values",
   staticInitials as Questionnaire,
+);
+export const Multilingual = makeStory(
+  "Multilingual",
+  multilingual as Questionnaire,
 );
 export const ExpressionInitialDefaults = makeStory(
   "Initial expression defaults",

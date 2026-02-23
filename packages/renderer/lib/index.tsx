@@ -22,6 +22,8 @@ type RendererProperties<V extends FhirVersion> = {
   onChange?: ((response: QuestionnaireResponseOf<V>) => void) | undefined;
   onSubmit?: ((response: QuestionnaireResponseOf<V>) => void) | undefined;
   terminologyServerUrl?: string | undefined;
+  language?: string | undefined;
+  onLanguageChange?: ((language: string | undefined) => void) | undefined;
   strings?: StringsOverride | undefined;
   fhirVersion: V;
   theme: Theme;
@@ -33,6 +35,8 @@ function Renderer<V extends FhirVersion>({
   onSubmit,
   onChange,
   terminologyServerUrl,
+  language,
+  onLanguageChange,
   strings: stringsOverride,
   fhirVersion,
   theme,
@@ -61,6 +65,10 @@ function Renderer<V extends FhirVersion>({
   }, [store, strings]);
 
   useEffect(() => {
+    store.setLanguage(language ?? questionnaire.language);
+  }, [store, language, questionnaire.language]);
+
+  useEffect(() => {
     if (!onChange) {
       return;
     }
@@ -83,7 +91,11 @@ function Renderer<V extends FhirVersion>({
   return (
     <ThemeProvider theme={theme}>
       <StringsContext.Provider value={strings}>
-        <Form store={store} onSubmit={handleSubmit} />
+        <Form
+          store={store}
+          onSubmit={handleSubmit}
+          onLanguageChange={onLanguageChange}
+        />
       </StringsContext.Provider>
     </ThemeProvider>
   );

@@ -3,6 +3,8 @@ import type {
   AnswerConstraint,
   AnswerOption,
   AnswerType,
+  AnswerTypeToDataType,
+  DataTypeToType,
   IAnswerOptions,
   IOptionSelection,
   IQuestionNode,
@@ -20,6 +22,8 @@ import {
   buildId,
   EXT,
   extractExtensionValue,
+  findExtension,
+  getTranslated,
   getValue,
   OPTIONS_ISSUE_EXPRESSION,
   tokenify,
@@ -146,7 +150,7 @@ export class AnswerOptionStore<
 
     const seen = new Set<OptionToken>();
     return this.answerOptions.flatMap((option) => {
-      const value = getValue(this.question.dataType, option);
+      const value = this.getTranslatedValue(option);
       if (value == undefined) {
         return [];
       }
@@ -165,7 +169,11 @@ export class AnswerOptionStore<
           value,
           disabled,
           answerType: this.question.type,
-          prefix: extractExtensionValue("string", option, EXT.OPTION_PREFIX),
+          prefix: getTranslated(
+            findExtension(option, EXT.OPTION_PREFIX),
+            "valueString",
+            this.question.form.language,
+          ),
           media: extractExtensionValue(
             "Attachment",
             option,
@@ -174,6 +182,32 @@ export class AnswerOptionStore<
         } satisfies AnswerOption<T>,
       ];
     });
+  }
+
+  private getTranslatedValue(
+    option: QuestionnaireItemAnswerOption,
+  ): DataTypeToType<AnswerTypeToDataType<T>> | undefined {
+    const value = getValue(this.question.dataType, option);
+    if (value == undefined) return undefined;
+
+    const language = this.question.form.language;
+    if (language == undefined) return value;
+
+    if (this.question.dataType === "string") {
+      const localized = getTranslated(option, "valueString", language);
+      return (localized ?? value) as DataTypeToType<AnswerTypeToDataType<T>>;
+    }
+
+    if (this.question.dataType === "Coding") {
+      const coding = value as Coding;
+      const display = getTranslated(coding, "display", language);
+
+      return display == undefined
+        ? value
+        : ({ ...coding, display } as DataTypeToType<AnswerTypeToDataType<T>>);
+    }
+
+    return value;
   }
 
   @computed

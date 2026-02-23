@@ -41,10 +41,12 @@ import {
   EXT,
   extractExtensionsValues,
   extractExtensionValue,
+  findExtension,
   getIssueMessage,
   getItemControlCode,
   getValue,
   buildId,
+  getTranslated,
   normalizeExpressionValues,
 } from "../../utilities.ts";
 import type { HTMLAttributes } from "react";
@@ -200,7 +202,11 @@ export class QuestionStore<T extends AnswerType = AnswerType>
 
   @computed
   get openLabel(): string | undefined {
-    return extractExtensionValue("string", this.template, EXT.SDC_OPEN_LABEL);
+    return getTranslated(
+      findExtension(this.template, EXT.SDC_OPEN_LABEL),
+      "valueString",
+      this.form.language,
+    );
   }
 
   @computed

@@ -2,6 +2,7 @@ import {
   ActionIcon,
   Box,
   Combobox,
+  ComboboxChevron,
   Group,
   InputBase,
   Loader,
@@ -74,7 +75,7 @@ export function SelectInput({
       ×
     </ActionIcon>
   ) : (
-    <Text c="dimmed">▾</Text>
+    <ComboboxChevron />
   );
 
   return (

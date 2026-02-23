@@ -428,6 +428,9 @@ importers:
 
   themes/antd-theme:
     dependencies:
+      '@ant-design/icons':
+        specifier: ^6.1.0
+        version: 6.1.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@formbox/theme':
         specifier: workspace:*
         version: link:../../packages/theme

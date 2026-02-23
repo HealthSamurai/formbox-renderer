@@ -8,6 +8,7 @@ export function Form({
   children,
   title,
   description,
+  languageSelector,
   errors,
   before,
   after,
@@ -39,11 +40,18 @@ export function Form({
         {Boolean(description) && <Description>{description}</Description>}
       </Header>
     ) : undefined;
+  const top =
+    header || languageSelector ? (
+      <TopRow>
+        {header && <HeaderSlot>{header}</HeaderSlot>}
+        {languageSelector && <LanguageSlot>{languageSelector}</LanguageSlot>}
+      </TopRow>
+    ) : undefined;
 
   if (pagination) {
     return (
       <FormElement onSubmit={handleSubmit}>
-        {header && <TitleSlot>{header}</TitleSlot>}
+        {top}
         {Boolean(errors) && <Slot>{errors}</Slot>}
         {Boolean(before) && <Slot>{before}</Slot>}
         {children}
@@ -76,7 +84,7 @@ export function Form({
 
   return (
     <FormElement onSubmit={handleSubmit}>
-      {header && <TitleSlot>{header}</TitleSlot>}
+      {top}
       {Boolean(errors) && <Slot>{errors}</Slot>}
       {Boolean(before) && <Slot>{before}</Slot>}
       {children}
@@ -92,10 +100,23 @@ const FormElement = styled.form`
   gap: 1rem;
 `;
 
-const TitleSlot = styled.div`
+const TopRow = styled.div`
   display: flex;
-  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: 0.75rem;
+  flex-wrap: wrap;
+`;
+
+const HeaderSlot = styled.div`
+  flex: 1 1 20rem;
+  min-width: 0;
+`;
+
+const LanguageSlot = styled.div`
+  flex: 0 0 auto;
+  min-width: 0;
+  margin-left: auto;
 `;
 
 const Slot = styled.div`

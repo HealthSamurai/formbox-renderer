@@ -757,6 +757,10 @@ export interface IForm extends IssueSource {
   readonly fhirVersion: FhirVersion;
   readonly adapter: IFhirAdapter;
   readonly strings: Strings;
+  readonly language: string | undefined;
+  readonly availableLanguages: readonly string[];
+  readonly title: string | undefined;
+  readonly description: string | undefined;
   questionnaire: Questionnaire;
   response: QuestionnaireResponse | undefined;
   nodes: Array<IPresentableNode>;
@@ -795,6 +799,7 @@ export interface IForm extends IssueSource {
     parentToken: string,
     responseItems: QuestionnaireResponseItem[] | undefined,
   ): IPresentableNode;
+  setLanguage(language: string | undefined): void;
   reset(): void;
   dispose(): void;
 }

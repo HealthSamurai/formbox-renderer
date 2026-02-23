@@ -1,6 +1,7 @@
 import type { Preview } from "@storybook/react-vite";
 import { ThemeProvider } from "@formbox/renderer/ui/theme.tsx";
-import type { Theme } from "@formbox/theme";
+import { StringsContext, type Theme } from "@formbox/theme";
+import en from "@formbox/strings/en";
 import type { ComponentType, PropsWithChildren } from "react";
 import { useEffect, useState } from "react";
 import "./preview.css";
@@ -171,9 +172,11 @@ const preview: Preview = {
       }
 
       const story = (
-        <ThemeProvider theme={state.value.theme}>
-          <Story />
-        </ThemeProvider>
+        <StringsContext.Provider value={en}>
+          <ThemeProvider theme={state.value.theme}>
+            <Story />
+          </ThemeProvider>
+        </StringsContext.Provider>
       );
 
       const Provider = state.value.Provider;

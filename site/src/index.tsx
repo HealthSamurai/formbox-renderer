@@ -384,6 +384,34 @@ export default function Landing() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     >
+                      <path d="M4 5h16" />
+                      <path d="M4 12h16" />
+                      <path d="M4 19h16" />
+                      <path d="M9 5c0 9 6 14 6 14" />
+                      <path d="M15 5c0 9-6 14-6 14" />
+                    </svg>
+                    <h3 className="font-display text-lg text-foreground">
+                      Multilingual forms ready
+                    </h3>
+                  </div>
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    Render multilingual questionnaires with interface text ready
+                    in multiple languages, and let users switch language while
+                    filling the same form.
+                  </p>
+                </article>
+                <article className="rounded-2xl border border-border/60 bg-card/70 p-6 shadow-lg shadow-black/30 transition hover:border-ring/60 md:col-span-6 lg:col-span-6">
+                  <div className="flex items-center gap-3">
+                    <svg
+                      className="h-7 w-7 text-foreground/70"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <circle cx="12" cy="5" r="2.5" />
                       <path d="M4 9h16" />
                       <path d="M10 13l-2 8" />

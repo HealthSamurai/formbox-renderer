@@ -33,6 +33,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: {
+        index: path.resolve(__dirname, "lib/index.ts"),
         de: path.resolve(__dirname, "lib/de.ts"),
         en: path.resolve(__dirname, "lib/en.ts"),
         es: path.resolve(__dirname, "lib/es.ts"),

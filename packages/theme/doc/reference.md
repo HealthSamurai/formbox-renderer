@@ -12,10 +12,11 @@ This reference lists every component in the Theme contract and the props the ren
 - `ariaLabelledBy` and `ariaDescribedBy` are already space-joined strings. Forward them to the focusable element.
 - Inputs are controlled. Callbacks receive values, not DOM events.
 - `children` and `label` props are already rendered `ReactNode` values.
+- `Path`/`Text` tables list string keys currently used by built-in theme components via `useStrings()`.
 
 ## Shared types
 
-`OptionItem`, `SelectedOptionItem`, and `Attachment` are exported by `@formbox/theme`. Import them when you need to type your components or helpers.
+`OptionItem`, `SelectedOptionItem`, `Attachment`, `ChoiceOrientation`, `Hyperlink`, and `LanguageOption` are exported by `@formbox/theme`. Import them when you need to type your components or helpers.
 
 ## Component reference
 
@@ -63,53 +64,88 @@ controls also receive `isLoading`, so avoid duplicating spinners if you render b
 Short help text associated with a node label. Usually rendered near the label and referenced by the control via
 aria-describedby.
 
-| Prop        | Type        | Optional | Description                                              |
-| ----------- | ----------- | -------- | -------------------------------------------------------- |
-| `id`        | `string`    | No       | Apply as the element id so the control can reference it. |
-| `children`  | `ReactNode` | No       | Render this help content near the label or input.        |
-| `ariaLabel` | `string`    | Yes      | Use as aria-label for the help region when needed.       |
+**Props**
+
+| Prop       | Type        | Optional | Description                                              |
+| ---------- | ----------- | -------- | -------------------------------------------------------- |
+| `id`       | `string`    | No       | Apply as the element id so the control can reference it. |
+| `children` | `ReactNode` | No       | Render this help content near the label or input.        |
+
+**Recommended translation strings**
+
+| Path        | Text                                                |
+| ----------- | --------------------------------------------------- |
+| `aria.help` | Accessible label for help trigger/content controls. |
 
 ### Legal
 
 Legal or consent content tied to a node. It can be inline text or a trigger that reveals more detail, but should remain
 accessible.
 
-| Prop        | Type        | Optional | Description                                                                                                               |
-| ----------- | ----------- | -------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `id`        | `string`    | No       | Apply to the element that contains (or references) the legal text so other components can target it via aria-describedby. |
-| `children`  | `ReactNode` | No       | Render the legal text or markup provided by the renderer.                                                                 |
-| `ariaLabel` | `string`    | Yes      | Use as an aria-label when the legal UI is only an icon or otherwise lacks a visible label.                                |
+**Props**
+
+| Prop       | Type        | Optional | Description                                                                                                               |
+| ---------- | ----------- | -------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `id`       | `string`    | No       | Apply to the element that contains (or references) the legal text so other components can target it via aria-describedby. |
+| `children` | `ReactNode` | No       | Render the legal text or markup provided by the renderer.                                                                 |
+
+**Recommended translation strings**
+
+| Path         | Text                                                 |
+| ------------ | ---------------------------------------------------- |
+| `aria.legal` | Accessible label for legal trigger/content controls. |
 
 ### Flyover
 
 Supplementary context for a node, often presented as a tooltip or popover. Keep it discoverable from the header and
 reachable via aria-describedby.
 
-| Prop        | Type        | Optional | Description                                                                                                               |
-| ----------- | ----------- | -------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `id`        | `string`    | No       | Apply to the element that holds (or is referenced by) the flyover content so inputs can point to it via aria-describedby. |
-| `children`  | `ReactNode` | No       | Render the informational content provided by the renderer.                                                                |
-| `ariaLabel` | `string`    | Yes      | Use as an aria-label when the flyover UI is an icon-only control.                                                         |
+**Props**
+
+| Prop       | Type        | Optional | Description                                                                                                               |
+| ---------- | ----------- | -------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `id`       | `string`    | No       | Apply to the element that holds (or is referenced by) the flyover content so inputs can point to it via aria-describedby. |
+| `children` | `ReactNode` | No       | Render the informational content provided by the renderer.                                                                |
+
+**Recommended translation strings**
+
+| Path           | Text                                                   |
+| -------------- | ------------------------------------------------------ |
+| `aria.flyover` | Accessible label for flyover trigger/content controls. |
 
 ### Label
 
 Header block for questions and groups that owns label layout (prefix + label text), required marker, and optional
 help/legal/flyover slots. It also provides the labelled-by anchor for the main control.
 
-| Prop       | Type                            | Optional | Description                                                                        |
-| ---------- | ------------------------------- | -------- | ---------------------------------------------------------------------------------- |
-| `prefix`   | `ReactNode`                     | Yes      | Render an optional prefix (for example, a question number).                        |
-| `children` | `ReactNode`                     | No       | Render the primary label content for the node.                                     |
-| `id`       | `string`                        | No       | Use as the id on the label element so inputs can reference it via aria-labelledby. |
-| `htmlFor`  | `string`                        | Yes      | Forward to the label element to connect it to the primary control.                 |
-| `required` | `boolean`                       | Yes      | When true, display a visual required indicator near the label.                     |
-| `help`     | `ReactNode`                     | Yes      | Render the help slot content next to or beneath the label.                         |
-| `legal`    | `ReactNode`                     | Yes      | Render the legal slot content within the header layout.                            |
-| `flyover`  | `ReactNode`                     | Yes      | Render the flyover slot content within the header layout.                          |
-| `as`       | `"legend" \| "label" \| "text"` | Yes      | Hint for the semantic role of the label; themes can select the appropriate tag.    |
+**Props**
+
+| Prop                | Type                            | Optional | Description                                                                                  |
+| ------------------- | ------------------------------- | -------- | -------------------------------------------------------------------------------------------- |
+| `prefix`            | `ReactNode`                     | Yes      | Render an optional prefix (for example, a question number).                                  |
+| `shortText`         | `string`                        | Yes      | Optional compact label text for narrow layouts.                                              |
+| `supportHyperlinks` | `Hyperlink[]`                   | Yes      | Optional support links associated with the item.                                             |
+| `media`             | `Attachment`                    | Yes      | Optional item media attachment rendered near the label text.                                 |
+| `isExpanded`        | `boolean`                       | No       | Current expanded state for collapsible items.                                                |
+| `onToggleExpanded`  | `() => void`                    | Yes      | Toggle handler for collapsible items; render an expand or collapse affordance when provided. |
+| `children`          | `ReactNode`                     | No       | Render the primary label content for the node.                                               |
+| `id`                | `string`                        | No       | Use as the id on the label element so inputs can reference it via aria-labelledby.           |
+| `htmlFor`           | `string`                        | Yes      | Forward to the label element to connect it to the primary control.                           |
+| `required`          | `boolean`                       | Yes      | When true, display a visual required indicator near the label.                               |
+| `help`              | `ReactNode`                     | Yes      | Render the help slot content next to or beneath the label.                                   |
+| `legal`             | `ReactNode`                     | Yes      | Render the legal slot content within the header layout.                                      |
+| `flyover`           | `ReactNode`                     | Yes      | Render the flyover slot content within the header layout.                                    |
+| `as`                | `"legend" \| "label" \| "text"` | Yes      | Hint for the semantic role of the label; themes can select the appropriate tag.              |
 
 `as` is a semantic/styling hint; themes may render a `div` for all values (including `"legend"`) and should not assume
 fieldset/legend markup.
+
+**Recommended translation strings**
+
+| Path                   | Text                       |
+| ---------------------- | -------------------------- |
+| `collapsible.expand`   | Label for expand action.   |
+| `collapsible.collapse` | Label for collapse action. |
 
 ### InputGroup
 
@@ -262,6 +298,17 @@ Numeric control with stepper affordances for small ranges. It should support typ
 | `placeholder`     | `string`                   | Yes      | Show this hint when the field is empty.                                                             |
 | `unitLabel`       | `string`                   | Yes      | Render a unit label alongside the input when provided.                                              |
 
+### OptionDisplay
+
+Wrapper for option labels used in list, dropdown, and table selection controls. It receives already-rendered content
+and optional option-level adornments.
+
+| Prop       | Type         | Optional | Description                                                 |
+| ---------- | ------------ | -------- | ----------------------------------------------------------- |
+| `children` | `ReactNode`  | No       | Render the main option label content.                       |
+| `prefix`   | `string`     | Yes      | Optional prefix text for the option (for example, `A.`).    |
+| `media`    | `Attachment` | Yes      | Optional media attachment associated with the option label. |
+
 ### SelectInput
 
 Single-select dropdown for option lists. Include disabled legacy entries in the options list when needed and allow
@@ -315,6 +362,7 @@ Single-select option list presented as radio buttons. Include disabled legacy op
 | `id`                 | `string`                   | No       | Use as the radio group name/id so options stay grouped.                                |
 | `ariaLabelledBy`     | `string`                   | No       | Forward to aria-labelledby to associate the group with its label.                      |
 | `ariaDescribedBy`    | `string`                   | Yes      | Forward to aria-describedby to associate the group with help or error text.            |
+| `orientation`        | `ChoiceOrientation`        | Yes      | Render the options in horizontal or vertical orientation when provided.                |
 | `disabled`           | `boolean`                  | Yes      | When true, render options as disabled and prevent selection changes.                   |
 | `isLoading`          | `boolean`                  | Yes      | When true, show a loading indicator or busy state for the list.                        |
 
@@ -347,6 +395,7 @@ Multi-select option list presented as checkboxes. Support per-option errors and 
 | `id`                 | `string`                  | No       | Use as the checkbox group name/id so inputs stay grouped.                            |
 | `ariaLabelledBy`     | `string`                  | No       | Forward to aria-labelledby to associate the group with its label.                    |
 | `ariaDescribedBy`    | `string`                  | Yes      | Forward to aria-describedby to associate the group with help or error text.          |
+| `orientation`        | `ChoiceOrientation`       | Yes      | Render the options in horizontal or vertical orientation when provided.              |
 | `disabled`           | `boolean`                 | Yes      | When true, render all options as disabled and prevent changes.                       |
 | `isLoading`          | `boolean`                 | Yes      | When true, show a loading indicator or busy state for the list.                      |
 
@@ -382,6 +431,8 @@ selection so per-selection errors can be announced.
 
 Layout wrapper for custom option entry flows. Use it to present the custom input along with submit/cancel actions.
 
+**Props**
+
 | Prop        | Type         | Optional | Description                                                          |
 | ----------- | ------------ | -------- | -------------------------------------------------------------------- |
 | `content`   | `ReactNode`  | No       | Render the custom input control.                                     |
@@ -389,6 +440,13 @@ Layout wrapper for custom option entry flows. Use it to present the custom input
 | `onSubmit`  | `() => void` | No       | Call when the user confirms the custom option value.                 |
 | `onCancel`  | `() => void` | No       | Call when the user exits custom entry and returns to options.        |
 | `canSubmit` | `boolean`    | Yes      | When false, render the submit action disabled.                       |
+
+**Recommended translation strings**
+
+| Path            | Text                         |
+| --------------- | ---------------------------- |
+| `dialog.add`    | Label for submit/add action. |
+| `dialog.cancel` | Label for cancel action.     |
 
 Use `onCancel` as the "back to options" action and `onSubmit` to commit the custom value.
 
@@ -412,12 +470,19 @@ file (or undefined when clearing) so the renderer can update the Attachment.
 Container that lays out one or more answers and an optional add control. It controls spacing and ordering of answer
 rows.
 
+**Props**
+
 | Prop       | Type         | Optional | Description                                              |
 | ---------- | ------------ | -------- | -------------------------------------------------------- |
 | `children` | `ReactNode`  | No       | Render the list of answer rows supplied by the renderer. |
 | `onAdd`    | `() => void` | Yes      | When provided, render an add‑answer control.             |
 | `canAdd`   | `boolean`    | Yes      | When false, render the add control disabled.             |
-| `addLabel` | `string`     | Yes      | Use as the add‑answer label for icon-only controls.      |
+
+**Recommended translation strings**
+
+| Path                   | Text                                 |
+| ---------------------- | ------------------------------------ |
+| `selection.addAnother` | Label for add-another-answer action. |
 
 ### AnswerScaffold
 
@@ -437,16 +502,21 @@ nodes and errors.
 Wrapper around a question that organizes header, control, and validation feedback. Use it as the outer shell for
 question nodes.
 
-| Prop       | Type        | Optional | Description                                                                                  |
-| ---------- | ----------- | -------- | -------------------------------------------------------------------------------------------- |
-| `linkId`   | `string`    | No       | Use for debugging; typically render as a `data-linkId` attribute and feel free to ignore it. |
-| `header`   | `ReactNode` | Yes      | Render the question header (label, help, legal, flyover).                                    |
-| `children` | `ReactNode` | No       | Render the question body content, including controls and answer-level errors.                |
-| `errors`   | `ReactNode` | Yes      | Render question-level validation errors.                                                     |
+| Prop         | Type        | Optional | Description                                                                                  |
+| ------------ | ----------- | -------- | -------------------------------------------------------------------------------------------- |
+| `linkId`     | `string`    | No       | Use for debugging; typically render as a `data-linkId` attribute and feel free to ignore it. |
+| `header`     | `ReactNode` | Yes      | Render the question header (label, help, legal, flyover).                                    |
+| `children`   | `ReactNode` | No       | Render the question body content, including controls and answer-level errors.                |
+| `errors`     | `ReactNode` | Yes      | Render question-level validation errors.                                                     |
+| `isExpanded` | `boolean`   | No       | Current expanded state for collapsible questions.                                            |
+
+Use `isExpanded` to decide whether to render or visually hide question body content.
 
 ### GroupList
 
 Wrapper around a repeating group that holds the collection of instances and the add control.
+
+**Props**
 
 | Prop       | Type         | Optional | Description                                                                                  |
 | ---------- | ------------ | -------- | -------------------------------------------------------------------------------------------- |
@@ -455,20 +525,35 @@ Wrapper around a repeating group that holds the collection of instances and the 
 | `children` | `ReactNode`  | No       | Render each group instance inside the list.                                                  |
 | `onAdd`    | `() => void` | Yes      | When provided, render an add‑group control.                                                  |
 | `canAdd`   | `boolean`    | Yes      | When false, render the add control disabled.                                                 |
-| `addLabel` | `string`     | Yes      | Use as the add‑group label for icon-only controls.                                           |
+
+**Recommended translation strings**
+
+| Path               | Text                                 |
+| ------------------ | ------------------------------------ |
+| `group.addSection` | Label for add-group-instance action. |
 
 ### GroupScaffold
 
 Layout shell for a group instance (repeating or not). It can also render an optional remove action and errors.
 
-| Prop          | Type         | Optional | Description                                              |
-| ------------- | ------------ | -------- | -------------------------------------------------------- |
-| `header`      | `ReactNode`  | Yes      | Render the group header (label, help, legal, flyover).   |
-| `children`    | `ReactNode`  | Yes      | Render the group body content and nested nodes.          |
-| `errors`      | `ReactNode`  | Yes      | Render per-instance validation errors.                   |
-| `onRemove`    | `() => void` | Yes      | When provided, render a remove action for this instance. |
-| `canRemove`   | `boolean`    | Yes      | When false, render the remove action disabled.           |
-| `removeLabel` | `string`     | Yes      | Use as the remove label for icon-only controls.          |
+**Props**
+
+| Prop         | Type         | Optional | Description                                              |
+| ------------ | ------------ | -------- | -------------------------------------------------------- |
+| `header`     | `ReactNode`  | Yes      | Render the group header (label, help, legal, flyover).   |
+| `children`   | `ReactNode`  | Yes      | Render the group body content and nested nodes.          |
+| `errors`     | `ReactNode`  | Yes      | Render per-instance validation errors.                   |
+| `isExpanded` | `boolean`    | No       | Current expanded state for collapsible groups.           |
+| `onRemove`   | `() => void` | Yes      | When provided, render a remove action for this instance. |
+| `canRemove`  | `boolean`    | Yes      | When false, render the remove action disabled.           |
+
+Use `isExpanded` to decide whether to render or visually hide group body content.
+
+**Recommended translation strings**
+
+| Path                  | Text                                    |
+| --------------------- | --------------------------------------- |
+| `group.removeSection` | Label for remove-group-instance action. |
 
 ### Header
 
@@ -513,17 +598,18 @@ Outer wrapper for the questionnaire. If you render a form element, prevent defau
 onSubmit from your own controls. When pagination is provided, render prev/next controls and keep them aligned with
 submit/cancel.
 
-| Prop          | Type             | Optional | Description                                                                |
-| ------------- | ---------------- | -------- | -------------------------------------------------------------------------- |
-| `onSubmit`    | `() => void`     | Yes      | Call when the user submits; prevent default yourself if you render a form. |
-| `onCancel`    | `() => void`     | Yes      | Call when the user cancels the form flow (e.g., resets or exits).          |
-| `children`    | `ReactNode`      | No       | Render the full form content inside the form element.                      |
-| `pagination`  | `FormPagination` | Yes      | Render pagination controls and the current/total page context.             |
-| `title`       | `string`         | Yes      | Render the form title text.                                                |
-| `description` | `string`         | Yes      | Render the form description text.                                          |
-| `errors`      | `ReactNode`      | Yes      | Render the provided error element near the top of the form.                |
-| `before`      | `ReactNode`      | Yes      | Render content before the main form body (pinned headers).                 |
-| `after`       | `ReactNode`      | Yes      | Render content after the main form body (actions, footers).                |
+| Prop               | Type             | Optional | Description                                                                |
+| ------------------ | ---------------- | -------- | -------------------------------------------------------------------------- |
+| `onSubmit`         | `() => void`     | Yes      | Call when the user submits; prevent default yourself if you render a form. |
+| `onCancel`         | `() => void`     | Yes      | Call when the user cancels the form flow (e.g., resets or exits).          |
+| `children`         | `ReactNode`      | No       | Render the full form content inside the form element.                      |
+| `pagination`       | `FormPagination` | Yes      | Render pagination controls and the current/total page context.             |
+| `title`            | `string`         | Yes      | Render the form title text.                                                |
+| `description`      | `string`         | Yes      | Render the form description text.                                          |
+| `languageSelector` | `ReactNode`      | Yes      | Render a language switcher control in the form header area.                |
+| `errors`           | `ReactNode`      | Yes      | Render the provided error element near the top of the form.                |
+| `before`           | `ReactNode`      | Yes      | Render content before the main form body (pinned headers).                 |
+| `after`            | `ReactNode`      | Yes      | Render content after the main form body (actions, footers).                |
 
 Example patterns:
 
@@ -547,16 +633,36 @@ Example patterns:
 </div>
 ```
 
+### LanguageSelector
+
+Language picker control surfaced by `Form.languageSelector`. Render it as a compact selector (for example, dropdown or
+menu button) and call `onChange` with the selected language code.
+
+| Prop       | Type                      | Optional | Description                                               |
+| ---------- | ------------------------- | -------- | --------------------------------------------------------- |
+| `id`       | `string`                  | No       | Set as the focusable element id for the selector control. |
+| `options`  | `LanguageOption[]`        | No       | Render these language choices.                            |
+| `value`    | `string`                  | No       | Current selected language code.                           |
+| `onChange` | `(value: string) => void` | No       | Call with the selected language code.                     |
+
 ### Table
 
 Tabular layout used by grid-style groups. Render headers and rows based on column and row metadata. Render a row header
 column for the row `content` values. When `isLoading` or `errors` are provided on a column or row, place them alongside
 the header content.
 
+**Props**
+
 | Prop      | Type            | Optional | Description                                                                           |
 | --------- | --------------- | -------- | ------------------------------------------------------------------------------------- |
 | `columns` | `TableColumn[]` | No       | Render these column definitions as table headers.                                     |
 | `rows`    | `TableRow[]`    | No       | Render these row definitions, including optional row header content and cell content. |
+
+**Recommended translation strings**
+
+| Path                  | Text                         |
+| --------------------- | ---------------------------- |
+| `group.removeSection` | Label for remove-row action. |
 
 ### TabContainer
 
@@ -590,6 +696,33 @@ Pagination state used by `Form` when rendering paged questionnaires.
 | `onNext`       | `() => void` | No       | Call when the user activates the next-page control.          |
 | `disabledPrev` | `boolean`    | No       | When true, render the previous-page control disabled.        |
 | `disabledNext` | `boolean`    | No       | When true, render the next-page control disabled.            |
+
+### ChoiceOrientation
+
+Orientation hint used by option-list controls.
+
+| Value          | Description                                      |
+| -------------- | ------------------------------------------------ |
+| `"horizontal"` | Render list options in a row-oriented layout.    |
+| `"vertical"`   | Render list options in a column-oriented layout. |
+
+### LanguageOption
+
+Selectable language entry used by `LanguageSelector`.
+
+| Field   | Type     | Optional | Description                                          |
+| ------- | -------- | -------- | ---------------------------------------------------- |
+| `value` | `string` | No       | Stable language code (for example, `en` or `es-ES`). |
+| `label` | `string` | No       | Human-readable language name shown in the selector.  |
+
+### Hyperlink
+
+Support-link shape used by `Label.supportHyperlinks`.
+
+| Field   | Type     | Optional | Description                                                         |
+| ------- | -------- | -------- | ------------------------------------------------------------------- |
+| `href`  | `string` | No       | URL for the support hyperlink target.                               |
+| `label` | `string` | Yes      | Optional link label; if missing, themes may display the URL itself. |
 
 ### OptionItem
 
@@ -631,21 +764,21 @@ Attachment shape used by `FileInput` to display metadata and stored content.
 | ----------- | ----------- | -------- | -------------------------------------------------------- |
 | `token`     | `string`    | No       | Use as a stable identifier for the column.               |
 | `content`   | `ReactNode` | No       | Render as the column header content.                     |
+| `width`     | `string`    | Yes      | Optional CSS width for the rendered table column.        |
 | `isLoading` | `boolean`   | Yes      | When true, render a loading indicator near the content.  |
 | `errors`    | `ReactNode` | Yes      | Render errors associated with the column header content. |
 
 ### TableRow
 
-| Field         | Type          | Optional | Description                                              |
-| ------------- | ------------- | -------- | -------------------------------------------------------- |
-| `token`       | `string`      | No       | Use as a stable identifier for the row.                  |
-| `content`     | `ReactNode`   | No       | Render as the row header content.                        |
-| `cells`       | `TableCell[]` | No       | Render these cells for the row, aligned to columns.      |
-| `isLoading`   | `boolean`     | Yes      | When true, render a loading indicator near the content.  |
-| `errors`      | `ReactNode`   | Yes      | Render errors associated with the row header content.    |
-| `onRemove`    | `() => void`  | Yes      | Invoke when the remove action is activated for this row. |
-| `canRemove`   | `boolean`     | Yes      | When false, render the remove action disabled.           |
-| `removeLabel` | `string`      | Yes      | Use as the label for icon-only remove controls.          |
+| Field       | Type          | Optional | Description                                              |
+| ----------- | ------------- | -------- | -------------------------------------------------------- |
+| `token`     | `string`      | No       | Use as a stable identifier for the row.                  |
+| `content`   | `ReactNode`   | Yes      | Render as the row header content.                        |
+| `cells`     | `TableCell[]` | No       | Render these cells for the row, aligned to columns.      |
+| `isLoading` | `boolean`     | Yes      | When true, render a loading indicator near the content.  |
+| `errors`    | `ReactNode`   | Yes      | Render errors associated with the row header content.    |
+| `onRemove`  | `() => void`  | Yes      | Invoke when the remove action is activated for this row. |
+| `canRemove` | `boolean`     | Yes      | When false, render the remove action disabled.           |
 
 When any row provides `onRemove`, render a trailing remove-action column for all rows.
 
@@ -665,3 +798,8 @@ When any row provides `onRemove`, render a trailing remove-action column for all
 | `buttonId` | `string`    | No       | Apply as the tab button id and use it for aria-controls.     |
 | `panelId`  | `string`    | No       | Apply as the tab panel id and use it for aria-labelledby.    |
 | `content`  | `ReactNode` | No       | Render as the panel content for this tab.                    |
+
+## Localization utilities
+
+`useStrings()` returns translation strings for the currently selected language. Use those strings instead of hardcoding
+text to make your themes multilingual.

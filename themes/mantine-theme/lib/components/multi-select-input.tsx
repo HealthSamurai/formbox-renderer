@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Combobox,
+  ComboboxChevron,
   Group,
   InputBase,
   Loader,
@@ -132,7 +133,7 @@ export function MultiSelectInput({
             aria-labelledby={ariaLabelledBy}
             {...describedByProperties}
             rightSection={
-              isLoading ? <Loader size="xs" /> : <Text c="dimmed">▾</Text>
+              isLoading ? <Loader size="xs" /> : <ComboboxChevron />
             }
             rightSectionPointerEvents="none"
           >

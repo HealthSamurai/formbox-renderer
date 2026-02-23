@@ -46,6 +46,10 @@ export type Strings = {
     readonly removeSelection: string;
     readonly removeCustomValue: string;
   };
+  readonly language: {
+    readonly label: string;
+    readonly placeholder: string;
+  };
   readonly table: {
     readonly noChoiceQuestionsHorizontal: string;
     readonly noChoiceQuestions: string;

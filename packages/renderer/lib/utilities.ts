@@ -25,6 +25,7 @@ import type {
   Extension,
   OperationOutcomeIssue,
   Quantity,
+  Questionnaire,
   QuestionnaireItem,
   QuestionnaireItemAnswerOption,
   QuestionnaireItemEnableWhen,
@@ -218,6 +219,7 @@ export const EXT = {
   CQF_CALCULATED_VALUE:          "http://hl7.org/fhir/uv/cql/StructureDefinition/cqf-calculatedValue",
   TARGET_CONSTRAINT:             "http://hl7.org/fhir/StructureDefinition/targetConstraint",
   PREFERRED_TERMINOLOGY_SERVER:  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-preferredTerminologyServer",
+  TRANSLATION:                   "http://hl7.org/fhir/StructureDefinition/translation",
 } as const;
 
 export function answerify<T extends AnswerType>(
@@ -328,6 +330,105 @@ export function findExtension(
 
 export function findExtensions(element: Element, url: string): Extension[] {
   return element.extension?.filter((extension) => extension.url === url) ?? [];
+}
+
+type LocalizableFieldKey<E extends Element> = Extract<
+  {
+    [K in keyof E & string]: K extends `_${string}`
+      ? never
+      : `_${K}` extends keyof E
+        ? E[K] extends string | undefined
+          ? K
+          : never
+        : never;
+  }[keyof E & string],
+  string
+>;
+
+export function getTranslated<
+  E extends Element,
+  K extends LocalizableFieldKey<E>,
+>(
+  element: E | undefined,
+  key: K,
+  requestedLanguage: string | undefined,
+): string | undefined {
+  const value = element?.[key] as string | undefined;
+  const valueElement = element?.[`_${key}` as `_${K}` as keyof E] as
+    | Element
+    | undefined;
+
+  if (
+    requestedLanguage == undefined ||
+    value == undefined ||
+    valueElement == undefined
+  ) {
+    return value;
+  }
+
+  let result = value;
+
+  for (const extension of findExtensions(valueElement, EXT.TRANSLATION)) {
+    const content = findExtension(extension, "content");
+    if (content == undefined) continue;
+
+    const translated = content.valueString;
+    if (translated == undefined) continue;
+
+    const language = findExtension(extension, "lang")?.valueCode;
+    if (language == undefined) continue;
+
+    if (requestedLanguage === language) {
+      return translated;
+    }
+
+    if (
+      (requestedLanguage.split("-")[0] ?? "") === (language.split("-")[0] ?? "")
+    ) {
+      result = translated;
+    }
+  }
+
+  return result;
+}
+
+export function getTranslationLanguages(
+  questionnaire: Questionnaire,
+): string[] {
+  if (questionnaire.language == undefined) {
+    return [];
+  }
+
+  const languages = new Set<string>([questionnaire.language]);
+
+  const walk = (value: unknown): void => {
+    if (value == undefined || typeof value !== "object") {
+      return;
+    }
+
+    const element = value as Element;
+    findExtensions(element, EXT.TRANSLATION).forEach((extension) => {
+      const language = findExtension(extension, "lang")?.valueCode;
+      if (language != undefined) {
+        languages.add(language);
+      }
+    });
+
+    Object.values(value).forEach((entry) => {
+      if (Array.isArray(entry)) {
+        entry.forEach((nested) => {
+          walk(nested);
+        });
+        return;
+      }
+
+      walk(entry);
+    });
+  };
+
+  walk(questionnaire);
+
+  return languages.size > 1 ? [...languages] : [];
 }
 
 export function shouldCreateStore(

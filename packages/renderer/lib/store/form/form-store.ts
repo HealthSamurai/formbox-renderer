@@ -51,8 +51,10 @@ import {
   clamp,
   EXT,
   extractExtensionsValues,
+  getTranslationLanguages,
   getIssueMessage,
   getItemControlCode,
+  getTranslated,
   makeIssue,
   randomToken,
   shouldCreateStore,
@@ -110,12 +112,18 @@ export class FormStore<V extends FhirVersion = FhirVersion>
   @observable.ref
   private stringsState: Strings;
 
+  @observable.ref
+  private languageState: string | undefined;
+
+  readonly availableLanguages: readonly string[];
+
   constructor(
     strings: Strings,
     readonly fhirVersion: V,
     questionnaire: QuestionnaireOf<V>,
     response?: QuestionnaireResponseOf<V>,
     terminologyServerUrl?: string,
+    language?: string | undefined,
   ) {
     this.questionRendererRegistry = new RendererRegistry(
       defaultQuestionRenderers,
@@ -126,11 +134,13 @@ export class FormStore<V extends FhirVersion = FhirVersion>
       defaultGroupListRenderers,
     );
 
-    makeObservable(this);
-
     this.questionnaire = questionnaire as Questionnaire;
     this.initialResponse = response as QuestionnaireResponse | undefined;
     this.stringsState = strings;
+    this.availableLanguages = getTranslationLanguages(this.questionnaire);
+    this.languageState = language ?? this.questionnaire.language;
+    makeObservable(this);
+
     this.adapter =
       this.fhirVersion === "r4" ? new R4Adapter() : new R5Adapter();
     this.valueSetExpander = new ValueSetExpander(
@@ -176,9 +186,29 @@ export class FormStore<V extends FhirVersion = FhirVersion>
     return this.stringsState;
   }
 
+  @computed
+  get language(): string | undefined {
+    return this.languageState;
+  }
+
+  @computed
+  get title(): string | undefined {
+    return getTranslated(this.questionnaire, "title", this.language);
+  }
+
+  @computed
+  get description(): string | undefined {
+    return getTranslated(this.questionnaire, "description", this.language);
+  }
+
   @action
   setStrings(strings: Strings): void {
     this.stringsState = strings;
+  }
+
+  @action
+  setLanguage(language: string | undefined): void {
+    this.languageState = language;
   }
 
   @computed

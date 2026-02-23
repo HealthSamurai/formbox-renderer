@@ -327,6 +327,7 @@ export function SelectInput({
                   }}
                   onFocus={() => setActiveToken(entry.token)}
                   onKeyDown={handleNavigationKeyDown}
+                  onMouseDown={(event) => event.preventDefault()}
                   onClick={() => {
                     if (!entry.disabled) {
                       handleSelect(entry.token);
@@ -358,6 +359,7 @@ export function SelectInput({
                   }}
                   onFocus={() => setActiveToken(specifyOtherOption.token)}
                   onKeyDown={handleNavigationKeyDown}
+                  onMouseDown={(event) => event.preventDefault()}
                   onClick={() => {
                     if (!specifyOtherOption.disabled) {
                       handleSelect(specifyOtherOption.token);

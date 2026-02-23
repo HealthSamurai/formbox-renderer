@@ -46,6 +46,10 @@ const strings: Strings = {
     removeSelection: "Supprimer la selection",
     removeCustomValue: "Supprimer la valeur personnalisee",
   },
+  language: {
+    label: "Langue",
+    placeholder: "Selectionnez la langue",
+  },
   table: {
     noChoiceQuestionsHorizontal:
       "Aucune question a choix disponible pour le tableau horizontal.",

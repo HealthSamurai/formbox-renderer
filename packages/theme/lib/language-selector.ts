@@ -1,0 +1,15 @@
+import type { ComponentType } from "react";
+
+export type LanguageOption = {
+  value: string;
+  label: string;
+};
+
+export type LanguageSelectorProperties = {
+  options: readonly LanguageOption[];
+  value: string;
+  onChange: (value: string) => void;
+};
+
+export type LanguageSelectorComponent =
+  ComponentType<LanguageSelectorProperties>;

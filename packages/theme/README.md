@@ -4,7 +4,7 @@ Theme contract and TypeScript types for Formbox Renderer themes.
 
 ## When to use
 
-Use this package if you are building a custom theme or want strict theme typing. It does not ship runtime components.
+Use this package if you are building a custom theme or want strict theme typing.
 
 ## Install
 

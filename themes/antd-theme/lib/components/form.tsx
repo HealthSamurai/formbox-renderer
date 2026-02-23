@@ -8,6 +8,7 @@ export function Form({
   children,
   title,
   description,
+  languageSelector,
   errors,
   before,
   after,
@@ -33,6 +34,21 @@ export function Form({
         )}
       </Space>
     ) : undefined;
+  const top =
+    header || languageSelector ? (
+      <Space
+        align="start"
+        style={{ width: "100%", justifyContent: "space-between" }}
+        wrap
+      >
+        {header && <div style={{ flex: 1, minWidth: 0 }}>{header}</div>}
+        {languageSelector && (
+          <div style={{ width: "min(100%, 16rem)", marginLeft: "auto" }}>
+            {languageSelector}
+          </div>
+        )}
+      </Space>
+    ) : undefined;
 
   const actions = (
     <Space wrap>
@@ -49,7 +65,7 @@ export function Form({
     return (
       <form onSubmit={handleSubmit}>
         <Space orientation="vertical" size="large" style={{ width: "100%" }}>
-          {header}
+          {top}
           {errors}
           {before}
           {children}
@@ -88,7 +104,7 @@ export function Form({
   return (
     <form onSubmit={handleSubmit}>
       <Space orientation="vertical" size="large" style={{ width: "100%" }}>
-        {header}
+        {top}
         {errors}
         {before}
         {children}
