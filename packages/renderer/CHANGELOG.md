@@ -1,5 +1,16 @@
 # @formbox/renderer
 
+## 0.2.1
+
+### Patch Changes
+
+- [`ac3fa39`](https://github.com/HealthSamurai/formbox-renderer/commit/ac3fa39530e818925acf7c7ef233522ae091caf9) Thanks [@olimsaidov](https://github.com/olimsaidov)! - Hide `Coding` system URL in option labels and selected display values.
+
+- Updated dependencies []:
+  - @formbox/theme@0.2.1
+  - @formbox/fhir@0.2.1
+  - @formbox/strings@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes

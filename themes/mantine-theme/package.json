@@ -1,6 +1,6 @@
 {
   "name": "@formbox/mantine-theme",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Mantine theme for Formbox Renderer",
   "private": false,
   "type": "module",
