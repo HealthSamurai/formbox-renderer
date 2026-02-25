@@ -27,8 +27,11 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: path.resolve(__dirname, "lib/index.tsx"),
-      fileName: "index",
+      entry: {
+        index: path.resolve(__dirname, "lib/index.tsx"),
+        controlled: path.resolve(__dirname, "lib/controlled.tsx"),
+      },
+      fileName: (_format, entryName) => `${entryName}.js`,
       formats: ["es"],
     },
     rollupOptions: {

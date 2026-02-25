@@ -166,7 +166,7 @@ export default function Landing() {
                   language="tsx"
                   code={`
                     import "@formbox/hs-theme/style.css";
-                    import { Renderer } from "@formbox/renderer";
+                    import Renderer from "@formbox/renderer";
                     import { theme } from "@formbox/hs-theme";
 
                     <Renderer fhirVersion="r5" questionnaire={questionnaire} theme={theme} />
@@ -833,7 +833,7 @@ export default function Landing() {
                     language="tsx"
                     code={`
                       import "@formbox/hs-theme/style.css";
-                      import { Renderer } from "@formbox/renderer";
+                      import Renderer from "@formbox/renderer";
                       import { theme } from "@formbox/hs-theme";
 
                       <Renderer fhirVersion="r5" questionnaire={questionnaire} theme={theme} />

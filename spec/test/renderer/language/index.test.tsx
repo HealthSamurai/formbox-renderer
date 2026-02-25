@@ -4,7 +4,9 @@ import Renderer, {
   type ElementOf,
   type ExtensionOf,
   type QuestionnaireOf,
+  type QuestionnaireResponseOf,
 } from "@formbox/renderer";
+import ControlledRenderer from "@formbox/renderer/controlled";
 import { useState } from "react";
 import { autorun } from "mobx";
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
@@ -15,8 +17,21 @@ import { EXT } from "@formbox/renderer/utilities.ts";
 import en from "@formbox/strings/en";
 
 type Questionnaire = QuestionnaireOf<"r5">;
+type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
 type Extension = ExtensionOf<"r5">;
 type Element = ElementOf<"r5">;
+
+const EMPTY_RESPONSE: QuestionnaireResponse = {
+  resourceType: "QuestionnaireResponse",
+  status: "in-progress",
+  questionnaire: "Questionnaire/test",
+};
+
+function noopOnChange() {}
+function noopOnSubmit() {}
+function noopOnLanguageChange() {}
+
+const TERMINOLOGY_SERVER_URL = "https://tx.fhir.org/r5";
 
 function getLanguageLabel(code: string): string {
   if (typeof Intl === "object" && "DisplayNames" in Intl) {
@@ -77,22 +92,34 @@ function getQuestion(form: FormStore, linkId: string): IQuestionNode<"string"> {
 describe("renderer.language", () => {
   it("uses controlled language prop", () => {
     const { rerender } = render(
-      <Renderer
+      <ControlledRenderer
         fhirVersion="r5"
         questionnaire={translatedQuestionnaire}
+        defaultQuestionnaireResponse={EMPTY_RESPONSE}
+        strings={en}
         theme={hsTheme}
         language="es"
+        onChange={noopOnChange}
+        onSubmit={noopOnSubmit}
+        onLanguageChange={noopOnLanguageChange}
+        terminologyServerUrl={TERMINOLOGY_SERVER_URL}
       />,
     );
 
     expect(screen.getByLabelText("Nombre del paciente")).toBeInTheDocument();
 
     rerender(
-      <Renderer
+      <ControlledRenderer
         fhirVersion="r5"
         questionnaire={translatedQuestionnaire}
+        defaultQuestionnaireResponse={EMPTY_RESPONSE}
+        strings={en}
         theme={hsTheme}
         language="fr"
+        onChange={noopOnChange}
+        onSubmit={noopOnSubmit}
+        onLanguageChange={noopOnLanguageChange}
+        terminologyServerUrl={TERMINOLOGY_SERVER_URL}
       />,
     );
 
@@ -127,7 +154,7 @@ describe("renderer.language", () => {
     dispose();
   });
 
-  it("does not render language selector without onLanguageChange", () => {
+  it("renders language selector in autonomous mode", () => {
     render(
       <Renderer
         fhirVersion="r5"
@@ -138,8 +165,8 @@ describe("renderer.language", () => {
 
     expect(screen.getByLabelText("Patient name")).toBeInTheDocument();
     expect(
-      screen.queryByRole("button", { name: "Language" }),
-    ).not.toBeInTheDocument();
+      screen.getByRole("button", { name: "Language" }),
+    ).toBeInTheDocument();
   });
 
   it("emits language changes from selector in controlled mode", () => {
@@ -148,12 +175,17 @@ describe("renderer.language", () => {
     const onLanguageChange = vi.fn();
 
     render(
-      <Renderer
+      <ControlledRenderer
         fhirVersion="r5"
         questionnaire={translatedQuestionnaire}
+        defaultQuestionnaireResponse={EMPTY_RESPONSE}
+        strings={en}
         theme={hsTheme}
         language="en"
+        onChange={noopOnChange}
         onLanguageChange={onLanguageChange}
+        onSubmit={noopOnSubmit}
+        terminologyServerUrl={TERMINOLOGY_SERVER_URL}
       />,
     );
 
@@ -181,12 +213,17 @@ describe("renderer.language", () => {
     function ControlledHost() {
       const [language, setLanguage] = useState<string | undefined>("en");
       return (
-        <Renderer
+        <ControlledRenderer
           fhirVersion="r5"
           questionnaire={translatedQuestionnaire}
+          defaultQuestionnaireResponse={EMPTY_RESPONSE}
+          strings={en}
           theme={hsTheme}
-          language={language}
+          language={language ?? "en"}
+          onChange={noopOnChange}
           onLanguageChange={setLanguage}
+          onSubmit={noopOnSubmit}
+          terminologyServerUrl={TERMINOLOGY_SERVER_URL}
         />
       );
     }

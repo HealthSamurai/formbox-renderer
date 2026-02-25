@@ -18,6 +18,10 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./controlled": {
+      "import": "./dist/controlled.js",
+      "types": "./dist/controlled.d.ts"
     }
   },
   "scripts": {

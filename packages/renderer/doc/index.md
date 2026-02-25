@@ -58,20 +58,43 @@ These types map directly to `fhir/r4` or `fhir/r5` based on the version you pass
 
 ## Renderer props
 
-| Prop                   | Type                                             | Required | Description                                                      |
-| ---------------------- | ------------------------------------------------ | -------- | ---------------------------------------------------------------- |
-| `questionnaire`        | `QuestionnaireOf<V>`                             | Yes      | FHIR Questionnaire resource that drives the form.                |
-| `theme`                | `Theme`                                          | Yes      | Theme contract implementation.                                   |
-| `initialResponse`      | `QuestionnaireResponseOf<V>`                     | No       | Seed response used to initialize answers.                        |
-| `onChange`             | `(response: QuestionnaireResponseOf<V>) => void` | No       | Called with the latest response whenever state changes.          |
-| `onSubmit`             | `(response: QuestionnaireResponseOf<V>) => void` | No       | Called after validation passes and the form is submitted.        |
-| `terminologyServerUrl` | `string`                                         | No       | Base URL for ValueSet `$expand` requests.                        |
-| `language`             | `string`                                         | No       | Controlled language used for Questionnaire text translations.    |
-| `onLanguageChange`     | `(language: string \| undefined) => void`        | No       | Called when the user selects a different language.               |
-| `strings`              | `StringsOverride`                                | No       | Renderer/theme string override tree (or full locale dictionary). |
-| `fhirVersion`          | `"r4" \| "r5"`                                   | Yes      | FHIR version for Questionnaire parsing.                          |
+| Prop                           | Type                                             | Required | Description                                               |
+| ------------------------------ | ------------------------------------------------ | -------- | --------------------------------------------------------- |
+| `questionnaire`                | `QuestionnaireOf<V>`                             | Yes      | FHIR Questionnaire resource that drives the form.         |
+| `theme`                        | `Theme`                                          | Yes      | Theme contract implementation.                            |
+| `defaultQuestionnaireResponse` | `QuestionnaireResponseOf<V>`                     | No       | Initial QuestionnaireResponse value.                      |
+| `onChange`                     | `(response: QuestionnaireResponseOf<V>) => void` | No       | Called with the latest response whenever state changes.   |
+| `onSubmit`                     | `(response: QuestionnaireResponseOf<V>) => void` | No       | Called after validation passes and the form is submitted. |
+| `terminologyServerUrl`         | `string`                                         | No       | Base URL for ValueSet `$expand` requests.                 |
+| `defaultLanguage`              | `string`                                         | No       | Initial language value.                                   |
+| `onLanguageChange`             | `(language: string) => void`                     | No       | Called when the user selects a different language.        |
+| `fhirVersion`                  | `"r4" \| "r5"`                                   | Yes      | FHIR version for Questionnaire parsing.                   |
 
-If `language` is omitted, renderer falls back to `questionnaire.language`.
+## Controlled mode
+
+Use `Renderer` from `@formbox/renderer/controlled` when `language` and `strings` are managed externally and the response is seeded from a default value.
+
+All props are required. Use `null` for values/callbacks you do not provide.
+
+Note: Controlling the value of questionnaire response is yet to be supported. If you want to apply new questionnaire response value, you can use `key` prop to reset the internal state of the renderer.
+
+```tsx
+import Renderer from "@formbox/renderer/controlled";
+import en from "@formbox/strings/en";
+
+<Renderer
+  fhirVersion="r5"
+  questionnaire={questionnaire}
+  defaultQuestionnaireResponse={questionnaireResponse}
+  language={language}
+  strings={en}
+  onChange={onChange}
+  onSubmit={null}
+  onLanguageChange={onLanguageChange}
+  terminologyServerUrl={null}
+  theme={theme}
+/>;
+```
 
 ## Validation and submit
 

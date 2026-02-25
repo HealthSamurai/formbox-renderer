@@ -124,7 +124,7 @@ function SwmClient() {
       <Renderer
         fhirVersion="r4"
         questionnaire={questionnaire as unknown as Questionnaire}
-        initialResponse={initialResponse}
+        defaultQuestionnaireResponse={initialResponse}
         onChange={handleChange}
         terminologyServerUrl={config?.terminologyServer}
         theme={theme}

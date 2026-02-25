@@ -1,103 +1,78 @@
+/* eslint-disable unicorn/no-null */
+import { useCallback, useMemo, useState } from "react";
+import bundledStrings from "@formbox/strings";
 import type {
   FhirVersion,
   QuestionnaireOf,
   QuestionnaireResponseOf,
 } from "@formbox/fhir";
-import { FormStore } from "./store/form/form-store.ts";
-import { Form } from "./component/form/form.tsx";
-import { useCallback, useEffect, useMemo } from "react";
-import { autorun } from "mobx";
-import en from "@formbox/strings/en";
-import {
-  StringsContext,
-  type Theme,
-  type StringsOverride,
-} from "@formbox/theme";
-import { ThemeProvider } from "./ui/theme.tsx";
-import { deepMerge } from "./utilities.ts";
+import type { Theme } from "@formbox/theme";
+import ControlledRenderer from "./controlled.tsx";
 
-type RendererProperties<V extends FhirVersion> = {
+export type RendererProperties<V extends FhirVersion> = {
   questionnaire: QuestionnaireOf<V>;
-  initialResponse?: QuestionnaireResponseOf<V> | undefined;
+  defaultQuestionnaireResponse?: QuestionnaireResponseOf<V> | undefined;
+  defaultLanguage?: string | undefined;
   onChange?: ((response: QuestionnaireResponseOf<V>) => void) | undefined;
   onSubmit?: ((response: QuestionnaireResponseOf<V>) => void) | undefined;
+  onLanguageChange?: ((language: string) => void) | undefined;
   terminologyServerUrl?: string | undefined;
-  language?: string | undefined;
-  onLanguageChange?: ((language: string | undefined) => void) | undefined;
-  strings?: StringsOverride | undefined;
   fhirVersion: V;
   theme: Theme;
 };
 
+function resolveBundledStrings(language: string | null | undefined) {
+  const primaryLanguage = language?.split(
+    "-",
+  )[0] as keyof typeof bundledStrings;
+  return bundledStrings[primaryLanguage] ?? bundledStrings.en;
+}
+
 function Renderer<V extends FhirVersion>({
   questionnaire,
-  initialResponse,
-  onSubmit,
+  defaultQuestionnaireResponse,
+  defaultLanguage,
   onChange,
-  terminologyServerUrl,
-  language,
+  onSubmit,
   onLanguageChange,
-  strings: stringsOverride,
+  terminologyServerUrl,
   fhirVersion,
   theme,
 }: RendererProperties<V>) {
-  const strings = useMemo(
-    () => (stringsOverride == undefined ? en : deepMerge(en, stringsOverride)),
-    [stringsOverride],
+  const [language, setLanguage] = useState<string | null>(
+    defaultLanguage ?? questionnaire.language ?? null,
   );
 
-  const store = useMemo(
-    () =>
-      new FormStore(
-        en,
-        fhirVersion,
-        questionnaire,
-        initialResponse,
-        terminologyServerUrl,
-      ),
-    [questionnaire, initialResponse, terminologyServerUrl, fhirVersion],
+  const strings = useMemo(() => resolveBundledStrings(language), [language]);
+
+  const handleChange = useCallback(
+    (response: QuestionnaireResponseOf<V>) => {
+      onChange?.(response);
+    },
+    [onChange],
   );
 
-  useEffect(() => () => store.dispose(), [store]);
-
-  useEffect(() => {
-    store.setStrings(strings);
-  }, [store, strings]);
-
-  useEffect(() => {
-    store.setLanguage(language ?? questionnaire.language);
-  }, [store, language, questionnaire.language]);
-
-  useEffect(() => {
-    if (!onChange) {
-      return;
-    }
-
-    const dispose = autorun(() => {
-      onChange(store.response as QuestionnaireResponseOf<V>);
-    });
-
-    return () => {
-      dispose();
-    };
-  }, [onChange, store]);
-
-  const handleSubmit = useCallback(() => {
-    if (store.validateAll()) {
-      onSubmit?.(store.response as QuestionnaireResponseOf<V>);
-    }
-  }, [onSubmit, store]);
+  const handleLanguageChange = useCallback(
+    (nextLanguage: string) => {
+      setLanguage(nextLanguage);
+      onLanguageChange?.(nextLanguage);
+    },
+    [onLanguageChange],
+  );
 
   return (
-    <ThemeProvider theme={theme}>
-      <StringsContext.Provider value={strings}>
-        <Form
-          store={store}
-          onSubmit={handleSubmit}
-          onLanguageChange={onLanguageChange}
-        />
-      </StringsContext.Provider>
-    </ThemeProvider>
+    <ControlledRenderer
+      questionnaire={questionnaire}
+      defaultQuestionnaireResponse={defaultQuestionnaireResponse ?? null}
+      language={language}
+      strings={strings}
+      onChange={handleChange}
+      onSubmit={onSubmit ?? null}
+      onLanguageChange={handleLanguageChange}
+      terminologyServerUrl={terminologyServerUrl ?? null}
+      fhirVersion={fhirVersion}
+      theme={theme}
+    />
   );
 }
 
@@ -126,4 +101,4 @@ export type {
   ReferenceOf,
 } from "@formbox/fhir";
 
-export type { Strings, StringsOverride } from "@formbox/theme";
+export type { Strings } from "@formbox/theme";
