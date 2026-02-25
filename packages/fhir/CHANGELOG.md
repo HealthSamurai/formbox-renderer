@@ -1,0 +1,7 @@
+# @formbox/fhir
+
+## 0.2.0
+
+### Minor Changes
+
+- [`90c09c1`](https://github.com/HealthSamurai/formbox-renderer/commit/90c09c1f2953bc4b50cd539d05878ca700220323) Thanks [@olimsaidov](https://github.com/olimsaidov)! - Support advanced rendering spec

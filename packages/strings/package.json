@@ -1,6 +1,6 @@
 {
   "name": "@formbox/strings",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Localized UI strings for Formbox Renderer",
   "private": false,
   "type": "module",
