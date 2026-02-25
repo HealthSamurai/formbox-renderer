@@ -35,11 +35,11 @@ const renderNotFound = async (title) => {
 };
 const loadDocumentation = async () => {
   const [manifest, layout, documentPage, documentationIndex, themes] = await Promise.all([
-    import("./assets/manifest-NUSWq3xB.js").then((n) => n.m),
-    import("./assets/layout-BRcQfUxm.js"),
-    import("./assets/page-CzRklbum.js"),
+    import("./assets/manifest-BSODy-dD.js").then((n) => n.m),
+    import("./assets/layout-BhkB52Pk.js"),
+    import("./assets/page-BLoVOZko.js"),
     import("./assets/index-Biw2Xbl-.js"),
-    import("./assets/themes-5B3HRTRu.js")
+    import("./assets/themes-D5HDyzCG.js")
   ]);
   return {
     routes: manifest.routes,
@@ -52,7 +52,7 @@ const loadDocumentation = async () => {
 };
 const getRoutes = async () => {
   {
-    const { routes } = await import("./assets/manifest-NUSWq3xB.js").then((n) => n.m);
+    const { routes } = await import("./assets/manifest-BSODy-dD.js").then((n) => n.m);
     return ["/", "/swm/", "/docs/", "/docs/themes/", ...routes.keys()];
   }
 };
