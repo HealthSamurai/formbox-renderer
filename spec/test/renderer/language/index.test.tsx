@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import Renderer, {
   type ElementOf,
   type ExtensionOf,
+  type LaunchContext,
   type QuestionnaireOf,
   type QuestionnaireResponseOf,
 } from "@formbox/renderer";
@@ -26,6 +27,7 @@ const EMPTY_RESPONSE: QuestionnaireResponse = {
   status: "in-progress",
   questionnaire: "Questionnaire/test",
 };
+const EMPTY_LAUNCH_CONTEXT: LaunchContext = {};
 
 function noopOnChange() {}
 function noopOnSubmit() {}
@@ -103,7 +105,7 @@ describe("renderer.language", () => {
         onSubmit={noopOnSubmit}
         onLanguageChange={noopOnLanguageChange}
         terminologyServerUrl={TERMINOLOGY_SERVER_URL}
-        launchContext={null}
+        launchContext={EMPTY_LAUNCH_CONTEXT}
       />,
     );
 
@@ -121,7 +123,7 @@ describe("renderer.language", () => {
         onSubmit={noopOnSubmit}
         onLanguageChange={noopOnLanguageChange}
         terminologyServerUrl={TERMINOLOGY_SERVER_URL}
-        launchContext={null}
+        launchContext={EMPTY_LAUNCH_CONTEXT}
       />,
     );
 
@@ -188,7 +190,7 @@ describe("renderer.language", () => {
         onLanguageChange={onLanguageChange}
         onSubmit={noopOnSubmit}
         terminologyServerUrl={TERMINOLOGY_SERVER_URL}
-        launchContext={null}
+        launchContext={EMPTY_LAUNCH_CONTEXT}
       />,
     );
 
@@ -227,7 +229,7 @@ describe("renderer.language", () => {
           onLanguageChange={setLanguage}
           onSubmit={noopOnSubmit}
           terminologyServerUrl={TERMINOLOGY_SERVER_URL}
-          launchContext={null}
+          launchContext={EMPTY_LAUNCH_CONTEXT}
         />
       );
     }

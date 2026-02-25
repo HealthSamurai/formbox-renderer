@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Renderer, {
+  type LaunchContext,
   type QuestionnaireOf,
   type QuestionnaireResponseOf,
   type Strings,
@@ -20,6 +21,7 @@ const EMPTY_RESPONSE: QuestionnaireResponse = {
   status: "in-progress",
   questionnaire: "Questionnaire/test",
 };
+const EMPTY_LAUNCH_CONTEXT: LaunchContext = {};
 
 function noopOnChange() {}
 function noopOnSubmit() {}
@@ -135,7 +137,7 @@ describe("renderer.strings", () => {
         onSubmit={noopOnSubmit}
         onLanguageChange={noopOnLanguageChange}
         terminologyServerUrl={TERMINOLOGY_SERVER_URL}
-        launchContext={null}
+        launchContext={EMPTY_LAUNCH_CONTEXT}
       />,
     );
 
@@ -172,7 +174,7 @@ describe("renderer.strings", () => {
         onSubmit={noopOnSubmit}
         onLanguageChange={noopOnLanguageChange}
         terminologyServerUrl={TERMINOLOGY_SERVER_URL}
-        launchContext={null}
+        launchContext={EMPTY_LAUNCH_CONTEXT}
       />,
     );
 
@@ -219,7 +221,7 @@ describe("renderer.strings", () => {
         onSubmit={noopOnSubmit}
         onLanguageChange={noopOnLanguageChange}
         terminologyServerUrl={TERMINOLOGY_SERVER_URL}
-        launchContext={null}
+        launchContext={EMPTY_LAUNCH_CONTEXT}
       />,
     );
 
@@ -284,7 +286,7 @@ describe("renderer.strings", () => {
         onSubmit={noopOnSubmit}
         onLanguageChange={noopOnLanguageChange}
         terminologyServerUrl={TERMINOLOGY_SERVER_URL}
-        launchContext={null}
+        launchContext={EMPTY_LAUNCH_CONTEXT}
       />,
     );
 
@@ -330,7 +332,7 @@ describe("renderer.strings", () => {
           onSubmit={noopOnSubmit}
           onLanguageChange={noopOnLanguageChange}
           terminologyServerUrl={TERMINOLOGY_SERVER_URL}
-          launchContext={null}
+          launchContext={EMPTY_LAUNCH_CONTEXT}
         />
       );
     }
