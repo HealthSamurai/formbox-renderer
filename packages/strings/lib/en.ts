@@ -9,17 +9,17 @@ const strings: Strings = {
   value: {
     yes: "Yes",
     no: "No",
-    undefined: "Unanswered",
+    unanswered: "Unanswered",
   },
   dialog: {
     cancel: "Cancel",
-    add: "Apply",
+    submit: "Apply",
   },
   errors: {
     unknown: "Unknown error",
   },
   file: {
-    sizeLabelKb: "{sizeKb} KB",
+    sizeLabel: "{sizeKb} KB",
   },
   group: {
     addSection: "Add another",
@@ -66,7 +66,7 @@ const strings: Strings = {
     empty: "No tab content",
   },
   unsupported: {
-    itemType: "Unsupported type:",
+    itemType: "Unsupported type: {type}",
   },
   validation: {
     group: {
@@ -95,9 +95,9 @@ const strings: Strings = {
       valueDecimalPlaces: "Value must not exceed {maxPlaces} decimal place(s).",
       quantityMin: "Quantity must be greater than or equal to {formatted}.",
       quantityMax: "Quantity must be less than or equal to {formatted}.",
-      attachmentTypeRequired:
+      attachmentTypeMissing:
         "Attachment must declare a content type from the allowed list ({allowed}).",
-      attachmentTypeAllowed:
+      attachmentTypeNotAllowed:
         "Attachment must be one of the allowed content types ({allowed}).",
       attachmentSizeMax: "Attachment must not exceed {maxSize} bytes.",
     },

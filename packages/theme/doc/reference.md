@@ -445,7 +445,7 @@ Layout wrapper for custom option entry flows. Use it to present the custom input
 
 | Path            | Text                         |
 | --------------- | ---------------------------- |
-| `dialog.add`    | Label for submit/add action. |
+| `dialog.submit` | Label for submit/add action. |
 | `dialog.cancel` | Label for cancel action.     |
 
 Use `onCancel` as the "back to options" action and `onSubmit` to commit the custom value.

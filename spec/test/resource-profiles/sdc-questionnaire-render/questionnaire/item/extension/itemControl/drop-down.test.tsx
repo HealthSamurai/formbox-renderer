@@ -299,7 +299,7 @@ describe("itemControl.drop-down", () => {
         render(<DropdownSelectRenderer node={question} />);
 
         let input = screen.getByRole("combobox") as HTMLElement;
-        expect(getComboboxValue(input)).toBe(en.value.undefined);
+        expect(getComboboxValue(input)).toBe(en.value.unanswered);
 
         fireEvent.click(input);
         let listbox = getListbox(input);
@@ -315,7 +315,7 @@ describe("itemControl.drop-down", () => {
         listbox = getListbox(input);
         fireEvent.click(
           within(listbox).getByRole("option", {
-            name: en.value.undefined,
+            name: en.value.unanswered,
           }),
         );
         expect(getAnswerValues(question)).toEqual([undefined]);
@@ -479,7 +479,7 @@ describe("itemControl.drop-down", () => {
           name: "Dose",
         }) as HTMLInputElement;
         fireEvent.change(customInput, { target: { value: "custom-dose" } });
-        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.submit }));
 
         expect(screen.getByText("String: custom-dose")).toBeInTheDocument();
         expect(screen.queryByText("Quantity: custom-dose")).toBeNull();
@@ -545,7 +545,7 @@ describe("itemControl.drop-down", () => {
         expect(customInput.value).toBe("");
         const cancelButton = screen.getByRole("button", { name: "Cancel" });
         const addButton = screen.getByRole("button", {
-          name: en.dialog.add,
+          name: en.dialog.submit,
         });
         expect(cancelButton).not.toBeDisabled();
         expect(addButton).toBeDisabled();
@@ -647,7 +647,7 @@ describe("itemControl.drop-down", () => {
         fireEvent.change(customInput, { target: { value: "Magenta" } });
         expect(customInput).toHaveValue("Magenta");
 
-        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.submit }));
 
         expect(
           screen.queryByRole("textbox", { name: "Favorite color" }),
@@ -688,7 +688,7 @@ describe("itemControl.drop-down", () => {
           name: "Favorite color",
         }) as HTMLInputElement;
         fireEvent.change(customInput, { target: { value: "Green" } });
-        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.submit }));
 
         expect(getComboboxValue(getCombobox("Favorite color"))).toBe("Green");
 
@@ -738,7 +738,7 @@ describe("itemControl.drop-down", () => {
         fireEvent.change(customInput, {
           target: { value: "custom-dose" },
         });
-        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.submit }));
 
         expect(getStringAnswers(question)).toEqual(["custom-dose"]);
         expect(getComboboxValue(getCombobox("Dose"))).toContain("custom-dose");
@@ -944,7 +944,7 @@ describe("itemControl.drop-down", () => {
         expect(customInput.value).toBe("");
 
         fireEvent.change(customInput, { target: { value: "Cats" } });
-        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.submit }));
         expect(getStringAnswers(question).toSorted()).toEqual(["Cats", "Dust"]);
         expect(screen.queryByRole("textbox", { name: "Allergy" })).toBeNull();
 
@@ -1130,7 +1130,7 @@ describe("itemControl.drop-down", () => {
         expect(screen.queryByRole("textbox", { name: "Call sign" })).toBeNull();
         expect(screen.queryByRole("button", { name: "Cancel" })).toBeNull();
         expect(
-          screen.queryByRole("button", { name: en.dialog.add }),
+          screen.queryByRole("button", { name: en.dialog.submit }),
         ).toBeNull();
       });
     });
@@ -1277,7 +1277,7 @@ describe("itemControl.drop-down", () => {
           name: "Dose",
         }) as HTMLInputElement;
         fireEvent.change(customInput, { target: { value: "5" } });
-        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.submit }));
         expect(screen.queryByRole("spinbutton", { name: "Dose" })).toBeNull();
         expect(getAnswerValues(question).toSorted()).toEqual([1, 5]);
 
@@ -1326,7 +1326,7 @@ describe("itemControl.drop-down", () => {
           name: "Dose",
         }) as HTMLInputElement;
         fireEvent.change(customInput, { target: { value: "3" } });
-        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.submit }));
 
         fireEvent.click(getChipButton("3"));
 
@@ -1378,7 +1378,7 @@ describe("itemControl.drop-down", () => {
         fireEvent.change(customInput, {
           target: { value: "5" },
         });
-        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.submit }));
 
         expect(screen.queryByRole("spinbutton", { name: "Dose" })).toBeNull();
         expect(getComboboxValue(getCombobox("Dose"))).toContain("5");
@@ -1455,7 +1455,7 @@ describe("itemControl.drop-down", () => {
           name: "Call sign",
         }) as HTMLInputElement;
         fireEvent.change(customInput, { target: { value: "Echo" } });
-        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.submit }));
 
         expect(getChipButton("Echo")).toBeInTheDocument();
         expect(screen.getAllByRole("button", { name: "Remove" })).toHaveLength(
@@ -1547,14 +1547,14 @@ describe("itemControl.drop-down", () => {
           name: "Call sign",
         }) as HTMLInputElement;
         fireEvent.change(customInput, { target: { value: "Echo" } });
-        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.submit }));
 
         selectOption("Call sign", /specify other/i);
         customInput = screen.getByRole("textbox", {
           name: "Call sign",
         }) as HTMLInputElement;
         fireEvent.change(customInput, { target: { value: "Echoless" } });
-        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.submit }));
 
         expect(screen.getAllByRole("button", { name: "Remove" })).toHaveLength(
           2,

@@ -9,20 +9,20 @@ const strings: Strings = {
   value: {
     yes: "Ja",
     no: "Nein",
-    undefined: "Unbeantwortet",
+    unanswered: "Unbeantwortet",
   },
   dialog: {
     cancel: "Abbrechen",
-    add: "Uebernehmen",
+    submit: "Übernehmen",
   },
   errors: {
     unknown: "Unbekannter Fehler",
   },
   file: {
-    sizeLabelKb: "{sizeKb} KB",
+    sizeLabel: "{sizeKb} KB",
   },
   group: {
-    addSection: "Weiteren hinzufuegen",
+    addSection: "Weiteren hinzufügen",
     removeSection: "Entfernen",
     noNodesYet: "Noch keine Elemente.",
   },
@@ -37,27 +37,26 @@ const strings: Strings = {
     codingDisplayPlaceholder: "Anzeige",
     quantityValuePlaceholder: "Wert",
     quantityUnitPlaceholder: "Einheit",
-    attachmentSelected: "Anhang ausgewaehlt",
+    attachmentSelected: "Anhang ausgewählt",
   },
   selection: {
     specifyOther: "Anderes angeben",
-    addAnother: "Weiteren hinzufuegen",
-    selectPlaceholder: "Option auswaehlen",
+    addAnother: "Weiteren hinzufügen",
+    selectPlaceholder: "Option auswählen",
     removeSelection: "Auswahl entfernen",
     removeCustomValue: "Benutzerdefinierten Wert entfernen",
   },
   language: {
     label: "Sprache",
-    placeholder: "Sprache auswaehlen",
+    placeholder: "Sprache auswählen",
   },
   table: {
     noChoiceQuestionsHorizontal:
-      "Keine Auswahlfragen fuer die horizontale Tabelle verfuegbar.",
-    noChoiceQuestions: "Keine Auswahlfragen verfuegbar.",
+      "Keine Auswahlfragen für die horizontale Tabelle verfügbar.",
+    noChoiceQuestions: "Keine Auswahlfragen verfügbar.",
     noAnswerOptionsHorizontal:
-      "Keine Antwortoptionen fuer das horizontale Tabellenlayout verfuegbar.",
-    noAnswerOptions:
-      "Keine Antwortoptionen fuer das Tabellenlayout verfuegbar.",
+      "Keine Antwortoptionen für das horizontale Tabellenlayout verfügbar.",
+    noAnswerOptions: "Keine Antwortoptionen für das Tabellenlayout verfügbar.",
   },
   collapsible: {
     expand: "Erweitern",
@@ -67,7 +66,7 @@ const strings: Strings = {
     empty: "Kein Tab-Inhalt",
   },
   unsupported: {
-    itemType: "Nicht unterstuetzter Typ:",
+    itemType: "Nicht unterstützter Typ: {type}",
   },
   validation: {
     group: {
@@ -87,25 +86,24 @@ const strings: Strings = {
     answer: {
       minLength: "Die Antwort muss mindestens {minLength} Zeichen lang sein.",
       maxLength:
-        "Die Antwort ueberschreitet die maximale Laenge von {maxLength}.",
+        "Die Antwort überschreitet die maximale Länge von {maxLength}.",
       minPrecision:
-        "Die Antwort muss mindestens {minLength} Zeichen lang sein, um die erforderliche Praezision abzubilden.",
-      maxPrecision:
-        "Die Antwort darf {maxLength} Zeichen nicht ueberschreiten.",
+        "Die Antwort muss mindestens {minLength} Zeichen lang sein, um die erforderliche Präzision abzubilden.",
+      maxPrecision: "Die Antwort darf {maxLength} Zeichen nicht überschreiten.",
       blank: "Die Antwort darf nicht leer sein.",
-      valueNotEarlier: "Der Wert darf nicht frueher als {formatted} sein.",
-      valueNotLater: "Der Wert darf nicht spaeter als {formatted} sein.",
-      valueMin: "Der Wert muss groesser oder gleich {formatted} sein.",
+      valueNotEarlier: "Der Wert darf nicht früher als {formatted} sein.",
+      valueNotLater: "Der Wert darf nicht später als {formatted} sein.",
+      valueMin: "Der Wert muss größer oder gleich {formatted} sein.",
       valueMax: "Der Wert muss kleiner oder gleich {formatted} sein.",
       valueDecimalPlaces:
         "Der Wert darf nicht mehr als {maxPlaces} Dezimalstellen haben.",
-      quantityMin: "Die Menge muss groesser oder gleich {formatted} sein.",
+      quantityMin: "Die Menge muss größer oder gleich {formatted} sein.",
       quantityMax: "Die Menge muss kleiner oder gleich {formatted} sein.",
-      attachmentTypeRequired:
+      attachmentTypeMissing:
         "Der Anhang muss einen Inhaltstyp aus der erlaubten Liste ({allowed}) angeben.",
-      attachmentTypeAllowed:
+      attachmentTypeNotAllowed:
         "Der Anhang muss einer der erlaubten Inhaltstypen sein ({allowed}).",
-      attachmentSizeMax: "Der Anhang darf {maxSize} Byte nicht ueberschreiten.",
+      attachmentSizeMax: "Der Anhang darf {maxSize} Byte nicht überschreiten.",
     },
   },
 };

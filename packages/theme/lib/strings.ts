@@ -1,5 +1,7 @@
 import { createContext, useContext } from "react";
 
+type PlaceholderString<Key extends string> = `${string}{${Key}}${string}`;
+
 export type Strings = {
   readonly aria: {
     readonly help: string;
@@ -9,17 +11,17 @@ export type Strings = {
   readonly value: {
     readonly yes: string;
     readonly no: string;
-    readonly undefined: string;
+    readonly unanswered: string;
   };
   readonly dialog: {
     readonly cancel: string;
-    readonly add: string;
+    readonly submit: string;
   };
   readonly errors: {
     readonly unknown: string;
   };
   readonly file: {
-    readonly sizeLabelKb: string;
+    readonly sizeLabel: PlaceholderString<"sizeKb">;
   };
   readonly group: {
     readonly addSection: string;
@@ -64,37 +66,37 @@ export type Strings = {
     readonly empty: string;
   };
   readonly unsupported: {
-    readonly itemType: string;
+    readonly itemType: PlaceholderString<"type">;
   };
   readonly validation: {
     readonly group: {
       readonly atLeastOneAnswer: string;
     };
     readonly groupList: {
-      readonly minOccurs: string;
-      readonly maxOccurs: string;
+      readonly minOccurs: PlaceholderString<"minOccurs">;
+      readonly maxOccurs: PlaceholderString<"maxOccurs">;
     };
     readonly question: {
       readonly minOccursSingle: string;
-      readonly minOccursMultiple: string;
-      readonly maxOccurs: string;
+      readonly minOccursMultiple: PlaceholderString<"minOccurs">;
+      readonly maxOccurs: PlaceholderString<"maxOccurs">;
     };
     readonly answer: {
-      readonly minLength: string;
-      readonly maxLength: string;
-      readonly minPrecision: string;
-      readonly maxPrecision: string;
+      readonly minLength: PlaceholderString<"minLength">;
+      readonly maxLength: PlaceholderString<"maxLength">;
+      readonly minPrecision: PlaceholderString<"minLength">;
+      readonly maxPrecision: PlaceholderString<"maxLength">;
       readonly blank: string;
-      readonly valueNotEarlier: string;
-      readonly valueNotLater: string;
-      readonly valueMin: string;
-      readonly valueMax: string;
-      readonly valueDecimalPlaces: string;
-      readonly quantityMin: string;
-      readonly quantityMax: string;
-      readonly attachmentTypeRequired: string;
-      readonly attachmentTypeAllowed: string;
-      readonly attachmentSizeMax: string;
+      readonly valueNotEarlier: PlaceholderString<"formatted">;
+      readonly valueNotLater: PlaceholderString<"formatted">;
+      readonly valueMin: PlaceholderString<"formatted">;
+      readonly valueMax: PlaceholderString<"formatted">;
+      readonly valueDecimalPlaces: PlaceholderString<"maxPlaces">;
+      readonly quantityMin: PlaceholderString<"formatted">;
+      readonly quantityMax: PlaceholderString<"formatted">;
+      readonly attachmentTypeMissing: PlaceholderString<"allowed">;
+      readonly attachmentTypeNotAllowed: PlaceholderString<"allowed">;
+      readonly attachmentSizeMax: PlaceholderString<"maxSize">;
     };
   };
 };

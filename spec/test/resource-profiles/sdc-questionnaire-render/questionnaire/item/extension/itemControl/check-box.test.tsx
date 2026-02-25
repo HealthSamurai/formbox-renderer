@@ -257,7 +257,7 @@ describe("itemControl.check-box", () => {
         expect(getStringAnswers(question).toSorted()).toEqual(["Cats", "Dust"]);
         assertOptionsEnabled();
 
-        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.submit }));
         expect(specifyOther).not.toBeChecked();
         expect(screen.queryByRole("textbox", { name: "Allergy" })).toBeNull();
         expect(screen.getByRole("checkbox", { name: /cats/i })).toBeChecked();
@@ -533,7 +533,7 @@ describe("itemControl.check-box", () => {
         ).toEqual([1, 5]);
         assertOptionsEnabled();
 
-        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.submit }));
         expect(specifyOther).not.toBeChecked();
         expect(screen.queryByRole("spinbutton", { name: /dose/i })).toBeNull();
         expect(
@@ -613,7 +613,7 @@ describe("itemControl.check-box", () => {
         fireEvent.change(screen.getByRole("spinbutton", { name: /dose/i }), {
           target: { value: "5" },
         });
-        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.submit }));
         expect(specifyOther).not.toBeChecked();
         expect(screen.queryByRole("spinbutton", { name: /dose/i })).toBeNull();
         assertOptionsEnabled();
@@ -765,7 +765,7 @@ describe("itemControl.check-box", () => {
         expect(option).not.toBeChecked();
         assertOptionsEnabled();
 
-        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.submit }));
         expect(specifyOther).not.toBeChecked();
         expect(option).not.toBeChecked();
         expect(
@@ -778,7 +778,7 @@ describe("itemControl.check-box", () => {
           name: "Call sign",
         }) as HTMLInputElement;
         fireEvent.change(customInput, { target: { value: "Zulu" } });
-        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.submit }));
         expect(specifyOther).not.toBeChecked();
         expect(option).not.toBeChecked();
         expect(screen.getByRole("checkbox", { name: /zulu/i })).toBeChecked();

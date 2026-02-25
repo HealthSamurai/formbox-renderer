@@ -29,7 +29,7 @@ export function CustomOptionForm({
           disabled={canSubmit === false}
           className="nhsuk-button nhsuk-button--small nhsuk-button--secondary"
         >
-          {strings.dialog.add}
+          {strings.dialog.submit}
         </button>
       </div>
     </Root>

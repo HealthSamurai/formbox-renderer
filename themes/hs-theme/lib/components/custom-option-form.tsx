@@ -23,7 +23,7 @@ export function CustomOptionForm({
           onClick={onSubmit}
           disabled={canSubmit === false}
         >
-          {strings.dialog.add}
+          {strings.dialog.submit}
         </SubmitButton>
       </Actions>
     </Stack>

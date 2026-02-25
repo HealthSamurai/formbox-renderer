@@ -26,9 +26,41 @@
       "import": "./dist/es.js",
       "types": "./dist/es.d.ts"
     },
+    "./fi": {
+      "import": "./dist/fi.js",
+      "types": "./dist/fi.d.ts"
+    },
     "./fr": {
       "import": "./dist/fr.js",
       "types": "./dist/fr.d.ts"
+    },
+    "./it": {
+      "import": "./dist/it.js",
+      "types": "./dist/it.d.ts"
+    },
+    "./nl": {
+      "import": "./dist/nl.js",
+      "types": "./dist/nl.d.ts"
+    },
+    "./pl": {
+      "import": "./dist/pl.js",
+      "types": "./dist/pl.d.ts"
+    },
+    "./pt": {
+      "import": "./dist/pt.js",
+      "types": "./dist/pt.d.ts"
+    },
+    "./ru": {
+      "import": "./dist/ru.js",
+      "types": "./dist/ru.d.ts"
+    },
+    "./sv": {
+      "import": "./dist/sv.js",
+      "types": "./dist/sv.d.ts"
+    },
+    "./tr": {
+      "import": "./dist/tr.js",
+      "types": "./dist/tr.d.ts"
     }
   },
   "files": [

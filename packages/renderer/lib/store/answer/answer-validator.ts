@@ -264,7 +264,7 @@ export class AnswerValidator<
                 makeIssue(
                   "invalid",
                   formatString(
-                    strings.validation.answer.attachmentTypeRequired,
+                    strings.validation.answer.attachmentTypeMissing,
                     { allowed: normalizedAllowed.join(", ") },
                   ),
                 ),
@@ -274,7 +274,7 @@ export class AnswerValidator<
                 makeIssue(
                   "invalid",
                   formatString(
-                    strings.validation.answer.attachmentTypeAllowed,
+                    strings.validation.answer.attachmentTypeNotAllowed,
                     { allowed: normalizedAllowed.join(", ") },
                   ),
                 ),

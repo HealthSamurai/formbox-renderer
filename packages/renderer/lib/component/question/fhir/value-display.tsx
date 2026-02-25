@@ -49,7 +49,7 @@ export function ValueDisplay<T extends AnswerType>({
   const strings = useStrings();
 
   if (value == undefined) {
-    return strings.value.undefined;
+    return strings.value.unanswered;
   } else {
     const Component = VALUE_DISPLAY_BY_TYPE[type] as ValueDisplayComponent<T>;
     return <Component value={value} />;

@@ -198,7 +198,7 @@ describe("itemControl.radio-button", () => {
           name: en.value.no,
         }) as HTMLInputElement;
         const unanswered = screen.getByRole("radio", {
-          name: en.value.undefined,
+          name: en.value.unanswered,
         }) as HTMLInputElement;
 
         expect(unanswered).toBeChecked();
@@ -367,7 +367,7 @@ describe("itemControl.radio-button", () => {
           name: "Favorite color",
         }) as HTMLInputElement;
         fireEvent.change(customInput, { target: { value: "Green" } });
-        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.submit }));
 
         expect(screen.getByRole("radio", { name: "Green" })).toBeChecked();
 
@@ -542,7 +542,7 @@ describe("itemControl.radio-button", () => {
           name: "Favorite color",
         }) as HTMLInputElement;
         fireEvent.change(customInput, { target: { value: "Magenta" } });
-        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.submit }));
 
         expect(
           screen.queryByRole("textbox", { name: "Favorite color" }),
@@ -781,7 +781,7 @@ describe("itemControl.radio-button", () => {
         fireEvent.change(customInput, {
           target: { value: "5" },
         });
-        fireEvent.click(screen.getByRole("button", { name: en.dialog.add }));
+        fireEvent.click(screen.getByRole("button", { name: en.dialog.submit }));
 
         expect(screen.queryByRole("spinbutton", { name: "Dose" })).toBeNull();
         const customValue = screen.getByRole("radio", {

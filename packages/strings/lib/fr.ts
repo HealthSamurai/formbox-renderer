@@ -3,107 +3,107 @@ import type { Strings } from "@formbox/theme";
 const strings: Strings = {
   aria: {
     help: "Plus d'information",
-    legal: "Informations legales",
+    legal: "Informations légales",
     flyover: "Plus de contexte",
   },
   value: {
     yes: "Oui",
     no: "Non",
-    undefined: "Sans reponse",
+    unanswered: "Sans réponse",
   },
   dialog: {
     cancel: "Annuler",
-    add: "Appliquer",
+    submit: "Appliquer",
   },
   errors: {
     unknown: "Erreur inconnue",
   },
   file: {
-    sizeLabelKb: "{sizeKb} KB",
+    sizeLabel: "{sizeKb} KB",
   },
   group: {
     addSection: "Ajouter un autre",
     removeSection: "Supprimer",
-    noNodesYet: "Aucun element pour le moment.",
+    noNodesYet: "Aucun élément pour le moment.",
   },
   gridTable: {
     headerActions: "Actions",
   },
   inputs: {
     referencePlaceholder: "Ressource/type/id",
-    referenceDisplayPlaceholder: "Libelle d'affichage",
-    codingSystemPlaceholder: "Systeme",
+    referenceDisplayPlaceholder: "Libellé d'affichage",
+    codingSystemPlaceholder: "Système",
     codingCodePlaceholder: "Code",
     codingDisplayPlaceholder: "Affichage",
     quantityValuePlaceholder: "Valeur",
-    quantityUnitPlaceholder: "Unite",
-    attachmentSelected: "Piece jointe selectionnee",
+    quantityUnitPlaceholder: "Unité",
+    attachmentSelected: "Pièce jointe sélectionnée",
   },
   selection: {
-    specifyOther: "Specifier un autre",
+    specifyOther: "Spécifier un autre",
     addAnother: "Ajouter un autre",
-    selectPlaceholder: "Selectionnez une option",
-    removeSelection: "Supprimer la selection",
-    removeCustomValue: "Supprimer la valeur personnalisee",
+    selectPlaceholder: "Sélectionnez une option",
+    removeSelection: "Supprimer la sélection",
+    removeCustomValue: "Supprimer la valeur personnalisée",
   },
   language: {
     label: "Langue",
-    placeholder: "Selectionnez la langue",
+    placeholder: "Sélectionnez la langue",
   },
   table: {
     noChoiceQuestionsHorizontal:
-      "Aucune question a choix disponible pour le tableau horizontal.",
-    noChoiceQuestions: "Aucune question a choix disponible.",
+      "Aucune question à choix disponible pour le tableau horizontal.",
+    noChoiceQuestions: "Aucune question à choix disponible.",
     noAnswerOptionsHorizontal:
-      "Aucune option de reponse disponible pour la mise en page de tableau horizontal.",
+      "Aucune option de réponse disponible pour la mise en page de tableau horizontal.",
     noAnswerOptions:
-      "Aucune option de reponse disponible pour la mise en page de tableau.",
+      "Aucune option de réponse disponible pour la mise en page de tableau.",
   },
   collapsible: {
-    expand: "Developper",
-    collapse: "Reduire",
+    expand: "Développer",
+    collapse: "Réduire",
   },
   tab: {
     empty: "Aucun contenu d'onglet",
   },
   unsupported: {
-    itemType: "Type non pris en charge :",
+    itemType: "Type non pris en charge : {type}",
   },
   validation: {
     group: {
-      atLeastOneAnswer: "Au moins une reponse est requise dans ce groupe.",
+      atLeastOneAnswer: "Au moins une réponse est requise dans ce groupe.",
     },
     groupList: {
       minOccurs: "Au moins {minOccurs} occurrence(s) requise(s).",
-      maxOccurs: "Pas plus de {maxOccurs} occurrence(s) autorisee(s).",
+      maxOccurs: "Pas plus de {maxOccurs} occurrence(s) autorisée(s).",
     },
     question: {
-      minOccursSingle: "Au moins une reponse non vide est requise.",
+      minOccursSingle: "Au moins une réponse non vide est requise.",
       minOccursMultiple:
-        "Au moins {minOccurs} reponses non vides sont requises.",
-      maxOccurs: "Pas plus de {maxOccurs} reponses autorisees.",
+        "Au moins {minOccurs} réponses non vides sont requises.",
+      maxOccurs: "Pas plus de {maxOccurs} réponses autorisées.",
     },
     answer: {
-      minLength: "La reponse doit comporter au moins {minLength} caracteres.",
-      maxLength: "La reponse depasse la longueur maximale de {maxLength}.",
+      minLength: "La réponse doit comporter au moins {minLength} caractères.",
+      maxLength: "La réponse dépasse la longueur maximale de {maxLength}.",
       minPrecision:
-        "La reponse doit comporter au moins {minLength} caracteres pour respecter la precision requise.",
-      maxPrecision: "La reponse ne doit pas depasser {maxLength} caracteres.",
-      blank: "La reponse ne doit pas etre vide.",
-      valueNotEarlier: "La valeur ne doit pas etre anterieure a {formatted}.",
-      valueNotLater: "La valeur ne doit pas etre posterieure a {formatted}.",
-      valueMin: "La valeur doit etre superieure ou egale a {formatted}.",
-      valueMax: "La valeur doit etre inferieure ou egale a {formatted}.",
+        "La réponse doit comporter au moins {minLength} caractères pour respecter la précision requise.",
+      maxPrecision: "La réponse ne doit pas dépasser {maxLength} caractères.",
+      blank: "La réponse ne doit pas être vide.",
+      valueNotEarlier: "La valeur ne doit pas être antérieure à {formatted}.",
+      valueNotLater: "La valeur ne doit pas être postérieure à {formatted}.",
+      valueMin: "La valeur doit être supérieure ou égale à {formatted}.",
+      valueMax: "La valeur doit être inférieure ou égale à {formatted}.",
       valueDecimalPlaces:
-        "La valeur ne doit pas depasser {maxPlaces} decimales.",
-      quantityMin: "La quantite doit etre superieure ou egale a {formatted}.",
-      quantityMax: "La quantite doit etre inferieure ou egale a {formatted}.",
-      attachmentTypeRequired:
-        "La piece jointe doit declarer un type de contenu issu de la liste autorisee ({allowed}).",
-      attachmentTypeAllowed:
-        "La piece jointe doit etre l'un des types de contenu autorises ({allowed}).",
+        "La valeur ne doit pas dépasser {maxPlaces} décimales.",
+      quantityMin: "La quantité doit être supérieure ou égale à {formatted}.",
+      quantityMax: "La quantité doit être inférieure ou égale à {formatted}.",
+      attachmentTypeMissing:
+        "La pièce jointe doit déclarer un type de contenu issu de la liste autorisée ({allowed}).",
+      attachmentTypeNotAllowed:
+        "La pièce jointe doit être l'un des types de contenu autorisés ({allowed}).",
       attachmentSizeMax:
-        "La piece jointe ne doit pas depasser {maxSize} octets.",
+        "La pièce jointe ne doit pas dépasser {maxSize} octets.",
     },
   },
 };
