@@ -3,7 +3,8 @@ import type { ReactNode } from "react";
 export type OptionItem = {
   token: string;
   label: ReactNode;
-  disabled?: boolean;
+  disabled: boolean;
+  exclusive: boolean;
 };
 
 export type SelectedOptionItem = OptionItem & {

@@ -56,6 +56,7 @@ export const SingleDropdownSelectControl = observer(
           </OptionDisplay>
         ),
         disabled: entry.disabled,
+        exclusive: entry.exclusive === true,
       }));
     }, [OptionDisplay, store.filteredOptions]);
 
@@ -64,6 +65,7 @@ export const SingleDropdownSelectControl = observer(
           token: store.specifyOtherToken,
           label: node.openLabel ?? strings.selection.specifyOther,
           disabled: store.isLoading,
+          exclusive: false,
         }
       : undefined;
 
@@ -77,6 +79,7 @@ export const SingleDropdownSelectControl = observer(
       return {
         token: selection.token,
         disabled: selection.disabled,
+        exclusive: selection.exclusive === true,
         label: (
           <OptionDisplay prefix={selection.prefix} media={selection.media}>
             <ValueDisplay type={selection.answerType} value={selection.value} />

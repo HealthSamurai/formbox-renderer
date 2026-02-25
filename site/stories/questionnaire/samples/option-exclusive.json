@@ -1,0 +1,80 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "option-exclusive",
+  "status": "active",
+  "title": "Option Exclusive",
+  "description": "Demonstrates questionnaire-optionExclusive behavior in multi-select controls.",
+  "item": [
+    {
+      "linkId": "option-exclusive-notes",
+      "type": "display",
+      "text": "Select regular options first, then choose 'None of the above' to see exclusive replacement. Choose any regular option again to replace the exclusive selection."
+    },
+    {
+      "linkId": "symptoms-checkbox",
+      "type": "string",
+      "repeats": true,
+      "text": "Symptoms (check-box)",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "check-box"
+              }
+            ]
+          }
+        }
+      ],
+      "answerOption": [
+        { "valueString": "Fever" },
+        { "valueString": "Cough" },
+        { "valueString": "Fatigue" },
+        {
+          "valueString": "None of the above",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionExclusive",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "symptoms-dropdown",
+      "type": "string",
+      "repeats": true,
+      "text": "Symptoms (drop-down)",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "drop-down"
+              }
+            ]
+          }
+        }
+      ],
+      "answerOption": [
+        { "valueString": "Headache" },
+        { "valueString": "Sore throat" },
+        { "valueString": "Nausea" },
+        {
+          "valueString": "None of the above",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionExclusive",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

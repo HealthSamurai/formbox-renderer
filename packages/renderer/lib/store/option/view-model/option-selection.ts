@@ -102,6 +102,7 @@ export class OptionSelection<
           ? matches.set(match.token, {
               token: option.token,
               disabled: option.disabled,
+              exclusive: option.exclusive,
               prefix: option.prefix,
               media: option.media,
             })
@@ -112,6 +113,7 @@ export class OptionSelection<
         {
           token: OptionToken;
           disabled: boolean;
+          exclusive?: boolean | undefined;
           prefix?: string | undefined;
           media?: AnswerOption<T>["media"];
         }
@@ -133,6 +135,7 @@ export class OptionSelection<
           answer,
           value: answer.value,
           answerType: this.question.type,
+          exclusive: matchedOption.exclusive,
           prefix: matchedOption.prefix,
           media: matchedOption.media,
           disabled:
@@ -154,6 +157,7 @@ export class OptionSelection<
         answer,
         value: answer.value,
         answerType: this.allowCustom ? this.customType : this.question.type,
+        exclusive: false,
         prefix: undefined,
         media: undefined,
         disabled:
@@ -287,6 +291,10 @@ export class OptionSelection<
     const nextValue = structuredClone(entry.value) as DataTypeToType<
       AnswerTypeToDataType<T>
     >;
+    this.reserveAnswerSlotForSelection(
+      this.isExclusiveToken(entry.token),
+      answer,
+    );
     answer.setValueByUser(nextValue);
   }
 
@@ -398,7 +406,7 @@ export class OptionSelection<
     const nextValue = structuredClone(value) as DataTypeToType<
       AnswerTypeToDataType<T>
     >;
-    const slot = this.findAvailableAnswer();
+    const slot = this.reserveAnswerSlotForSelection(false);
     if (slot) {
       this.customAnswerTokens.add(slot.token);
       slot.setValueByUser(nextValue);
@@ -440,17 +448,22 @@ export class OptionSelection<
     }
 
     if (answer) {
-      this.customAnswerTokens.add(answer.token);
-      answer.setValueByUser();
+      const slot = this.reserveAnswerSlotForSelection(false, answer);
+      if (!slot) {
+        return;
+      }
+
+      this.customAnswerTokens.add(slot.token);
+      slot.setValueByUser();
       this.pendingCustomOptionForm = {
-        answer,
+        answer: slot,
         isNew: false,
         canSubmit: false,
       };
       return;
     }
 
-    const slot = this.findAvailableAnswer();
+    const slot = this.reserveAnswerSlotForSelection(false);
     if (slot) {
       this.customAnswerTokens.add(slot.token);
       this.pendingCustomOptionForm = {
@@ -487,6 +500,7 @@ export class OptionSelection<
           token: selection.token,
           value: selection.value,
           disabled: selection.disabled,
+          exclusive: selection.exclusive,
           answerType: selection.answerType,
           prefix: selection.prefix,
           media: selection.media,
@@ -545,12 +559,72 @@ export class OptionSelection<
     const nextValue = structuredClone(value) as DataTypeToType<
       AnswerTypeToDataType<T>
     >;
-    const slot = this.findAvailableAnswer();
+    const slot = this.reserveAnswerSlotForSelection(
+      this.isExclusiveToken(token),
+    );
     if (slot) {
+      this.customAnswerTokens.delete(slot.token);
       slot.setValueByUser(nextValue);
       return;
     }
     this.question.addAnswer(nextValue);
+  }
+
+  private isExclusiveToken(token: OptionToken): boolean {
+    return this.inherentOptions.some(
+      (option) => option.token === token && option.exclusive === true,
+    );
+  }
+
+  @action.bound
+  private reserveAnswerSlotForSelection(
+    exclusive: boolean,
+    preferred?: IAnswer<T>,
+  ): IAnswer<T> | undefined {
+    const selected = this.selectedOptions.filter(
+      (entry) => entry.answer.token !== preferred?.token,
+    );
+
+    const conflicting = exclusive
+      ? selected
+      : selected.filter((entry) => entry.exclusive === true);
+
+    let slot = preferred;
+    let remainingConflicts = conflicting;
+
+    if (!slot && conflicting.length > 0) {
+      const [first, ...rest] = conflicting;
+      slot = first.answer;
+      remainingConflicts = rest;
+      this.customAnswerTokens.delete(slot.token);
+      if (this.pendingCustomOptionForm?.answer.token === slot.token) {
+        this.pendingCustomOptionForm = undefined;
+      }
+    }
+
+    remainingConflicts.forEach((entry) =>
+      this.clearConflictingAnswer(entry.answer),
+    );
+
+    return slot ?? this.findAvailableAnswer();
+  }
+
+  @action.bound
+  private clearConflictingAnswer(answer: IAnswer<T>) {
+    this.rememberAnswerValue(answer);
+    this.customAnswerTokens.delete(answer.token);
+    if (this.pendingCustomOptionForm?.answer.token === answer.token) {
+      this.pendingCustomOptionForm = undefined;
+    }
+
+    const canRemove =
+      this.question.answers.includes(answer) && this.question.canRemove;
+    if (canRemove) {
+      this.question.removeAnswer(answer);
+      return;
+    }
+
+    answer.setValueByUser();
   }
 
   private get inherentOptions() {

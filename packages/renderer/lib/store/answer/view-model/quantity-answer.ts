@@ -60,6 +60,8 @@ export class QuantityAnswer implements IQuantityAnswer {
     return {
       token: `${LEGACY_UNIT_PREFIX}${label}`,
       label,
+      disabled: true,
+      exclusive: false,
     };
   }
 
@@ -69,6 +71,7 @@ export class QuantityAnswer implements IQuantityAnswer {
       token,
       label: coding.display ?? coding.code ?? coding.system ?? token,
       disabled: false,
+      exclusive: false,
     }));
 
     const fallback = this.fallbackOption;
@@ -81,6 +84,7 @@ export class QuantityAnswer implements IQuantityAnswer {
         token: fallback.token,
         label: fallback.label,
         disabled: true,
+        exclusive: false,
       },
       ...base,
     ];

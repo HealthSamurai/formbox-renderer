@@ -35,6 +35,7 @@ export const MultiDropdownSelectControl = observer(
       ariaDescribedBy: getIssueErrorId(selection.answer),
       errors: renderErrors(selection.answer),
       disabled: selection.disabled,
+      exclusive: selection.exclusive === true,
     }));
 
     const formState = store.customOptionFormState;
@@ -60,6 +61,7 @@ export const MultiDropdownSelectControl = observer(
       return store.filteredOptions.map((entry) => ({
         token: entry.token,
         disabled: entry.disabled,
+        exclusive: entry.exclusive === true,
         label: (
           <OptionDisplay prefix={entry.prefix} media={entry.media}>
             <ValueDisplay type={entry.answerType} value={entry.value} />
@@ -73,6 +75,7 @@ export const MultiDropdownSelectControl = observer(
           token: store.specifyOtherToken,
           label: node.openLabel ?? strings.selection.specifyOther,
           disabled: !store.canAddSelection || store.isLoading,
+          exclusive: false,
         }
       : undefined;
 

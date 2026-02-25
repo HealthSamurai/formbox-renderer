@@ -22,6 +22,7 @@ import nestedFollowUps from "./samples/nested-follow-ups.json" with { type: "jso
 import numericThresholds from "./samples/numeric-thresholds.json" with { type: "json" };
 import numericUnits from "./samples/numeric-units.json" with { type: "json" };
 import openLabel from "./samples/open-label.json" with { type: "json" };
+import optionExclusive from "./samples/option-exclusive.json" with { type: "json" };
 import optionPrefix from "./samples/option-prefix.json" with { type: "json" };
 import quantityUnitOptions from "./samples/quantity-unit-options.json" with { type: "json" };
 import repeatingGroup from "./samples/repeating-group.json" with { type: "json" };
@@ -181,6 +182,10 @@ export const Collapsible = makeStory(
   collapsible as Questionnaire,
 );
 export const OpenLabel = makeStory("Open label", openLabel as Questionnaire);
+export const OptionExclusive = makeStory(
+  "Option exclusive",
+  optionExclusive as Questionnaire,
+);
 export const OptionPrefix = makeStory(
   "Option prefix",
   optionPrefix as Questionnaire,

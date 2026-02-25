@@ -267,6 +267,7 @@ export type AnswerOption<T extends AnswerType> = {
   readonly token: OptionToken;
   readonly value: DataTypeToType<AnswerTypeToDataType<T>> | undefined;
   readonly disabled: boolean;
+  readonly exclusive?: boolean | undefined;
   readonly answerType: AnswerType;
   readonly prefix?: string | undefined;
   readonly media?: Attachment | undefined;

@@ -124,6 +124,7 @@ export class AnswerOptionStore<
           token: buildId(this.question.token, "true"),
           value: true,
           disabled: false,
+          exclusive: false,
           answerType: "boolean",
           prefix: undefined,
         },
@@ -131,6 +132,7 @@ export class AnswerOptionStore<
           token: buildId(this.question.token, "false"),
           value: false,
           disabled: false,
+          exclusive: false,
           answerType: "boolean",
           prefix: undefined,
         },
@@ -141,6 +143,7 @@ export class AnswerOptionStore<
                 token: buildId(this.question.token, "null"),
                 value: undefined,
                 disabled: false,
+                exclusive: false,
                 answerType: "boolean",
                 prefix: undefined,
               },
@@ -162,12 +165,15 @@ export class AnswerOptionStore<
       seen.add(token);
 
       const disabled = !this.isOptionEnabled(option);
+      const exclusive =
+        findExtension(option, EXT.OPTION_EXCLUSIVE)?.valueBoolean === true;
 
       return [
         {
           token,
           value,
           disabled,
+          exclusive,
           answerType: this.question.type,
           prefix: getTranslated(
             findExtension(option, EXT.OPTION_PREFIX),
