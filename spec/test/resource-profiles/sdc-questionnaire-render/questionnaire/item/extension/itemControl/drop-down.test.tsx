@@ -320,6 +320,73 @@ describe("itemControl.drop-down", () => {
         );
         expect(getAnswerValues(question)).toEqual([undefined]);
       });
+
+      it("does not show coding system in option labels or selected value", () => {
+        const questionnaire: Questionnaire = {
+          resourceType: "Questionnaire",
+          status: "active",
+          item: [
+            {
+              linkId: "gender",
+              text: "Gender",
+              type: "coding",
+              answerOption: [
+                {
+                  valueCoding: {
+                    code: "F",
+                    system:
+                      "http://terminology.hl7.org/CodeSystem/v3-AdministrativeGender",
+                    display: "Female",
+                  },
+                },
+                {
+                  valueCoding: {
+                    code: "M",
+                    system:
+                      "http://terminology.hl7.org/CodeSystem/v3-AdministrativeGender",
+                    display: "Male",
+                  },
+                },
+              ] as QuestionnaireItemAnswerOption[],
+            },
+          ],
+        };
+
+        const form = new FormStore(
+          en,
+          "r5",
+          questionnaire,
+          undefined,
+          undefined,
+        );
+        const question = getQuestion(form, "gender");
+
+        render(<DropdownSelectRenderer node={question} />);
+
+        const input = getCombobox("Gender");
+        fireEvent.click(input);
+        const listbox = getListbox(input);
+        const female = within(listbox).getByRole("option", { name: "Female" });
+
+        expect(
+          within(listbox).queryByText(
+            "http://terminology.hl7.org/CodeSystem/v3-AdministrativeGender",
+          ),
+        ).toBeNull();
+
+        fireEvent.click(female);
+
+        expect(question.answers[0]?.value).toEqual({
+          code: "F",
+          system:
+            "http://terminology.hl7.org/CodeSystem/v3-AdministrativeGender",
+          display: "Female",
+        });
+        expect(getComboboxValue(getCombobox("Gender"))).toBe("Female");
+        expect(getComboboxValue(getCombobox("Gender"))).not.toContain(
+          "http://",
+        );
+      });
     });
 
     describe("multi (multi-select)", () => {
