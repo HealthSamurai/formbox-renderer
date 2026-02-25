@@ -180,6 +180,11 @@ export interface INodeExpressionRegistry extends IExpressionRegistry {
   readonly answerOptionToggles: ReadonlyArray<AnswerOptionToggleDefinition>;
 }
 
+export interface IVariable {
+  readonly name: string;
+  readonly value: unknown; // todo: make a universal normalization function for the value
+}
+
 export interface IExpressionSlot {
   readonly name?: string | undefined;
   readonly value: unknown; // todo: make a universal normalization function for the value
@@ -215,9 +220,8 @@ export interface IScope {
   extend(ownsNodes: boolean): IScope;
   registerNode(node: IPresentableNode): void;
   lookupNode(linkId: string): IPresentableNode | undefined;
-  registerExpression(slot: IExpressionSlot): void;
-  lookupExpression(name: string): IExpressionSlot | undefined;
-  listExpressions(): IterableIterator<[string, IExpressionSlot]>;
+  registerVariable(slot: IVariable): void;
+  lookupVariable(name: string): IVariable | undefined;
   getParentScope(): IScope | undefined;
   mergeEnvironment(initial: ExpressionEnvironment): ExpressionEnvironment;
 }

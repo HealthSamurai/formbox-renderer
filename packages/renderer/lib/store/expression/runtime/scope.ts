@@ -1,16 +1,33 @@
 import {
-  IExpressionSlot,
+  IVariable,
   IScope,
   ExpressionEnvironment,
   IPresentableNode,
 } from "../../../types.ts";
 import { makeObservable, observable, ObservableMap } from "mobx";
 
-export class DuplicateExpressionNameError extends Error {
-  constructor(public expressionName: string) {
-    super(`Expression name collision for "${expressionName}".`);
+export class DuplicateVariableNameError extends Error {
+  constructor(public variableName: string) {
+    super(`Variable name collision for "${variableName}".`);
   }
 }
+
+export class ReservedVariableNameError extends Error {
+  constructor(public variableName: string) {
+    super(`Variable name "${variableName}" is reserved by FHIRPath/SDC.`);
+  }
+}
+
+const RESERVED_VARIABLE_NAMES = new Set([
+  "resource",
+  "context",
+  "rootResource",
+  "questionnaire",
+  "qitem",
+  "ucum",
+  "sct",
+  "loinc",
+]);
 
 export class Scope implements IScope {
   private parent: IScope | undefined;
@@ -19,9 +36,9 @@ export class Scope implements IScope {
     | ObservableMap<string, IPresentableNode>
     | undefined;
 
-  private readonly expressionRegistry = observable.map<string, IExpressionSlot>(
+  private readonly variableRegistry = observable.map<string, IVariable>(
     {},
-    { deep: false, name: "NodeScope.expressionRegistry" },
+    { deep: false, name: "NodeScope.variableRegistry" },
   );
 
   constructor(ownsNodes: boolean) {
@@ -41,12 +58,12 @@ export class Scope implements IScope {
       get: (extra: ExpressionEnvironment, property: string) => {
         return Object.prototype.hasOwnProperty.call(extra, property)
           ? extra[property]
-          : this.lookupExpression(property)?.value; // todo: exclude self name
+          : this.lookupVariable(property)?.value; // todo: exclude self name
       },
       has: (extra: ExpressionEnvironment, property: string) => {
         return (
           Object.prototype.hasOwnProperty.call(extra, property) ||
-          !!this.lookupExpression(property) // todo: exclude self name
+          !!this.lookupVariable(property) // todo: exclude self name
         );
       },
     });
@@ -76,23 +93,21 @@ export class Scope implements IScope {
     return this.parent?.lookupNode(linkId);
   }
 
-  listExpressions(): IterableIterator<[string, IExpressionSlot]> {
-    return this.expressionRegistry.entries();
+  lookupVariable(name: string): IVariable | undefined {
+    return this.variableRegistry.get(name) ?? this.parent?.lookupVariable(name);
   }
 
-  lookupExpression(name: string): IExpressionSlot | undefined {
-    return (
-      this.expressionRegistry.get(name) ?? this.parent?.lookupExpression(name)
-    );
-  }
+  registerVariable(variable: IVariable): void {
+    if (variable.name) {
+      if (RESERVED_VARIABLE_NAMES.has(variable.name)) {
+        throw new ReservedVariableNameError(variable.name);
+      }
 
-  registerExpression(slot: IExpressionSlot): void {
-    if (slot.name) {
-      const existing = this.expressionRegistry.get(slot.name);
-      if (existing && existing !== slot)
-        throw new DuplicateExpressionNameError(slot.name);
+      const existing = this.variableRegistry.get(variable.name);
+      if (existing && existing !== variable)
+        throw new DuplicateVariableNameError(variable.name);
 
-      this.expressionRegistry.set(slot.name, slot);
+      this.variableRegistry.set(variable.name, variable);
     }
   }
 

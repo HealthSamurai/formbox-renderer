@@ -15,9 +15,12 @@ import {
   findExtensions,
   makeIssue,
 } from "../../../utilities.ts";
-import { ExpressionSlot } from "../slot/expression-slot.ts";
+import { ExpressionSlot, isVariable } from "../slot/expression-slot.ts";
 import { ConstraintSlot } from "../slot/constraint-slot.ts";
-import { DuplicateExpressionNameError } from "../runtime/scope.ts";
+import {
+  DuplicateVariableNameError,
+  ReservedVariableNameError,
+} from "../runtime/scope.ts";
 import { computed, makeObservable, observable } from "mobx";
 
 export class BaseExpressionRegistry implements IExpressionRegistry {
@@ -101,12 +104,17 @@ export class BaseExpressionRegistry implements IExpressionRegistry {
 
     this.slots.push(slot);
 
-    try {
-      this.scope.registerExpression(slot);
-    } catch (error) {
-      if (error instanceof DuplicateExpressionNameError)
-        this.registrationIssues.push(makeIssue("invalid", error.message));
-      else throw error;
+    if (isVariable(slot)) {
+      try {
+        this.scope.registerVariable(slot);
+      } catch (error) {
+        if (
+          error instanceof DuplicateVariableNameError ||
+          error instanceof ReservedVariableNameError
+        )
+          this.registrationIssues.push(makeIssue("invalid", error.message));
+        else throw error;
+      }
     }
 
     return slot;

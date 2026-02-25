@@ -16,8 +16,11 @@ import type {
   QuestionnaireOf,
   QuestionnaireResponseOf,
 } from "@formbox/renderer";
+import { IExpressionSlot } from "@formbox/renderer/types.ts";
+
 type Questionnaire = QuestionnaireOf<"r5">;
 type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
+
 describe("item variable extension", () => {
   it("honors variable shadowing", () => {
     const questionnaire: Questionnaire = {
@@ -251,10 +254,10 @@ describe("item variable extension", () => {
     secondResidentsAnswer0.setValueByUser("Charlie");
 
     const firstResidentCountSlot =
-      firstNode.scope.lookupExpression("residentCount");
+      firstNode.scope.lookupVariable("residentCount");
     assertDefined(firstResidentCountSlot, "Expected residentCount variables");
     const secondResidentCountSlot =
-      secondNode.scope.lookupExpression("residentCount");
+      secondNode.scope.lookupVariable("residentCount");
     assertDefined(secondResidentCountSlot, "Expected residentCount variables");
 
     expect(firstResidents.answers.map((answer) => answer.value)).toEqual([
@@ -519,7 +522,7 @@ describe("item variable extension", () => {
 
     expect(aliases.repeats).toBe(true);
 
-    const aliasVariable = aliases.scope.lookupExpression("allAliases");
+    const aliasVariable = aliases.scope.lookupVariable("allAliases");
     assertDefined(aliasVariable);
 
     expect(aliasVariable.value).toEqual(["Alpha", "Beta"]);
@@ -653,17 +656,15 @@ describe("item variable extension", () => {
     );
     assertQuestionNode(secondCopy1);
 
-    const firstCopy0Variable =
-      firstCopy0.scope.lookupExpression("residentName");
+    const firstCopy0Variable = firstCopy0.scope.lookupVariable("residentName");
     assertDefined(firstCopy0Variable);
-    const firstCopy1Variable =
-      firstCopy1.scope.lookupExpression("residentName");
+    const firstCopy1Variable = firstCopy1.scope.lookupVariable("residentName");
     assertDefined(firstCopy1Variable);
     const secondCopy0Variable =
-      secondCopy0.scope.lookupExpression("residentName");
+      secondCopy0.scope.lookupVariable("residentName");
     assertDefined(secondCopy0Variable);
     const secondCopy1Variable =
-      secondCopy1.scope.lookupExpression("residentName");
+      secondCopy1.scope.lookupVariable("residentName");
     assertDefined(secondCopy1Variable);
 
     expect(firstCopy0Variable).not.toBe(firstCopy1Variable);
@@ -807,7 +808,9 @@ describe("item variable extension", () => {
     const unsupported = form.scope.lookupNode("unsupported");
     assertGroupNode(unsupported);
 
-    const slot = unsupported.scope.lookupExpression("unsupportedVar");
+    const slot = unsupported.scope.lookupVariable(
+      "unsupportedVar",
+    ) as unknown as IExpressionSlot;
     expect(slot).toBeDefined();
     assertDefined(slot);
     void slot.value;
@@ -871,9 +874,13 @@ describe("item variable extension", () => {
     assertGroupNode(cycle);
 
     const scopedCycle = cycle;
-    const first = scopedCycle.scope.lookupExpression("alphaVar");
+    const first = scopedCycle.scope.lookupVariable(
+      "alphaVar",
+    ) as unknown as IExpressionSlot;
     assertDefined(first);
-    const second = scopedCycle.scope.lookupExpression("betaVar");
+    const second = scopedCycle.scope.lookupVariable(
+      "betaVar",
+    ) as unknown as IExpressionSlot;
     assertDefined(second);
     void first.value;
     void second.value;
@@ -904,11 +911,17 @@ describe("item variable extension", () => {
     assertGroupNode(group);
 
     const scopedGroup = group;
-    const alpha = scopedGroup.scope.lookupExpression("alphaVar");
+    const alpha = scopedGroup.scope.lookupVariable(
+      "alphaVar",
+    ) as unknown as IExpressionSlot;
     assertDefined(alpha);
-    const beta = scopedGroup.scope.lookupExpression("betaVar");
+    const beta = scopedGroup.scope.lookupVariable(
+      "betaVar",
+    ) as unknown as IExpressionSlot;
     assertDefined(beta);
-    const gamma = scopedGroup.scope.lookupExpression("gammaVar");
+    const gamma = scopedGroup.scope.lookupVariable(
+      "gammaVar",
+    ) as unknown as IExpressionSlot;
     assertDefined(gamma);
 
     void alpha.value;

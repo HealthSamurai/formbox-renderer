@@ -5,6 +5,7 @@ import {
   IEvaluationCoordinator,
   IExpressionEnvironmentProvider,
   IExpressionSlot,
+  IVariable,
 } from "../../../types.ts";
 import { makeIssue } from "../../../utilities.ts";
 import fhirpath from "fhirpath";
@@ -143,4 +144,10 @@ export class ExpressionSlot implements IExpressionSlot {
   toString(): string {
     return `${this.kind}${this.expression.name ? ` "${this.expression.name}"` : ""}`;
   }
+}
+
+export function isVariable(
+  slot: IExpressionSlot,
+): slot is IExpressionSlot & IVariable {
+  return !!slot.name;
 }
