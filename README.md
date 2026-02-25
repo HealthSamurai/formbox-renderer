@@ -87,6 +87,7 @@ import "@formbox/mantine-theme/style.css";
 - `onChange`: Called on every response change.
 - `onSubmit`: Called after validation passes.
 - `terminologyServerUrl`: Base URL for ValueSet `$expand` requests.
+- `launchContext`: Named resources made available to expressions (for SDC `launchContext` support).
 - `fhirVersion` (required): `"r4"` or `"r5"`.
 
 ## Custom themes

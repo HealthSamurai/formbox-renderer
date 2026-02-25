@@ -13,6 +13,7 @@ import {
   IQuestionNode,
   IScope,
   IValueSetExpander,
+  LaunchContext,
   QuestionRendererDefinition,
   SnapshotKind,
 } from "../../types.ts";
@@ -44,17 +45,23 @@ import { GroupStore, isGroupNode } from "../group/group-store.ts";
 import { DisplayStore } from "../display/display-store.ts";
 import { GroupListStore, isGroupListStore } from "../group/group-list-store.ts";
 import { EvaluationCoordinator } from "../expression/runtime/evaluation-coordinator.ts";
-import { Scope } from "../expression/runtime/scope.ts";
+import {
+  DuplicateVariableNameError,
+  ReservedVariableNameError,
+  Scope,
+} from "../expression/runtime/scope.ts";
 import { BaseExpressionRegistry } from "../expression/registry/base-expression-registry.ts";
 import {
   buildId,
   clamp,
   EXT,
   extractExtensionsValues,
-  getTranslationLanguages,
+  extractExtensionValue,
+  findExtensions,
   getIssueMessage,
   getItemControlCode,
   getTranslated,
+  getTranslationLanguages,
   makeIssue,
   randomToken,
   shouldCreateStore,
@@ -63,6 +70,17 @@ import { ValueSetExpander } from "../option/valueset-expander.ts";
 import type { FormPagination, Strings } from "@formbox/theme";
 import { R4Adapter } from "../../fhir/r4-adapter.ts";
 import { R5Adapter } from "../../fhir/r5-adapter.ts";
+
+const SDC_LAUNCH_CONTEXT_CODE_SYSTEM =
+  "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext";
+
+const SDC_LAUNCH_CONTEXT_TYPES_BY_CODE: Record<string, readonly string[]> = {
+  patient: ["Patient"],
+  user: ["Patient", "Practitioner", "PractitionerRole", "RelatedPerson"],
+  encounter: ["Encounter"],
+  location: ["Location"],
+  study: ["ResearchStudy"],
+};
 
 export class FormStore<V extends FhirVersion = FhirVersion>
   implements IForm, IExpressionEnvironmentProvider
@@ -115,6 +133,9 @@ export class FormStore<V extends FhirVersion = FhirVersion>
   @observable.ref
   private languageState: string | undefined;
 
+  @observable.ref
+  private launchContextState: LaunchContext;
+
   readonly availableLanguages: readonly string[];
 
   constructor(
@@ -124,6 +145,7 @@ export class FormStore<V extends FhirVersion = FhirVersion>
     response?: QuestionnaireResponseOf<V>,
     terminologyServerUrl?: string,
     language?: string | undefined,
+    launchContext?: LaunchContext | undefined,
   ) {
     this.questionRendererRegistry = new RendererRegistry(
       defaultQuestionRenderers,
@@ -139,6 +161,7 @@ export class FormStore<V extends FhirVersion = FhirVersion>
     this.stringsState = strings;
     this.availableLanguages = getTranslationLanguages(this.questionnaire);
     this.languageState = language ?? this.questionnaire.language;
+    this.launchContextState = launchContext ? { ...launchContext } : {};
     makeObservable(this);
 
     this.adapter =
@@ -153,6 +176,7 @@ export class FormStore<V extends FhirVersion = FhirVersion>
       this,
       this.questionnaire,
     );
+    this.registerLaunchContextSlots();
 
     runInAction(() => {
       this.nodes.replace(
@@ -209,6 +233,11 @@ export class FormStore<V extends FhirVersion = FhirVersion>
   @action
   setLanguage(language: string | undefined): void {
     this.languageState = language;
+  }
+
+  @action
+  setLaunchContext(launchContext: LaunchContext | undefined): void {
+    this.launchContextState = launchContext ? { ...launchContext } : {};
   }
 
   @computed
@@ -613,6 +642,75 @@ export class FormStore<V extends FhirVersion = FhirVersion>
       console.warn(
         `[Formbox] Items that are siblings of a page group must be groups with item-control 'page', 'header', or 'footer'. Parent: ${violation.parent}. Invalid linkIds: ${violation.linkIds.join(", ")}.`,
       );
+    });
+  }
+
+  private registerLaunchContextSlots(): void {
+    const extensions = findExtensions(
+      this.questionnaire,
+      EXT.SDC_LAUNCH_CONTEXT,
+    );
+
+    extensions.forEach((extension, index) => {
+      const name = extractExtensionValue("Coding", extension, "name");
+      const contextName = name?.code?.trim();
+      if (!contextName) {
+        this.reportRenderingIssue(
+          makeIssue(
+            "invalid",
+            `LaunchContext extension #${index + 1} is missing name.code.`,
+          ),
+        );
+        return;
+      }
+
+      const types = extractExtensionsValues("code", extension, "type");
+      if (types.length === 0) {
+        this.reportRenderingIssue(
+          makeIssue(
+            "invalid",
+            `LaunchContext "${contextName}" is missing at least one type.`,
+          ),
+        );
+        return;
+      }
+
+      if (name?.system === SDC_LAUNCH_CONTEXT_CODE_SYSTEM) {
+        const allowedTypes = SDC_LAUNCH_CONTEXT_TYPES_BY_CODE[contextName];
+        if (allowedTypes) {
+          const invalidTypes = types.filter(
+            (type) => !allowedTypes.includes(type),
+          );
+          if (invalidTypes.length > 0) {
+            this.reportRenderingIssue(
+              makeIssue(
+                "invalid",
+                `LaunchContext "${contextName}" has invalid type(s): ${invalidTypes.join(", ")}. Allowed type(s): ${allowedTypes.join(", ")}.`,
+              ),
+            );
+            return;
+          }
+        }
+      }
+
+      try {
+        const getValue = () => this.launchContextState[contextName];
+        this.scope.registerVariable({
+          name: contextName,
+          get value() {
+            return getValue();
+          },
+        });
+      } catch (error) {
+        if (
+          error instanceof DuplicateVariableNameError ||
+          error instanceof ReservedVariableNameError
+        ) {
+          this.reportRenderingIssue(makeIssue("invalid", error.message));
+          return;
+        }
+        throw error;
+      }
     });
   }
 

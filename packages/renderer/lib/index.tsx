@@ -8,6 +8,7 @@ import type {
 } from "@formbox/fhir";
 import type { Theme } from "@formbox/theme";
 import ControlledRenderer from "./controlled.tsx";
+import type { LaunchContext } from "./types.ts";
 
 export type RendererProperties<V extends FhirVersion> = {
   questionnaire: QuestionnaireOf<V>;
@@ -17,6 +18,7 @@ export type RendererProperties<V extends FhirVersion> = {
   onSubmit?: ((response: QuestionnaireResponseOf<V>) => void) | undefined;
   onLanguageChange?: ((language: string) => void) | undefined;
   terminologyServerUrl?: string | undefined;
+  launchContext?: LaunchContext | undefined;
   fhirVersion: V;
   theme: Theme;
 };
@@ -36,6 +38,7 @@ function Renderer<V extends FhirVersion>({
   onSubmit,
   onLanguageChange,
   terminologyServerUrl,
+  launchContext,
   fhirVersion,
   theme,
 }: RendererProperties<V>) {
@@ -70,6 +73,7 @@ function Renderer<V extends FhirVersion>({
       onSubmit={onSubmit ?? null}
       onLanguageChange={handleLanguageChange}
       terminologyServerUrl={terminologyServerUrl ?? null}
+      launchContext={launchContext ?? null}
       fhirVersion={fhirVersion}
       theme={theme}
     />
@@ -102,3 +106,4 @@ export type {
 } from "@formbox/fhir";
 
 export type { Strings } from "@formbox/theme";
+export type { LaunchContext } from "./types.ts";

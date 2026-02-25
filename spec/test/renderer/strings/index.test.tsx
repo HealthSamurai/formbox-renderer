@@ -135,6 +135,7 @@ describe("renderer.strings", () => {
         onSubmit={noopOnSubmit}
         onLanguageChange={noopOnLanguageChange}
         terminologyServerUrl={TERMINOLOGY_SERVER_URL}
+        launchContext={null}
       />,
     );
 
@@ -171,6 +172,7 @@ describe("renderer.strings", () => {
         onSubmit={noopOnSubmit}
         onLanguageChange={noopOnLanguageChange}
         terminologyServerUrl={TERMINOLOGY_SERVER_URL}
+        launchContext={null}
       />,
     );
 
@@ -217,6 +219,7 @@ describe("renderer.strings", () => {
         onSubmit={noopOnSubmit}
         onLanguageChange={noopOnLanguageChange}
         terminologyServerUrl={TERMINOLOGY_SERVER_URL}
+        launchContext={null}
       />,
     );
 
@@ -281,6 +284,7 @@ describe("renderer.strings", () => {
         onSubmit={noopOnSubmit}
         onLanguageChange={noopOnLanguageChange}
         terminologyServerUrl={TERMINOLOGY_SERVER_URL}
+        launchContext={null}
       />,
     );
 
@@ -326,6 +330,7 @@ describe("renderer.strings", () => {
           onSubmit={noopOnSubmit}
           onLanguageChange={noopOnLanguageChange}
           terminologyServerUrl={TERMINOLOGY_SERVER_URL}
+          launchContext={null}
         />
       );
     }

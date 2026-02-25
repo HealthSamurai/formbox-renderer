@@ -66,6 +66,7 @@ These types map directly to `fhir/r4` or `fhir/r5` based on the version you pass
 | `onChange`                     | `(response: QuestionnaireResponseOf<V>) => void` | No       | Called with the latest response whenever state changes.   |
 | `onSubmit`                     | `(response: QuestionnaireResponseOf<V>) => void` | No       | Called after validation passes and the form is submitted. |
 | `terminologyServerUrl`         | `string`                                         | No       | Base URL for ValueSet `$expand` requests.                 |
+| `launchContext`                | `Record<string, unknown>`                        | No       | Named resources exposed to expressions via launchContext. |
 | `defaultLanguage`              | `string`                                         | No       | Initial language value.                                   |
 | `onLanguageChange`             | `(language: string) => void`                     | No       | Called when the user selects a different language.        |
 | `fhirVersion`                  | `"r4" \| "r5"`                                   | Yes      | FHIR version for Questionnaire parsing.                   |

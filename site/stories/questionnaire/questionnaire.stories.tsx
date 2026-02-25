@@ -17,6 +17,7 @@ import itemControlHelp from "./samples/item-control-help.json" with { type: "jso
 import itemAnswerMedia from "./samples/item-answer-media.json" with { type: "json" };
 import itemMedia from "./samples/item-media.json" with { type: "json" };
 import itemShortText from "./samples/item-short-text.json" with { type: "json" };
+import launchContext from "./samples/launch-context.json" with { type: "json" };
 import multilingual from "./samples/multilingual.json" with { type: "json" };
 import nestedFollowUps from "./samples/nested-follow-ups.json" with { type: "json" };
 import numericThresholds from "./samples/numeric-thresholds.json" with { type: "json" };
@@ -34,10 +35,14 @@ import textControls from "./samples/text-controls.json" with { type: "json" };
 import validation from "./samples/validation.json" with { type: "json" };
 import width from "./samples/width.json" with { type: "json" };
 
-import type { QuestionnaireOf } from "@formbox/renderer";
+import type {
+  LaunchContext as RendererLaunchContext,
+  QuestionnaireOf,
+} from "@formbox/renderer";
 type Questionnaire = QuestionnaireOf<"r5">;
 type PlaygroundArguments = {
   questionnaire: Questionnaire;
+  launchContext?: RendererLaunchContext | undefined;
 };
 
 const meta = {
@@ -49,6 +54,10 @@ const meta = {
     questionnaire: {
       control: { type: "object" },
       description: "Input questionnaire",
+    },
+    launchContext: {
+      control: { type: "object" },
+      description: "Launch context resources exposed to expressions.",
     },
   },
 } satisfies Meta<PlaygroundArguments>;
@@ -67,6 +76,7 @@ function makeStory(
         <Renderer
           fhirVersion="r5"
           questionnaire={arguments_.questionnaire}
+          launchContext={arguments_.launchContext}
           storyId={context.id}
           mode="form"
         />
@@ -186,6 +196,24 @@ export const OptionExclusive = makeStory(
   "Option exclusive",
   optionExclusive as Questionnaire,
 );
+export const LaunchContext = makeStory(
+  "Launch context",
+  launchContext as Questionnaire,
+);
+LaunchContext.args = {
+  questionnaire: launchContext as Questionnaire,
+  launchContext: {
+    patient: {
+      resourceType: "Patient",
+      id: "patient-123",
+      name: [{ given: ["Alice"], family: "Johnson" }],
+    },
+    encounter: {
+      resourceType: "Encounter",
+      id: "encounter-456",
+    },
+  },
+};
 export const OptionPrefix = makeStory(
   "Option prefix",
   optionPrefix as Questionnaire,

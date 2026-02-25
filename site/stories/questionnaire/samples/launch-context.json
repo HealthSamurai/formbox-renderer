@@ -1,0 +1,101 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "launch-context",
+  "status": "active",
+  "title": "Launch Context",
+  "description": "Demonstrates calculated expressions that read launch context variables.",
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext",
+      "extension": [
+        {
+          "url": "name",
+          "valueCoding": {
+            "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext",
+            "code": "patient"
+          }
+        },
+        {
+          "url": "type",
+          "valueCode": "Patient"
+        },
+        {
+          "url": "description",
+          "valueString": "Patient in scope for this form session."
+        }
+      ]
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext",
+      "extension": [
+        {
+          "url": "name",
+          "valueCoding": {
+            "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext",
+            "code": "encounter"
+          }
+        },
+        {
+          "url": "type",
+          "valueCode": "Encounter"
+        },
+        {
+          "url": "description",
+          "valueString": "Encounter in scope for this form session."
+        }
+      ]
+    }
+  ],
+  "item": [
+    {
+      "linkId": "launch-context-notes",
+      "type": "display",
+      "text": "This story passes patient and encounter resources through launchContext. Calculated expressions read them as %patient and %encounter."
+    },
+    {
+      "linkId": "patient-id",
+      "type": "string",
+      "text": "Patient ID",
+      "readOnly": true,
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "%patient.id"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "patient-given-name",
+      "type": "string",
+      "text": "Patient given name",
+      "readOnly": true,
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "%patient.name.given.first().first()"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "encounter-id",
+      "type": "string",
+      "text": "Encounter ID",
+      "readOnly": true,
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "%encounter.id"
+          }
+        }
+      ]
+    }
+  ]
+}

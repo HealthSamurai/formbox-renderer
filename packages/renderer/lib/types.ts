@@ -199,6 +199,8 @@ export interface IExpressionSlot {
 export type ExpressionEnvironment = Record<string, unknown> &
   Record<"context", unknown>;
 
+export type LaunchContext = Record<string, unknown>;
+
 export interface IFhirAdapter {
   readonly version: FhirVersion;
   readonly attachment: IAttachmentAdapter;

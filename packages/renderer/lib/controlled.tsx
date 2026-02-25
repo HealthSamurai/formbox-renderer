@@ -6,6 +6,7 @@ import type {
   QuestionnaireResponseOf,
 } from "@formbox/fhir";
 import { type Strings, StringsContext, type Theme } from "@formbox/theme";
+import type { LaunchContext } from "./types.ts";
 import { Form } from "./component/form/form.tsx";
 import { FormStore } from "./store/form/form-store.ts";
 import { ThemeProvider } from "./ui/theme.tsx";
@@ -19,6 +20,7 @@ export type RendererProperties<V extends FhirVersion> = {
   onSubmit: ((response: QuestionnaireResponseOf<V>) => void) | null;
   onLanguageChange: ((language: string) => void) | null;
   terminologyServerUrl: string | null;
+  launchContext: LaunchContext | null;
   fhirVersion: V;
   theme: Theme;
 };
@@ -32,6 +34,7 @@ function Renderer<V extends FhirVersion>({
   onSubmit,
   onLanguageChange,
   terminologyServerUrl,
+  launchContext,
   fhirVersion,
   theme,
 }: RendererProperties<V>) {
@@ -40,6 +43,7 @@ function Renderer<V extends FhirVersion>({
   const stringsReference = useRef(strings);
   const languageReference = useRef(language);
   const responseReference = useRef(defaultQuestionnaireResponse);
+  const launchContextReference = useRef(launchContext);
   const isInitialStoreSetupReference = useRef(true);
 
   useEffect(() => {
@@ -50,7 +54,8 @@ function Renderer<V extends FhirVersion>({
     stringsReference.current = strings;
     languageReference.current = language;
     responseReference.current = defaultQuestionnaireResponse;
-  }, [defaultQuestionnaireResponse, language, strings]);
+    launchContextReference.current = launchContext;
+  }, [defaultQuestionnaireResponse, language, strings, launchContext]);
 
   const [store, setStore] = useState<FormStore<V>>(
     () =>
@@ -61,6 +66,7 @@ function Renderer<V extends FhirVersion>({
         defaultQuestionnaireResponse ?? undefined,
         terminologyServerUrl ?? undefined,
         language ?? undefined,
+        launchContext ?? undefined,
       ),
   );
 
@@ -78,6 +84,7 @@ function Renderer<V extends FhirVersion>({
         responseReference.current ?? undefined,
         terminologyServerUrl ?? undefined,
         languageReference.current ?? undefined,
+        launchContextReference.current ?? undefined,
       ),
     );
   }, [fhirVersion, questionnaire, terminologyServerUrl]);
@@ -89,6 +96,10 @@ function Renderer<V extends FhirVersion>({
   useEffect(() => {
     store.setLanguage(language ?? undefined);
   }, [store, language]);
+
+  useEffect(() => {
+    store.setLaunchContext(launchContext ?? undefined);
+  }, [store, launchContext]);
 
   useEffect(() => {
     const dispose = reaction(

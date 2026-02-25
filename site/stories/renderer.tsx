@@ -14,11 +14,16 @@ import {
   useQuestionnaireResponseBroadcaster,
 } from "./story-channel-hooks.ts";
 
-import type { FhirVersion, QuestionnaireOf } from "@formbox/renderer";
+import type {
+  FhirVersion,
+  LaunchContext,
+  QuestionnaireOf,
+} from "@formbox/renderer";
 type RendererMode = "node" | "form";
 
 type RendererProperties<V extends FhirVersion = "r5"> = {
   questionnaire: QuestionnaireOf<V>;
+  launchContext?: LaunchContext | undefined;
   fhirVersion: V;
   storyId: string;
   mode: RendererMode;
@@ -45,6 +50,7 @@ function resolveStrings(language: string | undefined): Strings {
 
 export function Renderer<V extends FhirVersion = "r5">({
   questionnaire,
+  launchContext,
   fhirVersion,
   storyId,
   mode,
@@ -68,6 +74,9 @@ export function Renderer<V extends FhirVersion = "r5">({
   useEffect(() => {
     store.setStrings(strings);
   }, [store, strings]);
+  useEffect(() => {
+    store.setLaunchContext(launchContext);
+  }, [store, launchContext]);
 
   useQuestionnaireResponseBroadcaster(store, storyId);
   useQuestionnaireBroadcaster(questionnaire, storyId);

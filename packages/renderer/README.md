@@ -58,6 +58,7 @@ These types map directly to `fhir/r4` or `fhir/r5` based on the version you pass
 - `onSubmit`: Called after validation passes.
 - `onLanguageChange`: Called when user selects another language.
 - `terminologyServerUrl`: Base URL for ValueSet `$expand` requests.
+- `launchContext`: Named resources made available to expressions (for SDC `launchContext` support).
 - `fhirVersion`: `"r4"` or `"r5"` (required).
 
 ## Partially controlled mode

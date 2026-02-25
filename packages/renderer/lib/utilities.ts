@@ -214,6 +214,7 @@ export const EXT = {
   SUPPORT_LINK:                  "http://hl7.org/fhir/StructureDefinition/questionnaire-supportLink",
   SUPPORT_HYPERLINK:             "http://hl7.org/fhir/StructureDefinition/questionnaire-supportHyperlink",
   SDC_OPEN_LABEL:                "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-openLabel",
+  SDC_LAUNCH_CONTEXT:            "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext",
   OPTION_PREFIX:                 "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
   OPTION_EXCLUSIVE:              "http://hl7.org/fhir/StructureDefinition/questionnaire-optionExclusive",
   CQF_EXPRESSION:                "http://hl7.org/fhir/StructureDefinition/cqf-expression",
