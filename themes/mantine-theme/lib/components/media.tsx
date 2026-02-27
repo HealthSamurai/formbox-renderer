@@ -1,5 +1,5 @@
 import { Anchor, Text } from "@mantine/core";
-import type { Attachment } from "@formbox/theme";
+import { useStrings, type Attachment } from "@formbox/theme";
 import { styled } from "@linaria/react";
 
 function getAttachmentSource(attachment: Attachment): string | undefined {
@@ -22,7 +22,9 @@ function MediaBase({
   attachment: Attachment;
   className?: string;
 }) {
-  const label = attachment.title ?? attachment.url ?? "Attachment";
+  const strings = useStrings();
+  const label =
+    attachment.title ?? attachment.url ?? strings.inputs.attachmentLabel;
   const source = getAttachmentSource(attachment);
   const contentType = attachment.contentType?.toLowerCase();
   const classNameProperties = className === undefined ? {} : { className };

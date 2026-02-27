@@ -1,4 +1,4 @@
-import type { AnswerScaffoldProperties } from "@formbox/theme";
+import { useStrings, type AnswerScaffoldProperties } from "@formbox/theme";
 import { Button, Space } from "antd";
 
 export function AnswerScaffold({
@@ -8,6 +8,8 @@ export function AnswerScaffold({
   errors,
   children,
 }: AnswerScaffoldProperties) {
+  const strings = useStrings();
+
   return (
     <Space orientation="vertical" size="small" style={{ width: "100%" }}>
       <Space
@@ -23,7 +25,7 @@ export function AnswerScaffold({
             onClick={onRemove}
             disabled={canRemove === false}
           >
-            Remove
+            {strings.group.removeSection}
           </Button>
         )}
       </Space>

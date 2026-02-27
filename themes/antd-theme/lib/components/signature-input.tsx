@@ -1,4 +1,5 @@
 import {
+  useStrings,
   type SignatureInputProperties,
   PerfectFreehand as BaseSignatureInput,
 } from "@formbox/theme";
@@ -17,6 +18,7 @@ export function SignatureInput({
   ariaDescribedBy,
   onChange,
 }: SignatureInputProperties) {
+  const strings = useStrings();
   const [signatureVersion, setSignatureVersion] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -48,7 +50,7 @@ export function SignatureInput({
               // shape="circle"
               icon={<CloseOutlined />}
               onClick={handleClear}
-              aria-label="Clear signature"
+              aria-label={strings.signature.clearAction}
             />
           </ClearButtonSlot>
         ) : undefined}
@@ -73,7 +75,7 @@ export function SignatureInput({
         aria-controls={`${id}-dropdown`}
         icon={<EditOutlined />}
       >
-        {value ? "Signed" : "Sign"}
+        {value ? strings.signature.signed : strings.signature.sign}
       </Button>
     </Popover>
   );

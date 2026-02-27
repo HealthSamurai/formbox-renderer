@@ -15,11 +15,22 @@ const strings: Strings = {
     cancel: "Annulla",
     submit: "Applica",
   },
+  form: {
+    submit: "Invia",
+    cancel: "Annulla",
+  },
   errors: {
-    unknown: "Errore sconosciuto",
+    unknownMessage: "Errore sconosciuto",
+    issuesTitle: "Problemi",
+    issueMessage: "Errore: {message}",
   },
   file: {
     sizeLabel: "{sizeKb} KB",
+    chooseAction: "Scegli file",
+    changeAction: "Cambia file",
+    replaceAction: "Sostituisci file",
+    clearAction: "Cancella",
+    noFileChosen: "Nessun file selezionato",
   },
   group: {
     addSection: "Aggiungi un altro",
@@ -38,6 +49,7 @@ const strings: Strings = {
     quantityValuePlaceholder: "Valore",
     quantityUnitPlaceholder: "Unità",
     attachmentSelected: "Allegato selezionato",
+    attachmentLabel: "Allegato",
   },
   selection: {
     specifyOther: "Specifica altro",
@@ -45,12 +57,25 @@ const strings: Strings = {
     selectPlaceholder: "Seleziona un'opzione",
     removeSelection: "Rimuovi selezione",
     removeCustomValue: "Rimuovi valore personalizzato",
+    searchPlaceholder: "Cerca",
+    noOptions: "Nessuna opzione",
+    loadingOptions: "Caricamento opzioni...",
+    dividerOr: "o",
+  },
+  pagination: {
+    navigation: "Paginazione",
+    previous: "Precedente",
+    next: "Successivo",
+    pageLabel: "Pagina {page}",
+    previousTargetPage: "Pagina precedente {page}",
+    nextTargetPage: "Pagina successiva {page}",
   },
   language: {
     label: "Lingua",
     placeholder: "Seleziona lingua",
   },
   table: {
+    empty: "Niente da visualizzare.",
     noChoiceQuestionsHorizontal:
       "Nessuna domanda a scelta disponibile per la tabella orizzontale.",
     noChoiceQuestions: "Nessuna domanda a scelta disponibile.",
@@ -65,6 +90,17 @@ const strings: Strings = {
   },
   tab: {
     empty: "Nessun contenuto nella scheda",
+    scrollLeft: "Scorri le schede a sinistra",
+    scrollRight: "Scorri le schede a destra",
+  },
+  signature: {
+    sign: "Firma",
+    signed: "Firmato",
+    clearAction: "Cancella firma",
+  },
+  spinner: {
+    decrease: "Riduci valore",
+    increase: "Aumenta valore",
   },
   unsupported: {
     itemType: "Tipo non supportato: {type}",

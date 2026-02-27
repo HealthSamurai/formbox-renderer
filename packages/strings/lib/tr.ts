@@ -15,11 +15,22 @@ const strings: Strings = {
     cancel: "İptal",
     submit: "Uygula",
   },
+  form: {
+    submit: "Gönder",
+    cancel: "İptal",
+  },
   errors: {
-    unknown: "Bilinmeyen hata",
+    unknownMessage: "Bilinmeyen hata",
+    issuesTitle: "Sorunlar",
+    issueMessage: "Hata: {message}",
   },
   file: {
     sizeLabel: "{sizeKb} KB",
+    chooseAction: "Dosya seç",
+    changeAction: "Dosyayı değiştir",
+    replaceAction: "Dosyayı değiştir",
+    clearAction: "Temizle",
+    noFileChosen: "Dosya seçilmedi",
   },
   group: {
     addSection: "Bir tane daha ekle",
@@ -38,6 +49,7 @@ const strings: Strings = {
     quantityValuePlaceholder: "Değer",
     quantityUnitPlaceholder: "Birim",
     attachmentSelected: "Ek seçildi",
+    attachmentLabel: "Ek",
   },
   selection: {
     specifyOther: "Diğerini belirt",
@@ -45,12 +57,25 @@ const strings: Strings = {
     selectPlaceholder: "Bir seçenek seçin",
     removeSelection: "Seçimi kaldır",
     removeCustomValue: "Özel değeri kaldır",
+    searchPlaceholder: "Ara",
+    noOptions: "Seçenek yok",
+    loadingOptions: "Seçenekler yükleniyor...",
+    dividerOr: "veya",
+  },
+  pagination: {
+    navigation: "Sayfalama",
+    previous: "Önceki",
+    next: "Sonraki",
+    pageLabel: "Sayfa {page}",
+    previousTargetPage: "Önceki sayfa {page}",
+    nextTargetPage: "Sonraki sayfa {page}",
   },
   language: {
     label: "Dil",
     placeholder: "Dil seçin",
   },
   table: {
+    empty: "Gösterilecek bir şey yok.",
     noChoiceQuestionsHorizontal: "Yatay tablo için seçimli soru bulunamadı.",
     noChoiceQuestions: "Seçimli soru bulunamadı.",
     noAnswerOptionsHorizontal:
@@ -63,6 +88,17 @@ const strings: Strings = {
   },
   tab: {
     empty: "Sekme içeriği yok",
+    scrollLeft: "Sekmeleri sola kaydır",
+    scrollRight: "Sekmeleri sağa kaydır",
+  },
+  signature: {
+    sign: "İmzala",
+    signed: "İmzalı",
+    clearAction: "İmzayı temizle",
+  },
+  spinner: {
+    decrease: "Değeri azalt",
+    increase: "Değeri artır",
   },
   unsupported: {
     itemType: "Desteklenmeyen tür: {type}",

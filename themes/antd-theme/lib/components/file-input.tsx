@@ -1,4 +1,4 @@
-import type { FileInputProperties } from "@formbox/theme";
+import { useStrings, type FileInputProperties } from "@formbox/theme";
 import { Button, Space, Typography } from "antd";
 import { useRef, type ChangeEvent } from "react";
 
@@ -11,14 +11,20 @@ export function FileInput({
   value,
   onChange,
 }: FileInputProperties) {
+  const strings = useStrings();
   const fileInputReference = useRef<HTMLInputElement | null>(null);
   const hasValue = value != undefined;
   const displayLabel =
     value?.title ??
     value?.url ??
-    (hasValue ? "Attachment selected" : "Choose file");
+    (hasValue ? strings.inputs.attachmentSelected : strings.file.chooseAction);
   const displaySizeLabel =
-    value?.size == undefined ? "" : `${Math.round(value.size / 1024)} KB`;
+    value?.size == undefined
+      ? ""
+      : strings.file.sizeLabel.replace(
+          "{sizeKb}",
+          String(Math.round(value.size / 1024)),
+        );
   const textProperties = hasValue ? {} : ({ type: "secondary" } as const);
 
   const handlePickFile = () => {
@@ -50,7 +56,7 @@ export function FileInput({
         style={{ display: "none" }}
       />
       <Button onClick={handlePickFile} disabled={disabled === true}>
-        {hasValue ? "Replace file" : "Choose file"}
+        {hasValue ? strings.file.replaceAction : strings.file.chooseAction}
       </Button>
       <Typography.Text {...textProperties}>
         {displayLabel}
@@ -63,7 +69,7 @@ export function FileInput({
           onClick={() => onChange?.()}
           disabled={disabled === true}
         >
-          Clear
+          {strings.file.clearAction}
         </Button>
       )}
     </Space>

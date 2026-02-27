@@ -1,4 +1,5 @@
 import {
+  useStrings,
   type SignatureInputProperties,
   PerfectFreehand as BaseSignatureInput,
 } from "@formbox/theme";
@@ -16,6 +17,7 @@ export function SignatureInput({
   ariaDescribedBy,
   onChange,
 }: SignatureInputProperties) {
+  const strings = useStrings();
   const [signatureVersion, setSignatureVersion] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -37,7 +39,7 @@ export function SignatureInput({
         aria-controls={`${id}-dropdown`}
         onClick={() => setIsOpen((open) => !open)}
       >
-        {value ? "Signed" : "Sign"}
+        {value ? strings.signature.signed : strings.signature.sign}
         <Chevron aria-hidden data-open={isOpen ? "true" : undefined} />
       </ActionButton>
       {isOpen ? (
@@ -57,7 +59,7 @@ export function SignatureInput({
                 <IconButton
                   icon="×"
                   onClick={handleClear}
-                  label="Clear signature"
+                  label={strings.signature.clearAction}
                 />
               </ClearButtonSlot>
             ) : undefined}

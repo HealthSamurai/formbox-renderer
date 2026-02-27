@@ -1,6 +1,6 @@
 import type { FormEvent } from "react";
 import { Box, Button, Group, Stack, Text, Title } from "@mantine/core";
-import type { FormProperties } from "@formbox/theme";
+import { useStrings, type FormProperties } from "@formbox/theme";
 
 export function Form({
   onSubmit,
@@ -15,6 +15,8 @@ export function Form({
   after,
   signature,
 }: FormProperties) {
+  const strings = useStrings();
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     onSubmit?.();
@@ -61,7 +63,7 @@ export function Form({
                 onClick={pagination.onPrev}
                 disabled={pagination.disabledPrev}
               >
-                Previous
+                {strings.pagination.previous}
               </Button>
               <Text size="sm">
                 {pagination.current} / {pagination.total}
@@ -72,13 +74,13 @@ export function Form({
                 onClick={pagination.onNext}
                 disabled={pagination.disabledNext}
               >
-                Next
+                {strings.pagination.next}
               </Button>
             </Group>
             <Group gap="xs" align="center">
               {signature}
               <Button type="submit" disabled={onSubmit == undefined}>
-                Submit
+                {strings.form.submit}
               </Button>
               <Button
                 type="button"
@@ -86,7 +88,7 @@ export function Form({
                 onClick={handleCancel}
                 disabled={onCancel == undefined}
               >
-                Cancel
+                {strings.form.cancel}
               </Button>
             </Group>
           </Group>
@@ -94,7 +96,7 @@ export function Form({
           <Group justify="flex-end" gap="xs">
             {signature}
             <Button type="submit" disabled={onSubmit == undefined}>
-              Submit
+              {strings.form.submit}
             </Button>
             <Button
               type="button"
@@ -102,7 +104,7 @@ export function Form({
               onClick={handleCancel}
               disabled={onCancel == undefined}
             >
-              Cancel
+              {strings.form.cancel}
             </Button>
           </Group>
         )}

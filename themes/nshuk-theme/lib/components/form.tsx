@@ -1,5 +1,5 @@
 import type { FormEvent } from "react";
-import type { FormProperties } from "@formbox/theme";
+import { useStrings, type FormProperties } from "@formbox/theme";
 import { styled } from "@linaria/react";
 
 export function Form({
@@ -15,6 +15,8 @@ export function Form({
   signature,
   pagination,
 }: FormProperties) {
+  const strings = useStrings();
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     onSubmit?.();
@@ -24,7 +26,7 @@ export function Form({
     <>
       {signature}
       <ActionButton variant="primary" type="submit" disabled={!onSubmit}>
-        Submit
+        {strings.form.submit}
       </ActionButton>
       <ActionButton
         variant="secondary"
@@ -32,7 +34,7 @@ export function Form({
         onClick={handleCancel}
         disabled={!onCancel}
       >
-        Cancel
+        {strings.form.cancel}
       </ActionButton>
     </>
   );
@@ -60,6 +62,8 @@ export function Form({
       pagination.current,
       pagination.total,
     );
+    const previousPage = Math.max(1, pagination.current - 1);
+    const nextPage = Math.min(pagination.total, pagination.current + 1);
 
     const goToPage = (page: number) => {
       if (page === pagination.current) {
@@ -84,13 +88,17 @@ export function Form({
         <nav
           className="nhsuk-pagination nhsuk-pagination--numbered"
           role="navigation"
-          aria-label="Pagination"
+          aria-label={strings.pagination.navigation}
         >
           {pagination.disabledPrev ? undefined : (
             <a
               href="#"
               className="nhsuk-pagination__previous"
               rel="prev"
+              aria-label={strings.pagination.previousTargetPage.replace(
+                "{page}",
+                String(previousPage),
+              )}
               onClick={(event) => {
                 event.preventDefault();
                 pagination.onPrev();
@@ -98,7 +106,7 @@ export function Form({
             >
               <ArrowLeftIcon />
               <span className="nhsuk-pagination__title">
-                Previous<span className="nhsuk-u-visually-hidden"> page</span>
+                {strings.pagination.previous}
               </span>
             </a>
           )}
@@ -125,7 +133,10 @@ export function Form({
                   <a
                     className="nhsuk-pagination__link"
                     href="#"
-                    aria-label={`Page ${item.page}`}
+                    aria-label={strings.pagination.pageLabel.replace(
+                      "{page}",
+                      String(item.page),
+                    )}
                     aria-current={item.current ? "page" : undefined}
                     onClick={(event) => {
                       event.preventDefault();
@@ -144,13 +155,17 @@ export function Form({
               href="#"
               className="nhsuk-pagination__next"
               rel="next"
+              aria-label={strings.pagination.nextTargetPage.replace(
+                "{page}",
+                String(nextPage),
+              )}
               onClick={(event) => {
                 event.preventDefault();
                 pagination.onNext();
               }}
             >
               <span className="nhsuk-pagination__title">
-                Next<span className="nhsuk-u-visually-hidden"> page</span>
+                {strings.pagination.next}
               </span>
               <ArrowRightIcon />
             </a>

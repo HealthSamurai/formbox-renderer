@@ -1,5 +1,5 @@
 import type { FormEvent } from "react";
-import type { FormProperties } from "@formbox/theme";
+import { useStrings, type FormProperties } from "@formbox/theme";
 import { Button, Space, Typography } from "antd";
 
 export function Form({
@@ -15,6 +15,8 @@ export function Form({
   signature,
   pagination,
 }: FormProperties) {
+  const strings = useStrings();
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     onSubmit?.();
@@ -55,10 +57,10 @@ export function Form({
     <Space wrap>
       {signature}
       <Button type="primary" htmlType="submit" disabled={!onSubmit}>
-        Submit
+        {strings.form.submit}
       </Button>
       <Button onClick={onCancel} disabled={!onCancel}>
-        Cancel
+        {strings.form.cancel}
       </Button>
     </Space>
   );
@@ -82,7 +84,7 @@ export function Form({
                 onClick={pagination.onPrev}
                 disabled={pagination.disabledPrev}
               >
-                Previous
+                {strings.pagination.previous}
               </Button>
               <Typography.Text>
                 {pagination.current} / {pagination.total}
@@ -92,7 +94,7 @@ export function Form({
                 onClick={pagination.onNext}
                 disabled={pagination.disabledNext}
               >
-                Next
+                {strings.pagination.next}
               </Button>
             </Space>
             {actions}

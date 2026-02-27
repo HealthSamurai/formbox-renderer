@@ -1,5 +1,5 @@
 import { styled } from "@linaria/react";
-import type { RadioButtonListProperties } from "@formbox/theme";
+import { useStrings, type RadioButtonListProperties } from "@formbox/theme";
 import { LoadingSpinner } from "./loading-spinner.tsx";
 
 export function RadioButtonList({
@@ -15,6 +15,7 @@ export function RadioButtonList({
   disabled,
   isLoading,
 }: RadioButtonListProperties) {
+  const strings = useStrings();
   const selectedToken = selectedOption?.token ?? "";
   const makeInputId = (token: string) => `${id}-${token}`;
 
@@ -55,7 +56,9 @@ export function RadioButtonList({
       {specifyOtherOption && (
         <>
           {options.length > 0 && (
-            <div className="nhsuk-radios__divider">or</div>
+            <div className="nhsuk-radios__divider">
+              {strings.selection.dividerOr}
+            </div>
           )}
           {renderOption(specifyOtherOption)}
         </>

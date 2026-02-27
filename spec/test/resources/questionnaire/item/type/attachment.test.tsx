@@ -47,7 +47,7 @@ describe("type.attachment", () => {
 
     expect(screen.getByText("Attachment selected (2 KB)")).toBeInTheDocument();
     const clearButton = screen.getByRole("button", {
-      name: "Clear attachment",
+      name: en.file.clearAction,
     });
 
     const user = userEvent.setup();

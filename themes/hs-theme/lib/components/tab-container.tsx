@@ -1,5 +1,5 @@
 import { styled } from "@linaria/react";
-import type { TabContainerProperties } from "@formbox/theme";
+import { useStrings, type TabContainerProperties } from "@formbox/theme";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { clamp } from "./utilities.ts";
 
@@ -11,6 +11,7 @@ export function TabContainer({
   errors,
   linkId,
 }: TabContainerProperties) {
+  const strings = useStrings();
   const tabListReference = useRef<HTMLDivElement | null>(null);
   const tabListInnerReference = useRef<HTMLDivElement | null>(null);
   const leftScrollReference = useRef<HTMLButtonElement | null>(null);
@@ -111,7 +112,7 @@ export function TabContainer({
   };
 
   if (items.length === 0) {
-    return <Empty>{"No tab content available."}</Empty>;
+    return <Empty>{strings.tab.empty}</Empty>;
   }
 
   const active = items[clampedIndex];
@@ -123,7 +124,7 @@ export function TabContainer({
         <TabScrollButton
           ref={leftScrollReference}
           type="button"
-          aria-label="Scroll tabs left"
+          aria-label={strings.tab.scrollLeft}
           onClick={() => handleScrollButton(-1)}
           data-direction="left"
           data-visible={isScrollable && canScrollLeft ? "true" : "false"}
@@ -156,7 +157,7 @@ export function TabContainer({
         <TabScrollButton
           ref={rightScrollReference}
           type="button"
-          aria-label="Scroll tabs right"
+          aria-label={strings.tab.scrollRight}
           onClick={() => handleScrollButton(1)}
           data-direction="right"
           data-visible={isScrollable && canScrollRight ? "true" : "false"}

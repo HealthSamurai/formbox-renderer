@@ -1,4 +1,4 @@
-import type { TabContainerProperties } from "@formbox/theme";
+import { useStrings, type TabContainerProperties } from "@formbox/theme";
 
 export function TabContainer({
   header,
@@ -8,10 +8,12 @@ export function TabContainer({
   errors,
   linkId,
 }: TabContainerProperties) {
+  const strings = useStrings();
+
   if (items.length === 0) {
     return (
       <div className="nhsuk-form-group">
-        <div className="nhsuk-hint">No tab content available.</div>
+        <div className="nhsuk-hint">{strings.tab.empty}</div>
       </div>
     );
   }

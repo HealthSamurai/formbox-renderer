@@ -1,4 +1,4 @@
-import type { AnswerScaffoldProperties } from "@formbox/theme";
+import { useStrings, type AnswerScaffoldProperties } from "@formbox/theme";
 import { styled } from "@linaria/react";
 
 export function AnswerScaffold({
@@ -8,6 +8,8 @@ export function AnswerScaffold({
   errors,
   children,
 }: AnswerScaffoldProperties) {
+  const strings = useStrings();
+
   return (
     <Column>
       <MainRow>
@@ -24,7 +26,7 @@ export function AnswerScaffold({
                 disabled={canRemove === false}
                 className="nhsuk-button nhsuk-button--secondary nhsuk-button--small"
               >
-                Remove
+                {strings.group.removeSection}
               </button>
             </div>
           </Remove>

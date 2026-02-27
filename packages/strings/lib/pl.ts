@@ -15,11 +15,22 @@ const strings: Strings = {
     cancel: "Anuluj",
     submit: "Zastosuj",
   },
+  form: {
+    submit: "Prześlij",
+    cancel: "Anuluj",
+  },
   errors: {
-    unknown: "Nieznany błąd",
+    unknownMessage: "Nieznany błąd",
+    issuesTitle: "Problemy",
+    issueMessage: "Błąd: {message}",
   },
   file: {
     sizeLabel: "{sizeKb} KB",
+    chooseAction: "Wybierz plik",
+    changeAction: "Zmień plik",
+    replaceAction: "Zastąp plik",
+    clearAction: "Wyczyść",
+    noFileChosen: "Nie wybrano pliku",
   },
   group: {
     addSection: "Dodaj kolejny",
@@ -38,6 +49,7 @@ const strings: Strings = {
     quantityValuePlaceholder: "Wartość",
     quantityUnitPlaceholder: "Jednostka",
     attachmentSelected: "Załącznik wybrany",
+    attachmentLabel: "Załącznik",
   },
   selection: {
     specifyOther: "Określ inne",
@@ -45,12 +57,25 @@ const strings: Strings = {
     selectPlaceholder: "Wybierz opcję",
     removeSelection: "Usuń wybór",
     removeCustomValue: "Usuń wartość niestandardową",
+    searchPlaceholder: "Szukaj",
+    noOptions: "Brak opcji",
+    loadingOptions: "Ładowanie opcji...",
+    dividerOr: "lub",
+  },
+  pagination: {
+    navigation: "Paginacja",
+    previous: "Poprzednia",
+    next: "Następna",
+    pageLabel: "Strona {page}",
+    previousTargetPage: "Poprzednia strona {page}",
+    nextTargetPage: "Następna strona {page}",
   },
   language: {
     label: "Język",
     placeholder: "Wybierz język",
   },
   table: {
+    empty: "Brak danych do wyświetlenia.",
     noChoiceQuestionsHorizontal:
       "Brak pytań wyboru dostępnych dla tabeli poziomej.",
     noChoiceQuestions: "Brak pytań wyboru dostępnych.",
@@ -64,6 +89,17 @@ const strings: Strings = {
   },
   tab: {
     empty: "Brak zawartości zakładki",
+    scrollLeft: "Przewiń karty w lewo",
+    scrollRight: "Przewiń karty w prawo",
+  },
+  signature: {
+    sign: "Podpisz",
+    signed: "Podpisano",
+    clearAction: "Wyczyść podpis",
+  },
+  spinner: {
+    decrease: "Zmniejsz wartość",
+    increase: "Zwiększ wartość",
   },
   unsupported: {
     itemType: "Nieobsługiwany typ: {type}",

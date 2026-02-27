@@ -1,5 +1,5 @@
 import { Box, Stack, Tabs, Text } from "@mantine/core";
-import type { TabContainerProperties } from "@formbox/theme";
+import { useStrings, type TabContainerProperties } from "@formbox/theme";
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
@@ -13,10 +13,12 @@ export function TabContainer({
   errors,
   linkId,
 }: TabContainerProperties) {
+  const strings = useStrings();
+
   if (items.length === 0) {
     return (
       <Text size="sm" c="dimmed" style={{ fontStyle: "italic" }}>
-        No tab content available.
+        {strings.tab.empty}
       </Text>
     );
   }

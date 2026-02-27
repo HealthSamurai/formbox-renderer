@@ -207,7 +207,7 @@ describe("unitOption", () => {
 
     const user = userEvent.setup();
     const clearButton = combobox.parentElement?.querySelector(
-      "button[aria-label='Clear']",
+      `button[aria-label='${en.selection.removeSelection}']`,
     ) as HTMLButtonElement | undefined;
     expect(clearButton).not.toBeNull();
     await user.click(clearButton as HTMLButtonElement);
@@ -444,7 +444,7 @@ describe("unitOption", () => {
     await selectComboboxOption(user, combobox, "mL/hour");
     const selectedCombobox = getByRole("combobox") as HTMLElement;
     const clearButton = selectedCombobox.parentElement?.querySelector(
-      "button[aria-label='Clear']",
+      `button[aria-label='${en.selection.removeSelection}']`,
     ) as HTMLButtonElement | undefined;
     expect(clearButton).not.toBeNull();
     await user.click(clearButton as HTMLButtonElement);

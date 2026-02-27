@@ -15,11 +15,22 @@ const strings: Strings = {
     cancel: "Cancelar",
     submit: "Aplicar",
   },
+  form: {
+    submit: "Enviar",
+    cancel: "Cancelar",
+  },
   errors: {
-    unknown: "Error desconocido",
+    unknownMessage: "Error desconocido",
+    issuesTitle: "Problemas",
+    issueMessage: "Error: {message}",
   },
   file: {
     sizeLabel: "{sizeKb} KB",
+    chooseAction: "Elegir archivo",
+    changeAction: "Cambiar archivo",
+    replaceAction: "Reemplazar archivo",
+    clearAction: "Borrar",
+    noFileChosen: "Ningún archivo seleccionado",
   },
   group: {
     addSection: "Agregar otro",
@@ -38,6 +49,7 @@ const strings: Strings = {
     quantityValuePlaceholder: "Valor",
     quantityUnitPlaceholder: "Unidad",
     attachmentSelected: "Adjunto seleccionado",
+    attachmentLabel: "Adjunto",
   },
   selection: {
     specifyOther: "Especificar otro",
@@ -45,12 +57,25 @@ const strings: Strings = {
     selectPlaceholder: "Seleccione una opción",
     removeSelection: "Quitar selección",
     removeCustomValue: "Quitar valor personalizado",
+    searchPlaceholder: "Buscar",
+    noOptions: "Sin opciones",
+    loadingOptions: "Cargando opciones...",
+    dividerOr: "o",
+  },
+  pagination: {
+    navigation: "Paginación",
+    previous: "Anterior",
+    next: "Siguiente",
+    pageLabel: "Página {page}",
+    previousTargetPage: "Página anterior {page}",
+    nextTargetPage: "Página siguiente {page}",
   },
   language: {
     label: "Idioma",
     placeholder: "Seleccione idioma",
   },
   table: {
+    empty: "Nada para mostrar.",
     noChoiceQuestionsHorizontal:
       "No hay preguntas de opción para la tabla horizontal.",
     noChoiceQuestions: "No hay preguntas de opción disponibles.",
@@ -64,6 +89,17 @@ const strings: Strings = {
   },
   tab: {
     empty: "Sin contenido en la pestaña",
+    scrollLeft: "Desplazar pestañas a la izquierda",
+    scrollRight: "Desplazar pestañas a la derecha",
+  },
+  signature: {
+    sign: "Firmar",
+    signed: "Firmado",
+    clearAction: "Borrar firma",
+  },
+  spinner: {
+    decrease: "Disminuir valor",
+    increase: "Aumentar valor",
   },
   unsupported: {
     itemType: "Tipo no compatible: {type}",

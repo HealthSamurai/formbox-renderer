@@ -14,6 +14,7 @@ import type { IQuestionNode } from "@formbox/renderer/types.ts";
 import { theme as hsTheme } from "@formbox/hs-theme";
 import { EXT } from "@formbox/renderer/utilities.ts";
 import en from "@formbox/strings/en";
+import es from "@formbox/strings/es";
 
 type Questionnaire = QuestionnaireOf<"r5">;
 type Extension = ExtensionOf<"r5">;
@@ -203,6 +204,35 @@ describe("renderer.language", () => {
 
     expect(screen.getByLabelText("Nombre del paciente")).toBeInTheDocument();
     expect(screen.queryByLabelText("Patient name")).not.toBeInTheDocument();
+  });
+
+  it("updates form action labels when language is changed", () => {
+    const esLabel = getLanguageLabel("es");
+
+    render(
+      <Renderer
+        fhirVersion="r5"
+        questionnaire={translatedQuestionnaire}
+        theme={hsTheme}
+      />,
+    );
+
+    expect(
+      screen.getByRole("button", { name: en.form.submit }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: en.form.cancel }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Language" }));
+    fireEvent.click(screen.getByRole("menuitemradio", { name: esLabel }));
+
+    expect(
+      screen.getByRole("button", { name: es.form.submit }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: es.form.cancel }),
+    ).toBeInTheDocument();
   });
 
   it("does not render language selector without translations", () => {

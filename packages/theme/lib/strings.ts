@@ -17,11 +17,22 @@ export type Strings = {
     readonly cancel: string;
     readonly submit: string;
   };
+  readonly form: {
+    readonly submit: string;
+    readonly cancel: string;
+  };
   readonly errors: {
-    readonly unknown: string;
+    readonly unknownMessage: string;
+    readonly issuesTitle: string;
+    readonly issueMessage: PlaceholderString<"message">;
   };
   readonly file: {
     readonly sizeLabel: PlaceholderString<"sizeKb">;
+    readonly chooseAction: string;
+    readonly changeAction: string;
+    readonly replaceAction: string;
+    readonly clearAction: string;
+    readonly noFileChosen: string;
   };
   readonly group: {
     readonly addSection: string;
@@ -40,6 +51,7 @@ export type Strings = {
     readonly quantityValuePlaceholder: string;
     readonly quantityUnitPlaceholder: string;
     readonly attachmentSelected: string;
+    readonly attachmentLabel: string;
   };
   readonly selection: {
     readonly specifyOther: string;
@@ -47,12 +59,25 @@ export type Strings = {
     readonly selectPlaceholder: string;
     readonly removeSelection: string;
     readonly removeCustomValue: string;
+    readonly searchPlaceholder: string;
+    readonly noOptions: string;
+    readonly loadingOptions: string;
+    readonly dividerOr: string;
+  };
+  readonly pagination: {
+    readonly navigation: string;
+    readonly previous: string;
+    readonly next: string;
+    readonly pageLabel: PlaceholderString<"page">;
+    readonly previousTargetPage: PlaceholderString<"page">;
+    readonly nextTargetPage: PlaceholderString<"page">;
   };
   readonly language: {
     readonly label: string;
     readonly placeholder: string;
   };
   readonly table: {
+    readonly empty: string;
     readonly noChoiceQuestionsHorizontal: string;
     readonly noChoiceQuestions: string;
     readonly noAnswerOptionsHorizontal: string;
@@ -64,6 +89,17 @@ export type Strings = {
   };
   readonly tab: {
     readonly empty: string;
+    readonly scrollLeft: string;
+    readonly scrollRight: string;
+  };
+  readonly signature: {
+    readonly sign: string;
+    readonly signed: string;
+    readonly clearAction: string;
+  };
+  readonly spinner: {
+    readonly decrease: string;
+    readonly increase: string;
   };
   readonly unsupported: {
     readonly itemType: PlaceholderString<"type">;

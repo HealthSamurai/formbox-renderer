@@ -116,7 +116,9 @@ function selectOption(label: string, optionLabel: string | RegExp) {
 }
 
 function getChipButton(label: string) {
-  const buttons = screen.getAllByRole("button", { name: "Remove" });
+  const buttons = screen.getAllByRole("button", {
+    name: en.selection.removeSelection,
+  });
   const match = buttons.find((button) => within(button).queryByText(label));
   expect(match).toBeDefined();
   return match as HTMLDivElement;
@@ -424,9 +426,11 @@ describe("itemControl.drop-down", () => {
         expect(remove).toHaveAttribute("aria-disabled", "true");
 
         selectOption("Favorite color", "Blue");
-        screen.getAllByRole("button", { name: "Remove" }).forEach((button) => {
-          expect(button).not.toHaveAttribute("aria-disabled", "true");
-        });
+        screen
+          .getAllByRole("button", { name: en.selection.removeSelection })
+          .forEach((button) => {
+            expect(button).not.toHaveAttribute("aria-disabled", "true");
+          });
       });
 
       it("renders legacy selections as chips for repeating answers", () => {
@@ -1525,9 +1529,11 @@ describe("itemControl.drop-down", () => {
         fireEvent.click(screen.getByRole("button", { name: en.dialog.submit }));
 
         expect(getChipButton("Echo")).toBeInTheDocument();
-        expect(screen.getAllByRole("button", { name: "Remove" })).toHaveLength(
-          1,
-        );
+        expect(
+          screen.getAllByRole("button", {
+            name: en.selection.removeSelection,
+          }),
+        ).toHaveLength(1);
 
         const input = getCombobox("Call sign");
         fireEvent.click(input);
@@ -1623,16 +1629,20 @@ describe("itemControl.drop-down", () => {
         fireEvent.change(customInput, { target: { value: "Echoless" } });
         fireEvent.click(screen.getByRole("button", { name: en.dialog.submit }));
 
-        expect(screen.getAllByRole("button", { name: "Remove" })).toHaveLength(
-          2,
-        );
+        expect(
+          screen.getAllByRole("button", {
+            name: en.selection.removeSelection,
+          }),
+        ).toHaveLength(2);
         expect(getChipButton("Echo")).toBeInTheDocument();
         expect(getChipButton("Echoless")).toBeInTheDocument();
 
         fireEvent.click(getChipButton("Echo"));
-        expect(screen.getAllByRole("button", { name: "Remove" })).toHaveLength(
-          1,
-        );
+        expect(
+          screen.getAllByRole("button", {
+            name: en.selection.removeSelection,
+          }),
+        ).toHaveLength(1);
         expect(getChipButton("Echoless")).toBeInTheDocument();
 
         const input = getCombobox("Call sign");

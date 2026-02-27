@@ -187,7 +187,7 @@ export class AnswerOptionStore<
       new Error(
         "answerValueSetExpression must evaluate to a canonical URL string.",
       ),
-      this.question.form.strings.errors.unknown,
+      this.question.form.strings.errors.unknownMessage,
     );
   }
 
@@ -201,7 +201,10 @@ export class AnswerOptionStore<
       ...issues,
       ...(this.expansion?.case({
         rejected: (error) => [
-          toOptionsIssue(error, this.question.form.strings.errors.unknown),
+          toOptionsIssue(
+            error,
+            this.question.form.strings.errors.unknownMessage,
+          ),
         ],
       }) ?? []),
     ];

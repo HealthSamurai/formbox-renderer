@@ -15,11 +15,22 @@ const strings: Strings = {
     cancel: "Cancel",
     submit: "Apply",
   },
+  form: {
+    submit: "Submit",
+    cancel: "Cancel",
+  },
   errors: {
-    unknown: "Unknown error",
+    unknownMessage: "Unknown error",
+    issuesTitle: "Issues",
+    issueMessage: "Error: {message}",
   },
   file: {
     sizeLabel: "{sizeKb} KB",
+    chooseAction: "Choose file",
+    changeAction: "Change file",
+    replaceAction: "Replace file",
+    clearAction: "Clear",
+    noFileChosen: "No file chosen",
   },
   group: {
     addSection: "Add another",
@@ -38,6 +49,7 @@ const strings: Strings = {
     quantityValuePlaceholder: "Value",
     quantityUnitPlaceholder: "Unit",
     attachmentSelected: "Attachment selected",
+    attachmentLabel: "Attachment",
   },
   selection: {
     specifyOther: "Specify other",
@@ -45,12 +57,25 @@ const strings: Strings = {
     selectPlaceholder: "Select an option",
     removeSelection: "Remove selection",
     removeCustomValue: "Remove custom value",
+    searchPlaceholder: "Search",
+    noOptions: "No options",
+    loadingOptions: "Loading options...",
+    dividerOr: "or",
+  },
+  pagination: {
+    navigation: "Pagination",
+    previous: "Previous",
+    next: "Next",
+    pageLabel: "Page {page}",
+    previousTargetPage: "Previous page {page}",
+    nextTargetPage: "Next page {page}",
   },
   language: {
     label: "Language",
     placeholder: "Select language",
   },
   table: {
+    empty: "Nothing to display.",
     noChoiceQuestionsHorizontal:
       "No choice questions available for horizontal table.",
     noChoiceQuestions: "No choice questions available.",
@@ -64,6 +89,17 @@ const strings: Strings = {
   },
   tab: {
     empty: "No tab content",
+    scrollLeft: "Scroll tabs left",
+    scrollRight: "Scroll tabs right",
+  },
+  signature: {
+    sign: "Sign",
+    signed: "Signed",
+    clearAction: "Clear signature",
+  },
+  spinner: {
+    decrease: "Decrease value",
+    increase: "Increase value",
   },
   unsupported: {
     itemType: "Unsupported type: {type}",

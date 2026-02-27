@@ -36,7 +36,7 @@ export function Table({ columns, rows }: TableProperties) {
   if (rows.length === 0 || columns.length === 0) {
     return (
       <Text size="sm" c="dimmed" style={{ fontStyle: "italic" }}>
-        Nothing to display.
+        {strings.table.empty}
       </Text>
     );
   }

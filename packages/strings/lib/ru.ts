@@ -15,11 +15,22 @@ const strings: Strings = {
     cancel: "Отмена",
     submit: "Применить",
   },
+  form: {
+    submit: "Отправить",
+    cancel: "Отмена",
+  },
   errors: {
-    unknown: "Неизвестная ошибка",
+    unknownMessage: "Неизвестная ошибка",
+    issuesTitle: "Проблемы",
+    issueMessage: "Ошибка: {message}",
   },
   file: {
     sizeLabel: "{sizeKb} KB",
+    chooseAction: "Выбрать файл",
+    changeAction: "Изменить файл",
+    replaceAction: "Заменить файл",
+    clearAction: "Очистить",
+    noFileChosen: "Файл не выбран",
   },
   group: {
     addSection: "Добавить ещё",
@@ -38,6 +49,7 @@ const strings: Strings = {
     quantityValuePlaceholder: "Значение",
     quantityUnitPlaceholder: "Единица",
     attachmentSelected: "Вложение выбрано",
+    attachmentLabel: "Вложение",
   },
   selection: {
     specifyOther: "Указать другое",
@@ -45,12 +57,25 @@ const strings: Strings = {
     selectPlaceholder: "Выберите вариант",
     removeSelection: "Удалить выбор",
     removeCustomValue: "Удалить пользовательское значение",
+    searchPlaceholder: "Поиск",
+    noOptions: "Нет вариантов",
+    loadingOptions: "Загрузка вариантов...",
+    dividerOr: "или",
+  },
+  pagination: {
+    navigation: "Пагинация",
+    previous: "Назад",
+    next: "Далее",
+    pageLabel: "Страница {page}",
+    previousTargetPage: "Предыдущая страница {page}",
+    nextTargetPage: "Следующая страница {page}",
   },
   language: {
     label: "Язык",
     placeholder: "Выберите язык",
   },
   table: {
+    empty: "Нечего отображать.",
     noChoiceQuestionsHorizontal:
       "Нет вопросов с выбором для горизонтальной таблицы.",
     noChoiceQuestions: "Нет доступных вопросов с выбором.",
@@ -64,6 +89,17 @@ const strings: Strings = {
   },
   tab: {
     empty: "Нет содержимого вкладки",
+    scrollLeft: "Прокрутить вкладки влево",
+    scrollRight: "Прокрутить вкладки вправо",
+  },
+  signature: {
+    sign: "Подписать",
+    signed: "Подписано",
+    clearAction: "Очистить подпись",
+  },
+  spinner: {
+    decrease: "Уменьшить значение",
+    increase: "Увеличить значение",
   },
   unsupported: {
     itemType: "Неподдерживаемый тип: {type}",

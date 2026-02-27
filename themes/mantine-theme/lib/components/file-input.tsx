@@ -1,7 +1,7 @@
 import { ActionIcon, Button, Group, Text } from "@mantine/core";
 import type { ChangeEvent } from "react";
 import { useRef } from "react";
-import type { FileInputProperties } from "@formbox/theme";
+import { useStrings, type FileInputProperties } from "@formbox/theme";
 
 export function FileInput({
   value,
@@ -12,6 +12,7 @@ export function FileInput({
   accept,
   onChange,
 }: FileInputProperties) {
+  const strings = useStrings();
   const fileInputReference = useRef<HTMLInputElement | null>(null);
   const isDisabled = disabled === true;
 
@@ -20,9 +21,14 @@ export function FileInput({
   const displayLabel =
     value?.title ??
     value?.url ??
-    (isEmpty ? "Choose file" : "Attachment selected");
+    (isEmpty ? strings.file.chooseAction : strings.inputs.attachmentSelected);
   const displaySizeLabel =
-    value?.size == undefined ? "" : `${Math.round(value.size / 1024)} KB`;
+    value?.size == undefined
+      ? ""
+      : strings.file.sizeLabel.replace(
+          "{sizeKb}",
+          String(Math.round(value.size / 1024)),
+        );
 
   const describedByProperties =
     ariaDescribedBy == undefined ? {} : { "aria-describedby": ariaDescribedBy };
@@ -66,7 +72,7 @@ export function FileInput({
         aria-labelledby={ariaLabelledBy}
         {...describedByProperties}
       >
-        {hasValue ? "Change file" : "Choose file"}
+        {hasValue ? strings.file.changeAction : strings.file.chooseAction}
       </Button>
       <Text
         size="sm"
@@ -88,7 +94,7 @@ export function FileInput({
           color="red"
           onClick={() => onChange?.()}
           disabled={isDisabled}
-          aria-label="Clear attachment"
+          aria-label={strings.file.clearAction}
         >
           ×
         </ActionIcon>

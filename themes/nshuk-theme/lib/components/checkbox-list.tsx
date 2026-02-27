@@ -1,5 +1,5 @@
 import { styled } from "@linaria/react";
-import type { CheckboxListProperties } from "@formbox/theme";
+import { useStrings, type CheckboxListProperties } from "@formbox/theme";
 import { LoadingSpinner } from "./loading-spinner.tsx";
 
 export function CheckboxList({
@@ -16,6 +16,7 @@ export function CheckboxList({
   disabled,
   isLoading,
 }: CheckboxListProperties) {
+  const strings = useStrings();
   const selectedByToken = new Map(
     selectedOptions.map((option) => [option.token, option]),
   );
@@ -86,7 +87,9 @@ export function CheckboxList({
       {specifyOtherOption && (
         <>
           {options.length > 0 && (
-            <div className="nhsuk-checkboxes__divider">or</div>
+            <div className="nhsuk-checkboxes__divider">
+              {strings.selection.dividerOr}
+            </div>
           )}
           {renderOption(specifyOtherOption, options.length)}
         </>

@@ -11,7 +11,9 @@ export function Table({
 
   if (rows.length === 0 || columns.length === 0) {
     return (
-      <p className="nhsuk-body-s nhsuk-u-secondary-text">Nothing to display.</p>
+      <p className="nhsuk-body-s nhsuk-u-secondary-text">
+        {strings.table.empty}
+      </p>
     );
   }
 

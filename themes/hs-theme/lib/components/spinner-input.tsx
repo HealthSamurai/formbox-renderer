@@ -1,5 +1,5 @@
 import { styled } from "@linaria/react";
-import type { SpinnerInputProperties } from "@formbox/theme";
+import { useStrings, type SpinnerInputProperties } from "@formbox/theme";
 import { Minus } from "../icons/minus.tsx";
 import { Plus } from "../icons/plus.tsx";
 import { getPrecision, roundToPrecision } from "./utilities.ts";
@@ -17,6 +17,7 @@ export function SpinnerInput({
   placeholder,
   unitLabel,
 }: SpinnerInputProperties) {
+  const strings = useStrings();
   const unitId = unitLabel ? `${id}-unit` : undefined;
   const describedBy = [ariaDescribedBy, unitId]
     .filter(Boolean)
@@ -46,7 +47,7 @@ export function SpinnerInput({
         type="button"
         onClick={() => handleAdjust(-1)}
         disabled={disabled}
-        aria-label="Decrease value"
+        aria-label={strings.spinner.decrease}
       >
         <Minus size={14} />
       </SpinnerButton>
@@ -75,7 +76,7 @@ export function SpinnerInput({
         type="button"
         onClick={() => handleAdjust(1)}
         disabled={disabled}
-        aria-label="Increase value"
+        aria-label={strings.spinner.increase}
       >
         <Plus size={14} />
       </SpinnerButton>

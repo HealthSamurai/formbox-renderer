@@ -7,7 +7,7 @@ export function Table({ columns, rows }: TableProperties) {
   const strings = useStrings();
 
   if (rows.length === 0 || columns.length === 0) {
-    return <Empty description="Nothing to display." />;
+    return <Empty description={strings.table.empty} />;
   }
 
   const hasRowHeader = rows.some((row) => row.content != undefined);

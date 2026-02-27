@@ -1,5 +1,5 @@
 import { styled } from "@linaria/react";
-import type { AnswerScaffoldProperties } from "@formbox/theme";
+import { useStrings, type AnswerScaffoldProperties } from "@formbox/theme";
 import { Trash } from "../icons/trash.tsx";
 import { IconButton } from "./icon-button.tsx";
 
@@ -10,6 +10,8 @@ export function AnswerScaffold({
   errors,
   children,
 }: AnswerScaffoldProperties) {
+  const strings = useStrings();
+
   return (
     <Row>
       <MainRow>
@@ -20,7 +22,7 @@ export function AnswerScaffold({
               icon={<Trash />}
               onClick={onRemove}
               disabled={canRemove === false}
-              label="Remove"
+              label={strings.group.removeSection}
             />
           </Toolbar>
         )}

@@ -12,7 +12,7 @@ import {
 } from "@mantine/core";
 import type { ChangeEvent } from "react";
 import { useEffect, useMemo, useState } from "react";
-import type { MultiSelectInputProperties } from "@formbox/theme";
+import { useStrings, type MultiSelectInputProperties } from "@formbox/theme";
 
 function joinIds(...parts: Array<string | undefined>) {
   const value = parts.filter(Boolean).join(" ").trim();
@@ -34,6 +34,7 @@ export function MultiSelectInput({
   isLoading = false,
   placeholder,
 }: MultiSelectInputProperties) {
+  const strings = useStrings();
   const [searchQuery, setSearchQuery] = useState("");
 
   const combobox = useCombobox({
@@ -65,7 +66,7 @@ export function MultiSelectInput({
   const describedBy = joinIds(ariaDescribedBy);
   const describedByProperties =
     describedBy == undefined ? {} : { "aria-describedby": describedBy };
-  const placeholderText = placeholder ?? "Select an option";
+  const placeholderText = placeholder ?? strings.selection.selectPlaceholder;
 
   return (
     <Stack gap="xs">
@@ -93,10 +94,10 @@ export function MultiSelectInput({
                     color="red"
                     onClick={() => onDeselect(option.token)}
                     disabled={isRowDisabled}
-                    aria-label="Remove"
+                    aria-label={strings.selection.removeSelection}
                     {...rowDescribedByProperties}
                   >
-                    Remove
+                    {strings.selection.removeSelection}
                   </Button>
                 </Group>
                 {option.errors}
@@ -155,13 +156,13 @@ export function MultiSelectInput({
                     onSearch(next);
                     combobox.openDropdown();
                   }}
-                  placeholder="Search"
+                  placeholder={strings.selection.searchPlaceholder}
                 />
               ) : undefined}
 
               <Combobox.Options>
                 {visibleOptions.length === 0 ? (
-                  <Combobox.Empty>No options</Combobox.Empty>
+                  <Combobox.Empty>{strings.selection.noOptions}</Combobox.Empty>
                 ) : (
                   visibleOptions.map((option) => (
                     <Combobox.Option

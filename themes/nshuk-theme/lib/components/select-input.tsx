@@ -1,4 +1,4 @@
-import type { SelectInputProperties } from "@formbox/theme";
+import { useStrings, type SelectInputProperties } from "@formbox/theme";
 import { styled } from "@linaria/react";
 import { useEffect, useRef, useState, useMemo } from "react";
 import type { FocusEvent, KeyboardEvent } from "react";
@@ -18,6 +18,7 @@ export function SelectInput({
   isLoading = false,
   placeholder,
 }: SelectInputProperties) {
+  const strings = useStrings();
   const containerReference = useRef<HTMLDivElement | null>(null);
   const inputReference = useRef<HTMLInputElement | null>(null);
   const [query, setQuery] = useState("");
@@ -42,7 +43,9 @@ export function SelectInput({
   const displayContent = selectedOption ? (
     selectedOption.label
   ) : (
-    <Placeholder>{placeholder ?? "Select an option"}</Placeholder>
+    <Placeholder>
+      {placeholder ?? strings.selection.selectPlaceholder}
+    </Placeholder>
   );
 
   const listboxId = `${id}-listbox`;
@@ -248,7 +251,7 @@ export function SelectInput({
               ? activeDescendantId
               : undefined
           }
-          placeholder={placeholder ?? "Select an option"}
+          placeholder={placeholder ?? strings.selection.selectPlaceholder}
           autoComplete="off"
         />
       ) : (
@@ -261,7 +264,9 @@ export function SelectInput({
           aria-expanded={isOpenWithCustom}
           aria-controls={listboxId}
           aria-placeholder={
-            selectedOption ? undefined : (placeholder ?? "Select an option")
+            selectedOption
+              ? undefined
+              : (placeholder ?? strings.selection.selectPlaceholder)
           }
           aria-disabled={disabled || isLoading ? true : undefined}
           tabIndex={disabled || isLoading ? -1 : 0}
@@ -291,7 +296,7 @@ export function SelectInput({
             disabled={disabled || isLoading}
             data-disabled={disabled || isLoading ? "true" : undefined}
             onMouseDown={(event) => event.preventDefault()}
-            aria-label="Clear"
+            aria-label={strings.selection.removeSelection}
           />
         ) : (
           showChevron && <Chevron aria-hidden="true" />

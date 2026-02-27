@@ -1,4 +1,4 @@
-import type { FileInputProperties } from "@formbox/theme";
+import { useStrings, type FileInputProperties } from "@formbox/theme";
 import { styled } from "@linaria/react";
 import {
   type ChangeEvent,
@@ -16,14 +16,20 @@ export function FileInput({
   value,
   onChange,
 }: FileInputProperties) {
+  const strings = useStrings();
   const isEmpty = value == undefined;
   const hasValue = value != undefined;
   const displayLabel =
     value?.title ??
     value?.url ??
-    (isEmpty ? "Choose file" : "Attachment selected");
+    (isEmpty ? strings.file.chooseAction : strings.inputs.attachmentSelected);
   const displaySizeLabel =
-    value?.size == undefined ? "" : `${Math.round(value.size / 1024)} KB`;
+    value?.size == undefined
+      ? ""
+      : strings.file.sizeLabel.replace(
+          "{sizeKb}",
+          String(Math.round(value.size / 1024)),
+        );
   const fileInputReference = useRef<HTMLInputElement | null>(null);
 
   const handlePickFile = () => {
@@ -85,7 +91,7 @@ export function FileInput({
           type="button"
           onClick={() => onChange?.()}
           disabled={disabled}
-          aria-label="Clear attachment"
+          aria-label={strings.file.clearAction}
         >
           ×
         </ClearButton>

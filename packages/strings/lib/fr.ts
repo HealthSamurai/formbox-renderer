@@ -15,11 +15,22 @@ const strings: Strings = {
     cancel: "Annuler",
     submit: "Appliquer",
   },
+  form: {
+    submit: "Soumettre",
+    cancel: "Annuler",
+  },
   errors: {
-    unknown: "Erreur inconnue",
+    unknownMessage: "Erreur inconnue",
+    issuesTitle: "Problèmes",
+    issueMessage: "Erreur : {message}",
   },
   file: {
     sizeLabel: "{sizeKb} KB",
+    chooseAction: "Choisir un fichier",
+    changeAction: "Changer de fichier",
+    replaceAction: "Remplacer le fichier",
+    clearAction: "Effacer",
+    noFileChosen: "Aucun fichier sélectionné",
   },
   group: {
     addSection: "Ajouter un autre",
@@ -38,6 +49,7 @@ const strings: Strings = {
     quantityValuePlaceholder: "Valeur",
     quantityUnitPlaceholder: "Unité",
     attachmentSelected: "Pièce jointe sélectionnée",
+    attachmentLabel: "Pièce jointe",
   },
   selection: {
     specifyOther: "Spécifier un autre",
@@ -45,12 +57,25 @@ const strings: Strings = {
     selectPlaceholder: "Sélectionnez une option",
     removeSelection: "Supprimer la sélection",
     removeCustomValue: "Supprimer la valeur personnalisée",
+    searchPlaceholder: "Rechercher",
+    noOptions: "Aucune option",
+    loadingOptions: "Chargement des options...",
+    dividerOr: "ou",
+  },
+  pagination: {
+    navigation: "Pagination",
+    previous: "Précédent",
+    next: "Suivant",
+    pageLabel: "Page {page}",
+    previousTargetPage: "Page précédente {page}",
+    nextTargetPage: "Page suivante {page}",
   },
   language: {
     label: "Langue",
     placeholder: "Sélectionnez la langue",
   },
   table: {
+    empty: "Rien à afficher.",
     noChoiceQuestionsHorizontal:
       "Aucune question à choix disponible pour le tableau horizontal.",
     noChoiceQuestions: "Aucune question à choix disponible.",
@@ -65,6 +90,17 @@ const strings: Strings = {
   },
   tab: {
     empty: "Aucun contenu d'onglet",
+    scrollLeft: "Faire défiler les onglets vers la gauche",
+    scrollRight: "Faire défiler les onglets vers la droite",
+  },
+  signature: {
+    sign: "Signer",
+    signed: "Signé",
+    clearAction: "Effacer la signature",
+  },
+  spinner: {
+    decrease: "Diminuer la valeur",
+    increase: "Augmenter la valeur",
   },
   unsupported: {
     itemType: "Type non pris en charge : {type}",

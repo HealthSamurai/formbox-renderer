@@ -15,11 +15,22 @@ const strings: Strings = {
     cancel: "Cancelar",
     submit: "Aplicar",
   },
+  form: {
+    submit: "Enviar",
+    cancel: "Cancelar",
+  },
   errors: {
-    unknown: "Erro desconhecido",
+    unknownMessage: "Erro desconhecido",
+    issuesTitle: "Problemas",
+    issueMessage: "Erro: {message}",
   },
   file: {
     sizeLabel: "{sizeKb} KB",
+    chooseAction: "Escolher arquivo",
+    changeAction: "Alterar arquivo",
+    replaceAction: "Substituir arquivo",
+    clearAction: "Limpar",
+    noFileChosen: "Nenhum arquivo selecionado",
   },
   group: {
     addSection: "Adicionar outro",
@@ -38,6 +49,7 @@ const strings: Strings = {
     quantityValuePlaceholder: "Valor",
     quantityUnitPlaceholder: "Unidade",
     attachmentSelected: "Anexo selecionado",
+    attachmentLabel: "Anexo",
   },
   selection: {
     specifyOther: "Especificar outro",
@@ -45,12 +57,25 @@ const strings: Strings = {
     selectPlaceholder: "Selecione uma opção",
     removeSelection: "Remover seleção",
     removeCustomValue: "Remover valor personalizado",
+    searchPlaceholder: "Pesquisar",
+    noOptions: "Sem opções",
+    loadingOptions: "Carregando opções...",
+    dividerOr: "ou",
+  },
+  pagination: {
+    navigation: "Paginação",
+    previous: "Anterior",
+    next: "Próximo",
+    pageLabel: "Página {page}",
+    previousTargetPage: "Página anterior {page}",
+    nextTargetPage: "Página seguinte {page}",
   },
   language: {
     label: "Idioma",
     placeholder: "Selecione o idioma",
   },
   table: {
+    empty: "Nada para exibir.",
     noChoiceQuestionsHorizontal:
       "Nenhuma pergunta de escolha disponível para a tabela horizontal.",
     noChoiceQuestions: "Nenhuma pergunta de escolha disponível.",
@@ -65,6 +90,17 @@ const strings: Strings = {
   },
   tab: {
     empty: "Sem conteúdo na aba",
+    scrollLeft: "Rolar abas para a esquerda",
+    scrollRight: "Rolar abas para a direita",
+  },
+  signature: {
+    sign: "Assinar",
+    signed: "Assinado",
+    clearAction: "Limpar assinatura",
+  },
+  spinner: {
+    decrease: "Diminuir valor",
+    increase: "Aumentar valor",
   },
   unsupported: {
     itemType: "Tipo não suportado: {type}",

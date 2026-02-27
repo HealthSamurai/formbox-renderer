@@ -1,4 +1,4 @@
-import type { FileInputProperties } from "@formbox/theme";
+import { useStrings, type FileInputProperties } from "@formbox/theme";
 import { styled } from "@linaria/react";
 import { type ChangeEvent, type KeyboardEvent, useRef } from "react";
 
@@ -13,11 +13,19 @@ export function FileInput({
   value,
   onChange,
 }: FileInputProperties) {
+  const strings = useStrings();
   const hasValue = value != undefined;
   const displayLabel =
-    value?.title ?? value?.url ?? (hasValue ? "Attachment selected" : "");
+    value?.title ??
+    value?.url ??
+    (hasValue ? strings.inputs.attachmentSelected : "");
   const displaySizeLabel =
-    value?.size == undefined ? "" : `${Math.round(value.size / 1024)} KB`;
+    value?.size == undefined
+      ? ""
+      : strings.file.sizeLabel.replace(
+          "{sizeKb}",
+          String(Math.round(value.size / 1024)),
+        );
   const summaryValue = hasValue
     ? `${displayLabel}${displaySizeLabel ? ` (${displaySizeLabel})` : ""}`
     : "";
@@ -57,7 +65,7 @@ export function FileInput({
         className={inputClassName}
         type="text"
         value={summaryValue}
-        placeholder="No file chosen"
+        placeholder={strings.file.noFileChosen}
         readOnly
         disabled={disabled}
         aria-labelledby={ariaLabelledBy}
@@ -82,7 +90,7 @@ export function FileInput({
         onClick={handlePickFile}
         disabled={disabled}
       >
-        {hasValue ? "Change file" : "Choose file"}
+        {hasValue ? strings.file.changeAction : strings.file.chooseAction}
       </button>
       {hasValue && (
         <button
@@ -90,9 +98,9 @@ export function FileInput({
           type="button"
           onClick={() => onChange?.()}
           disabled={disabled}
-          aria-label="Clear attachment"
+          aria-label={strings.file.clearAction}
         >
-          Clear
+          {strings.file.clearAction}
         </button>
       )}
     </div>

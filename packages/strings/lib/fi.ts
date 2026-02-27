@@ -15,11 +15,22 @@ const strings: Strings = {
     cancel: "Peruuta",
     submit: "Käytä",
   },
+  form: {
+    submit: "Lähetä",
+    cancel: "Peruuta",
+  },
   errors: {
-    unknown: "Tuntematon virhe",
+    unknownMessage: "Tuntematon virhe",
+    issuesTitle: "Ongelmat",
+    issueMessage: "Virhe: {message}",
   },
   file: {
     sizeLabel: "{sizeKb} KB",
+    chooseAction: "Valitse tiedosto",
+    changeAction: "Vaihda tiedosto",
+    replaceAction: "Korvaa tiedosto",
+    clearAction: "Tyhjennä",
+    noFileChosen: "Tiedostoa ei valittu",
   },
   group: {
     addSection: "Lisää toinen",
@@ -38,6 +49,7 @@ const strings: Strings = {
     quantityValuePlaceholder: "Arvo",
     quantityUnitPlaceholder: "Yksikkö",
     attachmentSelected: "Liite valittu",
+    attachmentLabel: "Liite",
   },
   selection: {
     specifyOther: "Määritä muu",
@@ -45,12 +57,25 @@ const strings: Strings = {
     selectPlaceholder: "Valitse vaihtoehto",
     removeSelection: "Poista valinta",
     removeCustomValue: "Poista mukautettu arvo",
+    searchPlaceholder: "Haku",
+    noOptions: "Ei vaihtoehtoja",
+    loadingOptions: "Ladataan vaihtoehtoja...",
+    dividerOr: "tai",
+  },
+  pagination: {
+    navigation: "Sivutus",
+    previous: "Edellinen",
+    next: "Seuraava",
+    pageLabel: "Sivu {page}",
+    previousTargetPage: "Edellinen sivu {page}",
+    nextTargetPage: "Seuraava sivu {page}",
   },
   language: {
     label: "Kieli",
     placeholder: "Valitse kieli",
   },
   table: {
+    empty: "Ei näytettävää.",
     noChoiceQuestionsHorizontal:
       "Vaakasuoraan taulukkoon ei ole saatavilla valintakysymyksiä.",
     noChoiceQuestions: "Valintakysymyksiä ei ole saatavilla.",
@@ -65,6 +90,17 @@ const strings: Strings = {
   },
   tab: {
     empty: "Välilehdellä ei ole sisältöä",
+    scrollLeft: "Vieritä välilehtiä vasemmalle",
+    scrollRight: "Vieritä välilehtiä oikealle",
+  },
+  signature: {
+    sign: "Allekirjoita",
+    signed: "Allekirjoitettu",
+    clearAction: "Tyhjennä allekirjoitus",
+  },
+  spinner: {
+    decrease: "Pienennä arvoa",
+    increase: "Suurenna arvoa",
   },
   unsupported: {
     itemType: "Tukematon tyyppi: {type}",

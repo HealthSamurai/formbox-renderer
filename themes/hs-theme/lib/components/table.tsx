@@ -12,7 +12,7 @@ export function Table({
   const strings = useStrings();
 
   if (rows.length === 0 || columns.length === 0) {
-    return <Empty>Nothing to display.</Empty>;
+    return <Empty>{strings.table.empty}</Empty>;
   }
 
   const hasRowHeader = rows.some((row) => row.content != undefined);

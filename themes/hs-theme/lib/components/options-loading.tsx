@@ -1,9 +1,11 @@
 import { styled } from "@linaria/react";
-import type { OptionsLoadingProperties } from "@formbox/theme";
+import { useStrings, type OptionsLoadingProperties } from "@formbox/theme";
 
 export function OptionsLoading({ isLoading }: OptionsLoadingProperties) {
+  const strings = useStrings();
+
   if (isLoading) {
-    return <Hint role="status">Loading options…</Hint>;
+    return <Hint role="status">{strings.selection.loadingOptions}</Hint>;
   }
   return;
 }

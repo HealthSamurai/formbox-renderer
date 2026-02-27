@@ -1,4 +1,5 @@
 import { styled } from "@linaria/react";
+import { useStrings } from "@formbox/theme";
 
 export type LoadingSpinnerProperties = {
   label?: string | undefined;
@@ -7,17 +8,20 @@ export type LoadingSpinnerProperties = {
 };
 
 export function LoadingSpinner({
-  label = "Loading options...",
+  label,
   showLabel = false,
   size = "sm",
 }: LoadingSpinnerProperties) {
+  const strings = useStrings();
+  const resolvedLabel = label ?? strings.selection.loadingOptions;
+
   return (
     <SpinnerWrapper role="status" aria-live="polite">
       <SpinnerIcon aria-hidden="true" data-size={size} />
       {showLabel ? (
-        <SpinnerText>{label}</SpinnerText>
+        <SpinnerText>{resolvedLabel}</SpinnerText>
       ) : (
-        <VisuallyHidden>{label}</VisuallyHidden>
+        <VisuallyHidden>{resolvedLabel}</VisuallyHidden>
       )}
     </SpinnerWrapper>
   );

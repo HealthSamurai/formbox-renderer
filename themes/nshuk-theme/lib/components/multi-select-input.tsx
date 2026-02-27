@@ -1,4 +1,4 @@
-import type { MultiSelectInputProperties } from "@formbox/theme";
+import { useStrings, type MultiSelectInputProperties } from "@formbox/theme";
 import { styled } from "@linaria/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FocusEvent, KeyboardEvent } from "react";
@@ -30,6 +30,7 @@ export function MultiSelectInput({
   customOptionForm,
   placeholder,
 }: MultiSelectInputProperties) {
+  const strings = useStrings();
   const containerReference = useRef<HTMLDivElement | null>(null);
   const [query, setQuery] = useState("");
   const inputReference = useRef<HTMLInputElement | null>(null);
@@ -219,7 +220,9 @@ export function MultiSelectInput({
                 onDeselect(chip.token);
               }}
             >
-              <span className="nhsuk-u-visually-hidden">Remove </span>
+              <span className="nhsuk-u-visually-hidden">
+                {strings.selection.removeSelection}
+              </span>{" "}
               {chip.label}
               <Icon aria-hidden="true" />
             </Chip>
@@ -256,7 +259,7 @@ export function MultiSelectInput({
                 ? activeDescendantId
                 : undefined
             }
-            placeholder={placeholder ?? "Select an option"}
+            placeholder={placeholder ?? strings.selection.selectPlaceholder}
             autoComplete="off"
           />
         ) : (
@@ -284,7 +287,9 @@ export function MultiSelectInput({
             onKeyDown={handleNavigationKeyDown}
           >
             {selectedOptions.length === 0 && (
-              <Placeholder>{placeholder ?? "Select an option"}</Placeholder>
+              <Placeholder>
+                {placeholder ?? strings.selection.selectPlaceholder}
+              </Placeholder>
             )}
           </Trigger>
         )}

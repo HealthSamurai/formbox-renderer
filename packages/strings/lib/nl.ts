@@ -15,11 +15,22 @@ const strings: Strings = {
     cancel: "Annuleren",
     submit: "Toepassen",
   },
+  form: {
+    submit: "Verzenden",
+    cancel: "Annuleren",
+  },
   errors: {
-    unknown: "Onbekende fout",
+    unknownMessage: "Onbekende fout",
+    issuesTitle: "Problemen",
+    issueMessage: "Fout: {message}",
   },
   file: {
     sizeLabel: "{sizeKb} KB",
+    chooseAction: "Bestand kiezen",
+    changeAction: "Bestand wijzigen",
+    replaceAction: "Bestand vervangen",
+    clearAction: "Wissen",
+    noFileChosen: "Geen bestand gekozen",
   },
   group: {
     addSection: "Nog een toevoegen",
@@ -38,6 +49,7 @@ const strings: Strings = {
     quantityValuePlaceholder: "Waarde",
     quantityUnitPlaceholder: "Eenheid",
     attachmentSelected: "Bijlage geselecteerd",
+    attachmentLabel: "Bijlage",
   },
   selection: {
     specifyOther: "Anders specificeren",
@@ -45,12 +57,25 @@ const strings: Strings = {
     selectPlaceholder: "Selecteer een optie",
     removeSelection: "Selectie verwijderen",
     removeCustomValue: "Aangepaste waarde verwijderen",
+    searchPlaceholder: "Zoeken",
+    noOptions: "Geen opties",
+    loadingOptions: "Opties laden...",
+    dividerOr: "of",
+  },
+  pagination: {
+    navigation: "Paginering",
+    previous: "Vorige",
+    next: "Volgende",
+    pageLabel: "Pagina {page}",
+    previousTargetPage: "Vorige pagina {page}",
+    nextTargetPage: "Volgende pagina {page}",
   },
   language: {
     label: "Taal",
     placeholder: "Selecteer taal",
   },
   table: {
+    empty: "Niets weer te geven.",
     noChoiceQuestionsHorizontal:
       "Geen keuzevragen beschikbaar voor de horizontale tabel.",
     noChoiceQuestions: "Geen keuzevragen beschikbaar.",
@@ -64,6 +89,17 @@ const strings: Strings = {
   },
   tab: {
     empty: "Geen tabinhoud",
+    scrollLeft: "Tabbladen naar links scrollen",
+    scrollRight: "Tabbladen naar rechts scrollen",
+  },
+  signature: {
+    sign: "Ondertekenen",
+    signed: "Ondertekend",
+    clearAction: "Handtekening wissen",
+  },
+  spinner: {
+    decrease: "Waarde verlagen",
+    increase: "Waarde verhogen",
   },
   unsupported: {
     itemType: "Niet ondersteund type: {type}",

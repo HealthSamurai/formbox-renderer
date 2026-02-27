@@ -1,5 +1,5 @@
 import { Box, Button, Group, Stack } from "@mantine/core";
-import type { AnswerScaffoldProperties } from "@formbox/theme";
+import { useStrings, type AnswerScaffoldProperties } from "@formbox/theme";
 
 export function AnswerScaffold({
   control,
@@ -8,6 +8,8 @@ export function AnswerScaffold({
   errors,
   children,
 }: AnswerScaffoldProperties) {
+  const strings = useStrings();
+
   return (
     <Stack gap={6}>
       <Group align="flex-start" wrap="nowrap" gap="sm">
@@ -20,7 +22,7 @@ export function AnswerScaffold({
             onClick={onRemove}
             disabled={canRemove === false}
           >
-            Remove
+            {strings.group.removeSection}
           </Button>
         ) : undefined}
       </Group>

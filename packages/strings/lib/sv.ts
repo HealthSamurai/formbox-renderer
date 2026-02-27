@@ -15,11 +15,22 @@ const strings: Strings = {
     cancel: "Avbryt",
     submit: "Tillämpa",
   },
+  form: {
+    submit: "Skicka",
+    cancel: "Avbryt",
+  },
   errors: {
-    unknown: "Okänt fel",
+    unknownMessage: "Okänt fel",
+    issuesTitle: "Problem",
+    issueMessage: "Fel: {message}",
   },
   file: {
     sizeLabel: "{sizeKb} KB",
+    chooseAction: "Välj fil",
+    changeAction: "Byt fil",
+    replaceAction: "Ersätt fil",
+    clearAction: "Rensa",
+    noFileChosen: "Ingen fil vald",
   },
   group: {
     addSection: "Lägg till en till",
@@ -38,6 +49,7 @@ const strings: Strings = {
     quantityValuePlaceholder: "Värde",
     quantityUnitPlaceholder: "Enhet",
     attachmentSelected: "Bilaga vald",
+    attachmentLabel: "Bilaga",
   },
   selection: {
     specifyOther: "Ange annat",
@@ -45,12 +57,25 @@ const strings: Strings = {
     selectPlaceholder: "Välj ett alternativ",
     removeSelection: "Ta bort val",
     removeCustomValue: "Ta bort anpassat värde",
+    searchPlaceholder: "Sök",
+    noOptions: "Inga alternativ",
+    loadingOptions: "Laddar alternativ...",
+    dividerOr: "eller",
+  },
+  pagination: {
+    navigation: "Sidindelning",
+    previous: "Föregående",
+    next: "Nästa",
+    pageLabel: "Sida {page}",
+    previousTargetPage: "Föregående sida {page}",
+    nextTargetPage: "Nästa sida {page}",
   },
   language: {
     label: "Språk",
     placeholder: "Välj språk",
   },
   table: {
+    empty: "Inget att visa.",
     noChoiceQuestionsHorizontal:
       "Inga valfrågor tillgängliga för horisontell tabell.",
     noChoiceQuestions: "Inga valfrågor tillgängliga.",
@@ -64,6 +89,17 @@ const strings: Strings = {
   },
   tab: {
     empty: "Inget innehåll i fliken",
+    scrollLeft: "Rulla flikar åt vänster",
+    scrollRight: "Rulla flikar åt höger",
+  },
+  signature: {
+    sign: "Signera",
+    signed: "Signerad",
+    clearAction: "Rensa signatur",
+  },
+  spinner: {
+    decrease: "Minska värde",
+    increase: "Öka värde",
   },
   unsupported: {
     itemType: "Typen stöds inte: {type}",

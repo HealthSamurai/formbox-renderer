@@ -1,5 +1,5 @@
 import { styled } from "@linaria/react";
-import type { SelectInputProperties } from "@formbox/theme";
+import { useStrings, type SelectInputProperties } from "@formbox/theme";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FocusEvent, KeyboardEvent } from "react";
 import { LoadingSpinner } from "./loading-spinner.tsx";
@@ -19,6 +19,7 @@ export function SelectInput({
   isLoading = false,
   placeholder,
 }: SelectInputProperties) {
+  const strings = useStrings();
   const containerReference = useRef<HTMLDivElement | null>(null);
   const inputReference = useRef<HTMLInputElement | null>(null);
   const [query, setQuery] = useState("");
@@ -42,7 +43,9 @@ export function SelectInput({
   const displayContent = selectedOption ? (
     selectedOption.label
   ) : (
-    <PlaceholderText>{placeholder ?? "Select an option"}</PlaceholderText>
+    <PlaceholderText>
+      {placeholder ?? strings.selection.selectPlaceholder}
+    </PlaceholderText>
   );
 
   const listboxId = `${id}-listbox`;
@@ -252,7 +255,7 @@ export function SelectInput({
                   ? activeDescendantId
                   : undefined
               }
-              placeholder={placeholder ?? "Select an option"}
+              placeholder={placeholder ?? strings.selection.selectPlaceholder}
               autoComplete="off"
             />
           ) : (
@@ -269,7 +272,9 @@ export function SelectInput({
               aria-expanded={isOpenWithCustom}
               aria-controls={listboxId}
               aria-placeholder={
-                selectedOption ? undefined : (placeholder ?? "Select an option")
+                selectedOption
+                  ? undefined
+                  : (placeholder ?? strings.selection.selectPlaceholder)
               }
               aria-disabled={disabled || isLoading ? true : undefined}
               tabIndex={disabled || isLoading ? -1 : 0}
@@ -293,7 +298,7 @@ export function SelectInput({
                   onClick={handleClear}
                   disabled={disabled || isLoading}
                   onMouseDown={(event) => event.preventDefault()}
-                  aria-label="Clear"
+                  aria-label={strings.selection.removeSelection}
                 >
                   {"\u00D7"}
                 </ClearButton>

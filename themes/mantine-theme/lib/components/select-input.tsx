@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import { useEffect, useMemo, useState } from "react";
 import type { ChangeEvent } from "react";
-import type { SelectInputProperties } from "@formbox/theme";
+import { useStrings, type SelectInputProperties } from "@formbox/theme";
 
 function joinIds(...parts: Array<string | undefined>) {
   const value = parts.filter(Boolean).join(" ").trim();
@@ -32,6 +32,7 @@ export function SelectInput({
   isLoading = false,
   placeholder,
 }: SelectInputProperties) {
+  const strings = useStrings();
   const [searchQuery, setSearchQuery] = useState("");
 
   const combobox = useCombobox({
@@ -56,7 +57,7 @@ export function SelectInput({
   const describedBy = joinIds(ariaDescribedBy);
   const describedByProperties =
     describedBy == undefined ? {} : { "aria-describedby": describedBy };
-  const placeholderText = placeholder ?? "Select an option";
+  const placeholderText = placeholder ?? strings.selection.selectPlaceholder;
 
   const rightSection = isLoading ? (
     <Loader size="xs" />
@@ -64,7 +65,7 @@ export function SelectInput({
     <ActionIcon
       size="sm"
       variant="subtle"
-      aria-label="Clear selection"
+      aria-label={strings.selection.removeSelection}
       onClick={(event) => {
         event.stopPropagation();
         onChange();
@@ -131,13 +132,13 @@ export function SelectInput({
                     onSearch(next);
                     combobox.openDropdown();
                   }}
-                  placeholder="Search"
+                  placeholder={strings.selection.searchPlaceholder}
                 />
               ) : undefined}
 
               <Combobox.Options>
                 {visibleOptions.length === 0 ? (
-                  <Combobox.Empty>No options</Combobox.Empty>
+                  <Combobox.Empty>{strings.selection.noOptions}</Combobox.Empty>
                 ) : (
                   visibleOptions.map((option) => (
                     <Combobox.Option

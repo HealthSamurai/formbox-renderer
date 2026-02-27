@@ -1,5 +1,5 @@
 import { styled } from "@linaria/react";
-import type { Attachment } from "@formbox/theme";
+import { useStrings, type Attachment } from "@formbox/theme";
 
 function getAttachmentSource(attachment: Attachment): string | undefined {
   if (attachment.url) {
@@ -15,7 +15,9 @@ function getAttachmentSource(attachment: Attachment): string | undefined {
 }
 
 export function Media({ attachment }: { attachment: Attachment }) {
-  const label = attachment.title ?? attachment.url ?? "Attachment";
+  const strings = useStrings();
+  const label =
+    attachment.title ?? attachment.url ?? strings.inputs.attachmentLabel;
   const source = getAttachmentSource(attachment);
   const contentType = attachment.contentType?.toLowerCase();
 

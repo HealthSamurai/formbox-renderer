@@ -1,5 +1,5 @@
 import { styled } from "@linaria/react";
-import type { MultiSelectInputProperties } from "@formbox/theme";
+import { useStrings, type MultiSelectInputProperties } from "@formbox/theme";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FocusEvent, KeyboardEvent } from "react";
 import { LoadingSpinner } from "./loading-spinner.tsx";
@@ -26,6 +26,7 @@ export function MultiSelectInput({
   customOptionForm,
   placeholder,
 }: MultiSelectInputProperties) {
+  const strings = useStrings();
   const containerReference = useRef<HTMLDivElement | null>(null);
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -192,7 +193,7 @@ export function MultiSelectInput({
               <Chip
                 role="button"
                 tabIndex={isChipDisabled ? undefined : 0}
-                aria-label="Remove"
+                aria-label={strings.selection.removeSelection}
                 aria-disabled={isChipDisabled ? true : undefined}
                 data-clickable="true"
                 data-disabled={isChipDisabled ? "true" : undefined}
@@ -245,7 +246,7 @@ export function MultiSelectInput({
                   ? activeDescendantId
                   : undefined
               }
-              placeholder={placeholder ?? "Select an option"}
+              placeholder={placeholder ?? strings.selection.selectPlaceholder}
               autoComplete="off"
             />
           ) : (
@@ -270,7 +271,7 @@ export function MultiSelectInput({
             >
               {selectedOptions.length === 0 && (
                 <PlaceholderText>
-                  {placeholder ?? "Select an option"}
+                  {placeholder ?? strings.selection.selectPlaceholder}
                 </PlaceholderText>
               )}
             </SelectTrigger>

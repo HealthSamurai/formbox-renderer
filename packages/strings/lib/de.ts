@@ -15,11 +15,22 @@ const strings: Strings = {
     cancel: "Abbrechen",
     submit: "Übernehmen",
   },
+  form: {
+    submit: "Absenden",
+    cancel: "Abbrechen",
+  },
   errors: {
-    unknown: "Unbekannter Fehler",
+    unknownMessage: "Unbekannter Fehler",
+    issuesTitle: "Probleme",
+    issueMessage: "Fehler: {message}",
   },
   file: {
     sizeLabel: "{sizeKb} KB",
+    chooseAction: "Datei auswählen",
+    changeAction: "Datei ändern",
+    replaceAction: "Datei ersetzen",
+    clearAction: "Löschen",
+    noFileChosen: "Keine Datei ausgewählt",
   },
   group: {
     addSection: "Weiteren hinzufügen",
@@ -38,6 +49,7 @@ const strings: Strings = {
     quantityValuePlaceholder: "Wert",
     quantityUnitPlaceholder: "Einheit",
     attachmentSelected: "Anhang ausgewählt",
+    attachmentLabel: "Anhang",
   },
   selection: {
     specifyOther: "Anderes angeben",
@@ -45,12 +57,25 @@ const strings: Strings = {
     selectPlaceholder: "Option auswählen",
     removeSelection: "Auswahl entfernen",
     removeCustomValue: "Benutzerdefinierten Wert entfernen",
+    searchPlaceholder: "Suchen",
+    noOptions: "Keine Optionen",
+    loadingOptions: "Optionen werden geladen...",
+    dividerOr: "oder",
+  },
+  pagination: {
+    navigation: "Seitennavigation",
+    previous: "Zurück",
+    next: "Weiter",
+    pageLabel: "Seite {page}",
+    previousTargetPage: "Vorherige Seite {page}",
+    nextTargetPage: "Nächste Seite {page}",
   },
   language: {
     label: "Sprache",
     placeholder: "Sprache auswählen",
   },
   table: {
+    empty: "Nichts anzuzeigen.",
     noChoiceQuestionsHorizontal:
       "Keine Auswahlfragen für die horizontale Tabelle verfügbar.",
     noChoiceQuestions: "Keine Auswahlfragen verfügbar.",
@@ -64,6 +89,17 @@ const strings: Strings = {
   },
   tab: {
     empty: "Kein Tab-Inhalt",
+    scrollLeft: "Tabs nach links scrollen",
+    scrollRight: "Tabs nach rechts scrollen",
+  },
+  signature: {
+    sign: "Signieren",
+    signed: "Signiert",
+    clearAction: "Signatur löschen",
+  },
+  spinner: {
+    decrease: "Wert verringern",
+    increase: "Wert erhöhen",
   },
   unsupported: {
     itemType: "Nicht unterstützter Typ: {type}",
