@@ -201,6 +201,15 @@ export type ExpressionEnvironment = Record<string, unknown> &
 
 export type LaunchContext = Record<string, unknown>;
 
+export type RenderMode = "capture" | "display";
+
+export type QuestionnaireUsageMode =
+  | "capture-display"
+  | "capture"
+  | "display"
+  | "display-non-empty"
+  | "capture-display-non-empty";
+
 export interface IFhirAdapter {
   readonly version: FhirVersion;
   readonly attachment: IAttachmentAdapter;
@@ -518,6 +527,7 @@ export interface IPresentableNode {
   readonly unitDisplay: string | undefined;
   readonly unitOptions: ReadonlyArray<Coding>;
   readonly isEnabled: boolean;
+  readonly hasResponseContent: boolean;
   readonly preferredTerminologyServers: ReadonlyArray<string>;
   readonly isExpandable: boolean;
   readonly isExpanded: boolean;
@@ -769,6 +779,7 @@ export interface IValueSetExpander {
 export interface IForm extends IssueSource {
   readonly fhirVersion: FhirVersion;
   readonly adapter: IFhirAdapter;
+  readonly mode: RenderMode;
   readonly strings: Strings;
   readonly language: string | undefined;
   readonly availableLanguages: readonly string[];
@@ -816,6 +827,7 @@ export interface IForm extends IssueSource {
     responseItems: QuestionnaireResponseItem[] | undefined,
   ): IPresentableNode;
   setLanguage(language: string | undefined): void;
+  setMode(mode: RenderMode | undefined): void;
   reset(): void;
   dispose(): void;
 }

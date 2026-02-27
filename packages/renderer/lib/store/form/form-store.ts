@@ -15,6 +15,7 @@ import {
   IValueSetExpander,
   LaunchContext,
   QuestionRendererDefinition,
+  RenderMode,
   SnapshotKind,
 } from "../../types.ts";
 import { RendererRegistry } from "../../renderer-registry.ts";
@@ -139,6 +140,9 @@ export class FormStore<V extends FhirVersion = FhirVersion>
   private launchContextState: LaunchContext;
 
   @observable.ref
+  private modeState: RenderMode | undefined;
+
+  @observable.ref
   private signatureState: Signature | undefined;
 
   readonly availableLanguages: readonly string[];
@@ -151,6 +155,7 @@ export class FormStore<V extends FhirVersion = FhirVersion>
     terminologyServerUrl?: string,
     language?: string | undefined,
     launchContext?: LaunchContext | undefined,
+    mode?: RenderMode | undefined,
   ) {
     this.questionRendererRegistry = new RendererRegistry(
       defaultQuestionRenderers,
@@ -174,6 +179,7 @@ export class FormStore<V extends FhirVersion = FhirVersion>
     this.availableLanguages = getTranslationLanguages(this.questionnaire);
     this.languageState = language ?? this.questionnaire.language;
     this.launchContextState = launchContext ? { ...launchContext } : {};
+    this.modeState = mode;
     makeObservable(this);
 
     this.adapter =
@@ -238,6 +244,14 @@ export class FormStore<V extends FhirVersion = FhirVersion>
   }
 
   @computed
+  get mode(): RenderMode {
+    return (
+      this.modeState ??
+      (this.initialResponse?.status === "completed" ? "display" : "capture")
+    );
+  }
+
+  @computed
   get signature(): Signature | undefined {
     return this.signatureState;
   }
@@ -263,6 +277,11 @@ export class FormStore<V extends FhirVersion = FhirVersion>
   @action
   setLanguage(language: string | undefined): void {
     this.languageState = language;
+  }
+
+  @action
+  setMode(mode: RenderMode | undefined): void {
+    this.modeState = mode;
   }
 
   @action

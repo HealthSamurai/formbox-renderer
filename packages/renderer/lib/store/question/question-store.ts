@@ -38,7 +38,7 @@ import { AnswerStore } from "../answer/answer-store.ts";
 import { QuestionValidator } from "./question-validator.ts";
 import {
   ANSWER_TYPE_TO_DATA_TYPE,
-  answerHasContent,
+  answerHasOwnValue,
   booleanify,
   EXT,
   extractExtensionsValues,
@@ -344,10 +344,17 @@ export class QuestionStore<T extends AnswerType = AnswerType>
     }
   }
 
-  @computed
-  private get hasContent() {
+  @override
+  override get hasResponseContent(): boolean {
     const answers = this.repeats ? this.answers : this.answers.slice(0, 1);
-    return answers.some((answer) => answerHasContent(answer));
+    return answers.some((answer) => this.hasAnswerContent(answer));
+  }
+
+  private hasAnswerContent(answer: IAnswer<T>): boolean {
+    return (
+      answerHasOwnValue(answer) ||
+      answer.nodes.some((child) => child.hasResponseContent)
+    );
   }
 
   private detectInitialOverride() {
@@ -359,7 +366,7 @@ export class QuestionStore<T extends AnswerType = AnswerType>
       return;
     }
 
-    if (!this.hasContent) {
+    if (!this.hasResponseContent) {
       return;
     }
 
@@ -401,7 +408,12 @@ export class QuestionStore<T extends AnswerType = AnswerType>
     const { initial, calculated } = this.expressionRegistry;
     if (initial) {
       const disposer = reaction(
-        () => [this.isEnabled, initial.value, this.hasContent, this.lifecycle],
+        () => [
+          this.isEnabled,
+          initial.value,
+          this.hasResponseContent,
+          this.lifecycle,
+        ],
         (_argument: unknown, _previous: unknown, reaction) => {
           if (this.applyInitialExpressionValue()) {
             this.unregisterDisposer(disposer);
@@ -495,7 +507,7 @@ export class QuestionStore<T extends AnswerType = AnswerType>
     if (!initial || !this.isEnabled) return false;
 
     const seededContent = this.lifecycle === "template";
-    if (this.hasContent && !seededContent) return true;
+    if (this.hasResponseContent && !seededContent) return true;
     if (initial.value === undefined) return false;
 
     const values = normalizeExpressionValues(this.type, initial.value);

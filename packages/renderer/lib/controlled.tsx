@@ -6,21 +6,22 @@ import type {
   QuestionnaireResponseOf,
 } from "@formbox/fhir";
 import { type Strings, StringsContext, type Theme } from "@formbox/theme";
-import type { LaunchContext } from "./types.ts";
+import type { LaunchContext, RenderMode } from "./types.ts";
 import { Form } from "./component/form/form.tsx";
 import { FormStore } from "./store/form/form-store.ts";
 import { ThemeProvider } from "./ui/theme.tsx";
 
 export type RendererProperties<V extends FhirVersion> = {
   questionnaire: QuestionnaireOf<V>;
-  defaultQuestionnaireResponse: QuestionnaireResponseOf<V> | null;
-  language: string | null;
+  defaultQuestionnaireResponse?: QuestionnaireResponseOf<V> | undefined;
+  language?: string | undefined;
   strings: Strings;
-  onChange: ((response: QuestionnaireResponseOf<V>) => void) | null;
-  onSubmit: ((response: QuestionnaireResponseOf<V>) => void) | null;
-  onLanguageChange: ((language: string) => void) | null;
-  terminologyServerUrl: string | null;
-  launchContext: LaunchContext | null;
+  onChange?: ((response: QuestionnaireResponseOf<V>) => void) | undefined;
+  onSubmit?: ((response: QuestionnaireResponseOf<V>) => void) | undefined;
+  onLanguageChange?: ((language: string) => void) | undefined;
+  terminologyServerUrl?: string | undefined;
+  launchContext?: LaunchContext | undefined;
+  mode?: RenderMode | undefined;
   fhirVersion: V;
   theme: Theme;
 };
@@ -35,6 +36,7 @@ function Renderer<V extends FhirVersion>({
   onLanguageChange,
   terminologyServerUrl,
   launchContext,
+  mode,
   fhirVersion,
   theme,
 }: RendererProperties<V>) {
@@ -44,6 +46,7 @@ function Renderer<V extends FhirVersion>({
   const languageReference = useRef(language);
   const responseReference = useRef(defaultQuestionnaireResponse);
   const launchContextReference = useRef(launchContext);
+  const modeReference = useRef(mode);
   const isInitialStoreSetupReference = useRef(true);
 
   useEffect(() => {
@@ -55,7 +58,8 @@ function Renderer<V extends FhirVersion>({
     languageReference.current = language;
     responseReference.current = defaultQuestionnaireResponse;
     launchContextReference.current = launchContext;
-  }, [defaultQuestionnaireResponse, language, strings, launchContext]);
+    modeReference.current = mode;
+  }, [defaultQuestionnaireResponse, language, strings, launchContext, mode]);
 
   const [store, setStore] = useState<FormStore<V>>(
     () =>
@@ -63,10 +67,11 @@ function Renderer<V extends FhirVersion>({
         strings,
         fhirVersion,
         questionnaire,
-        defaultQuestionnaireResponse ?? undefined,
-        terminologyServerUrl ?? undefined,
-        language ?? undefined,
-        launchContext ?? undefined,
+        defaultQuestionnaireResponse,
+        terminologyServerUrl,
+        language,
+        launchContext,
+        mode,
       ),
   );
 
@@ -81,10 +86,11 @@ function Renderer<V extends FhirVersion>({
         stringsReference.current,
         fhirVersion,
         questionnaire,
-        responseReference.current ?? undefined,
-        terminologyServerUrl ?? undefined,
-        languageReference.current ?? undefined,
-        launchContextReference.current ?? undefined,
+        responseReference.current,
+        terminologyServerUrl,
+        languageReference.current,
+        launchContextReference.current,
+        modeReference.current,
       ),
     );
   }, [fhirVersion, questionnaire, terminologyServerUrl]);
@@ -94,12 +100,16 @@ function Renderer<V extends FhirVersion>({
   }, [store, strings]);
 
   useEffect(() => {
-    store.setLanguage(language ?? undefined);
+    store.setLanguage(language);
   }, [store, language]);
 
   useEffect(() => {
-    store.setLaunchContext(launchContext ?? undefined);
+    store.setLaunchContext(launchContext);
   }, [store, launchContext]);
+
+  useEffect(() => {
+    store.setMode(mode);
+  }, [store, mode]);
 
   useEffect(() => {
     const dispose = reaction(
@@ -127,7 +137,7 @@ function Renderer<V extends FhirVersion>({
         <Form
           store={store}
           onSubmit={handleSubmit}
-          onLanguageChange={onLanguageChange ?? undefined}
+          onLanguageChange={onLanguageChange}
         />
       </StringsContext.Provider>
     </ThemeProvider>

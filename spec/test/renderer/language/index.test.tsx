@@ -3,9 +3,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import Renderer, {
   type ElementOf,
   type ExtensionOf,
-  type LaunchContext,
   type QuestionnaireOf,
-  type QuestionnaireResponseOf,
 } from "@formbox/renderer";
 import ControlledRenderer from "@formbox/renderer/controlled";
 import { useState } from "react";
@@ -18,22 +16,8 @@ import { EXT } from "@formbox/renderer/utilities.ts";
 import en from "@formbox/strings/en";
 
 type Questionnaire = QuestionnaireOf<"r5">;
-type QuestionnaireResponse = QuestionnaireResponseOf<"r5">;
 type Extension = ExtensionOf<"r5">;
 type Element = ElementOf<"r5">;
-
-const EMPTY_RESPONSE: QuestionnaireResponse = {
-  resourceType: "QuestionnaireResponse",
-  status: "in-progress",
-  questionnaire: "Questionnaire/test",
-};
-const EMPTY_LAUNCH_CONTEXT: LaunchContext = {};
-
-function noopOnChange() {}
-function noopOnSubmit() {}
-function noopOnLanguageChange() {}
-
-const TERMINOLOGY_SERVER_URL = "https://tx.fhir.org/r5";
 
 function getLanguageLabel(code: string): string {
   if (typeof Intl === "object" && "DisplayNames" in Intl) {
@@ -97,15 +81,9 @@ describe("renderer.language", () => {
       <ControlledRenderer
         fhirVersion="r5"
         questionnaire={translatedQuestionnaire}
-        defaultQuestionnaireResponse={EMPTY_RESPONSE}
         strings={en}
         theme={hsTheme}
         language="es"
-        onChange={noopOnChange}
-        onSubmit={noopOnSubmit}
-        onLanguageChange={noopOnLanguageChange}
-        terminologyServerUrl={TERMINOLOGY_SERVER_URL}
-        launchContext={EMPTY_LAUNCH_CONTEXT}
       />,
     );
 
@@ -115,15 +93,9 @@ describe("renderer.language", () => {
       <ControlledRenderer
         fhirVersion="r5"
         questionnaire={translatedQuestionnaire}
-        defaultQuestionnaireResponse={EMPTY_RESPONSE}
         strings={en}
         theme={hsTheme}
         language="fr"
-        onChange={noopOnChange}
-        onSubmit={noopOnSubmit}
-        onLanguageChange={noopOnLanguageChange}
-        terminologyServerUrl={TERMINOLOGY_SERVER_URL}
-        launchContext={EMPTY_LAUNCH_CONTEXT}
       />,
     );
 
@@ -182,15 +154,10 @@ describe("renderer.language", () => {
       <ControlledRenderer
         fhirVersion="r5"
         questionnaire={translatedQuestionnaire}
-        defaultQuestionnaireResponse={EMPTY_RESPONSE}
         strings={en}
         theme={hsTheme}
         language="en"
-        onChange={noopOnChange}
         onLanguageChange={onLanguageChange}
-        onSubmit={noopOnSubmit}
-        terminologyServerUrl={TERMINOLOGY_SERVER_URL}
-        launchContext={EMPTY_LAUNCH_CONTEXT}
       />,
     );
 
@@ -221,15 +188,10 @@ describe("renderer.language", () => {
         <ControlledRenderer
           fhirVersion="r5"
           questionnaire={translatedQuestionnaire}
-          defaultQuestionnaireResponse={EMPTY_RESPONSE}
           strings={en}
           theme={hsTheme}
           language={language ?? "en"}
-          onChange={noopOnChange}
           onLanguageChange={setLanguage}
-          onSubmit={noopOnSubmit}
-          terminologyServerUrl={TERMINOLOGY_SERVER_URL}
-          launchContext={EMPTY_LAUNCH_CONTEXT}
         />
       );
     }

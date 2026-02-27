@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-null */
 import { useCallback, useMemo, useState } from "react";
 import bundledStrings from "@formbox/strings";
 import type {
@@ -8,7 +7,7 @@ import type {
 } from "@formbox/fhir";
 import type { Theme } from "@formbox/theme";
 import ControlledRenderer from "./controlled.tsx";
-import type { LaunchContext } from "./types.ts";
+import type { LaunchContext, RenderMode } from "./types.ts";
 
 export type RendererProperties<V extends FhirVersion> = {
   questionnaire: QuestionnaireOf<V>;
@@ -19,11 +18,12 @@ export type RendererProperties<V extends FhirVersion> = {
   onLanguageChange?: ((language: string) => void) | undefined;
   terminologyServerUrl?: string | undefined;
   launchContext?: LaunchContext | undefined;
+  mode?: RenderMode | undefined;
   fhirVersion: V;
   theme: Theme;
 };
 
-function resolveBundledStrings(language: string | null | undefined) {
+function resolveBundledStrings(language: string | undefined) {
   const primaryLanguage = language?.split(
     "-",
   )[0] as keyof typeof bundledStrings;
@@ -39,11 +39,12 @@ function Renderer<V extends FhirVersion>({
   onLanguageChange,
   terminologyServerUrl,
   launchContext,
+  mode,
   fhirVersion,
   theme,
 }: RendererProperties<V>) {
-  const [language, setLanguage] = useState<string | null>(
-    defaultLanguage ?? questionnaire.language ?? null,
+  const [language, setLanguage] = useState<string | undefined>(
+    defaultLanguage ?? questionnaire.language,
   );
 
   const strings = useMemo(() => resolveBundledStrings(language), [language]);
@@ -66,14 +67,15 @@ function Renderer<V extends FhirVersion>({
   return (
     <ControlledRenderer
       questionnaire={questionnaire}
-      defaultQuestionnaireResponse={defaultQuestionnaireResponse ?? null}
+      defaultQuestionnaireResponse={defaultQuestionnaireResponse}
       language={language}
       strings={strings}
       onChange={handleChange}
-      onSubmit={onSubmit ?? null}
+      onSubmit={onSubmit}
       onLanguageChange={handleLanguageChange}
-      terminologyServerUrl={terminologyServerUrl ?? null}
-      launchContext={launchContext ?? null}
+      terminologyServerUrl={terminologyServerUrl}
+      launchContext={launchContext}
+      mode={mode}
       fhirVersion={fhirVersion}
       theme={theme}
     />
@@ -106,4 +108,8 @@ export type {
 } from "@formbox/fhir";
 
 export type { Strings } from "@formbox/theme";
-export type { LaunchContext } from "./types.ts";
+export type {
+  LaunchContext,
+  QuestionnaireUsageMode,
+  RenderMode,
+} from "./types.ts";

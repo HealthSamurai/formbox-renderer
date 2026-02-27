@@ -18,12 +18,16 @@ import type {
   FhirVersion,
   LaunchContext,
   QuestionnaireOf,
+  QuestionnaireResponseOf,
+  RenderMode,
 } from "@formbox/renderer";
 type RendererMode = "node" | "form";
 
 type RendererProperties<V extends FhirVersion = "r5"> = {
   questionnaire: QuestionnaireOf<V>;
+  defaultQuestionnaireResponse?: QuestionnaireResponseOf<V> | undefined;
   launchContext?: LaunchContext | undefined;
+  formMode?: RenderMode | undefined;
   fhirVersion: V;
   storyId: string;
   mode: RendererMode;
@@ -50,7 +54,9 @@ function resolveStrings(language: string | undefined): Strings {
 
 export function Renderer<V extends FhirVersion = "r5">({
   questionnaire,
+  defaultQuestionnaireResponse,
   launchContext,
+  formMode,
   fhirVersion,
   storyId,
   mode,
@@ -63,8 +69,14 @@ export function Renderer<V extends FhirVersion = "r5">({
     [language, questionnaire.language],
   );
   const store = useMemo(
-    () => new FormStore(en, fhirVersion, questionnaire, undefined, undefined),
-    [fhirVersion, questionnaire],
+    () =>
+      new FormStore(
+        en,
+        fhirVersion,
+        questionnaire,
+        defaultQuestionnaireResponse,
+      ),
+    [defaultQuestionnaireResponse, fhirVersion, questionnaire],
   );
 
   useEffect(() => () => store.dispose(), [store]);
@@ -77,6 +89,9 @@ export function Renderer<V extends FhirVersion = "r5">({
   useEffect(() => {
     store.setLaunchContext(launchContext);
   }, [store, launchContext]);
+  useEffect(() => {
+    store.setMode(formMode);
+  }, [store, formMode]);
 
   useQuestionnaireResponseBroadcaster(store, storyId);
   useQuestionnaireBroadcaster(questionnaire, storyId);

@@ -40,9 +40,7 @@ import fi from "@formbox/strings/fi";
   language="fi"
   strings={fi}
   onChange={onChange}
-  onSubmit={null}
   onLanguageChange={onLanguageChange}
-  terminologyServerUrl={null}
   theme={theme}
 />;
 ```

@@ -1,0 +1,191 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "usage-mode-showcase",
+  "status": "active",
+  "title": "Usage mode",
+  "description": "Single-form showcase of all questionnaire-usageMode values using realistic review items.",
+  "item": [
+    {
+      "linkId": "intro",
+      "type": "display",
+      "text": "Complete the form in capture mode, then switch to display mode to review what remains visible."
+    },
+    {
+      "linkId": "capture-intake-instructions",
+      "type": "display",
+      "text": "Capture note: confirm active medications directly with the patient.",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-usageMode",
+          "valueCode": "capture"
+        }
+      ]
+    },
+    {
+      "linkId": "shared-chief-complaint",
+      "type": "string",
+      "text": "Chief complaint",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-usageMode",
+          "valueCode": "capture-display"
+        }
+      ],
+      "item": [
+        {
+          "linkId": "shared-chief-complaint-help",
+          "type": "display",
+          "text": "Showcase: capture-display remains visible in both capture and display modes.",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "help"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "review-assessment-note",
+      "type": "string",
+      "text": "Clinical assessment summary",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-usageMode",
+          "valueCode": "display-non-empty"
+        }
+      ],
+      "item": [
+        {
+          "linkId": "review-assessment-note-help",
+          "type": "display",
+          "text": "Showcase: display-non-empty appears in display mode only when this answer exists.",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "help"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "review-secondary-note",
+      "type": "string",
+      "text": "Secondary reviewer comment",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-usageMode",
+          "valueCode": "display-non-empty"
+        }
+      ],
+      "item": [
+        {
+          "linkId": "review-secondary-note-help",
+          "type": "display",
+          "text": "Showcase: this display-non-empty example stays hidden in display mode when unanswered.",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "help"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "plan-home-care",
+      "type": "string",
+      "text": "Home care plan",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-usageMode",
+          "valueCode": "capture-display-non-empty"
+        }
+      ],
+      "item": [
+        {
+          "linkId": "plan-home-care-help",
+          "type": "display",
+          "text": "Showcase: capture-display-non-empty appears in capture mode and also in display mode when answered.",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "help"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "plan-follow-up",
+      "type": "string",
+      "text": "Follow-up action items",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-usageMode",
+          "valueCode": "capture-display-non-empty"
+        }
+      ],
+      "item": [
+        {
+          "linkId": "plan-follow-up-help",
+          "type": "display",
+          "text": "Showcase: this capture-display-non-empty example is visible in capture mode, but hidden in display mode when unanswered.",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "help"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "display-review-instructions",
+      "type": "display",
+      "text": "Display note: confirm that completed notes are consistent with discharge documentation.",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-usageMode",
+          "valueCode": "display"
+        }
+      ]
+    }
+  ]
+}

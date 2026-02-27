@@ -65,8 +65,6 @@ These types map directly to `fhir/r4` or `fhir/r5` based on the version you pass
 
 Use `Renderer` from `@formbox/renderer/controlled` when `language` and `strings` are managed outside the renderer and the response is seeded from a default value.
 
-All props are required. Use `null` for values/callbacks you do not provide.
-
 ```tsx
 import Renderer from "@formbox/renderer/controlled";
 import en from "@formbox/strings/en";
@@ -78,9 +76,7 @@ import en from "@formbox/strings/en";
   language={language}
   strings={en}
   onChange={onChange}
-  onSubmit={null}
   onLanguageChange={onLanguageChange}
-  terminologyServerUrl={null}
   theme={theme}
 />;
 ```

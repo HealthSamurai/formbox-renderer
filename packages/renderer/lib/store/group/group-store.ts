@@ -52,6 +52,11 @@ export class GroupStore extends AbstractActualNodeStore implements IGroupNode {
     return this.nodes.filter((child) => !child.hidden);
   }
 
+  @override
+  override get hasResponseContent(): boolean {
+    return this.nodes.some((child) => child.hasResponseContent);
+  }
+
   @computed
   get signature(): Signature | undefined {
     return this.signatureState;

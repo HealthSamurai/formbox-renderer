@@ -75,8 +75,6 @@ These types map directly to `fhir/r4` or `fhir/r5` based on the version you pass
 
 Use `Renderer` from `@formbox/renderer/controlled` when `language` and `strings` are managed externally and the response is seeded from a default value.
 
-All props are required. Use `null` for values/callbacks you do not provide.
-
 Note: Controlling the value of questionnaire response is yet to be supported. If you want to apply new questionnaire response value, you can use `key` prop to reset the internal state of the renderer.
 
 ```tsx
@@ -90,9 +88,7 @@ import en from "@formbox/strings/en";
   language={language}
   strings={en}
   onChange={onChange}
-  onSubmit={null}
   onLanguageChange={onLanguageChange}
-  terminologyServerUrl={null}
   theme={theme}
 />;
 ```

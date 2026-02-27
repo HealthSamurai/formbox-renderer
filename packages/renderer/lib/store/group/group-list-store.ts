@@ -49,6 +49,11 @@ export class GroupListStore
     return this.nodes.filter((node) => !node.hidden);
   }
 
+  @override
+  override get hasResponseContent(): boolean {
+    return this.nodes.some((node) => node.hasResponseContent);
+  }
+
   private readonly validator: GroupListValidator;
 
   private lastIndex = 0;

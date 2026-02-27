@@ -12,6 +12,7 @@ import {
   dedupe,
   EXT,
   extractExtensionsValues,
+  extractExtensionValue,
   findDisplayItemByControl,
   findExtension,
   findExtensions,
@@ -199,7 +200,26 @@ export abstract class AbstractPresentableNode implements IPresentableNode {
   }
 
   @computed
+  private get usageMode(): string | undefined {
+    return extractExtensionValue("code", this.template, EXT.USAGE_MODE);
+  }
+
+  @computed
+  private get isEnabledByUsageMode(): boolean {
+    // prettier-ignore
+    return this.usageMode === "capture-display"           ? true :
+           this.usageMode === "capture"                   ? this.form.mode === "capture" :
+           this.usageMode === "display"                   ? this.form.mode === "display" :
+           this.usageMode === "display-non-empty"         ? this.form.mode === "display" && this.hasResponseContent :
+           this.usageMode === "capture-display-non-empty" ? this.form.mode === "capture" || this.hasResponseContent : true;
+  }
+
+  @computed
   get isEnabled(): boolean {
+    if (!this.isEnabledByUsageMode) {
+      return false;
+    }
+
     if (this.parentStore && !this.parentStore.isEnabled) {
       return false;
     }
@@ -237,6 +257,11 @@ export abstract class AbstractPresentableNode implements IPresentableNode {
       );
     }
 
+    return false;
+  }
+
+  @computed
+  get hasResponseContent(): boolean {
     return false;
   }
 
