@@ -602,6 +602,9 @@ export interface IGroupNode extends IActualNode {
   readonly renderer: ComponentType<GroupRendererProperties> | undefined;
   readonly grid: IGrid;
   readonly table: ITable;
+  readonly signatureRequired: boolean;
+  readonly signature: Signature | undefined;
+  setSignature(signature: Signature | undefined): void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -733,6 +736,9 @@ export interface IQuestionNode<
   readonly maxDecimalPlaces: number | undefined;
   readonly mimeTypes: readonly string[];
   readonly maxSize: number | undefined;
+  readonly signatureRequired: boolean;
+  readonly signature: Signature | undefined;
+  setSignature(signature: Signature | undefined): void;
 
   readonly canAdd: boolean;
   readonly canRemove: boolean;
@@ -768,6 +774,9 @@ export interface IForm extends IssueSource {
   readonly availableLanguages: readonly string[];
   readonly title: string | undefined;
   readonly description: string | undefined;
+  readonly signatureRequired: boolean;
+  readonly signature: Signature | undefined;
+  setSignature(signature: Signature | undefined): void;
   questionnaire: Questionnaire;
   response: QuestionnaireResponse | undefined;
   nodes: Array<IPresentableNode>;

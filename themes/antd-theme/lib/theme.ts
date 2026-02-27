@@ -32,6 +32,7 @@ export { GroupScaffold } from "./components/group-scaffold.tsx";
 export { Table } from "./components/table.tsx";
 export { InputGroup } from "./components/input-group.tsx";
 export { FileInput } from "./components/file-input.tsx";
+export { SignatureInput } from "./components/signature-input.tsx";
 export { TabContainer } from "./components/tab-container.tsx";
 export { DisplayRenderer } from "./components/display-renderer.tsx";
 export { Link } from "./components/link.tsx";
@@ -72,6 +73,7 @@ import { GroupScaffold } from "./components/group-scaffold.tsx";
 import { Table } from "./components/table.tsx";
 import { InputGroup } from "./components/input-group.tsx";
 import { FileInput } from "./components/file-input.tsx";
+import { SignatureInput } from "./components/signature-input.tsx";
 import { TabContainer } from "./components/tab-container.tsx";
 import { Link } from "./components/link.tsx";
 import { LanguageSelector } from "./components/language-selector.tsx";
@@ -112,6 +114,7 @@ export const theme: Theme = {
   Table,
   InputGroup,
   FileInput,
+  SignatureInput,
   DisplayRenderer,
   TabContainer,
   Link,

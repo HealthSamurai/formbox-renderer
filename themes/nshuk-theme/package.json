@@ -52,6 +52,7 @@
   "dependencies": {
     "@formbox/theme": "workspace:*",
     "classnames": "^2.5.1",
-    "nhsuk-frontend": "^10.2.2"
+    "nhsuk-frontend": "^10.2.2",
+    "perfect-freehand": "^1.2.3"
   }
 }

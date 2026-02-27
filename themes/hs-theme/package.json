@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "@formbox/theme": "workspace:*",
-    "classnames": "^2.5.1"
+    "classnames": "^2.5.1",
+    "perfect-freehand": "^1.2.3"
   }
 }

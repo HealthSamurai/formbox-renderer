@@ -1,7 +1,7 @@
 import { computed, makeObservable } from "mobx";
 import type { OperationOutcomeIssue } from "@formbox/fhir";
 
-import { makeIssue } from "../../utilities.ts";
+import { groupHasResponses, makeIssue } from "../../utilities.ts";
 import type { IGroupNode, INodeValidator } from "../../types.ts";
 
 export class GroupValidator implements INodeValidator {
@@ -15,23 +15,34 @@ export class GroupValidator implements INodeValidator {
 
   @computed
   get issues(): OperationOutcomeIssue[] {
+    const strings = this.group.form.strings;
+
     if (this.group.readOnly || !this.group.isEnabled) {
       return [];
     }
 
-    if (!this.group.form.isSubmitAttempted || this.group.minOccurs === 0) {
+    if (!this.group.form.isSubmitAttempted) {
       return [];
     }
 
-    const hasResponses = this.group.nodes.some(
-      (child) => child.responseItems.length > 0,
-    );
+    const hasResponses = groupHasResponses(this.group);
 
-    if (hasResponses) {
-      return [];
+    const issues: OperationOutcomeIssue[] = [];
+
+    if (this.group.minOccurs > 0 && !hasResponses) {
+      issues.push(
+        makeIssue("required", strings.validation.group.atLeastOneAnswer),
+      );
     }
 
-    const strings = this.group.form.strings;
-    return [makeIssue("required", strings.validation.group.atLeastOneAnswer)];
+    if (
+      this.group.signatureRequired &&
+      this.group.signature == undefined &&
+      hasResponses
+    ) {
+      issues.push(makeIssue("required", strings.validation.signature.required));
+    }
+
+    return issues;
   }
 }

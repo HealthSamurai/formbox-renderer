@@ -10,9 +10,16 @@ export function AnswerList({ children, onAdd, canAdd }: AnswerListProperties) {
     <Stack gap="sm">
       {items.length > 0 ? <Stack gap="sm">{items}</Stack> : undefined}
       {onAdd ? (
-        <Button type="button" onClick={onAdd} disabled={canAdd === false}>
-          {strings.selection.addAnother}
-        </Button>
+        <div>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onAdd}
+            disabled={canAdd === false}
+          >
+            {strings.selection.addAnother}
+          </Button>
+        </div>
       ) : undefined}
     </Stack>
   );

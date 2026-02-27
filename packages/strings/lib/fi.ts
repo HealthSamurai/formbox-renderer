@@ -82,6 +82,9 @@ const strings: Strings = {
       minOccursMultiple: "Vähintään {minOccurs} ei-tyhjää vastausta vaaditaan.",
       maxOccurs: "Enintään {maxOccurs} vastausta sallitaan.",
     },
+    signature: {
+      required: "Signature is required.",
+    },
     answer: {
       minLength: "Vastauksen pituuden on oltava vähintään {minLength} merkkiä.",
       maxLength: "Vastaus ylittää enimmäispituuden {maxLength}.",

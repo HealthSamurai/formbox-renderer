@@ -1,4 +1,4 @@
-import { action, computed, observable, override } from "mobx";
+import { action, computed, makeObservable, observable, override } from "mobx";
 import {
   AnswerType,
   IPresentableNode,
@@ -16,10 +16,14 @@ import {
 import type {
   QuestionnaireItem,
   QuestionnaireResponseItem,
+  Signature,
 } from "@formbox/fhir";
 
 import { AbstractActualNodeStore } from "../base/abstract-actual-node-store.ts";
 import {
+  EXT,
+  extractExtensionsValues,
+  findExtension,
   getItemControlCode,
   makeIssue,
   shouldCreateStore,
@@ -40,9 +44,31 @@ export class GroupStore extends AbstractActualNodeStore implements IGroupNode {
     name: "GroupStore.children",
   });
 
+  @observable.ref
+  private signatureState: Signature | undefined;
+
   @computed
   get visibleNodes(): IPresentableNode[] {
     return this.nodes.filter((child) => !child.hidden);
+  }
+
+  @computed
+  get signature(): Signature | undefined {
+    return this.signatureState;
+  }
+
+  @action
+  setSignature(signature: Signature | undefined): void {
+    this.signatureState = signature;
+  }
+
+  @computed
+  get signatureRequired(): boolean {
+    return (
+      findExtension(this.template, EXT.SIGNATURE_REQUIRED) != undefined &&
+      this.isEnabled &&
+      this.nodes.some((child) => child.responseItems.length > 0)
+    );
   }
 
   constructor(
@@ -54,6 +80,14 @@ export class GroupStore extends AbstractActualNodeStore implements IGroupNode {
     responseItem: QuestionnaireResponseItem | undefined,
   ) {
     super(form, template, parentStore, scope, token);
+    this.signatureState = responseItem
+      ? extractExtensionsValues(
+          "Signature",
+          responseItem,
+          EXT.QUESTIONNAIRE_RESPONSE_SIGNATURE,
+        )[0]
+      : undefined;
+    makeObservable(this);
 
     this.expressionRegistry = new NodeExpressionRegistry(
       this.form.coordinator,
@@ -137,6 +171,20 @@ export class GroupStore extends AbstractActualNodeStore implements IGroupNode {
 
     if (childItems.length > 0) {
       item.item = childItems;
+    }
+
+    if (
+      kind === "response" &&
+      this.signatureRequired &&
+      this.signature != undefined &&
+      childItems.length > 0
+    ) {
+      item.extension = [
+        {
+          url: EXT.QUESTIONNAIRE_RESPONSE_SIGNATURE,
+          valueSignature: this.signature,
+        },
+      ];
     }
 
     return [item];

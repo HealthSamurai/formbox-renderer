@@ -6,6 +6,7 @@ export function QuestionScaffold({
   linkId,
   header,
   children,
+  signature,
   errors,
   isExpanded,
 }: QuestionScaffoldProperties) {
@@ -14,6 +15,7 @@ export function QuestionScaffold({
       {header}
       <Collapsible isExpanded={isExpanded}>{children}</Collapsible>
       {errors}
+      {signature}
     </Container>
   );
 }

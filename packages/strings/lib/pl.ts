@@ -83,6 +83,9 @@ const strings: Strings = {
         "Wymagane są co najmniej {minOccurs} niepuste odpowiedzi.",
       maxOccurs: "Nie dozwolone więcej niż {maxOccurs} odpowiedzi.",
     },
+    signature: {
+      required: "Signature is required.",
+    },
     answer: {
       minLength: "Odpowiedź musi mieć co najmniej {minLength} znaków.",
       maxLength: "Odpowiedź przekracza maksymalną długość {maxLength}.",

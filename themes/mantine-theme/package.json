@@ -53,6 +53,8 @@
   "dependencies": {
     "@formbox/theme": "workspace:*",
     "@mantine/core": "^8.3.12",
-    "@mantine/hooks": "^8.3.12"
+    "@mantine/hooks": "^8.3.12",
+    "@tabler/icons-react": "^3.37.1",
+    "perfect-freehand": "^1.2.3"
   }
 }

@@ -30,6 +30,7 @@ import type {
   QuestionnaireItemAnswerOption,
   QuestionnaireItemEnableWhen,
   Reference,
+  Signature,
 } from "@formbox/fhir";
 import { UcumLhcUtils } from "@lhncbc/ucum-lhc";
 
@@ -182,46 +183,48 @@ export function getItemControlCode(
 
 // prettier-ignore
 export const EXT = {
-  MIN_OCCURS:                    "http://hl7.org/fhir/StructureDefinition/questionnaire-minOccurs",
-  MAX_OCCURS:                    "http://hl7.org/fhir/StructureDefinition/questionnaire-maxOccurs",
-  MIN_VALUE:                     "http://hl7.org/fhir/StructureDefinition/minValue",
-  MAX_VALUE:                     "http://hl7.org/fhir/StructureDefinition/maxValue",
-  MIN_LENGTH:                    "http://hl7.org/fhir/StructureDefinition/minLength",
-  MAX_DECIMAL_PLACES:            "http://hl7.org/fhir/StructureDefinition/maxDecimalPlaces",
-  ENTRY_FORMAT:                  "http://hl7.org/fhir/StructureDefinition/entryFormat",
-  SLIDER_STEP_VALUE:             "http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue",
-  MIME_TYPE:                     "http://hl7.org/fhir/StructureDefinition/mimeType",
-  MAX_SIZE:                      "http://hl7.org/fhir/StructureDefinition/maxSize",
-  SDC_MIN_QUANTITY:              "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-minQuantity",
-  SDC_MAX_QUANTITY:              "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-maxQuantity",
-  HIDDEN:                        "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
-  ITEM_CONTROL:                  "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-  CHOICE_ORIENTATION:            "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
-  QUESTIONNAIRE_UNIT:            "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
-  QUESTIONNAIRE_UNIT_OPTION:     "http://hl7.org/fhir/StructureDefinition/questionnaire-unitOption",
-  SDC_ENABLE_WHEN_EXPR:          "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-enableWhenExpression",
-  SDC_CALCULATED_EXPR:           "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
-  SDC_INITIAL_EXPR:              "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
-  SDC_ANSWER_EXPR:               "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression",
-  SDC_ANSWER_OPTIONS_TOGGLE:     "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerOptionsToggleExpression",
-  SDC_VARIABLE:                  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-variable",
-  SDC_KEYBOARD:                  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-keyboard",
-  SDC_ITEM_MEDIA:                "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemMedia",
-  SDC_ITEM_ANSWER_MEDIA:         "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemAnswerMedia",
-  SDC_COLLAPSIBLE:               "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-collapsible",
-  SDC_SHORT_TEXT:                "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-shortText",
-  SDC_WIDTH:                     "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-width",
-  SUPPORT_LINK:                  "http://hl7.org/fhir/StructureDefinition/questionnaire-supportLink",
-  SUPPORT_HYPERLINK:             "http://hl7.org/fhir/StructureDefinition/questionnaire-supportHyperlink",
-  SDC_OPEN_LABEL:                "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-openLabel",
-  SDC_LAUNCH_CONTEXT:            "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext",
-  OPTION_PREFIX:                 "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
-  OPTION_EXCLUSIVE:              "http://hl7.org/fhir/StructureDefinition/questionnaire-optionExclusive",
-  CQF_EXPRESSION:                "http://hl7.org/fhir/StructureDefinition/cqf-expression",
-  CQF_CALCULATED_VALUE:          "http://hl7.org/fhir/uv/cql/StructureDefinition/cqf-calculatedValue",
-  TARGET_CONSTRAINT:             "http://hl7.org/fhir/StructureDefinition/targetConstraint",
-  PREFERRED_TERMINOLOGY_SERVER:  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-preferredTerminologyServer",
-  TRANSLATION:                   "http://hl7.org/fhir/StructureDefinition/translation",
+  MIN_OCCURS:                       "http://hl7.org/fhir/StructureDefinition/questionnaire-minOccurs",
+  MAX_OCCURS:                       "http://hl7.org/fhir/StructureDefinition/questionnaire-maxOccurs",
+  MIN_VALUE:                        "http://hl7.org/fhir/StructureDefinition/minValue",
+  MAX_VALUE:                        "http://hl7.org/fhir/StructureDefinition/maxValue",
+  MIN_LENGTH:                       "http://hl7.org/fhir/StructureDefinition/minLength",
+  MAX_DECIMAL_PLACES:               "http://hl7.org/fhir/StructureDefinition/maxDecimalPlaces",
+  ENTRY_FORMAT:                     "http://hl7.org/fhir/StructureDefinition/entryFormat",
+  SLIDER_STEP_VALUE:                "http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue",
+  MIME_TYPE:                        "http://hl7.org/fhir/StructureDefinition/mimeType",
+  MAX_SIZE:                         "http://hl7.org/fhir/StructureDefinition/maxSize",
+  SDC_MIN_QUANTITY:                 "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-minQuantity",
+  SDC_MAX_QUANTITY:                 "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-maxQuantity",
+  HIDDEN:                           "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+  ITEM_CONTROL:                     "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+  CHOICE_ORIENTATION:               "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+  QUESTIONNAIRE_UNIT:               "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+  QUESTIONNAIRE_UNIT_OPTION:        "http://hl7.org/fhir/StructureDefinition/questionnaire-unitOption",
+  SDC_ENABLE_WHEN_EXPR:             "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-enableWhenExpression",
+  SDC_CALCULATED_EXPR:              "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
+  SDC_INITIAL_EXPR:                 "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+  SDC_ANSWER_EXPR:                  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression",
+  SDC_ANSWER_OPTIONS_TOGGLE:        "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerOptionsToggleExpression",
+  SDC_VARIABLE:                     "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-variable",
+  SDC_KEYBOARD:                     "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-keyboard",
+  SDC_ITEM_MEDIA:                   "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemMedia",
+  SDC_ITEM_ANSWER_MEDIA:            "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemAnswerMedia",
+  SDC_COLLAPSIBLE:                  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-collapsible",
+  SDC_SHORT_TEXT:                   "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-shortText",
+  SDC_WIDTH:                        "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-width",
+  SUPPORT_LINK:                     "http://hl7.org/fhir/StructureDefinition/questionnaire-supportLink",
+  SUPPORT_HYPERLINK:                "http://hl7.org/fhir/StructureDefinition/questionnaire-supportHyperlink",
+  SDC_OPEN_LABEL:                   "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-openLabel",
+  SDC_LAUNCH_CONTEXT:               "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext",
+  OPTION_PREFIX:                    "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+  OPTION_EXCLUSIVE:                 "http://hl7.org/fhir/StructureDefinition/questionnaire-optionExclusive",
+  SIGNATURE_REQUIRED:               "http://hl7.org/fhir/StructureDefinition/questionnaire-signatureRequired",
+  QUESTIONNAIRE_RESPONSE_SIGNATURE: "http://hl7.org/fhir/StructureDefinition/questionnaireresponse-signature",
+  CQF_EXPRESSION:                   "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+  CQF_CALCULATED_VALUE:             "http://hl7.org/fhir/uv/cql/StructureDefinition/cqf-calculatedValue",
+  TARGET_CONSTRAINT:                "http://hl7.org/fhir/StructureDefinition/targetConstraint",
+  PREFERRED_TERMINOLOGY_SERVER:     "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-preferredTerminologyServer",
+  TRANSLATION:                      "http://hl7.org/fhir/StructureDefinition/translation",
 } as const;
 
 export function answerify<T extends AnswerType>(
@@ -704,6 +707,40 @@ export async function prepareAttachmentFromFile(
 
   adapter.attachment.setSize(attachment, String(file.size));
   return attachment;
+}
+
+export function prepareSignatureFromDataUrl(
+  dataUrl: string,
+): Signature | undefined {
+  const trimmed = dataUrl.trim();
+  if (trimmed.length === 0) {
+    return undefined;
+  }
+
+  const match =
+    /^data:(?<sigFormat>[^;,]+)(?:;[^,]+)*;base64,(?<data>.+)$/u.exec(trimmed);
+  if (!match?.groups) {
+    return undefined;
+  }
+
+  const data = match.groups["data"];
+  if (!data) {
+    return undefined;
+  }
+
+  return {
+    sigFormat: match.groups["sigFormat"] ?? "image/png",
+    data,
+  };
+}
+
+export function prepareDataUrlFromSignature(
+  signature: Signature | undefined,
+): string | undefined {
+  if (signature?.data == undefined) {
+    return undefined;
+  }
+  return `data:${signature.sigFormat ?? "image/png"};base64,${signature.data}`;
 }
 
 export function groupHasResponses(group: IGroupNode): boolean {

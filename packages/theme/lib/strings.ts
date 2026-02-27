@@ -81,6 +81,9 @@ export type Strings = {
       readonly minOccursMultiple: PlaceholderString<"minOccurs">;
       readonly maxOccurs: PlaceholderString<"maxOccurs">;
     };
+    readonly signature: {
+      readonly required: string;
+    };
     readonly answer: {
       readonly minLength: PlaceholderString<"minLength">;
       readonly maxLength: PlaceholderString<"maxLength">;

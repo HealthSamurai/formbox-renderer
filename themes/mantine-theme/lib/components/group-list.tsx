@@ -16,7 +16,12 @@ export function GroupList({
       <Stack gap="md">{children}</Stack>
       {onAdd ? (
         <Box>
-          <Button type="button" onClick={onAdd} disabled={canAdd === false}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onAdd}
+            disabled={canAdd === false}
+          >
             {strings.group.addSection}
           </Button>
         </Box>

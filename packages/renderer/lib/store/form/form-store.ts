@@ -39,6 +39,7 @@ import {
   type QuestionnaireResponse,
   type QuestionnaireResponseItem,
   type QuestionnaireResponseOf,
+  type Signature,
 } from "@formbox/fhir";
 import { isQuestionNode, QuestionStore } from "../question/question-store.ts";
 import { GroupStore, isGroupNode } from "../group/group-store.ts";
@@ -57,6 +58,7 @@ import {
   EXT,
   extractExtensionsValues,
   extractExtensionValue,
+  findExtension,
   findExtensions,
   getIssueMessage,
   getItemControlCode,
@@ -136,6 +138,9 @@ export class FormStore<V extends FhirVersion = FhirVersion>
   @observable.ref
   private launchContextState: LaunchContext;
 
+  @observable.ref
+  private signatureState: Signature | undefined;
+
   readonly availableLanguages: readonly string[];
 
   constructor(
@@ -159,6 +164,13 @@ export class FormStore<V extends FhirVersion = FhirVersion>
     this.questionnaire = questionnaire as Questionnaire;
     this.initialResponse = response as QuestionnaireResponse | undefined;
     this.stringsState = strings;
+    this.signatureState = this.initialResponse
+      ? extractExtensionsValues(
+          "Signature",
+          this.initialResponse,
+          EXT.QUESTIONNAIRE_RESPONSE_SIGNATURE,
+        )[0]
+      : undefined;
     this.availableLanguages = getTranslationLanguages(this.questionnaire);
     this.languageState = language ?? this.questionnaire.language;
     this.launchContextState = launchContext ? { ...launchContext } : {};
@@ -223,6 +235,24 @@ export class FormStore<V extends FhirVersion = FhirVersion>
   @computed
   get description(): string | undefined {
     return getTranslated(this.questionnaire, "description", this.language);
+  }
+
+  @computed
+  get signature(): Signature | undefined {
+    return this.signatureState;
+  }
+
+  @action
+  setSignature(signature: Signature | undefined): void {
+    this.signatureState = signature;
+  }
+
+  @computed
+  get signatureRequired(): boolean {
+    return (
+      findExtension(this.questionnaire, EXT.SIGNATURE_REQUIRED) != undefined &&
+      this.nodes.some((node) => node.responseItems.length > 0)
+    );
   }
 
   @action
@@ -407,6 +437,17 @@ export class FormStore<V extends FhirVersion = FhirVersion>
       ...this.expressionRegistry.registrationIssues,
       ...this.expressionRegistry.slotsIssues,
     ];
+
+    if (
+      this.isSubmitAttempted &&
+      this.signatureRequired &&
+      this.signature == undefined
+    ) {
+      issues.push(
+        makeIssue("required", this.strings.validation.signature.required),
+      );
+    }
+
     if (this.isSubmitAttempted) {
       issues.push(...this.expressionRegistry.constraintsIssues);
     }
@@ -732,6 +773,20 @@ export class FormStore<V extends FhirVersion = FhirVersion>
 
     if (items.length > 0) {
       response.item = items;
+    }
+
+    if (
+      kind === "response" &&
+      this.signatureRequired &&
+      this.signature &&
+      items.length > 0
+    ) {
+      response.extension = [
+        {
+          url: EXT.QUESTIONNAIRE_RESPONSE_SIGNATURE,
+          valueSignature: this.signature,
+        },
+      ];
     }
 
     return response;

@@ -51,8 +51,9 @@
     "vite-plugin-dts": "^4.5.4"
   },
   "dependencies": {
-    "@formbox/theme": "workspace:*",
     "@ant-design/icons": "^6.1.0",
-    "antd": "^6.2.0"
+    "@formbox/theme": "workspace:*",
+    "antd": "^6.2.0",
+    "perfect-freehand": "^1.2.3"
   }
 }

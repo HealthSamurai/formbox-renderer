@@ -4,6 +4,7 @@ import { Collapsible } from "./collapsible.tsx";
 export function GroupScaffold({
   header,
   children,
+  signature,
   errors,
   isExpanded,
   onRemove,
@@ -15,8 +16,9 @@ export function GroupScaffold({
       {header}
       <Collapsible isExpanded={isExpanded}>{children}</Collapsible>
       {errors}
-      {onRemove && (
+      {onRemove ? (
         <div className="nhsuk-button-group">
+          {signature}
           <button
             type="button"
             onClick={onRemove}
@@ -26,6 +28,8 @@ export function GroupScaffold({
             {strings.group.removeSection}
           </button>
         </div>
+      ) : (
+        signature
       )}
     </div>
   );

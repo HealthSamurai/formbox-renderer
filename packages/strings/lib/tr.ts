@@ -80,6 +80,9 @@ const strings: Strings = {
       minOccursMultiple: "En az {minOccurs} boş olmayan yanıt gereklidir.",
       maxOccurs: "En fazla {maxOccurs} yanıta izin verilir.",
     },
+    signature: {
+      required: "Signature is required.",
+    },
     answer: {
       minLength: "Yanıt en az {minLength} karakter olmalıdır.",
       maxLength: "Yanıt {maxLength} azami uzunluğunu aşıyor.",

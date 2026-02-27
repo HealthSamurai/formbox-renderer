@@ -1,0 +1,30 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "signature-required-repeating-question",
+  "status": "active",
+  "title": "Repeating Question Signature Requirement",
+  "description": "Signature also works when the question allows repeated answers.",
+  "item": [
+    {
+      "linkId": "witness-name",
+      "text": "Witness names",
+      "type": "string",
+      "repeats": true,
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-signatureRequired",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "urn:iso-astm:E1762-95:2013",
+                "code": "1.2.840.10065.1.12.1.1",
+                "display": "Author's Signature"
+              }
+            ],
+            "text": "Author's Signature"
+          }
+        }
+      ]
+    }
+  ]
+}

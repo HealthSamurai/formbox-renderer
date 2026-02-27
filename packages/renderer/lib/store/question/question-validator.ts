@@ -63,6 +63,13 @@ export class QuestionValidator implements INodeValidator {
       );
     }
 
+    if (
+      this.question.signatureRequired &&
+      this.question.signature == undefined
+    ) {
+      issues.push(makeIssue("required", strings.validation.signature.required));
+    }
+
     return issues;
   }
 }

@@ -15,7 +15,7 @@ export function AnswerScaffold({
         {onRemove ? (
           <Button
             type="button"
-            variant="subtle"
+            variant="light"
             color="red"
             onClick={onRemove}
             disabled={canRemove === false}

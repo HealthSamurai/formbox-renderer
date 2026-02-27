@@ -3,6 +3,8 @@ import type { IForm } from "../../types.ts";
 import { renderErrors } from "../node/errors.tsx";
 import { NodeList } from "../node/node-list.tsx";
 import { useTheme } from "../../ui/theme.tsx";
+import { SignatureInput } from "../signature/signature-input.tsx";
+import { buildId, getIssueErrorId } from "../../utilities.ts";
 
 const displayNames =
   typeof Intl === "object" && "DisplayNames" in Intl
@@ -39,6 +41,17 @@ export const Form = observer(function Form({
       />
     ) : undefined;
 
+  const signature = store.signatureRequired ? (
+    <SignatureInput
+      id={buildId(store.token, "signature")}
+      value={store.signature}
+      onChange={(value) => {
+        store.setSignature(value);
+      }}
+      ariaDescribedBy={getIssueErrorId(store)}
+    />
+  ) : undefined;
+
   return (
     <ThemedForm
       title={store.title}
@@ -47,6 +60,7 @@ export const Form = observer(function Form({
       errors={renderErrors(store)}
       before={<NodeList nodes={store.headerNodes} />}
       after={<NodeList nodes={store.footerNodes} />}
+      signature={signature}
       onSubmit={onSubmit}
       onCancel={() => store.reset()}
       pagination={store.pagination}

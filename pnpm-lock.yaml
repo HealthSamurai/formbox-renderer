@@ -170,6 +170,10 @@ importers:
         version: 4.5.4(@types/node@25.0.7)(rollup@4.55.1)(typescript@5.9.3)(vite@7.3.1(@types/node@25.0.7)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2))
 
   packages/theme:
+    dependencies:
+      perfect-freehand:
+        specifier: ^1.2.3
+        version: 1.2.3
     devDependencies:
       '@types/react':
         specifier: ^19.2.8
@@ -437,6 +441,9 @@ importers:
       antd:
         specifier: ^6.2.0
         version: 6.2.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      perfect-freehand:
+        specifier: ^1.2.3
+        version: 1.2.3
     devDependencies:
       '@babel/preset-typescript':
         specifier: ^7.28.5
@@ -483,6 +490,9 @@ importers:
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
+      perfect-freehand:
+        specifier: ^1.2.3
+        version: 1.2.3
     devDependencies:
       '@linaria/core':
         specifier: ^6.3.0
@@ -532,6 +542,12 @@ importers:
       '@mantine/hooks':
         specifier: ^8.3.12
         version: 8.3.12(react@19.2.3)
+      '@tabler/icons-react':
+        specifier: ^3.37.1
+        version: 3.37.1(react@19.2.3)
+      perfect-freehand:
+        specifier: ^1.2.3
+        version: 1.2.3
     devDependencies:
       '@babel/preset-typescript':
         specifier: ^7.28.5
@@ -581,6 +597,9 @@ importers:
       nhsuk-frontend:
         specifier: ^10.2.2
         version: 10.2.2
+      perfect-freehand:
+        specifier: ^1.2.3
+        version: 1.2.3
     devDependencies:
       '@linaria/core':
         specifier: ^6.3.0
@@ -2290,6 +2309,14 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  '@tabler/icons-react@3.37.1':
+    resolution: {integrity: sha512-R7UE71Jji7i4Su56Y9zU1uYEBakUejuDJvyuYVmBuUoqp/x3Pn4cv2huarexR3P0GJ2eHg4rUj9l5zccqS6K/Q==}
+    peerDependencies:
+      react: 19.2.3
+
+  '@tabler/icons@3.37.1':
+    resolution: {integrity: sha512-neLCWkuyNHEPXCyYu6nbN4S3g/59BTa4qyITAugYVpq1YzYNDOZooW7/vRWH98ZItXAudxdKU8muFT7y1PqzuA==}
 
   '@tailwindcss/node@4.1.18':
     resolution: {integrity: sha512-DoR7U1P7iYhw16qJ49fgXUlry1t4CpXeErJHnQ44JgTSKMaZUdf17cfn5mHchfJ4KRBZRFA/Coo+MUF5+gOaCQ==}
@@ -4593,6 +4620,9 @@ packages:
   pathval@2.0.1:
     resolution: {integrity: sha512-//nshmD55c46FuFw26xV/xFAaB5HF9Xdap7HJBBnrKdAd6/GxDBaNA1870O79+9ueg61cZLSVc+OaFlfmObYVQ==}
     engines: {node: '>= 14.16'}
+
+  perfect-freehand@1.2.3:
+    resolution: {integrity: sha512-bHZSfqDHGNlPpgH2yxXgPHlQSPpEbo+qg7li0M78J9vNAi2yjwLeA4x79BEQhX44lEWpCLSFCeRZwpw0niiXPA==}
 
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
@@ -7419,6 +7449,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@tabler/icons-react@3.37.1(react@19.2.3)':
+    dependencies:
+      '@tabler/icons': 3.37.1
+      react: 19.2.3
+
+  '@tabler/icons@3.37.1': {}
+
   '@tailwindcss/node@4.1.18':
     dependencies:
       '@jridgewell/remapping': 2.3.5
@@ -10232,6 +10269,8 @@ snapshots:
   pathe@2.0.3: {}
 
   pathval@2.0.1: {}
+
+  perfect-freehand@1.2.3: {}
 
   picocolors@1.1.1: {}
 

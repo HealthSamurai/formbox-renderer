@@ -81,6 +81,9 @@ const strings: Strings = {
       minOccursMultiple: "Требуется минимум {minOccurs} непустых ответов.",
       maxOccurs: "Допускается не более {maxOccurs} ответов.",
     },
+    signature: {
+      required: "Signature is required.",
+    },
     answer: {
       minLength: "Ответ должен содержать минимум {minLength} символов.",
       maxLength: "Ответ превышает максимальную длину {maxLength}.",

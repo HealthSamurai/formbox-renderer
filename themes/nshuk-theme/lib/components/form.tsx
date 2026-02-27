@@ -12,6 +12,7 @@ export function Form({
   errors,
   before,
   after,
+  signature,
   pagination,
 }: FormProperties) {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -21,6 +22,7 @@ export function Form({
   const handleCancel = onCancel ?? (() => {});
   const actions = (
     <>
+      {signature}
       <ActionButton variant="primary" type="submit" disabled={!onSubmit}>
         Submit
       </ActionButton>

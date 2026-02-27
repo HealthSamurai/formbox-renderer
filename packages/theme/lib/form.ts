@@ -11,6 +11,7 @@ export type FormProperties = {
   errors?: ReactNode;
   before?: ReactNode;
   after?: ReactNode;
+  signature?: ReactNode;
 };
 
 export type FormComponent = ComponentType<FormProperties>;

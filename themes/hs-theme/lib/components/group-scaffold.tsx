@@ -8,6 +8,7 @@ import { IconButton } from "./icon-button.tsx";
 export function GroupScaffold({
   header,
   children,
+  signature,
   errors,
   isExpanded,
   onRemove,
@@ -29,8 +30,9 @@ export function GroupScaffold({
         </Collapsible>
       )}
       {errors}
-      {onRemove && (
+      {onRemove ? (
         <Toolbar>
+          {signature}
           <IconButton
             icon={<Trash />}
             onClick={onRemove}
@@ -38,6 +40,8 @@ export function GroupScaffold({
             label={strings.group.removeSection}
           />
         </Toolbar>
+      ) : (
+        signature
       )}
     </Container>
   );

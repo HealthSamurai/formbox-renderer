@@ -3,6 +3,7 @@ import {
   action,
   comparer,
   computed,
+  makeObservable,
   observable,
   override,
   reaction,
@@ -29,6 +30,7 @@ import type {
   QuestionnaireItem,
   QuestionnaireResponseItem,
   QuestionnaireResponseItemAnswer,
+  Signature,
 } from "@formbox/fhir";
 
 import { AbstractActualNodeStore } from "../base/abstract-actual-node-store.ts";
@@ -66,6 +68,9 @@ export class QuestionStore<T extends AnswerType = AnswerType>
 
   @observable
   private lifecycle: AnswerLifecycle = "pristine";
+
+  @observable.ref
+  private signatureState: Signature | undefined;
 
   private readonly disposers: IReactionDisposer[] = [];
 
@@ -113,6 +118,25 @@ export class QuestionStore<T extends AnswerType = AnswerType>
     return extractExtensionValue("decimal", this.template, EXT.MAX_SIZE);
   }
 
+  @computed
+  get signature(): Signature | undefined {
+    return this.signatureState;
+  }
+
+  @action
+  setSignature(signature: Signature | undefined): void {
+    this.signatureState = signature;
+  }
+
+  @computed
+  get signatureRequired(): boolean {
+    return (
+      findExtension(this.template, EXT.SIGNATURE_REQUIRED) != undefined &&
+      this.isEnabled &&
+      this.collectAnswers("response").length > 0
+    );
+  }
+
   constructor(
     form: IForm,
     template: QuestionnaireItem,
@@ -122,6 +146,14 @@ export class QuestionStore<T extends AnswerType = AnswerType>
     responseItem: QuestionnaireResponseItem | undefined,
   ) {
     super(form, template, parentStore, scope, token);
+    this.signatureState = responseItem
+      ? extractExtensionsValues(
+          "Signature",
+          responseItem,
+          EXT.QUESTIONNAIRE_RESPONSE_SIGNATURE,
+        )[0]
+      : undefined;
+    makeObservable(this);
 
     this.expressionRegistry = new NodeExpressionRegistry(
       this.form.coordinator,
@@ -642,19 +674,32 @@ export class QuestionStore<T extends AnswerType = AnswerType>
       item.answer = answers;
     }
 
+    if (
+      kind === "response" &&
+      this.signatureRequired &&
+      this.signature != undefined &&
+      answers.length > 0
+    ) {
+      item.extension = [
+        {
+          url: EXT.QUESTIONNAIRE_RESPONSE_SIGNATURE,
+          valueSignature: this.signature,
+        },
+      ];
+    }
+
     return [item];
   }
 
   private collectAnswers(
     kind: SnapshotKind,
   ): QuestionnaireResponseItemAnswer[] {
-    const answers =
-      kind === "expression"
+    const sourceAnswers =
+      kind === "expression" || this.repeats
         ? this.answers
-        : this.repeats
-          ? this.answers
-          : this.answers.slice(0, 1);
-    return answers
+        : this.answers.slice(0, 1);
+
+    return sourceAnswers
       .map((answer) =>
         kind === "response" ? answer.responseAnswer : answer.expressionAnswer,
       )

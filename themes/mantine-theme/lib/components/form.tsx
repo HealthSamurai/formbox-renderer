@@ -13,6 +13,7 @@ export function Form({
   errors,
   before,
   after,
+  signature,
 }: FormProperties) {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -75,6 +76,7 @@ export function Form({
               </Button>
             </Group>
             <Group gap="xs" align="center">
+              {signature}
               <Button type="submit" disabled={onSubmit == undefined}>
                 Submit
               </Button>
@@ -90,6 +92,7 @@ export function Form({
           </Group>
         ) : (
           <Group justify="flex-end" gap="xs">
+            {signature}
             <Button type="submit" disabled={onSubmit == undefined}>
               Submit
             </Button>

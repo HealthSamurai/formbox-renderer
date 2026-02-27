@@ -33,6 +33,7 @@ import { GroupScaffold } from "./components/group-scaffold.tsx";
 import { Table } from "./components/table.tsx";
 import { InputGroup } from "./components/input-group.tsx";
 import { FileInput } from "./components/file-input.tsx";
+import { SignatureInput } from "./components/signature-input.tsx";
 import { TabContainer } from "./components/tab-container.tsx";
 import { DisplayRenderer } from "./components/display-renderer.tsx";
 import { Link } from "./components/link.tsx";
@@ -44,6 +45,7 @@ export { NumberInput } from "./components/number-input.tsx";
 export { TabContainer } from "./components/tab-container.tsx";
 export { DisplayRenderer } from "./components/display-renderer.tsx";
 export { OptionDisplay } from "./components/option-display.tsx";
+export { SignatureInput } from "./components/signature-input.tsx";
 export { Link } from "./components/link.tsx";
 export { LanguageSelector } from "./components/language-selector.tsx";
 export { Provider } from "./provider.tsx";
@@ -83,6 +85,7 @@ export const theme: Theme = {
   Table,
   InputGroup,
   FileInput,
+  SignatureInput,
   TabContainer,
   DisplayRenderer,
   Link,

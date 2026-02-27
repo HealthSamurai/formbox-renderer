@@ -1,0 +1,30 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "signature-required-question",
+  "status": "active",
+  "title": "Question-Level Signature Requirement",
+  "description": "Question-level signature is rendered independently from the answer type.",
+  "item": [
+    {
+      "linkId": "q-patient-name",
+      "text": "Patient name",
+      "type": "string",
+      "required": true,
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-signatureRequired",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "urn:iso-astm:E1762-95:2013",
+                "code": "1.2.840.10065.1.12.1.1",
+                "display": "Author's Signature"
+              }
+            ],
+            "text": "Author's Signature"
+          }
+        }
+      ]
+    }
+  ]
+}

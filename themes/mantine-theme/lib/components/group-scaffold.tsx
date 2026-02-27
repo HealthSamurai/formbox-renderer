@@ -6,6 +6,7 @@ import { Collapsible } from "./collapsible.tsx";
 export function GroupScaffold({
   header,
   children,
+  signature,
   errors,
   isExpanded,
   onRemove,
@@ -23,17 +24,20 @@ export function GroupScaffold({
         </Collapsible>
       )}
       {errors}
-      {onRemove && (
+      {(signature || onRemove) && (
         <Group justify="flex-end">
-          <Button
-            type="button"
-            variant="subtle"
-            color="red"
-            onClick={onRemove}
-            disabled={canRemove === false}
-          >
-            {strings.group.removeSection}
-          </Button>
+          {signature}
+          {onRemove && (
+            <Button
+              type="button"
+              variant="light"
+              color="red"
+              onClick={onRemove}
+              disabled={canRemove === false}
+            >
+              {strings.group.removeSection}
+            </Button>
+          )}
         </Group>
       )}
     </Stack>

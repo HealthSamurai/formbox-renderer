@@ -81,6 +81,9 @@ const strings: Strings = {
       minOccursMultiple: "Minst {minOccurs} icke-tomma svar krävs.",
       maxOccurs: "Högst {maxOccurs} svar tillåts.",
     },
+    signature: {
+      required: "Signature is required.",
+    },
     answer: {
       minLength: "Svaret måste vara minst {minLength} tecken långt.",
       maxLength: "Svaret överstiger maximal längd på {maxLength}.",

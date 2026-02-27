@@ -12,6 +12,7 @@ export function Form({
   errors,
   before,
   after,
+  signature,
   pagination,
 }: FormProperties) {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -52,6 +53,7 @@ export function Form({
 
   const actions = (
     <Space wrap>
+      {signature}
       <Button type="primary" htmlType="submit" disabled={!onSubmit}>
         Submit
       </Button>

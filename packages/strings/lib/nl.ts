@@ -82,6 +82,9 @@ const strings: Strings = {
         "Minimaal {minOccurs} niet-lege antwoorden zijn vereist.",
       maxOccurs: "Niet meer dan {maxOccurs} antwoorden toegestaan.",
     },
+    signature: {
+      required: "Signature is required.",
+    },
     answer: {
       minLength: "Antwoord moet minimaal {minLength} tekens bevatten.",
       maxLength: "Antwoord overschrijdt de maximale lengte van {maxLength}.",

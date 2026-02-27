@@ -81,6 +81,9 @@ const strings: Strings = {
       minOccursMultiple: "At least {minOccurs} non-empty answers are required.",
       maxOccurs: "No more than {maxOccurs} answers are permitted.",
     },
+    signature: {
+      required: "Signature is required.",
+    },
     answer: {
       minLength: "Response must be at least {minLength} characters long.",
       maxLength: "Response exceeds the maximum length of {maxLength}.",
