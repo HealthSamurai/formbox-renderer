@@ -8,18 +8,6 @@ import { buildId, getNodeLabelId } from "../../utilities.ts";
 import type { LabelAs } from "@formbox/theme";
 import { isQuestionNode } from "../../store/question/question-store.ts";
 
-function hasOptions(node: {
-  template: { answerOption?: unknown; answerValueSet?: unknown };
-  expressionRegistry: { answer?: unknown };
-}): boolean {
-  return Boolean(
-    (Array.isArray(node.template.answerOption) &&
-      node.template.answerOption.length > 0) ||
-    node.expressionRegistry.answer ||
-    node.template.answerValueSet,
-  );
-}
-
 function isSelectLikeBooleanControl(control: string | undefined): boolean {
   return (
     control === "radio-button" ||
@@ -37,7 +25,7 @@ function isMultiSelectQuestion(node: IPresentableNode): boolean {
 
   return (
     node.isRepeatingWithoutChildren &&
-    (hasOptions(node) ||
+    (node.hasOptions ||
       (node.type === "boolean" && isSelectLikeBooleanControl(node.control)))
   );
 }

@@ -32,6 +32,7 @@ export class NodeExpressionRegistry
   readonly initial: IExpressionSlot | undefined;
   readonly calculated: IExpressionSlot | undefined;
   readonly answer: IExpressionSlot | undefined;
+  readonly answerValueSet: IExpressionSlot | undefined;
   readonly minValue: IExpressionSlot | undefined;
   readonly maxValue: IExpressionSlot | undefined;
   readonly maxQuantity: IExpressionSlot | undefined;
@@ -79,6 +80,15 @@ export class NodeExpressionRegistry
     this.answer = this.createSlot(
       extractExtensionValue("Expression", element, EXT.SDC_ANSWER_EXPR),
       "answer",
+    );
+
+    this.answerValueSet = this.createSlot(
+      extractExtensionValue(
+        "Expression",
+        element._answerValueSet,
+        EXT.CQF_EXPRESSION,
+      ),
+      "answer-valueset",
     );
 
     this.minValue = this.createSlot(

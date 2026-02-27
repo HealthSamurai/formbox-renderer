@@ -3,6 +3,7 @@ import { Renderer } from "../renderer.tsx";
 import answerConstraint from "./samples/answer-constraint-examples.json" with { type: "json" };
 import answerExpression from "./samples/answer-expression.json" with { type: "json" };
 import answerOptions from "./samples/answer-options.json" with { type: "json" };
+import answerValueSetExpression from "./samples/answer-valueset-expression.json" with { type: "json" };
 import answerValueSet from "./samples/answer-valueset.json" with { type: "json" };
 import booleanGating from "./samples/boolean-gating.json" with { type: "json" };
 import choiceOrientation from "./samples/choice-orientation.json" with { type: "json" };
@@ -173,6 +174,10 @@ export const AnswerConstraints = makeStory(
 export const AnswerValueSet = makeStory(
   "Answer ValueSet",
   answerValueSet as Questionnaire,
+);
+export const AnswerValueSetExpression = makeStory(
+  "Answer ValueSet Expression",
+  answerValueSetExpression as Questionnaire,
 );
 export const ItemShortText = makeStory(
   "Item shortText",

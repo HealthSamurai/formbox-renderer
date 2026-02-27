@@ -59,6 +59,29 @@ function toOptionsIssue(
   };
 }
 
+function normalizeExpressionCollection(value: unknown): unknown[] {
+  if (value === undefined) {
+    return [];
+  }
+
+  return Array.isArray(value) ? value : [value];
+}
+
+function pickCanonical(values: ReadonlyArray<unknown>): string | undefined {
+  for (const candidate of values) {
+    if (typeof candidate !== "string") {
+      continue;
+    }
+
+    const canonical = candidate.trim();
+    if (canonical.length > 0) {
+      return canonical;
+    }
+  }
+
+  return undefined;
+}
+
 export class AnswerOptionStore<
   T extends AnswerType,
 > implements IAnswerOptions<T> {
@@ -94,10 +117,11 @@ export class AnswerOptionStore<
 
   @computed({ keepAlive: true })
   private get expansion(): IPromiseBasedObservable<Coding[]> | undefined {
-    if (this.question.template.answerValueSet) {
+    const canonical = this.answerValueSetCanonical;
+    if (canonical) {
       return fromPromise(
         this.question.form.valueSetExpander.expand(
-          this.question.template.answerValueSet,
+          canonical,
           this.question.preferredTerminologyServers,
         ),
       );
@@ -106,14 +130,65 @@ export class AnswerOptionStore<
   }
 
   @computed
+  private get answerValueSetExpressionValues(): unknown[] {
+    const slot = this.question.expressionRegistry.answerValueSet;
+    return slot ? normalizeExpressionCollection(slot.value) : [];
+  }
+
+  @computed
+  private get answerValueSetCanonicalFromExpression(): string | undefined {
+    return pickCanonical(this.answerValueSetExpressionValues);
+  }
+
+  @computed
+  private get answerValueSetCanonical(): string | undefined {
+    const slot = this.question.expressionRegistry.answerValueSet;
+    if (slot) {
+      return this.answerValueSetCanonicalFromExpression;
+    }
+
+    return this.question.template.answerValueSet;
+  }
+
+  @computed
+  private get answerValueSetExpressionIssue():
+    | OperationOutcomeIssue
+    | undefined {
+    const slot = this.question.expressionRegistry.answerValueSet;
+    if (!slot || slot.error != undefined) {
+      return undefined;
+    }
+
+    const values = this.answerValueSetExpressionValues;
+    if (
+      values.length === 0 ||
+      this.answerValueSetCanonicalFromExpression != undefined
+    ) {
+      return undefined;
+    }
+
+    return toOptionsIssue(
+      new Error(
+        "answerValueSetExpression must evaluate to a canonical URL string.",
+      ),
+      this.question.form.strings.errors.unknown,
+    );
+  }
+
+  @computed
   get issues() {
-    return (
-      this.expansion?.case({
+    const issues = this.answerValueSetExpressionIssue
+      ? [this.answerValueSetExpressionIssue]
+      : [];
+
+    return [
+      ...issues,
+      ...(this.expansion?.case({
         rejected: (error) => [
           toOptionsIssue(error, this.question.form.strings.errors.unknown),
         ],
-      }) ?? []
-    );
+      }) ?? []),
+    ];
   }
 
   @computed

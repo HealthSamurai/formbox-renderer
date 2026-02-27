@@ -281,6 +281,16 @@ export class QuestionStore<T extends AnswerType = AnswerType>
     return new AnswerOptionStore<T>(this);
   }
 
+  @computed
+  get hasOptions(): boolean {
+    return !!(
+      this.template.answerOption?.length ||
+      this.expressionRegistry.answer ||
+      this.expressionRegistry.answerValueSet ||
+      this.template.answerValueSet
+    );
+  }
+
   @override
   override get issues() {
     const issues = [...super.issues, ...this.answerOption.issues];

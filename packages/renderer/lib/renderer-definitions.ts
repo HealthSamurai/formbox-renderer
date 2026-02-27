@@ -66,7 +66,7 @@ export const questions: QuestionRendererDefinition[] = [
     name: "list-select",
     priority: 95,
     matcher: (node) =>
-      (hasOptions(node) || node.type === "boolean") &&
+      (node.hasOptions || node.type === "boolean") &&
       (node.control === "radio-button" || node.control === "check-box"),
     renderer: ListSelectRenderer,
   },
@@ -74,7 +74,7 @@ export const questions: QuestionRendererDefinition[] = [
     name: "dropdown",
     priority: 90,
     matcher: (node) =>
-      hasOptions(node) ||
+      node.hasOptions ||
       (node.type === "boolean" &&
         (node.control === "drop-down" ||
           node.control === "autocomplete" ||
@@ -286,11 +286,3 @@ export const groupLists: GroupListRendererDefinition[] = [
     renderer: DefaultListRenderer,
   },
 ];
-
-function hasOptions(node: IQuestionNode) {
-  return !!(
-    node.template.answerOption?.length ||
-    node.expressionRegistry.answer ||
-    node.template.answerValueSet
-  );
-}

@@ -1,0 +1,53 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "answer-valueset-expression-demo",
+  "url": "http://example.org/Questionnaire/answer-valueset-expression-demo",
+  "status": "active",
+  "title": "Answer ValueSet Expression Demo",
+  "description": "Demonstrates a dynamic answerValueSet canonical resolved from cqf-expression on _answerValueSet.",
+  "item": [
+    {
+      "linkId": "panel",
+      "type": "group",
+      "text": "Choose which value set should drive the coding question",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-variable",
+          "valueExpression": {
+            "name": "useContactMethodSet",
+            "language": "text/fhirpath",
+            "expression": "%context.item.where(linkId='use-contact-methods').answer.valueBoolean.last()"
+          }
+        }
+      ],
+      "item": [
+        {
+          "linkId": "use-contact-methods",
+          "type": "boolean",
+          "text": "Use Contact Point System valueset",
+          "initial": [
+            {
+              "valueBoolean": false
+            }
+          ]
+        },
+        {
+          "linkId": "dynamic-valueset-choice",
+          "type": "coding",
+          "text": "Dynamic ValueSet-backed coding question",
+          "_answerValueSet": {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                "valueExpression": {
+                  "language": "text/fhirpath",
+                  "expression": "iif(%useContactMethodSet = true, 'http://hl7.org/fhir/ValueSet/contact-point-system', 'http://hl7.org/fhir/ValueSet/administrative-gender')"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -132,6 +132,7 @@ export type ExpressionSlotKind =
   | "initial"
   | "calculated"
   | "answer"
+  | "answer-valueset"
   | "answer-option-toggle"
   | "min-value"
   | "max-value"
@@ -165,6 +166,7 @@ export interface INodeExpressionRegistry extends IExpressionRegistry {
   readonly initial: IExpressionSlot | undefined;
   readonly calculated: IExpressionSlot | undefined;
   readonly answer: IExpressionSlot | undefined;
+  readonly answerValueSet: IExpressionSlot | undefined;
   readonly minValue: IExpressionSlot | undefined;
   readonly maxValue: IExpressionSlot | undefined;
   readonly maxQuantity: IExpressionSlot | undefined;
@@ -737,6 +739,7 @@ export interface IQuestionNode<
   readonly openLabel: string | undefined;
   readonly columnWidth: string | undefined;
   readonly answerOption: IAnswerOptions<T>;
+  readonly hasOptions: boolean;
   readonly choiceOrientation: ChoiceOrientation | undefined;
   readonly keyboardType: HTMLAttributes<Element>["inputMode"] | undefined;
   readonly answers: Array<IAnswer<T>>;
