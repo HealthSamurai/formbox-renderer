@@ -218,6 +218,8 @@ export const EXT = {
   SDC_LAUNCH_CONTEXT:               "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext",
   OPTION_PREFIX:                    "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
   OPTION_EXCLUSIVE:                 "http://hl7.org/fhir/StructureDefinition/questionnaire-optionExclusive",
+  ITEM_WEIGHT:                      "http://hl7.org/fhir/StructureDefinition/itemWeight",
+  ORDINAL_VALUE:                    "http://hl7.org/fhir/StructureDefinition/ordinalValue",
   USAGE_MODE:                       "http://hl7.org/fhir/StructureDefinition/questionnaire-usageMode",
   SIGNATURE_REQUIRED:               "http://hl7.org/fhir/StructureDefinition/questionnaire-signatureRequired",
   QUESTIONNAIRE_RESPONSE_SIGNATURE: "http://hl7.org/fhir/StructureDefinition/questionnaireresponse-signature",

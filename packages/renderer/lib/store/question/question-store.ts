@@ -565,6 +565,7 @@ export class QuestionStore<T extends AnswerType = AnswerType>
           AnswerTypeToDataType<T>
         >,
         answer.item,
+        answer,
       );
     });
 
@@ -648,6 +649,7 @@ export class QuestionStore<T extends AnswerType = AnswerType>
   private pushAnswer(
     initial?: DataTypeToType<AnswerTypeToDataType<T>>,
     responseItems?: QuestionnaireResponseItem[],
+    responseAnswer?: QuestionnaireResponseItemAnswer,
   ) {
     const answer = new AnswerStore(
       this,
@@ -655,6 +657,7 @@ export class QuestionStore<T extends AnswerType = AnswerType>
       buildId(this.token, this.lastIndex++),
       initial,
       responseItems,
+      responseAnswer,
     );
     this.answers.push(answer);
     return answer;

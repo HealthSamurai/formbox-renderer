@@ -14,12 +14,16 @@ import type {
 } from "../../types.ts";
 import type {
   OperationOutcomeIssue,
-  QuestionnaireResponseItem,
   QuestionnaireResponseItemAnswer,
+  QuestionnaireResponseItem,
 } from "@formbox/fhir";
 import {
   ANSWER_TYPE_TO_DATA_TYPE,
+  areValuesEqual,
   asAnswerFragment,
+  DATA_TYPE_TO_SUFFIX,
+  EXT,
+  extractExtensionValue,
   getIssueMessage,
   shouldCreateStore,
 } from "../../utilities.ts";
@@ -36,6 +40,7 @@ export class AnswerStore<T extends AnswerType> implements IAnswer<T> {
   @action.bound
   setValueByUser(value?: DataTypeToType<AnswerTypeToDataType<T>>): void {
     this._value = value === "" ? undefined : value;
+    this.explicitWeight = undefined;
     this.question.markDirty();
     this.question.markUserOverridden();
   }
@@ -43,12 +48,16 @@ export class AnswerStore<T extends AnswerType> implements IAnswer<T> {
   @action.bound
   setValueBySystem(next?: DataTypeToType<AnswerTypeToDataType<T>>): void {
     this._value = next;
+    this.explicitWeight = undefined;
     this.question.markDirty();
   }
 
   @observable.ref
   private _value: DataTypeToType<AnswerTypeToDataType<T>> | undefined =
     undefined;
+
+  @observable.ref
+  private explicitWeight: number | undefined = undefined;
 
   readonly nodes = observable.array<IPresentableNode>([], {
     deep: false,
@@ -61,6 +70,7 @@ export class AnswerStore<T extends AnswerType> implements IAnswer<T> {
     token: AnswerToken,
     initial: DataTypeToType<AnswerTypeToDataType<T>> | undefined,
     responseItems: QuestionnaireResponseItem[] = [],
+    responseAnswer?: QuestionnaireResponseItemAnswer,
   ) {
     makeObservable(this);
 
@@ -83,6 +93,7 @@ export class AnswerStore<T extends AnswerType> implements IAnswer<T> {
 
     this.nodes.replace(children);
     this._value = initial;
+    this.explicitWeight = this.extractWeightFromResponseAnswer(responseAnswer);
     this.validator = new AnswerValidator(
       this as IAnswer<T>,
       this.question as IQuestionNode<T>,
@@ -144,7 +155,117 @@ export class AnswerStore<T extends AnswerType> implements IAnswer<T> {
       answer.item = childItems;
     }
 
+    this.attachItemWeight(answer, kind);
+
     return answer;
+  }
+
+  @computed
+  private get optionWeight(): number | undefined {
+    const value = this.value;
+    if (value == undefined) {
+      return undefined;
+    }
+
+    return this.question.answerOption.inherentOptions.find((option) => {
+      if (option.value == undefined || option.weight == undefined) {
+        return false;
+      }
+
+      return areValuesEqual(this.question.dataType, option.value, value);
+    })?.weight;
+  }
+
+  @computed
+  private get resolvedWeight(): number | undefined {
+    return this.optionWeight ?? this.explicitWeight;
+  }
+
+  private attachItemWeight(
+    answer: QuestionnaireResponseItemAnswer,
+    kind: SnapshotKind,
+  ): void {
+    const coding = answer.valueCoding;
+    if (kind === "response" && coding?.extension != undefined) {
+      const extension = coding.extension.filter(
+        (entry) =>
+          entry.url !== EXT.ITEM_WEIGHT && entry.url !== EXT.ORDINAL_VALUE,
+      );
+
+      answer.valueCoding = {
+        ...coding,
+        extension: extension.length > 0 ? extension : undefined,
+      };
+    }
+
+    const weight = this.resolvedWeight;
+    if (weight == undefined) {
+      return;
+    }
+
+    const extension = {
+      url: EXT.ITEM_WEIGHT,
+      valueDecimal: weight,
+    };
+
+    answer.extension = [
+      ...(answer.extension ?? []).filter(
+        (entry) =>
+          entry.url !== EXT.ITEM_WEIGHT && entry.url !== EXT.ORDINAL_VALUE,
+      ),
+      extension,
+    ];
+
+    if (kind !== "expression" || coding == undefined) {
+      return;
+    }
+
+    answer.valueCoding = {
+      ...coding,
+      extension: [
+        ...(coding.extension ?? []).filter(
+          (entry) =>
+            entry.url !== EXT.ITEM_WEIGHT && entry.url !== EXT.ORDINAL_VALUE,
+        ),
+        extension,
+      ],
+    };
+  }
+
+  private extractWeightFromResponseAnswer(
+    answer: QuestionnaireResponseItemAnswer | undefined,
+  ): number | undefined {
+    if (!answer) {
+      return undefined;
+    }
+
+    const fromAnswerExtension =
+      extractExtensionValue("decimal", answer, EXT.ITEM_WEIGHT) ??
+      extractExtensionValue("decimal", answer, EXT.ORDINAL_VALUE);
+    if (fromAnswerExtension != undefined) {
+      return fromAnswerExtension;
+    }
+
+    const fromCoding =
+      extractExtensionValue("decimal", answer.valueCoding, EXT.ITEM_WEIGHT) ??
+      extractExtensionValue("decimal", answer.valueCoding, EXT.ORDINAL_VALUE);
+    if (fromCoding != undefined) {
+      return fromCoding;
+    }
+
+    const suffix = DATA_TYPE_TO_SUFFIX[this.question.dataType];
+    const valueElement = (answer as Record<string, unknown>)[
+      `_value${suffix}`
+    ] as
+      | {
+          extension?: QuestionnaireResponseItemAnswer["extension"];
+        }
+      | undefined;
+
+    return (
+      extractExtensionValue("decimal", valueElement, EXT.ITEM_WEIGHT) ??
+      extractExtensionValue("decimal", valueElement, EXT.ORDINAL_VALUE)
+    );
   }
 
   @action

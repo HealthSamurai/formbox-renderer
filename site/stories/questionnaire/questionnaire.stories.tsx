@@ -16,6 +16,7 @@ import expressionEnableWhen from "./samples/expression-enable-when.json" with { 
 import expressionInitial from "./samples/expression-initial.json" with { type: "json" };
 import itemControlHelp from "./samples/item-control-help.json" with { type: "json" };
 import itemAnswerMedia from "./samples/item-answer-media.json" with { type: "json" };
+import itemWeight from "./samples/item-weight.json" with { type: "json" };
 import itemMedia from "./samples/item-media.json" with { type: "json" };
 import itemShortText from "./samples/item-short-text.json" with { type: "json" };
 import launchContext from "./samples/launch-context.json" with { type: "json" };
@@ -188,6 +189,7 @@ export const ItemAnswerMedia = makeStory(
   "Item answer media",
   itemAnswerMedia as Questionnaire,
 );
+export const ItemWeight = makeStory("Item weight", itemWeight as Questionnaire);
 export const ChoiceOrientation = makeStory(
   "Choice orientation",
   choiceOrientation as Questionnaire,

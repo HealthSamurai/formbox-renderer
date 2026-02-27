@@ -1,0 +1,376 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "item-weight-phq9-demo",
+  "status": "active",
+  "title": "Item Weight scoring demo",
+  "description": "Demonstrates weighted answer options, a minimum answered warning constraint, and calculated total score.",
+  "item": [
+    {
+      "linkId": "phq9",
+      "type": "group",
+      "text": "Over the last 2 weeks, how often have you been bothered by any of the following problems?",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/targetConstraint",
+          "extension": [
+            {
+              "url": "key",
+              "valueId": "constraint-answered-min-3"
+            },
+            {
+              "url": "requirements",
+              "valueMarkdown": "At least three questions must be answered to have a meaningful total."
+            },
+            {
+              "url": "severity",
+              "valueCode": "warning"
+            },
+            {
+              "url": "expression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "%context.item.where(linkId='q1' or linkId='q2' or linkId='q3' or linkId='q4').where(answer.exists()).count() >= 3"
+              }
+            },
+            {
+              "url": "human",
+              "valueString": "You should answer at least three questions."
+            }
+          ]
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-variable",
+          "valueExpression": {
+            "name": "phq9Score",
+            "language": "text/fhirpath",
+            "expression": "%context.item.where(linkId='q1' or linkId='q2' or linkId='q3' or linkId='q4').answer.value.weight().aggregate($this + $total, 0)"
+          }
+        }
+      ],
+      "item": [
+        {
+          "linkId": "q1",
+          "text": "1. Little interest or pleasure in doing things",
+          "type": "coding",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+              "valueCode": "horizontal"
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "radio-button",
+                    "display": "Radio Button"
+                  }
+                ]
+              }
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "system": "http://example.org/phq9-frequency",
+                "code": "0",
+                "display": "Not at all (0)"
+              },
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/itemWeight",
+                  "valueDecimal": 0
+                }
+              ]
+            },
+            {
+              "valueCoding": {
+                "system": "http://example.org/phq9-frequency",
+                "code": "1",
+                "display": "Several days (1)"
+              },
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/itemWeight",
+                  "valueDecimal": 1
+                }
+              ]
+            },
+            {
+              "valueCoding": {
+                "system": "http://example.org/phq9-frequency",
+                "code": "2",
+                "display": "More than half the days (2)"
+              },
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/itemWeight",
+                  "valueDecimal": 2
+                }
+              ]
+            },
+            {
+              "valueCoding": {
+                "system": "http://example.org/phq9-frequency",
+                "code": "3",
+                "display": "Nearly every day (3)"
+              },
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/itemWeight",
+                  "valueDecimal": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "q2",
+          "text": "2. Feeling down, depressed, or hopeless",
+          "type": "coding",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+              "valueCode": "horizontal"
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "radio-button",
+                    "display": "Radio Button"
+                  }
+                ]
+              }
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "system": "http://example.org/phq9-frequency",
+                "code": "0",
+                "display": "Not at all (0)"
+              },
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/itemWeight",
+                  "valueDecimal": 0
+                }
+              ]
+            },
+            {
+              "valueCoding": {
+                "system": "http://example.org/phq9-frequency",
+                "code": "1",
+                "display": "Several days (1)"
+              },
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/itemWeight",
+                  "valueDecimal": 1
+                }
+              ]
+            },
+            {
+              "valueCoding": {
+                "system": "http://example.org/phq9-frequency",
+                "code": "2",
+                "display": "More than half the days (2)"
+              },
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/itemWeight",
+                  "valueDecimal": 2
+                }
+              ]
+            },
+            {
+              "valueCoding": {
+                "system": "http://example.org/phq9-frequency",
+                "code": "3",
+                "display": "Nearly every day (3)"
+              },
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/itemWeight",
+                  "valueDecimal": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "q3",
+          "text": "3. Trouble falling or staying asleep, or sleeping too much",
+          "type": "coding",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+              "valueCode": "horizontal"
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "radio-button",
+                    "display": "Radio Button"
+                  }
+                ]
+              }
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "system": "http://example.org/phq9-frequency",
+                "code": "0",
+                "display": "Not at all (0)"
+              },
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/itemWeight",
+                  "valueDecimal": 0
+                }
+              ]
+            },
+            {
+              "valueCoding": {
+                "system": "http://example.org/phq9-frequency",
+                "code": "1",
+                "display": "Several days (1)"
+              },
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/itemWeight",
+                  "valueDecimal": 1
+                }
+              ]
+            },
+            {
+              "valueCoding": {
+                "system": "http://example.org/phq9-frequency",
+                "code": "2",
+                "display": "More than half the days (2)"
+              },
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/itemWeight",
+                  "valueDecimal": 2
+                }
+              ]
+            },
+            {
+              "valueCoding": {
+                "system": "http://example.org/phq9-frequency",
+                "code": "3",
+                "display": "Nearly every day (3)"
+              },
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/itemWeight",
+                  "valueDecimal": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "q4",
+          "text": "4. Feeling tired or having little energy",
+          "type": "coding",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+              "valueCode": "horizontal"
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "radio-button",
+                    "display": "Radio Button"
+                  }
+                ]
+              }
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "system": "http://example.org/phq9-frequency",
+                "code": "0",
+                "display": "Not at all (0)"
+              },
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/itemWeight",
+                  "valueDecimal": 0
+                }
+              ]
+            },
+            {
+              "valueCoding": {
+                "system": "http://example.org/phq9-frequency",
+                "code": "1",
+                "display": "Several days (1)"
+              },
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/itemWeight",
+                  "valueDecimal": 1
+                }
+              ]
+            },
+            {
+              "valueCoding": {
+                "system": "http://example.org/phq9-frequency",
+                "code": "2",
+                "display": "More than half the days (2)"
+              },
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/itemWeight",
+                  "valueDecimal": 2
+                }
+              ]
+            },
+            {
+              "valueCoding": {
+                "system": "http://example.org/phq9-frequency",
+                "code": "3",
+                "display": "Nearly every day (3)"
+              },
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/itemWeight",
+                  "valueDecimal": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "total",
+          "text": "Total Score",
+          "type": "integer",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "%phq9Score"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

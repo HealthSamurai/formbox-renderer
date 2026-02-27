@@ -82,6 +82,22 @@ function pickCanonical(values: ReadonlyArray<unknown>): string | undefined {
   return undefined;
 }
 
+function getItemWeightFromOption(
+  option: QuestionnaireItemAnswerOption,
+): number | undefined {
+  return (
+    extractExtensionValue("decimal", option, EXT.ITEM_WEIGHT) ??
+    extractExtensionValue("decimal", option, EXT.ORDINAL_VALUE)
+  );
+}
+
+function getItemWeightFromCoding(coding: Coding): number | undefined {
+  return (
+    extractExtensionValue("decimal", coding, EXT.ITEM_WEIGHT) ??
+    extractExtensionValue("decimal", coding, EXT.ORDINAL_VALUE)
+  );
+}
+
 export class AnswerOptionStore<
   T extends AnswerType,
 > implements IAnswerOptions<T> {
@@ -242,6 +258,11 @@ export class AnswerOptionStore<
       const disabled = !this.isOptionEnabled(option);
       const exclusive =
         findExtension(option, EXT.OPTION_EXCLUSIVE)?.valueBoolean === true;
+      const weight =
+        getItemWeightFromOption(option) ??
+        (this.question.dataType === "Coding"
+          ? getItemWeightFromCoding(value as Coding)
+          : undefined);
 
       return [
         {
@@ -249,6 +270,7 @@ export class AnswerOptionStore<
           value,
           disabled,
           exclusive,
+          weight,
           answerType: this.question.type,
           prefix: getTranslated(
             findExtension(option, EXT.OPTION_PREFIX),
