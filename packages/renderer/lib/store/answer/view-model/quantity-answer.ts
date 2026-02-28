@@ -27,7 +27,7 @@ export class QuantityAnswer implements IQuantityAnswer {
   @computed
   private get unitEntries(): ReadonlyArray<readonly [string, Coding]> {
     const map = new Map<string, Coding>();
-    for (const coding of this.answer.question.unitOptions) {
+    for (const coding of this.answer.question.unitOption.options) {
       const token = tokenify("Coding", coding);
       if (!map.has(token)) {
         map.set(token, coding);
@@ -38,10 +38,6 @@ export class QuantityAnswer implements IQuantityAnswer {
 
   @computed
   private get fallbackOption(): OptionItem | undefined {
-    if (this.unitEntries.length === 0) {
-      return undefined;
-    }
-
     const tokenForQuantity = this.getUnitTokenForQuantity(this.quantityValue);
     if (tokenForQuantity) {
       return undefined;
@@ -92,7 +88,10 @@ export class QuantityAnswer implements IQuantityAnswer {
 
   @computed
   get isUnitFreeForm(): boolean {
-    return this.unitEntries.length === 0;
+    return (
+      this.unitEntries.length === 0 &&
+      !this.answer.question.unitOption.hasConstraint
+    );
   }
 
   private get firstEnabledOptionToken(): string | undefined {

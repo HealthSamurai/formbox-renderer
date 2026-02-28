@@ -1,0 +1,34 @@
+{
+  "resourceType": "Questionnaire",
+  "status": "active",
+  "title": "Quantity Unit ValueSet Showcase",
+  "description": "Demonstrates units resolved from questionnaire-unitValueSet for quantity questions.",
+  "item": [
+    {
+      "linkId": "age",
+      "text": "Patient age",
+      "type": "quantity",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unitValueSet",
+          "valueCanonical": "http://hl7.org/fhir/ValueSet/age-units"
+        }
+      ],
+      "initial": [
+        {
+          "valueQuantity": {
+            "value": 42,
+            "system": "http://unitsofmeasure.org",
+            "code": "a",
+            "unit": "years"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "custom-volume",
+      "text": "Custom volume (no constrained unit list)",
+      "type": "quantity"
+    }
+  ]
+}

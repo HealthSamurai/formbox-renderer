@@ -28,6 +28,8 @@ import openLabel from "./samples/open-label.json" with { type: "json" };
 import optionExclusive from "./samples/option-exclusive.json" with { type: "json" };
 import optionPrefix from "./samples/option-prefix.json" with { type: "json" };
 import quantityUnitOptions from "./samples/quantity-unit-options.json" with { type: "json" };
+import quantityUnitValueSetFallback from "./samples/quantity-unit-valueset-fallback.json" with { type: "json" };
+import quantityUnitValueSet from "./samples/quantity-unit-valueset.json" with { type: "json" };
 import repeatingGroup from "./samples/repeating-group.json" with { type: "json" };
 import repeatingQuestion from "./samples/repeating-question.json" with { type: "json" };
 import staticInitials from "./samples/static-initials.json" with { type: "json" };
@@ -106,6 +108,10 @@ export const NumericUnits = makeStory(
 export const QuantityUnitOptions = makeStory(
   "Quantity unit options",
   quantityUnitOptions as Questionnaire,
+);
+export const QuantityUnitValueSet = makeStory(
+  "Quantity unit ValueSet",
+  quantityUnitValueSet as Questionnaire,
 );
 export const HelpControls = makeStory(
   "Help controls",

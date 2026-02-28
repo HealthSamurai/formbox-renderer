@@ -3,7 +3,6 @@ import { IForm, INode, IPresentableNode, IScope } from "../../types.ts";
 import type { Hyperlink } from "@formbox/theme";
 import type {
   Attachment,
-  Coding,
   OperationOutcomeIssue,
   QuestionnaireItem,
   QuestionnaireResponseItem,
@@ -283,16 +282,6 @@ export abstract class AbstractPresentableNode implements IPresentableNode {
         this.form.language,
       )
     );
-  }
-
-  @computed
-  get unitOptions(): readonly Coding[] {
-    return this.type === "quantity"
-      ? (this.template.extension ?? [])
-          .filter(({ url }) => url === EXT.QUESTIONNAIRE_UNIT_OPTION)
-          .map((extension) => extension.valueCoding)
-          .filter((coding): coding is Coding => coding != undefined)
-      : [];
   }
 
   @computed

@@ -68,6 +68,7 @@ export const QuantityInput = observer(function QuantityInput({
           ariaLabelledBy={ariaLabelledBy}
           ariaDescribedBy={ariaDescribedBy}
           disabled={Boolean(disabled)}
+          isLoading={answer.question.unitOption.isLoading}
         />
       )}
     </InputGroup>

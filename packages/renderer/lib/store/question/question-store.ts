@@ -19,6 +19,7 @@ import {
   IForm,
   INode,
   IPresentableNode,
+  IUnitOptions,
   IQuestionNode,
   IScope,
   QUESTION_ITEM_CONTROLS,
@@ -27,6 +28,7 @@ import {
   SnapshotKind,
 } from "../../types.ts";
 import type {
+  OperationOutcomeIssue,
   QuestionnaireItem,
   QuestionnaireResponseItem,
   QuestionnaireResponseItemAnswer,
@@ -54,6 +56,7 @@ import {
 import type { HTMLAttributes } from "react";
 import { NodeExpressionRegistry } from "../expression/registry/node-expression-registry.ts";
 import { AnswerOptionStore } from "../option/answer-option-store.ts";
+import { UnitOptionStore } from "../option/unit-option-store.ts";
 
 export class QuestionStore<T extends AnswerType = AnswerType>
   extends AbstractActualNodeStore
@@ -281,6 +284,11 @@ export class QuestionStore<T extends AnswerType = AnswerType>
     return new AnswerOptionStore<T>(this);
   }
 
+  @computed({ keepAlive: true })
+  get unitOption(): IUnitOptions {
+    return new UnitOptionStore(this);
+  }
+
   @computed
   get hasOptions(): boolean {
     return !!(
@@ -292,8 +300,12 @@ export class QuestionStore<T extends AnswerType = AnswerType>
   }
 
   @override
-  override get issues() {
-    const issues = [...super.issues, ...this.answerOption.issues];
+  override get issues(): OperationOutcomeIssue[] {
+    const issues: OperationOutcomeIssue[] = [
+      ...super.issues,
+      ...this.answerOption.issues,
+      ...this.unitOption.issues,
+    ];
     return issues.filter((issue) => getIssueMessage(issue) !== undefined);
   }
 

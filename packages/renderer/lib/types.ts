@@ -528,7 +528,6 @@ export interface IPresentableNode {
   readonly readOnly: boolean;
   readonly hidden: boolean;
   readonly unitDisplay: string | undefined;
-  readonly unitOptions: ReadonlyArray<Coding>;
   readonly isEnabled: boolean;
   readonly hasResponseContent: boolean;
   readonly preferredTerminologyServers: ReadonlyArray<string>;
@@ -697,6 +696,13 @@ export interface IAnswerOptions<T extends AnswerType = AnswerType> {
   readonly select: IOptionSelection<T>;
 }
 
+export interface IUnitOptions {
+  readonly issues: ReadonlyArray<OperationOutcomeIssue>;
+  readonly options: ReadonlyArray<Coding>;
+  readonly hasConstraint: boolean;
+  readonly isLoading: boolean;
+}
+
 export type AnswerConstraint =
   | "optionsOnly"
   | "optionsOrType"
@@ -741,6 +747,7 @@ export interface IQuestionNode<
   readonly columnWidth: string | undefined;
   readonly answerOption: IAnswerOptions<T>;
   readonly hasOptions: boolean;
+  readonly unitOption: IUnitOptions;
   readonly choiceOrientation: ChoiceOrientation | undefined;
   readonly keyboardType: HTMLAttributes<Element>["inputMode"] | undefined;
   readonly answers: Array<IAnswer<T>>;
