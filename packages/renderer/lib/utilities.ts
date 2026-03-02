@@ -201,6 +201,7 @@ export const EXT = {
   QUESTIONNAIRE_UNIT:               "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
   QUESTIONNAIRE_UNIT_OPTION:        "http://hl7.org/fhir/StructureDefinition/questionnaire-unitOption",
   QUESTIONNAIRE_UNIT_VALUE_SET:     "http://hl7.org/fhir/StructureDefinition/questionnaire-unitValueSet",
+  SDC_UNIT_OPEN:                    "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-unitOpen",
   SDC_ENABLE_WHEN_EXPR:             "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-enableWhenExpression",
   SDC_CALCULATED_EXPR:              "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
   SDC_INITIAL_EXPR:                 "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
@@ -2312,4 +2313,46 @@ export function coerceExpressionValue<T extends AnswerType>(
       return undefined;
     }
   }
+}
+
+export function asOperationOutcomeIssue(
+  error: unknown,
+  unknownErrorMessage: string,
+): OperationOutcomeIssue {
+  const message =
+    error instanceof Error
+      ? error.message
+      : error == undefined
+        ? unknownErrorMessage
+        : String(error);
+  return {
+    severity: "error",
+    code: "invalid",
+    diagnostics: message,
+    details: { text: message },
+    expression: [OPTIONS_ISSUE_EXPRESSION],
+  };
+}
+export function normalizeExpressionCollection(value: unknown): unknown[] {
+  if (value === undefined) {
+    return [];
+  }
+
+  return Array.isArray(value) ? value : [value];
+}
+
+export function getWeightFromOption(
+  option: QuestionnaireItemAnswerOption,
+): number | undefined {
+  return (
+    extractExtensionValue("decimal", option, EXT.ITEM_WEIGHT) ??
+    extractExtensionValue("decimal", option, EXT.ORDINAL_VALUE)
+  );
+}
+
+export function getWeightFromCoding(coding: Coding): number | undefined {
+  return (
+    extractExtensionValue("decimal", coding, EXT.ITEM_WEIGHT) ??
+    extractExtensionValue("decimal", coding, EXT.ORDINAL_VALUE)
+  );
 }

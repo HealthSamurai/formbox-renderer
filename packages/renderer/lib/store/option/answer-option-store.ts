@@ -18,6 +18,7 @@ import type {
 import {
   answerify,
   areValuesEqual,
+  asOperationOutcomeIssue,
   booleanify,
   buildId,
   EXT,
@@ -25,78 +26,14 @@ import {
   findExtension,
   getTranslated,
   getValue,
-  OPTIONS_ISSUE_EXPRESSION,
+  getWeightFromCoding,
+  getWeightFromOption,
+  normalizeExpressionCollection,
   tokenify,
 } from "../../utilities.ts";
 import type { IPromiseBasedObservable } from "mobx-utils";
 import { fromPromise } from "mobx-utils";
 import { OptionSelection } from "./view-model/option-selection.ts";
-
-function getOptionsErrorMessage(
-  error: unknown,
-  unknownErrorMessage: string,
-): string {
-  if (error instanceof Error) {
-    return error.message;
-  }
-  if (error == undefined) {
-    return unknownErrorMessage;
-  }
-  return String(error);
-}
-
-function toOptionsIssue(
-  error: unknown,
-  unknownErrorMessage: string,
-): OperationOutcomeIssue {
-  const message = getOptionsErrorMessage(error, unknownErrorMessage);
-  return {
-    severity: "error",
-    code: "invalid",
-    diagnostics: message,
-    details: { text: message },
-    expression: [OPTIONS_ISSUE_EXPRESSION],
-  };
-}
-
-function normalizeExpressionCollection(value: unknown): unknown[] {
-  if (value === undefined) {
-    return [];
-  }
-
-  return Array.isArray(value) ? value : [value];
-}
-
-function pickCanonical(values: ReadonlyArray<unknown>): string | undefined {
-  for (const candidate of values) {
-    if (typeof candidate !== "string") {
-      continue;
-    }
-
-    const canonical = candidate.trim();
-    if (canonical.length > 0) {
-      return canonical;
-    }
-  }
-
-  return undefined;
-}
-
-function getItemWeightFromOption(
-  option: QuestionnaireItemAnswerOption,
-): number | undefined {
-  return (
-    extractExtensionValue("decimal", option, EXT.ITEM_WEIGHT) ??
-    extractExtensionValue("decimal", option, EXT.ORDINAL_VALUE)
-  );
-}
-
-function getItemWeightFromCoding(coding: Coding): number | undefined {
-  return (
-    extractExtensionValue("decimal", coding, EXT.ITEM_WEIGHT) ??
-    extractExtensionValue("decimal", coding, EXT.ORDINAL_VALUE)
-  );
-}
 
 export class AnswerOptionStore<
   T extends AnswerType,
@@ -133,11 +70,10 @@ export class AnswerOptionStore<
 
   @computed({ keepAlive: true })
   private get expansion(): IPromiseBasedObservable<Coding[]> | undefined {
-    const canonical = this.answerValueSetCanonical;
-    if (canonical) {
+    if (this.canonical) {
       return fromPromise(
         this.question.form.valueSetExpander.expand(
-          canonical,
+          this.canonical,
           this.question.preferredTerminologyServers,
         ),
       );
@@ -147,17 +83,27 @@ export class AnswerOptionStore<
 
   @computed
   private get answerValueSetExpressionValues(): unknown[] {
-    const slot = this.question.expressionRegistry.answerValueSet;
-    return slot ? normalizeExpressionCollection(slot.value) : [];
+    return normalizeExpressionCollection(
+      this.question.expressionRegistry.answerValueSet?.value,
+    );
   }
 
   @computed
   private get answerValueSetCanonicalFromExpression(): string | undefined {
-    return pickCanonical(this.answerValueSetExpressionValues);
+    for (const candidate of this.answerValueSetExpressionValues) {
+      if (typeof candidate === "string") {
+        const canonical = candidate.trim();
+        if (canonical.length > 0) {
+          return canonical;
+        }
+      }
+    }
+
+    return undefined;
   }
 
   @computed
-  private get answerValueSetCanonical(): string | undefined {
+  private get canonical(): string | undefined {
     const slot = this.question.expressionRegistry.answerValueSet;
     if (slot) {
       return this.answerValueSetCanonicalFromExpression;
@@ -183,7 +129,7 @@ export class AnswerOptionStore<
       return undefined;
     }
 
-    return toOptionsIssue(
+    return asOperationOutcomeIssue(
       new Error(
         "answerValueSetExpression must evaluate to a canonical URL string.",
       ),
@@ -201,7 +147,7 @@ export class AnswerOptionStore<
       ...issues,
       ...(this.expansion?.case({
         rejected: (error) => [
-          toOptionsIssue(
+          asOperationOutcomeIssue(
             error,
             this.question.form.strings.errors.unknownMessage,
           ),
@@ -262,9 +208,9 @@ export class AnswerOptionStore<
       const exclusive =
         findExtension(option, EXT.OPTION_EXCLUSIVE)?.valueBoolean === true;
       const weight =
-        getItemWeightFromOption(option) ??
+        getWeightFromOption(option) ??
         (this.question.dataType === "Coding"
-          ? getItemWeightFromCoding(value as Coding)
+          ? getWeightFromCoding(value as Coding)
           : undefined);
 
       return [
@@ -332,6 +278,7 @@ export class AnswerOptionStore<
 
   @computed({ keepAlive: true })
   get select(): IOptionSelection<T> {
+    // todo rename to selection, IOptionSelection -> IAnswerSelection
     return new OptionSelection(this.question, this);
   }
 

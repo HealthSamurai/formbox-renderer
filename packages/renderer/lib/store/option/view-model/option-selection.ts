@@ -241,7 +241,7 @@ export class OptionSelection<
     this.question.removeAnswer(selection.answer);
   }
 
-  @action.bound
+  @action
   selectOptionForAnswer(answer: IAnswer<T>, token?: OptionToken): void {
     const isCustomActive =
       this.customOptionFormState?.answer.token === answer.token;
@@ -344,7 +344,7 @@ export class OptionSelection<
     return baseToken ? buildId(this.question.token, "legacy", baseToken) : "";
   }
 
-  @action.bound
+  @action
   private rememberCustomValue(
     value: DataTypeToType<AnswerTypeToDataType<T>> | string | undefined,
   ) {
@@ -369,7 +369,7 @@ export class OptionSelection<
     } as AnswerOption<T> | AnswerOption<"string">);
   }
 
-  @action.bound
+  @action
   private rememberLegacyValue(
     value: DataTypeToType<AnswerTypeToDataType<T>> | undefined,
   ) {
@@ -391,7 +391,7 @@ export class OptionSelection<
     });
   }
 
-  @action.bound
+  @action
   private addCustomValue(
     value: DataTypeToType<AnswerTypeToDataType<T>> | string | undefined,
   ) {
@@ -436,7 +436,7 @@ export class OptionSelection<
     );
   }
 
-  @action.bound
+  @action
   private openCustomOptionForm(answer?: IAnswer<T>) {
     if (!this.allowCustom) return;
     if (this.pendingCustomOptionForm) return;
@@ -576,7 +576,7 @@ export class OptionSelection<
     );
   }
 
-  @action.bound
+  @action
   private reserveAnswerSlotForSelection(
     exclusive: boolean,
     preferred?: IAnswer<T>,
@@ -609,7 +609,7 @@ export class OptionSelection<
     return slot ?? this.findAvailableAnswer();
   }
 
-  @action.bound
+  @action
   private clearConflictingAnswer(answer: IAnswer<T>) {
     this.rememberAnswerValue(answer);
     this.customAnswerTokens.delete(answer.token);

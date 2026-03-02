@@ -170,7 +170,7 @@ describe("unitOption", () => {
     expect(getComboboxValue(combobox)).toBe("kg");
   });
 
-  it("auto selects the single unit option", async () => {
+  it("does not auto select the single unit option", async () => {
     const questionnaire: Questionnaire = {
       resourceType: "Questionnaire",
       status: "active",
@@ -199,28 +199,20 @@ describe("unitOption", () => {
     const { getByRole } = render(<QuantityRenderer node={question} />);
 
     const combobox = getByRole("combobox") as HTMLElement;
-    expect(getComboboxValue(combobox)).toBe("mL");
+    expect(getComboboxValue(combobox)).toBe(en.selection.selectPlaceholder);
     const numberInput = screen.getByRole("spinbutton", {
       name: /volume/i,
     }) as HTMLInputElement;
     expect(numberInput.value).toBe("");
 
     const user = userEvent.setup();
-    const clearButton = combobox.parentElement?.querySelector(
-      `button[aria-label='${en.selection.removeSelection}']`,
-    ) as HTMLButtonElement | undefined;
-    expect(clearButton).not.toBeNull();
-    await user.click(clearButton as HTMLButtonElement);
+    await selectComboboxOption(user, combobox, "mL");
 
     expect(numberInput.value).toBe("");
-    await waitFor(() =>
-      expect(getComboboxValue(getByRole("combobox") as HTMLElement)).toBe(
-        en.selection.selectPlaceholder,
-      ),
-    );
+    expect(getComboboxValue(getByRole("combobox") as HTMLElement)).toBe("mL");
   });
 
-  it("applies the single unit once the user types a value", async () => {
+  it("does not apply the single unit when the user types a value", async () => {
     const questionnaire: Questionnaire = {
       resourceType: "Questionnaire",
       status: "active",
@@ -258,9 +250,11 @@ describe("unitOption", () => {
     await user.type(numberInput, "37.5");
 
     expect(numberInput.value).toBe("37.5");
-    await waitFor(() =>
-      expect(getComboboxValue(getCombobox(/temperature/i))).toBe("°C"),
+    expect(getComboboxValue(getCombobox(/temperature/i))).toBe(
+      en.selection.selectPlaceholder,
     );
+    const answer = question.answers[0];
+    expect(answer?.value).toEqual({ value: 37.5 });
   });
 
   it("does not auto select when value is prepopulated", async () => {

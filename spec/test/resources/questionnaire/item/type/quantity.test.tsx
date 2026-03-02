@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
 import en from "@formbox/strings/en";
@@ -20,7 +19,7 @@ function getQuantityQuestion(form: FormStore, linkId: string) {
 }
 
 describe("type.quantity", () => {
-  it("keeps free-form unit entry as text when no unit options are provided", async () => {
+  it("renders unit select when no unit options are provided", () => {
     const questionnaire: Questionnaire = {
       resourceType: "Questionnaire",
       status: "active",
@@ -38,18 +37,10 @@ describe("type.quantity", () => {
 
     const { container } = render(<QuantityRenderer node={question} />);
 
-    expect(container.querySelector("select")).toBeNull();
-
-    const unitInput = container.querySelector(
-      "input[placeholder='unit']",
-    ) as HTMLInputElement;
-    expect(unitInput).toBeTruthy();
-    if (!unitInput) return;
-
-    const user = userEvent.setup();
-    await user.type(unitInput, "fl oz");
-
-    expect(unitInput).toHaveValue("fl oz");
+    expect(container.querySelector("input[placeholder='unit']")).toBeNull();
+    expect(
+      screen.getByRole("combobox", { name: /volume/i }),
+    ).toBeInTheDocument();
   });
 
   it("uses the default value placeholder when none is provided", () => {

@@ -192,7 +192,7 @@ describe("unitValueSet", () => {
 
       const answer = question.answers[0];
       assertDefined(answer);
-      expect(answer.quantity.isUnitFreeForm).toBe(false);
+      expect(answer.quantity.unitSelection.specifyOtherToken).toBeUndefined();
 
       render(<QuantityRenderer node={question} />);
 
@@ -209,7 +209,7 @@ describe("unitValueSet", () => {
     }
   });
 
-  it("merges unitOption and unitValueSet without duplicate codings", async () => {
+  it("prefers unitValueSet over unitOption when both are present", async () => {
     const fetchSpy = vi
       .spyOn(globalThis, "fetch")
       .mockImplementation(async (input) => {
@@ -250,6 +250,10 @@ describe("unitValueSet", () => {
       const question = getQuantityQuestion(form, "dose");
       await waitForUnitValueSetExpansion(question);
 
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+      expect(getRequestedCanonical(fetchSpy.mock.calls[0]?.[0])).toBe(
+        DOSE_UNITS_VALUE_SET,
+      );
       expect(question.unitOption.options.map((coding) => coding.code)).toEqual([
         "mg",
         "g",
@@ -297,7 +301,7 @@ describe("unitValueSet", () => {
 
       const answer = question.answers[0];
       assertDefined(answer);
-      expect(answer.quantity.isUnitFreeForm).toBe(false);
+      expect(answer.quantity.unitSelection.specifyOtherToken).toBeUndefined();
     } finally {
       fetchSpy.mockRestore();
     }

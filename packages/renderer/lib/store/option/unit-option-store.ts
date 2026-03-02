@@ -1,54 +1,32 @@
-import { computed, makeObservable } from "mobx";
-import { fromPromise, type IPromiseBasedObservable } from "mobx-utils";
+import { action, computed, makeObservable, observable } from "mobx";
+import type {
+  AnswerConstraint,
+  IQuestionNode,
+  IUnitOptions,
+} from "../../types.ts";
 import type { Coding, OperationOutcomeIssue } from "@formbox/fhir";
-
-import type { IQuestionNode, IUnitOptions } from "../../types.ts";
 import {
+  asOperationOutcomeIssue,
   EXT,
-  extractExtensionValue,
   extractExtensionsValues,
-  OPTIONS_ISSUE_EXPRESSION,
+  extractExtensionValue,
   tokenify,
 } from "../../utilities.ts";
-
-function getOptionsErrorMessage(
-  error: unknown,
-  unknownErrorMessage: string,
-): string {
-  if (error instanceof Error) {
-    return error.message;
-  }
-  if (error == undefined) {
-    return unknownErrorMessage;
-  }
-  return String(error);
-}
-
-function toOptionsIssue(
-  error: unknown,
-  unknownErrorMessage: string,
-): OperationOutcomeIssue {
-  const message = getOptionsErrorMessage(error, unknownErrorMessage);
-  return {
-    severity: "error",
-    code: "invalid",
-    diagnostics: message,
-    details: { text: message },
-    expression: [OPTIONS_ISSUE_EXPRESSION],
-  };
-}
+import type { IPromiseBasedObservable } from "mobx-utils";
+import { fromPromise } from "mobx-utils";
 
 export class UnitOptionStore implements IUnitOptions {
-  constructor(private readonly question: IQuestionNode) {
+  private readonly customOptionsByToken = observable.map<string, Coding>(
+    {},
+    { deep: false, name: "UnitOptionStore.customOptionsByToken" },
+  );
+
+  constructor(readonly question: IQuestionNode<"quantity">) {
     makeObservable(this);
   }
 
   @computed
-  private get explicitOptions(): readonly Coding[] {
-    if (this.question.type !== "quantity") {
-      return [];
-    }
-
+  private get explicitOptions(): Coding[] {
     return extractExtensionsValues(
       "Coding",
       this.question.template,
@@ -57,11 +35,7 @@ export class UnitOptionStore implements IUnitOptions {
   }
 
   @computed
-  private get rawUnitValueSetCanonical(): string | undefined {
-    if (this.question.type !== "quantity") {
-      return undefined;
-    }
-
+  private get canonical(): string | undefined {
     return extractExtensionValue(
       "canonical",
       this.question.template,
@@ -70,60 +44,50 @@ export class UnitOptionStore implements IUnitOptions {
   }
 
   @computed
-  private get unitValueSetCanonical(): string | undefined {
-    const canonical = this.rawUnitValueSetCanonical;
-    if (canonical == undefined) {
-      return undefined;
-    }
-
-    const trimmed = canonical.trim();
-    return trimmed.length > 0 ? trimmed : undefined;
+  get constraint(): AnswerConstraint {
+    return (extractExtensionValue(
+      "code",
+      this.question.template,
+      EXT.SDC_UNIT_OPEN,
+    ) ??
+      (this.hasOptions
+        ? "optionsOnly"
+        : "optionsOrString")) as AnswerConstraint;
   }
 
   @computed
-  private get unitValueSetCanonicalIssue(): OperationOutcomeIssue | undefined {
-    if (
-      this.rawUnitValueSetCanonical == undefined ||
-      this.unitValueSetCanonical != undefined
-    ) {
-      return undefined;
-    }
-
-    return toOptionsIssue(
-      new Error("questionnaire-unitValueSet must be a canonical URL string."),
-      this.question.form.strings.errors.unknownMessage,
-    );
+  private get inherentOptions(): Coding[] {
+    return this.expansion
+      ? this.expansion.case({
+          fulfilled: (value) => value,
+          pending: () => [],
+          rejected: () => [],
+        })
+      : this.explicitOptions;
   }
 
   @computed({ keepAlive: true })
   private get expansion(): IPromiseBasedObservable<Coding[]> | undefined {
-    const canonical = this.unitValueSetCanonical;
-    if (!canonical) {
-      return undefined;
+    if (this.canonical) {
+      return fromPromise(
+        this.question.form.valueSetExpander.expand(
+          this.canonical,
+          this.question.preferredTerminologyServers,
+        ),
+      );
     }
-
-    return fromPromise(
-      this.question.form.valueSetExpander.expand(
-        canonical,
-        this.question.preferredTerminologyServers,
-      ),
-    );
+    return;
   }
 
   @computed
-  private get expandedOptions(): readonly Coding[] {
-    return (
-      this.expansion?.case({
-        fulfilled: (value) => value,
-      }) ?? []
-    );
-  }
-
-  @computed
-  get hasConstraint(): boolean {
+  get hasOptions(): boolean {
     return (
       this.explicitOptions.length > 0 ||
-      this.rawUnitValueSetCanonical != undefined
+      extractExtensionValue(
+        "canonical",
+        this.question.template,
+        EXT.QUESTIONNAIRE_UNIT_VALUE_SET,
+      ) != undefined
     );
   }
 
@@ -135,35 +99,47 @@ export class UnitOptionStore implements IUnitOptions {
   @computed
   get options(): readonly Coding[] {
     const seen = new Set<string>();
-    const result: Coding[] = [];
 
-    for (const option of [...this.explicitOptions, ...this.expandedOptions]) {
-      const token = tokenify("Coding", option);
-      if (!seen.has(token)) {
-        seen.add(token);
-        result.push(option);
+    return [
+      ...this.inherentOptions,
+      ...this.customOptionsByToken.values(),
+    ].filter((coding) => {
+      const token = tokenify("Coding", coding);
+      if (seen.has(token)) {
+        return false;
       }
-    }
+      seen.add(token);
 
-    return result;
+      return true;
+    });
   }
 
   @computed
   get issues(): readonly OperationOutcomeIssue[] {
-    const issues = this.unitValueSetCanonicalIssue
-      ? [this.unitValueSetCanonicalIssue]
-      : [];
-
-    return [
-      ...issues,
-      ...(this.expansion?.case({
+    return (
+      this.expansion?.case({
         rejected: (error) => [
-          toOptionsIssue(
+          asOperationOutcomeIssue(
             error,
             this.question.form.strings.errors.unknownMessage,
           ),
         ],
-      }) ?? []),
-    ];
+      }) ?? []
+    );
+  }
+
+  @action
+  rememberCustomOption(coding: Coding): void {
+    if (this.constraint !== "optionsOnly") {
+      const token = tokenify("Coding", coding);
+      if (
+        !this.customOptionsByToken.has(token) &&
+        !this.inherentOptions.some(
+          (option) => tokenify("Coding", option) === token,
+        )
+      ) {
+        this.customOptionsByToken.set(token, { ...coding });
+      }
+    }
   }
 }

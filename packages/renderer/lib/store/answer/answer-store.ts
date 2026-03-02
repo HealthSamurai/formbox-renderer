@@ -37,7 +37,7 @@ export class AnswerStore<T extends AnswerType> implements IAnswer<T> {
   readonly question: IQuestionNode<T>;
   private readonly validator: AnswerValidator<T>;
 
-  @action.bound
+  @action
   setValueByUser(value?: DataTypeToType<AnswerTypeToDataType<T>>): void {
     this._value = value === "" ? undefined : value;
     this.explicitWeight = undefined;
@@ -45,7 +45,7 @@ export class AnswerStore<T extends AnswerType> implements IAnswer<T> {
     this.question.markUserOverridden();
   }
 
-  @action.bound
+  @action
   setValueBySystem(next?: DataTypeToType<AnswerTypeToDataType<T>>): void {
     this._value = next;
     this.explicitWeight = undefined;

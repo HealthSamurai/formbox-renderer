@@ -47,12 +47,7 @@ import type {
 } from "@formbox/fhir";
 import type { ComponentType, HTMLAttributes, ReactNode } from "react";
 import { PolyCarrierFor, PolyKeyFor } from "./utilities.ts";
-import type {
-  FormPagination,
-  Hyperlink,
-  OptionItem,
-  Strings,
-} from "@formbox/theme";
+import type { FormPagination, Hyperlink, Strings } from "@formbox/theme";
 import type { RendererRegistry } from "./renderer-registry.ts";
 import type { Model } from "fhirpath";
 
@@ -657,13 +652,26 @@ export interface IAnswer<T extends AnswerType = AnswerType> {
   dispose(): void;
 }
 
+export interface IUnitSelection {
+  readonly entries: ReadonlyArray<UnitEntry>;
+  readonly selectedToken: string | undefined;
+  readonly specifyOtherToken: string | undefined;
+  readonly customFormActive: boolean;
+  readonly customText: string;
+  readonly customCoding: Coding | undefined;
+  readonly canSubmitCustomForm: boolean;
+  setCustomText(text: string): void;
+  setCustomCoding(coding: Coding | undefined): void;
+  cancelCustomForm(): void;
+  submitCustomForm(): void;
+  select(token?: string): void;
+}
+
 export interface IQuantityAnswer {
-  readonly entries: ReadonlyArray<OptionItem>;
-  readonly unitToken: string;
-  readonly isUnitFreeForm: boolean;
+  readonly unitSelection: IUnitSelection;
   handleNumberInput(raw: string): void;
-  handleSelectChange(token: string): void;
   handleFreeTextChange(text: string): void;
+  handleCodingChange(coding?: Coding): void;
 }
 
 export interface IOptionSelection<T extends AnswerType = AnswerType> {
@@ -699,8 +707,10 @@ export interface IAnswerOptions<T extends AnswerType = AnswerType> {
 export interface IUnitOptions {
   readonly issues: ReadonlyArray<OperationOutcomeIssue>;
   readonly options: ReadonlyArray<Coding>;
-  readonly hasConstraint: boolean;
+  readonly constraint: AnswerConstraint;
+  readonly hasOptions: boolean;
   readonly isLoading: boolean;
+  rememberCustomOption(coding: Coding): void;
 }
 
 export type AnswerConstraint =
@@ -731,6 +741,11 @@ export type CustomOptionFormState<T extends AnswerType> = {
   canSubmit: boolean;
 };
 
+export type UnitEntry = {
+  readonly token: string;
+  readonly coding: Coding;
+};
+
 export type SelectedAnswerOption<T extends AnswerType> = {
   answer: IAnswer<T>;
 } & (AnswerOption<T> | AnswerOption<"string">);
@@ -747,7 +762,7 @@ export interface IQuestionNode<
   readonly columnWidth: string | undefined;
   readonly answerOption: IAnswerOptions<T>;
   readonly hasOptions: boolean;
-  readonly unitOption: IUnitOptions;
+  readonly unitOption: T extends "quantity" ? IUnitOptions : undefined;
   readonly choiceOrientation: ChoiceOrientation | undefined;
   readonly keyboardType: HTMLAttributes<Element>["inputMode"] | undefined;
   readonly answers: Array<IAnswer<T>>;

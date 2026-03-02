@@ -285,8 +285,12 @@ export class QuestionStore<T extends AnswerType = AnswerType>
   }
 
   @computed({ keepAlive: true })
-  get unitOption(): IUnitOptions {
-    return new UnitOptionStore(this);
+  get unitOption(): T extends "quantity" ? IUnitOptions : undefined {
+    return (
+      this.type === "quantity"
+        ? new UnitOptionStore(this as IQuestionNode<"quantity">)
+        : undefined
+    ) as T extends "quantity" ? IUnitOptions : undefined;
   }
 
   @computed
@@ -304,7 +308,7 @@ export class QuestionStore<T extends AnswerType = AnswerType>
     const issues: OperationOutcomeIssue[] = [
       ...super.issues,
       ...this.answerOption.issues,
-      ...this.unitOption.issues,
+      ...(this.unitOption?.issues ?? []),
     ];
     return issues.filter((issue) => getIssueMessage(issue) !== undefined);
   }

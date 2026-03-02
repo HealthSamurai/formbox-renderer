@@ -28,6 +28,7 @@ export function NumberInput({
         <Field
           id={id}
           type="number"
+          inputMode="numeric"
           value={value ?? ""}
           onChange={(event) => {
             const nextValue = event.target.value;

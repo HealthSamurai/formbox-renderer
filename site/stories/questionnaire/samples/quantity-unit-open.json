@@ -1,0 +1,140 @@
+{
+  "resourceType": "Questionnaire",
+  "status": "active",
+  "title": "Quantity unitOpen Showcase",
+  "description": "Demonstrates sdc-questionnaire-unitOpen behavior for constrained quantity units.",
+  "item": [
+    {
+      "linkId": "dose-options-only",
+      "text": "Dose (optionsOnly)",
+      "type": "quantity",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unitOption",
+          "valueCoding": {
+            "system": "http://unitsofmeasure.org",
+            "code": "mg",
+            "display": "mg"
+          }
+        },
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unitOption",
+          "valueCoding": {
+            "system": "http://unitsofmeasure.org",
+            "code": "g",
+            "display": "g"
+          }
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-unitOpen",
+          "valueCode": "optionsOnly"
+        }
+      ],
+      "initial": [
+        {
+          "valueQuantity": {
+            "value": 5,
+            "system": "http://unitsofmeasure.org",
+            "code": "mg",
+            "unit": "mg"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "dose-options-or-string",
+      "text": "Dose (optionsOrString)",
+      "type": "quantity",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unitOption",
+          "valueCoding": {
+            "system": "http://unitsofmeasure.org",
+            "code": "mg",
+            "display": "mg"
+          }
+        },
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unitOption",
+          "valueCoding": {
+            "system": "http://unitsofmeasure.org",
+            "code": "g",
+            "display": "g"
+          }
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-unitOpen",
+          "valueCode": "optionsOrString"
+        }
+      ],
+      "initial": [
+        {
+          "valueQuantity": {
+            "value": 2,
+            "unit": "tablespoon"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "dose-options-or-type",
+      "text": "Dose (optionsOrType)",
+      "type": "quantity",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unitOption",
+          "valueCoding": {
+            "system": "http://unitsofmeasure.org",
+            "code": "mg",
+            "display": "mg"
+          }
+        },
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unitOption",
+          "valueCoding": {
+            "system": "http://unitsofmeasure.org",
+            "code": "g",
+            "display": "g"
+          }
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-unitOpen",
+          "valueCode": "optionsOrType"
+        }
+      ],
+      "initial": [
+        {
+          "valueQuantity": {
+            "value": 1,
+            "system": "http://example.org/custom-unit-system",
+            "code": "tblsp",
+            "unit": "tablespoon"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "age-valueset-open",
+      "text": "Age (unitValueSet + optionsOrString)",
+      "type": "quantity",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unitValueSet",
+          "valueCanonical": "http://hl7.org/fhir/ValueSet/age-units"
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-unitOpen",
+          "valueCode": "optionsOrString"
+        }
+      ],
+      "initial": [
+        {
+          "valueQuantity": {
+            "value": 42,
+            "unit": "years"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -10,7 +10,7 @@ export function InputGroup({ children, spans }: InputGroupProperties) {
   return (
     <Row gutter={gutter} wrap>
       {items.map((child, index) => (
-        <Col key={index} span={spans[index] * 2} xs={24}>
+        <Col key={index} span={spans[index] * 2}>
           {child}
         </Col>
       ))}

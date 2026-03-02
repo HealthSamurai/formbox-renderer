@@ -8,7 +8,7 @@ export function InputGroup({ children, spans }: InputGroupProperties) {
   return (
     <Grid columns={12} gutter="sm">
       {items.map((child, index) => (
-        <Grid.Col key={index} span={{ base: 12, sm: spans[index] }}>
+        <Grid.Col key={index} span={spans[index]}>
           {child}
         </Grid.Col>
       ))}

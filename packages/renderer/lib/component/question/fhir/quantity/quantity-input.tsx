@@ -4,6 +4,7 @@ import { useStrings } from "@formbox/theme";
 import type { IAnswer } from "../../../../types.ts";
 import { useTheme } from "../../../../ui/theme.tsx";
 import { buildId } from "../../../../utilities.ts";
+import { QuantityUnitInput } from "./quantity-unit-input.tsx";
 
 export type QuantityInputProperties = {
   answer: IAnswer<"quantity">;
@@ -24,7 +25,7 @@ export const QuantityInput = observer(function QuantityInput({
   disabled,
 }: QuantityInputProperties) {
   const strings = useStrings();
-  const { InputGroup, NumberInput, SelectInput, TextInput } = useTheme();
+  const { InputGroup, NumberInput } = useTheme();
   const { min, max } = answer.bounds;
 
   const handleValueChange = (nextValue: number | undefined) => {
@@ -47,30 +48,13 @@ export const QuantityInput = observer(function QuantityInput({
         min={min?.value}
         max={max?.value}
       />
-      {answer.quantity.isUnitFreeForm ? (
-        <TextInput
-          id={buildId(id, "unit")}
-          ariaLabelledBy={ariaLabelledBy}
-          ariaDescribedBy={ariaDescribedBy}
-          value={answer.value?.unit ?? ""}
-          onChange={(text) => answer.quantity.handleFreeTextChange(text)}
-          disabled={disabled}
-          placeholder={strings.inputs.quantityUnitPlaceholder}
-        />
-      ) : (
-        <SelectInput
-          options={answer.quantity.entries}
-          selectedOption={answer.quantity.entries.find(
-            (entry) => entry.token === answer.quantity.unitToken,
-          )}
-          onChange={(token) => answer.quantity.handleSelectChange(token ?? "")}
-          id={buildId(id, "unit")}
-          ariaLabelledBy={ariaLabelledBy}
-          ariaDescribedBy={ariaDescribedBy}
-          disabled={Boolean(disabled)}
-          isLoading={answer.question.unitOption.isLoading}
-        />
-      )}
+      <QuantityUnitInput
+        answer={answer}
+        id={buildId(id, "unit")}
+        ariaLabelledBy={ariaLabelledBy}
+        ariaDescribedBy={ariaDescribedBy}
+        disabled={disabled}
+      />
     </InputGroup>
   );
 });
