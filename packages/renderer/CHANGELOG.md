@@ -1,5 +1,18 @@
 # @formbox/renderer
 
+## 0.3.0
+
+### Minor Changes
+
+- [`7e135ee`](https://github.com/HealthSamurai/formbox-renderer/commit/7e135ee5f63e6dcb088011fa055a1261aa899f97) Thanks [@olimsaidov](https://github.com/olimsaidov)! - Support more advanced behavior extensions
+
+### Patch Changes
+
+- Updated dependencies [[`7e135ee`](https://github.com/HealthSamurai/formbox-renderer/commit/7e135ee5f63e6dcb088011fa055a1261aa899f97)]:
+  - @formbox/fhir@0.3.0
+  - @formbox/strings@0.3.0
+  - @formbox/theme@0.3.0
+
 ## 0.2.1
 
 ### Patch Changes
