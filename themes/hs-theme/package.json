@@ -1,6 +1,6 @@
 {
   "name": "@formbox/hs-theme",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Health Samurai theme for Formbox Renderer",
   "private": false,
   "type": "module",
