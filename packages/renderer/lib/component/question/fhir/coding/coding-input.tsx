@@ -10,6 +10,7 @@ export type CodingInputProperties = {
   ariaLabelledBy: string;
   ariaDescribedBy?: string | undefined;
   disabled?: boolean | undefined;
+  supplementalSystem?: string | undefined;
 };
 
 export function CodingInput({
@@ -19,15 +20,23 @@ export function CodingInput({
   ariaLabelledBy,
   ariaDescribedBy,
   disabled,
+  supplementalSystem,
 }: CodingInputProperties) {
   const strings = useStrings();
   const { InputGroup, TextInput } = useTheme();
   const coding = value ?? {};
   const handleChange = (field: keyof Coding, nextValue: string) => {
+    if (field === "system" && supplementalSystem != undefined) {
+      return;
+    }
+
     const draft: Coding = {
       ...coding,
       [field]: nextValue || undefined,
     };
+    if (supplementalSystem != undefined) {
+      draft.system = supplementalSystem;
+    }
     onChange(pruneCoding(draft));
   };
 
@@ -39,7 +48,7 @@ export function CodingInput({
         ariaDescribedBy={ariaDescribedBy}
         value={coding.system ?? ""}
         onChange={(next) => handleChange("system", next)}
-        disabled={disabled}
+        disabled={Boolean(disabled) || supplementalSystem != undefined}
         placeholder={strings.inputs.codingSystemPlaceholder}
       />
       <TextInput

@@ -202,6 +202,7 @@ export const EXT = {
   QUESTIONNAIRE_UNIT_OPTION:        "http://hl7.org/fhir/StructureDefinition/questionnaire-unitOption",
   QUESTIONNAIRE_UNIT_VALUE_SET:     "http://hl7.org/fhir/StructureDefinition/questionnaire-unitValueSet",
   SDC_UNIT_OPEN:                    "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-unitOpen",
+  SDC_UNIT_SUPPLEMENTAL_SYSTEM:     "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-unitSupplementalSystem",
   SDC_ENABLE_WHEN_EXPR:             "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-enableWhenExpression",
   SDC_CALCULATED_EXPR:              "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
   SDC_INITIAL_EXPR:                 "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",

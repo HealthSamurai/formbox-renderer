@@ -44,15 +44,28 @@ export class UnitOptionStore implements IUnitOptions {
   }
 
   @computed
-  get constraint(): AnswerConstraint {
-    return (extractExtensionValue(
+  get unitOpen(): AnswerConstraint | undefined {
+    return extractExtensionValue(
       "code",
       this.question.template,
       EXT.SDC_UNIT_OPEN,
-    ) ??
-      (this.hasOptions
-        ? "optionsOnly"
-        : "optionsOrString")) as AnswerConstraint;
+    ) as AnswerConstraint | undefined;
+  }
+
+  @computed
+  get effectiveUnitOpen(): AnswerConstraint {
+    return (
+      this.unitOpen ?? (this.hasOptions ? "optionsOnly" : "optionsOrString")
+    );
+  }
+
+  @computed
+  get supplementalSystem(): string | undefined {
+    return extractExtensionValue(
+      "canonical",
+      this.question.template,
+      EXT.SDC_UNIT_SUPPLEMENTAL_SYSTEM,
+    );
   }
 
   @computed
@@ -81,14 +94,7 @@ export class UnitOptionStore implements IUnitOptions {
 
   @computed
   get hasOptions(): boolean {
-    return (
-      this.explicitOptions.length > 0 ||
-      extractExtensionValue(
-        "canonical",
-        this.question.template,
-        EXT.QUESTIONNAIRE_UNIT_VALUE_SET,
-      ) != undefined
-    );
+    return this.explicitOptions.length > 0 || this.canonical != undefined;
   }
 
   @computed
@@ -130,7 +136,7 @@ export class UnitOptionStore implements IUnitOptions {
 
   @action
   rememberCustomOption(coding: Coding): void {
-    if (this.constraint !== "optionsOnly") {
+    if (this.effectiveUnitOpen !== "optionsOnly") {
       const token = tokenify("Coding", coding);
       if (
         !this.customOptionsByToken.has(token) &&

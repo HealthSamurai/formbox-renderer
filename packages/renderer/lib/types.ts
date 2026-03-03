@@ -707,8 +707,10 @@ export interface IAnswerOptions<T extends AnswerType = AnswerType> {
 export interface IUnitOptions {
   readonly issues: ReadonlyArray<OperationOutcomeIssue>;
   readonly options: ReadonlyArray<Coding>;
-  readonly constraint: AnswerConstraint;
+  readonly unitOpen: AnswerConstraint | undefined;
+  readonly effectiveUnitOpen: AnswerConstraint;
   readonly hasOptions: boolean;
+  readonly supplementalSystem: string | undefined;
   readonly isLoading: boolean;
   rememberCustomOption(coding: Coding): void;
 }

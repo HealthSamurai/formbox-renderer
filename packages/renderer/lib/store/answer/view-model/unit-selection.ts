@@ -6,6 +6,12 @@ import { areCodingsEqual, buildId, tokenify } from "../../../utilities.ts";
 const LEGACY_PREFIX = "__legacy_unit__";
 const CUSTOM_PREFIX = "__custom_unit__";
 
+type UnitValueState =
+  | { kind: "none" }
+  | { kind: "inherent"; token: string }
+  | { kind: "custom"; token: string; coding: Coding }
+  | { kind: "legacy"; token: string; coding: Coding };
+
 export class UnitSelection implements IUnitSelection {
   private readonly answer: IAnswer<"quantity">;
 
@@ -23,13 +29,13 @@ export class UnitSelection implements IUnitSelection {
     makeObservable(this);
   }
 
-  private get quantityValue(): Quantity | undefined {
+  private get quantity(): Quantity | undefined {
     return this.answer.value as Quantity | undefined;
   }
 
   @computed
   private get allowCustom(): boolean {
-    return this.answer.question.unitOption.constraint !== "optionsOnly";
+    return this.answer.question.unitOption.effectiveUnitOpen !== "optionsOnly";
   }
 
   @computed
@@ -45,77 +51,57 @@ export class UnitSelection implements IUnitSelection {
   }
 
   @computed
-  private get customOption(): UnitEntry | undefined {
-    if (!this.allowCustom || this.customFormActiveState) {
-      return undefined;
-    }
-
-    if (this.getTokenForQuantity(this.quantityValue)) {
-      return undefined;
-    }
-
-    const quantity = this.quantityValue;
+  private get currentUnit(): UnitValueState {
+    const quantity = this.quantity;
     if (!quantity) {
-      return undefined;
+      return { kind: "none" };
     }
 
-    const label = quantity.unit ?? quantity.code ?? quantity.system;
-    if (!label) {
-      return undefined;
+    const inherentToken = this.getTokenForQuantity(quantity);
+    if (inherentToken) {
+      return { kind: "inherent", token: inherentToken };
     }
 
-    const coding = this.toCoding(quantity) ?? { display: label };
-    const codingToken = tokenify("Coding", coding);
-    return {
-      token: codingToken
-        ? `${CUSTOM_PREFIX}${codingToken}`
-        : `${CUSTOM_PREFIX}${label}`,
-      coding,
+    const coding: Coding = {
+      system: quantity.system,
+      code: quantity.code,
+      display: quantity.unit,
     };
-  }
 
-  @computed
-  private get legacyOption(): UnitEntry | undefined {
-    if (this.allowCustom) {
-      return undefined;
+    if (!coding.system && !coding.code && !coding.display) {
+      return { kind: "none" };
     }
 
-    if (this.getTokenForQuantity(this.quantityValue)) {
-      return undefined;
-    }
-
-    const quantity = this.quantityValue;
-    if (!quantity) {
-      return undefined;
-    }
-
-    const label = quantity.unit ?? quantity.code ?? quantity.system;
-    if (!label) {
-      return undefined;
-    }
-
-    const coding = this.toCoding(quantity) ?? { display: label };
-    return {
-      token: `${LEGACY_PREFIX}${label}`,
-      coding,
-    };
+    return this.canRepresentAsCustom(quantity, coding)
+      ? {
+          kind: "custom",
+          token: `${CUSTOM_PREFIX}${tokenify("Coding", coding)}`,
+          coding,
+        }
+      : {
+          kind: "legacy",
+          token: `${LEGACY_PREFIX}${tokenify("Coding", coding)}`,
+          coding,
+        };
   }
 
   @computed
   get entries(): ReadonlyArray<UnitEntry> {
-    const base = this.inherentOptions;
-
-    const custom = this.customOption;
-    if (custom) {
-      return [custom, ...base];
+    if (
+      this.customFormActiveState ||
+      this.currentUnit.kind === "none" ||
+      this.currentUnit.kind === "inherent"
+    ) {
+      return this.inherentOptions;
     }
 
-    const legacy = this.legacyOption;
-    if (!legacy) {
-      return base;
-    }
-
-    return [legacy, ...base];
+    return [
+      {
+        token: this.currentUnit.token,
+        coding: this.currentUnit.coding,
+      },
+      ...this.inherentOptions,
+    ];
   }
 
   @computed
@@ -137,7 +123,13 @@ export class UnitSelection implements IUnitSelection {
 
   @computed
   get customCoding(): Coding | undefined {
-    return this.customCodingState;
+    const supplementalSystem =
+      this.answer.question.unitOption.supplementalSystem;
+    if (this.customCodingState || !supplementalSystem) {
+      return this.customCodingState;
+    }
+
+    return { system: supplementalSystem };
   }
 
   @computed
@@ -146,9 +138,13 @@ export class UnitSelection implements IUnitSelection {
       return false;
     }
 
-    if (this.answer.question.unitOption.constraint === "optionsOrType") {
-      return this.customCodingState != undefined;
+    if (this.answer.question.unitOption.effectiveUnitOpen === "optionsOrType") {
+      return (
+        this.customCodingState != undefined &&
+        this.matchesSupplementalSystem(this.customCodingState.system)
+      );
     }
+
     return this.customTextState.trim().length > 0;
   }
 
@@ -158,17 +154,16 @@ export class UnitSelection implements IUnitSelection {
       return this.specifyOtherToken;
     }
 
-    const custom = this.customOption;
-    if (custom) {
-      return custom.token;
+    switch (this.currentUnit.kind) {
+      case "none": {
+        return undefined;
+      }
+      case "inherent":
+      case "custom":
+      case "legacy": {
+        return this.currentUnit.token;
+      }
     }
-
-    const legacy = this.legacyOption;
-    if (legacy) {
-      return legacy.token;
-    }
-
-    return this.getTokenForQuantity(this.quantityValue);
   }
 
   @action
@@ -241,10 +236,15 @@ export class UnitSelection implements IUnitSelection {
     }
 
     this.rememberCurrentUnitForReuse();
-    if (this.answer.question.unitOption.constraint === "optionsOrType") {
+
+    if (this.answer.question.unitOption.effectiveUnitOpen === "optionsOrType") {
+      if (!this.customCodingState) {
+        return;
+      }
+
       this.answer.quantity.handleCodingChange(this.customCodingState);
       this.answer.question.unitOption.rememberCustomOption(
-        this.customCodingState!,
+        this.customCodingState,
       );
     } else {
       const customText = this.customTextState.trim();
@@ -262,28 +262,38 @@ export class UnitSelection implements IUnitSelection {
   }
 
   private rememberCurrentUnitForReuse(): void {
-    if (!this.allowCustom) {
-      return;
-    }
-
-    const coding = this.toCoding(this.quantityValue);
-    if (coding) {
-      this.answer.question.unitOption.rememberCustomOption(coding);
+    if (this.currentUnit.kind === "custom") {
+      this.answer.question.unitOption.rememberCustomOption(
+        this.currentUnit.coding,
+      );
     }
   }
 
-  private toCoding(quantity: Quantity | undefined): Coding | undefined {
-    if (!quantity) {
-      return undefined;
+  private canRepresentAsCustom(quantity: Quantity, coding: Coding): boolean {
+    switch (this.answer.question.unitOption.effectiveUnitOpen) {
+      case "optionsOnly": {
+        return false;
+      }
+      case "optionsOrType": {
+        return this.matchesSupplementalSystem(coding.system);
+      }
+      case "optionsOrString": {
+        if (quantity.code != undefined || quantity.system != undefined) {
+          return (
+            !this.answer.question.unitOption.hasOptions &&
+            this.answer.question.unitOption.unitOpen == undefined
+          );
+        }
+
+        return quantity.unit != undefined;
+      }
     }
+  }
 
-    const coding: Coding = {
-      system: quantity.system,
-      code: quantity.code,
-      display: quantity.unit,
-    };
-
-    return coding.system || coding.code || coding.display ? coding : undefined;
+  private matchesSupplementalSystem(system: string | undefined): boolean {
+    const supplementalSystem =
+      this.answer.question.unitOption.supplementalSystem;
+    return supplementalSystem ? system === supplementalSystem : true;
   }
 
   private getCodingForToken(token: string): Coding | undefined {
@@ -291,11 +301,7 @@ export class UnitSelection implements IUnitSelection {
     return found?.coding ?? undefined;
   }
 
-  private getTokenForCoding(coding: Coding | undefined): string | undefined {
-    if (!coding) {
-      return;
-    }
-
+  private getTokenForCoding(coding: Coding): string | undefined {
     for (const entry of this.inherentOptions) {
       if (areCodingsEqual(entry.coding, coding)) {
         return entry.token;
@@ -305,13 +311,7 @@ export class UnitSelection implements IUnitSelection {
     return;
   }
 
-  private getTokenForQuantity(
-    quantity: Quantity | undefined,
-  ): string | undefined {
-    if (!quantity) {
-      return;
-    }
-
+  private getTokenForQuantity(quantity: Quantity): string | undefined {
     if (quantity.code || quantity.system) {
       return this.getTokenForCoding({
         code: quantity.code,

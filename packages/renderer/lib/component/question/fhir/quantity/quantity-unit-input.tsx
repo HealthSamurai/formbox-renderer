@@ -35,17 +35,28 @@ export const QuantityUnitInput = observer(function QuantityUnitInput({
   } = useTheme();
 
   const unitSelection = answer.quantity.unitSelection;
+  const supplementalSystem = answer.question.unitOption.supplementalSystem;
   const isCustomFormActive = unitSelection.customFormActive;
   const specifyOtherToken = unitSelection.specifyOtherToken;
-  const specifyOtherOption = specifyOtherToken
-    ? {
-        token: specifyOtherToken,
-        label: answer.question.form.strings.selection.specifyOther,
-        disabled:
-          answer.question.readOnly || answer.question.unitOption.isLoading,
-        exclusive: false,
-      }
-    : undefined;
+
+  const specifyOtherOption = useMemo(
+    () =>
+      specifyOtherToken
+        ? {
+            token: specifyOtherToken,
+            label: answer.question.form.strings.selection.specifyOther,
+            disabled:
+              answer.question.readOnly || answer.question.unitOption.isLoading,
+            exclusive: false,
+          }
+        : undefined,
+    [
+      specifyOtherToken,
+      answer.question.form.strings.selection.specifyOther,
+      answer.question.readOnly,
+      answer.question.unitOption.isLoading,
+    ],
+  );
 
   const options = useMemo<OptionItem[]>(() => {
     return unitSelection.entries.map((entry) => ({
@@ -63,7 +74,7 @@ export const QuantityUnitInput = observer(function QuantityUnitInput({
   const customForm = isCustomFormActive && (
     <CustomForm
       content={
-        answer.question.unitOption.constraint === "optionsOrType" ? (
+        answer.question.unitOption.effectiveUnitOpen === "optionsOrType" ? (
           <CodingInput
             id={buildId(id, "custom")}
             ariaLabelledBy={ariaLabelledBy}
@@ -71,6 +82,7 @@ export const QuantityUnitInput = observer(function QuantityUnitInput({
             value={unitSelection.customCoding}
             onChange={(coding) => unitSelection.setCustomCoding(coding)}
             disabled={disabled}
+            supplementalSystem={supplementalSystem}
           />
         ) : (
           <TextInput

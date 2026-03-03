@@ -1,0 +1,90 @@
+{
+  "resourceType": "Questionnaire",
+  "status": "active",
+  "title": "Quantity unitSupplementalSystem Showcase",
+  "description": "Demonstrates optionsOrType behavior with sdc-questionnaire-unitSupplementalSystem.",
+  "item": [
+    {
+      "linkId": "dose-supplemental-match",
+      "text": "Dose (supplemental system match)",
+      "type": "quantity",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unitOption",
+          "valueCoding": {
+            "system": "http://unitsofmeasure.org",
+            "code": "mg",
+            "display": "mg"
+          }
+        },
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unitOption",
+          "valueCoding": {
+            "system": "http://unitsofmeasure.org",
+            "code": "g",
+            "display": "g"
+          }
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-unitOpen",
+          "valueCode": "optionsOrType"
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-unitSupplementalSystem",
+          "valueCanonical": "http://unitsofmeasure.org"
+        }
+      ],
+      "initial": [
+        {
+          "valueQuantity": {
+            "value": 2,
+            "system": "http://unitsofmeasure.org",
+            "code": "kg",
+            "unit": "kg"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "dose-supplemental-mismatch",
+      "text": "Dose (supplemental system mismatch)",
+      "type": "quantity",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unitOption",
+          "valueCoding": {
+            "system": "http://unitsofmeasure.org",
+            "code": "mg",
+            "display": "mg"
+          }
+        },
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unitOption",
+          "valueCoding": {
+            "system": "http://unitsofmeasure.org",
+            "code": "g",
+            "display": "g"
+          }
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-unitOpen",
+          "valueCode": "optionsOrType"
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-unitSupplementalSystem",
+          "valueCanonical": "http://unitsofmeasure.org"
+        }
+      ],
+      "initial": [
+        {
+          "valueQuantity": {
+            "value": 2,
+            "system": "http://example.org/custom-unit-system",
+            "code": "tblsp",
+            "unit": "tablespoon"
+          }
+        }
+      ]
+    }
+  ]
+}

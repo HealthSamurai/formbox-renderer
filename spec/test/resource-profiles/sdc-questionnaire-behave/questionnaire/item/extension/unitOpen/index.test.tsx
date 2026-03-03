@@ -65,7 +65,7 @@ describe("unitOpen", () => {
 
     const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getQuantityQuestion(form, "dose");
-    expect(question.unitOption.constraint).toBe("optionsOrString");
+    expect(question.unitOption.effectiveUnitOpen).toBe("optionsOrString");
 
     render(<QuantityRenderer node={question} />);
 
@@ -110,7 +110,7 @@ describe("unitOpen", () => {
 
     const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getQuantityQuestion(form, "dose");
-    expect(question.unitOption.constraint).toBe("optionsOnly");
+    expect(question.unitOption.effectiveUnitOpen).toBe("optionsOnly");
 
     render(<QuantityRenderer node={question} />);
 
@@ -146,7 +146,7 @@ describe("unitOpen", () => {
 
     const form = new FormStore(en, "r5", questionnaire, undefined, undefined);
     const question = getQuantityQuestion(form, "dose");
-    expect(question.unitOption.constraint).toBe("optionsOrType");
+    expect(question.unitOption.effectiveUnitOpen).toBe("optionsOrType");
 
     render(<QuantityRenderer node={question} />);
 
