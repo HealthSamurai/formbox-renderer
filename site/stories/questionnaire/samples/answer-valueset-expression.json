@@ -12,7 +12,7 @@
       "text": "Choose which value set should drive the coding question",
       "extension": [
         {
-          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-variable",
+          "url": "http://hl7.org/fhir/StructureDefinition/variable",
           "valueExpression": {
             "name": "useContactMethodSet",
             "language": "text/fhirpath",

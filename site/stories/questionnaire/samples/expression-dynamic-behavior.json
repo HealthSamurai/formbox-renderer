@@ -16,7 +16,7 @@
       "text": "Behavior toggles",
       "extension": [
         {
-          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-variable",
+          "url": "http://hl7.org/fhir/StructureDefinition/variable",
           "valueExpression": {
             "language": "text/fhirpath",
             "name": "useNickname",
@@ -24,7 +24,7 @@
           }
         },
         {
-          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-variable",
+          "url": "http://hl7.org/fhir/StructureDefinition/variable",
           "valueExpression": {
             "language": "text/fhirpath",
             "name": "lockNickname",
@@ -32,7 +32,7 @@
           }
         },
         {
-          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-variable",
+          "url": "http://hl7.org/fhir/StructureDefinition/variable",
           "valueExpression": {
             "language": "text/fhirpath",
             "name": "allowMultiple",
@@ -40,7 +40,7 @@
           }
         },
         {
-          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-variable",
+          "url": "http://hl7.org/fhir/StructureDefinition/variable",
           "valueExpression": {
             "language": "text/fhirpath",
             "name": "requireNickname",
@@ -48,7 +48,7 @@
           }
         },
         {
-          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-variable",
+          "url": "http://hl7.org/fhir/StructureDefinition/variable",
           "valueExpression": {
             "language": "text/fhirpath",
             "name": "updateMin",
@@ -56,7 +56,7 @@
           }
         },
         {
-          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-variable",
+          "url": "http://hl7.org/fhir/StructureDefinition/variable",
           "valueExpression": {
             "language": "text/fhirpath",
             "name": "updateMax",

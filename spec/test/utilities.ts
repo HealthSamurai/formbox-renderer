@@ -10,7 +10,7 @@ type Quantity = QuantityOf<"r5">;
 type QuestionnaireItemAnswerOption = QuestionnaireItemAnswerOptionOf<"r5">;
 export function makeVariable(name: string, expression: string): Extension {
   return {
-    url: "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-variable",
+    url: "http://hl7.org/fhir/StructureDefinition/variable",
     valueExpression: {
       language: "text/fhirpath",
       expression,

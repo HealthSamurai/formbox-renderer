@@ -16,7 +16,7 @@
       "text": "Dose planning",
       "extension": [
         {
-          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-variable",
+          "url": "http://hl7.org/fhir/StructureDefinition/variable",
           "valueExpression": {
             "language": "text/fhirpath",
             "name": "currentDose",
@@ -24,7 +24,7 @@
           }
         },
         {
-          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-variable",
+          "url": "http://hl7.org/fhir/StructureDefinition/variable",
           "valueExpression": {
             "language": "text/fhirpath",
             "name": "clinicCeiling",

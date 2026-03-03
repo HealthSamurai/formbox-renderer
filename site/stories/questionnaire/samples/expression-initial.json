@@ -16,7 +16,7 @@
       "text": "Weekly exercise",
       "extension": [
         {
-          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-variable",
+          "url": "http://hl7.org/fhir/StructureDefinition/variable",
           "valueExpression": {
             "language": "text/fhirpath",
             "name": "hoursAnswer",

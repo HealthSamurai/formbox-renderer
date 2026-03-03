@@ -39,7 +39,7 @@
           ]
         },
         {
-          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-variable",
+          "url": "http://hl7.org/fhir/StructureDefinition/variable",
           "valueExpression": {
             "name": "phq9Score",
             "language": "text/fhirpath",

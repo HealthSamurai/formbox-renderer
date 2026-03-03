@@ -792,7 +792,7 @@ describe("item variable extension", () => {
           type: "group",
           extension: [
             {
-              url: "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-variable",
+              url: "http://hl7.org/fhir/StructureDefinition/variable",
               valueExpression: {
                 name: "unsupportedVar",
                 language: "text/cql",
