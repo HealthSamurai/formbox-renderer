@@ -5,7 +5,12 @@ import type {
   QuestionnaireOf,
   QuestionnaireResponseOf,
 } from "@formbox/fhir";
-import { type Strings, StringsContext, type Theme } from "@formbox/theme";
+import {
+  CustomQuestionnaireExtensionsProvider,
+  type Strings,
+  StringsContext,
+  type Theme,
+} from "@formbox/theme";
 import type { LaunchContext, RenderMode } from "./types.ts";
 import { Form } from "./component/form/form.tsx";
 import { FormStore } from "./store/form/form-store.ts";
@@ -72,6 +77,7 @@ function Renderer<V extends FhirVersion>({
         language,
         launchContext,
         mode,
+        theme.customExtensions,
       ),
   );
 
@@ -91,9 +97,15 @@ function Renderer<V extends FhirVersion>({
         languageReference.current,
         launchContextReference.current,
         modeReference.current,
+        theme.customExtensions,
       ),
     );
-  }, [fhirVersion, questionnaire, terminologyServerUrl]);
+  }, [
+    fhirVersion,
+    questionnaire,
+    terminologyServerUrl,
+    theme.customExtensions,
+  ]);
 
   useEffect(() => {
     store.setStrings(strings);
@@ -133,13 +145,15 @@ function Renderer<V extends FhirVersion>({
 
   return (
     <ThemeProvider theme={theme}>
-      <StringsContext.Provider value={strings}>
-        <Form
-          store={store}
-          onSubmit={handleSubmit}
-          onLanguageChange={onLanguageChange}
-        />
-      </StringsContext.Provider>
+      <CustomQuestionnaireExtensionsProvider value={store.customExtensions}>
+        <StringsContext.Provider value={strings}>
+          <Form
+            store={store}
+            onSubmit={handleSubmit}
+            onLanguageChange={onLanguageChange}
+          />
+        </StringsContext.Provider>
+      </CustomQuestionnaireExtensionsProvider>
     </ThemeProvider>
   );
 }

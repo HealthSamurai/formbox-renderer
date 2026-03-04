@@ -57,6 +57,7 @@ import {
   buildId,
   clamp,
   EXT,
+  extractCustomExtensions,
   extractExtensionsValues,
   extractExtensionValue,
   findExtension,
@@ -70,7 +71,11 @@ import {
   shouldCreateStore,
 } from "../../utilities.ts";
 import { ValueSetExpander } from "../option/valueset-expander.ts";
-import type { FormPagination, Strings } from "@formbox/theme";
+import type {
+  CustomExtensionDefinitions,
+  FormPagination,
+  Strings,
+} from "@formbox/theme";
 import { R4Adapter } from "../../fhir/r4-adapter.ts";
 import { R5Adapter } from "../../fhir/r5-adapter.ts";
 
@@ -145,6 +150,9 @@ export class FormStore<V extends FhirVersion = FhirVersion>
   @observable.ref
   private signatureState: Signature | undefined;
 
+  @observable.ref
+  public readonly customExtensionDefinitions: CustomExtensionDefinitions;
+
   readonly availableLanguages: readonly string[];
 
   constructor(
@@ -156,6 +164,7 @@ export class FormStore<V extends FhirVersion = FhirVersion>
     language?: string | undefined,
     launchContext?: LaunchContext | undefined,
     mode?: RenderMode | undefined,
+    customExtensions?: CustomExtensionDefinitions | undefined,
   ) {
     this.questionRendererRegistry = new RendererRegistry(
       defaultQuestionRenderers,
@@ -167,6 +176,7 @@ export class FormStore<V extends FhirVersion = FhirVersion>
     );
 
     this.questionnaire = questionnaire as Questionnaire;
+    this.customExtensionDefinitions = customExtensions || {};
     this.initialResponse = response as QuestionnaireResponse | undefined;
     this.stringsState = strings;
     this.signatureState = this.initialResponse
@@ -809,6 +819,15 @@ export class FormStore<V extends FhirVersion = FhirVersion>
     }
 
     return response;
+  }
+
+  @computed({ keepAlive: true })
+  get customExtensions(): Readonly<Record<string, unknown>> {
+    return extractCustomExtensions(
+      this.questionnaire,
+      this.customExtensionDefinitions,
+      "questionnaire",
+    );
   }
 }
 

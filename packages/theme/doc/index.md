@@ -37,6 +37,37 @@ const theme: Theme = {
 <Renderer fhirVersion="r5" questionnaire={questionnaire} theme={theme} />;
 ```
 
+## Custom extensions
+
+Use `theme.customExtensions` to declare FHIR extension definitions by key. Each definition declares `target` (`"questionnaire"` or `"item"`), `url`, `repeats`, and an `extract` callback.
+When `repeats` is `true`, `extract` runs per matching extension and the resolved value is an array of extracted values.
+
+Resolved values are consumed in theme components with `useCustomExtension(key)` from `@formbox/theme`.
+
+```ts
+import {
+  type InferCustomExtensionValues,
+  useCustomExtension,
+} from "@formbox/theme";
+
+const customExtensions = {
+  formShared: {
+    target: "questionnaire",
+    url: "http://example.org/fhir/StructureDefinition/form-shared",
+    repeats: false,
+    extract: (extension: unknown) => extension.valueString,
+  },
+} as const;
+
+declare module "@formbox/theme" {
+  interface CustomExtensionValueRegistry extends InferCustomExtensionValues<
+    typeof customExtensions
+  > {}
+}
+
+const formShared = useCustomExtension("formShared");
+```
+
 ## Theme contract
 
 A `Theme` is a full object with React components for every slot listed in the reference. The renderer never touches DOM APIs directly; the theme owns markup, layout, and styling. Data flows only through props.

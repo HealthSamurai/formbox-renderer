@@ -28,7 +28,7 @@ const themeWithStringsFallback = Object.fromEntries(
     key,
     withStringsFallback(component as ComponentType<object>),
   ]),
-) as typeof hsTheme;
+) as unknown as typeof hsTheme;
 
 vi.mock("@formbox/renderer/ui/theme.tsx", () => ({
   ThemeProvider: ({ children }: { children: ReactNode }) => children,

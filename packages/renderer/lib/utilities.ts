@@ -17,7 +17,7 @@ import {
   ValueKeyFor,
 } from "./types.ts";
 import { Hashery } from "hashery";
-import type { Strings } from "@formbox/theme";
+import type { CustomExtensionDefinitions, Strings } from "@formbox/theme";
 import type {
   Attachment,
   Coding,
@@ -2356,4 +2356,26 @@ export function getWeightFromCoding(coding: Coding): number | undefined {
     extractExtensionValue("decimal", coding, EXT.ITEM_WEIGHT) ??
     extractExtensionValue("decimal", coding, EXT.ORDINAL_VALUE)
   );
+}
+
+export function extractCustomExtensions(
+  source: Element,
+  definitions: CustomExtensionDefinitions,
+  target: "questionnaire" | "item",
+): Readonly<Record<string, unknown>> {
+  const values: Record<string, unknown> = {};
+
+  for (const [key, definition] of Object.entries(definitions)) {
+    if (definition.target == target) {
+      const matches = findExtensions(source, definition.url);
+      values[key] = definition.repeats
+        ? // eslint-disable-next-line unicorn/no-array-callback-reference
+          matches.map(definition.extract)
+        : matches.length > 0
+          ? definition.extract(matches[0])
+          : undefined;
+    }
+  }
+
+  return values;
 }

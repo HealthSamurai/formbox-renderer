@@ -10,6 +10,7 @@ import type {
 import {
   dedupe,
   EXT,
+  extractCustomExtensions,
   extractExtensionsValues,
   extractExtensionValue,
   findDisplayItemByControl,
@@ -35,6 +36,15 @@ export abstract class AbstractPresentableNode implements IPresentableNode {
     this.parentStore = parentStore;
 
     makeObservable(this);
+  }
+
+  @computed({ keepAlive: true })
+  get customExtensions(): Readonly<Record<string, unknown>> {
+    return extractCustomExtensions(
+      this.template,
+      this.form.customExtensionDefinitions,
+      "item",
+    );
   }
 
   @computed

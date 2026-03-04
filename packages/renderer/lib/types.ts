@@ -13,6 +13,7 @@ import type {
   DataRequirement,
   Distance,
   Dosage,
+  Element,
   Duration,
   Expression,
   ExtendedContactDetail,
@@ -47,7 +48,12 @@ import type {
 } from "@formbox/fhir";
 import type { ComponentType, HTMLAttributes, ReactNode } from "react";
 import { PolyCarrierFor, PolyKeyFor } from "./utilities.ts";
-import type { FormPagination, Hyperlink, Strings } from "@formbox/theme";
+import type {
+  CustomExtensionDefinitions,
+  FormPagination,
+  Hyperlink,
+  Strings,
+} from "@formbox/theme";
 import type { RendererRegistry } from "./renderer-registry.ts";
 import type { Model } from "fhirpath";
 
@@ -500,6 +506,7 @@ export interface IssueSource {
 export interface IPresentableNode {
   readonly template: QuestionnaireItem;
   readonly type: ItemType;
+  readonly customExtensions: Readonly<Record<string, unknown>>;
 
   readonly form: IForm;
   readonly adapter: IFhirAdapter;
@@ -807,6 +814,8 @@ export interface IValueSetExpander {
 export interface IForm extends IssueSource {
   readonly fhirVersion: FhirVersion;
   readonly adapter: IFhirAdapter;
+  readonly customExtensionDefinitions: CustomExtensionDefinitions;
+  readonly customExtensions: Readonly<Record<string, unknown>>;
   readonly mode: RenderMode;
   readonly strings: Strings;
   readonly language: string | undefined;

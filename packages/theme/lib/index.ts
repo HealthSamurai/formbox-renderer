@@ -37,6 +37,7 @@ import type { DisplayRendererComponent } from "./display-renderer.ts";
 import type { TabContainerComponent } from "./tab-container.ts";
 import type { LinkComponent } from "./link.ts";
 import type { LanguageSelectorComponent } from "./language-selector.ts";
+import type { CustomExtensionDefinitions } from "./custom-extension.tsx";
 
 export * from "./text-input.ts";
 export * from "./text-area.ts";
@@ -80,6 +81,7 @@ export * from "./tab-container.ts";
 export * from "./link.ts";
 export * from "./language-selector.ts";
 export * from "./strings.ts";
+export * from "./custom-extension.tsx";
 
 export type Theme = {
   TextInput: TextInputComponent;
@@ -121,4 +123,5 @@ export type Theme = {
   TabContainer: TabContainerComponent;
   Link: LinkComponent;
   LanguageSelector: LanguageSelectorComponent;
+  customExtensions?: CustomExtensionDefinitions;
 };
