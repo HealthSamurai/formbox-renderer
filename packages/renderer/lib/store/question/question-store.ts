@@ -11,20 +11,20 @@ import {
 import {
   AnswerLifecycle,
   AnswerType,
-  ChoiceOrientation,
   type AnswerTypeToDataType,
+  ChoiceOrientation,
   DataTypeToType,
   IAnswer,
   IAnswerOptions,
   IForm,
   INode,
   IPresentableNode,
-  IUnitOptions,
   IQuestionNode,
   IScope,
+  IUnitOptions,
   QUESTION_ITEM_CONTROLS,
-  QuestionRendererComponent,
   type QuestionItemControl,
+  QuestionRendererComponent,
   SnapshotKind,
 } from "../../types.ts";
 import type {
@@ -42,16 +42,17 @@ import {
   ANSWER_TYPE_TO_DATA_TYPE,
   answerHasOwnValue,
   booleanify,
+  buildId,
   EXT,
   extractExtensionsValues,
   extractExtensionValue,
   findExtension,
   getIssueMessage,
   getItemControlCode,
-  getValue,
-  buildId,
   getTranslated,
+  getValue,
   normalizeExpressionValues,
+  type PolyCarrierFor,
 } from "../../utilities.ts";
 import type { HTMLAttributes } from "react";
 import { NodeExpressionRegistry } from "../expression/registry/node-expression-registry.ts";
@@ -471,10 +472,16 @@ export class QuestionStore<T extends AnswerType = AnswerType>
 
   @action
   private applyTemplateInitialValues() {
-    const entries = this.template.initial;
-    if (!entries || entries.length === 0 || this.answers.length > 0) {
+    if (this.answers.length > 0) {
       return;
     }
+
+    const entries: Array<PolyCarrierFor<"value", AnswerTypeToDataType<T>>> =
+      this.template.answerOption && this.template.answerOption.length > 0
+        ? this.template.answerOption.filter(
+            (option) => option.initialSelected === true,
+          )
+        : (this.template.initial ?? []);
 
     const values = entries
       .map((entry) => {
@@ -488,9 +495,8 @@ export class QuestionStore<T extends AnswerType = AnswerType>
         return value;
       })
       .filter(
-        (value): value is DataTypeToType<AnswerTypeToDataType<T>> | string => {
-          return value != undefined;
-        },
+        (value): value is DataTypeToType<AnswerTypeToDataType<T>> | string =>
+          value != undefined,
       );
 
     if (values.length === 0) {
