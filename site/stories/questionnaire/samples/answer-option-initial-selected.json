@@ -1,0 +1,108 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "answer-option-initial-selected",
+  "status": "active",
+  "title": "Answer option initialSelected",
+  "description": "Demonstrates defaults selected from answerOption.initialSelected for single and repeating questions, including precedence over item.initial.",
+  "item": [
+    {
+      "linkId": "initial-selected-notes",
+      "type": "display",
+      "text": "Defaults are driven by answerOption.initialSelected flags. For the last question, answerOption.initialSelected overrides item.initial."
+    },
+    {
+      "linkId": "favorite-color",
+      "type": "string",
+      "text": "Favorite color",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "radio-button"
+              }
+            ]
+          }
+        }
+      ],
+      "answerOption": [
+        {
+          "valueString": "red"
+        },
+        {
+          "valueString": "green",
+          "initialSelected": true
+        },
+        {
+          "valueString": "blue"
+        }
+      ]
+    },
+    {
+      "linkId": "symptoms",
+      "type": "string",
+      "text": "Symptoms today",
+      "repeats": true,
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "check-box"
+              }
+            ]
+          }
+        }
+      ],
+      "answerOption": [
+        {
+          "valueString": "cough",
+          "initialSelected": true
+        },
+        {
+          "valueString": "fever"
+        },
+        {
+          "valueString": "fatigue",
+          "initialSelected": true
+        }
+      ]
+    },
+    {
+      "linkId": "pet",
+      "type": "string",
+      "text": "Preferred pet",
+      "initial": [
+        {
+          "valueString": "cat"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "radio-button"
+              }
+            ]
+          }
+        }
+      ],
+      "answerOption": [
+        {
+          "valueString": "dog",
+          "initialSelected": true
+        },
+        {
+          "valueString": "cat"
+        }
+      ]
+    }
+  ]
+}

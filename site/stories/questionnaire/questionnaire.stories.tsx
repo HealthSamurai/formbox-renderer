@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Renderer } from "../renderer.tsx";
 import answerConstraint from "./samples/answer-constraint-examples.json" with { type: "json" };
 import answerExpression from "./samples/answer-expression.json" with { type: "json" };
+import answerOptionInitialSelected from "./samples/answer-option-initial-selected.json" with { type: "json" };
 import answerOptions from "./samples/answer-options.json" with { type: "json" };
 import answerValueSetExpression from "./samples/answer-valueset-expression.json" with { type: "json" };
 import answerValueSet from "./samples/answer-valueset.json" with { type: "json" };
@@ -173,6 +174,10 @@ export const ExpressionDynamicQuantity = makeStory(
 export const AnswerOptions = makeStory(
   "Answer options",
   answerOptions as Questionnaire,
+);
+export const AnswerOptionInitialSelected = makeStory(
+  "Answer option initialSelected",
+  answerOptionInitialSelected as Questionnaire,
 );
 export const AnswerExpressions = makeStory(
   "Answer expressions",
