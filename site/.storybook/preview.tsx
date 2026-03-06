@@ -5,6 +5,7 @@ import en from "@formbox/strings/en";
 import type { ComponentType, PropsWithChildren } from "react";
 import { useEffect, useState } from "react";
 import "./preview.css";
+import afThemeCssUrl from "../../themes/af-theme/lib/style.css?url";
 import { theme as hsTheme } from "@formbox/hs-theme";
 import antdThemeCssUrl from "../../themes/antd-theme/lib/style.css?url";
 import hsThemeCssUrl from "../../themes/hs-theme/lib/style.css?url";
@@ -25,6 +26,16 @@ type ThemeDefinition = {
 };
 
 export const themes = {
+  af: {
+    title: "Aidbox Forms Theme",
+    packageName: "@formbox/af-theme",
+    themePath: "themes/af-theme/lib/theme.ts",
+    css: afThemeCssUrl,
+    load: async () => {
+      const module = await import("@formbox/af-theme");
+      return { theme: module.theme };
+    },
+  },
   antd: {
     title: "Ant Design",
     packageName: "@formbox/antd-theme",

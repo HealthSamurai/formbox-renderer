@@ -15,7 +15,7 @@ import {
 import {
   SmartMessagingPhase,
   useSmartMessaging,
-} from "sdc-smart-web-messaging-react";
+} from "sdc-smart-web-messaging-client/react";
 import "./style.css";
 
 type Questionnaire = QuestionnaireOf<"r4">;

@@ -38,6 +38,7 @@ export default defineConfig(async ({ mode, isSsrBuild }) => {
         "@formbox/renderer": path.resolve(repoRoot, "packages/renderer/lib"),
         "@formbox/strings": path.resolve(repoRoot, "packages/strings/lib"),
         "@formbox/theme": path.resolve(repoRoot, "packages/theme/lib"),
+        "@formbox/af-theme": path.resolve(repoRoot, "themes/af-theme/lib"),
         "@formbox/hs-theme": path.resolve(repoRoot, "themes/hs-theme/lib"),
         "@formbox/nshuk-theme": path.resolve(
           repoRoot,
@@ -54,6 +55,10 @@ export default defineConfig(async ({ mode, isSsrBuild }) => {
           path.resolve(
             repoRoot,
             "themes/hs-theme/lib/components/**/*.{ts,tsx}",
+          ),
+          path.resolve(
+            repoRoot,
+            "themes/af-theme/lib/components/**/*.{ts,tsx}",
           ),
           path.resolve(
             repoRoot,
