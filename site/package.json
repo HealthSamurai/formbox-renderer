@@ -68,7 +68,7 @@
     "remark-gfm": "^4.0.0",
     "remark-mdx-frontmatter": "^5.2.0",
     "shiki": "^3.12.2",
-    "storybook": "^10.1.11",
+    "storybook": "^10.2.10",
     "tailwindcss": "4.1.18",
     "typescript": "~5.9.3",
     "vite": "^7.3.1"
