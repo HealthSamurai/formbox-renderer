@@ -1,5 +1,5 @@
 packages:
   - packages/*
   - themes/*
-  - site
+  - site/*
   - spec

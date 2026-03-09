@@ -7,7 +7,10 @@ This repo is a pnpm workspace containing a React + TypeScript renderer for HL7®
 - `packages/renderer/`: the core renderer library (React + MobX) + Vitest tests
 - `packages/theme/`: theme contract/types (no tests)
 - `themes/*/`: concrete themes (`hs-theme`, `nshuk-theme`, `antd-theme`, `mantine-theme`)
-- `site/`: Storybook site used for docs/demo
+- `site/*/`: site-facing workspace packages
+- `site/docs/`: docs/landing site
+- `site/storybook/`: dedicated Storybook workspace package
+- `site/swm/`: dedicated Smart Web Messaging demo package
 
 ## Tooling
 
@@ -50,10 +53,20 @@ Renderer (`@formbox/renderer`):
 - `pnpm --filter @formbox/renderer test`
 - `pnpm --filter @formbox/renderer format`
 
-Storybook site (`@formbox/site`):
+Docs site (`@formbox/docs`):
 
-- `pnpm --filter @formbox/site dev`
-- `pnpm --filter @formbox/site build`
+- `pnpm --filter @formbox/docs dev`
+- `pnpm --filter @formbox/docs build`
+
+Storybook (`@formbox/storybook`):
+
+- `pnpm --filter @formbox/storybook dev`
+- `pnpm --filter @formbox/storybook build`
+
+SWM demo (`@formbox/swm`):
+
+- `pnpm --filter @formbox/swm dev`
+- `pnpm --filter @formbox/swm build`
 
 Themes/examples (build-only):
 

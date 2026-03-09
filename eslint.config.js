@@ -42,14 +42,14 @@ export default tseslint.config(
     },
   },
   {
-    files: ["site/src/components/ui/**/*.{ts,tsx}"],
+    files: ["site/docs/src/components/ui/**/*.{ts,tsx}"],
     rules: {
       "unicorn/prevent-abbreviations": "off",
       "react-refresh/only-export-components": "off",
     },
   },
   {
-    files: ["site/src/app/router.tsx"],
+    files: ["site/docs/src/app/router.tsx"],
     rules: {
       "react-refresh/only-export-components": "off",
     },

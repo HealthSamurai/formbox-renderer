@@ -28,20 +28,38 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build site
+      - name: Build Docs
         env:
           VITE_BASE_URL: /formbox-renderer/
-        run: pnpm --filter @formbox/site build
+        run: pnpm --filter @formbox/docs build
+
+      - name: Build Storybook
+        env:
+          VITE_BASE_URL: /formbox-renderer/storybook/
+        run: pnpm --filter @formbox/storybook build
+
+      - name: Build SWM
+        env:
+          VITE_BASE_URL: /formbox-renderer/swm/
+        run: pnpm --filter @formbox/swm build
+
+      - name: Consolidate Pages output
+        run: |
+          rm -rf site/docs/dist/server
+          mkdir -p site/docs/dist/storybook
+          mkdir -p site/docs/dist/swm
+          cp -R site/storybook/dist/. site/docs/dist/storybook/
+          cp -R site/swm/dist/. site/docs/dist/swm/
 
       - name: Add GitHub ribbon to built files
         run: |
           # Add GitHub fork ribbon CSS to the head
-          sed -i 's|</head>|    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.3/gh-fork-ribbon.min.css" />\n  </head>|' site/dist/storybook/index.html
+          sed -i 's|</head>|    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.3/gh-fork-ribbon.min.css" />\n  </head>|' site/docs/dist/storybook/index.html
 
           # Add GitHub fork ribbon HTML to the body
-          sed -i 's|<body>|<body>\n    <a class="github-fork-ribbon" href="https://github.com/HealthSamurai/formbox-renderer" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>|' site/dist/storybook/index.html
+          sed -i 's|<body>|<body>\n    <a class="github-fork-ribbon" href="https://github.com/HealthSamurai/formbox-renderer" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>|' site/docs/dist/storybook/index.html
 
       - name: Publish
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: site/dist
+          folder: site/docs/dist

@@ -1,0 +1,39 @@
+{
+  "name": "@formbox/storybook",
+  "version": "0.0.3-pre-alpha",
+  "description": "Storybook for Formbox Renderer",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "storybook dev -p 6006",
+    "storybook": "storybook dev -p 6006",
+    "build": "storybook build --output-dir dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@formbox/af-theme": "workspace:*",
+    "@formbox/antd-theme": "workspace:*",
+    "@formbox/hs-theme": "workspace:*",
+    "@formbox/mantine-theme": "workspace:*",
+    "@formbox/nshuk-theme": "workspace:*",
+    "@formbox/renderer": "workspace:*",
+    "@formbox/strings": "workspace:*",
+    "@formbox/theme": "workspace:*",
+    "mobx": "^6.15.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  },
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.28.5",
+    "@storybook/addon-docs": "^10.1.11",
+    "@storybook/react-vite": "^10.1.11",
+    "@types/react": "^19.2.8",
+    "@types/react-dom": "^19.2.2",
+    "@wyw-in-js/vite": "^1.0.5",
+    "storybook": "^10.1.11",
+    "typescript": "~5.9.3",
+    "vite": "^7.3.1"
+  }
+}

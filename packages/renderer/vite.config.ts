@@ -15,14 +15,6 @@ export default defineConfig({
       rollupTypes: true,
       tsconfigPath: path.resolve(__dirname, "tsconfig.lib.json"),
       pathsToAliases: false,
-      compilerOptions: {
-        paths: {
-          "@formbox/fhir": ["packages/fhir/lib"],
-          "@formbox/strings": ["packages/strings/lib"],
-          "@formbox/strings/*": ["packages/strings/lib/*"],
-          "@formbox/theme": ["packages/theme/lib"],
-        },
-      },
     }),
   ],
   build: {

@@ -12,5 +12,10 @@
   "access": "public",
   "baseBranch": "master",
   "updateInternalDependencies": "patch",
-  "ignore": ["@formbox/site", "@formbox/spec"]
+  "ignore": [
+    "@formbox/docs",
+    "@formbox/spec",
+    "@formbox/storybook",
+    "@formbox/swm"
+  ]
 }
