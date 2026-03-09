@@ -1,5 +1,11 @@
 # @formbox/theme
 
+## 0.3.1
+
+### Patch Changes
+
+- [`99b3333`](https://github.com/HealthSamurai/formbox-renderer/commit/99b3333068e9d6ef45be307015cb19fcc0575726) Thanks [@olimsaidov](https://github.com/olimsaidov)! - Fix extension urls
+
 ## 0.3.0
 
 ### Minor Changes
