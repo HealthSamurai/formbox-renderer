@@ -1,5 +1,7 @@
 # Formbox Renderer
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/HealthSamurai/formbox-renderer)
+
 React renderer for HL7® FHIR® R4 and R5 Questionnaires with pluggable themes. The renderer is headless: you must pass a theme and include its CSS.
 
 [Storybook demo](https://healthsamurai.github.io/formbox-renderer/storybook/)
