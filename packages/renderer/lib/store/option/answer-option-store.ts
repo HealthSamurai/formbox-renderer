@@ -4,6 +4,7 @@ import type {
   AnswerOption,
   AnswerType,
   AnswerTypeToDataType,
+  ChoiceColumn,
   DataTypeToType,
   IAnswerOptions,
   IOptionSelection,
@@ -33,6 +34,11 @@ import {
 import type { IPromiseBasedObservable } from "mobx-utils";
 import { fromPromise } from "mobx-utils";
 import { OptionSelection } from "./view-model/option-selection.ts";
+import {
+  applyChoiceColumns,
+  getExpansionProperties,
+  parseChoiceColumns,
+} from "./choice-column.ts";
 
 export class AnswerOptionStore<
   T extends AnswerType,
@@ -74,10 +80,18 @@ export class AnswerOptionStore<
         this.question.form.valueSetExpander.expand(
           this.canonical,
           this.question.preferredTerminologyServers,
+          getExpansionProperties(this.choiceColumns),
         ),
       );
     }
     return;
+  }
+
+  @computed.struct
+  get choiceColumns(): ChoiceColumn[] {
+    return this.question.dataType === "Coding"
+      ? parseChoiceColumns(this.question.template, this.question.form.language)
+      : [];
   }
 
   @computed
@@ -192,10 +206,18 @@ export class AnswerOptionStore<
 
     const seen = new Set<OptionToken>();
     return this.answerOptions.flatMap((option) => {
-      const value = this.getTranslatedValue(option);
-      if (value == undefined) {
+      const translated = this.getTranslatedValue(option);
+      if (translated == undefined) {
         return [];
       }
+
+      const columned =
+        this.choiceColumns.length > 0
+          ? applyChoiceColumns(translated as Coding, this.choiceColumns)
+          : undefined;
+      const value = (columned?.coding ?? translated) as DataTypeToType<
+        AnswerTypeToDataType<T>
+      >;
 
       const token = tokenify(this.question.dataType, value) as OptionToken;
       if (seen.has(token)) {
@@ -209,7 +231,7 @@ export class AnswerOptionStore<
       const weight =
         getWeightFromOption(option) ??
         (this.question.dataType === "Coding"
-          ? getWeightFromCoding(value as Coding)
+          ? getWeightFromCoding(translated as Coding)
           : undefined);
 
       return [
@@ -230,6 +252,7 @@ export class AnswerOptionStore<
             option,
             EXT.SDC_ITEM_ANSWER_MEDIA,
           ),
+          cells: columned?.cells,
         } satisfies AnswerOption<T>,
       ];
     });

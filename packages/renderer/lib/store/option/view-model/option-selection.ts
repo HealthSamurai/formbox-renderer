@@ -643,7 +643,13 @@ export class OptionSelection<
   @computed
   private get searchIndex() {
     const keysByType: Partial<Record<DataType, readonly string[]>> = {
-      Coding: ["value.display", "value.code", "value.system", "value.version"],
+      Coding: [
+        "value.display",
+        "value.code",
+        "value.system",
+        "value.version",
+        "cells",
+      ],
       Reference: ["value.display", "value.reference", "value.identifier.value"],
       Quantity: ["value.unit", "value.code", "value.system", "value.value"],
       Attachment: ["value.title", "value.url", "value.contentType"],

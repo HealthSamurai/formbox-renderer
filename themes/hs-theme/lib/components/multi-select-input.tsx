@@ -3,6 +3,7 @@ import { useStrings, type MultiSelectInputProperties } from "@formbox/theme";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FocusEvent, KeyboardEvent } from "react";
 import { LoadingSpinner } from "./loading-spinner.tsx";
+import { OptionCells, OptionColumnsHeader } from "./option-columns.tsx";
 
 function isInteractiveTarget(target: EventTarget | undefined): boolean {
   if (!(target instanceof Element)) return false;
@@ -13,6 +14,7 @@ function isInteractiveTarget(target: EventTarget | undefined): boolean {
 
 export function MultiSelectInput({
   options,
+  columns,
   onSelect,
   onDeselect,
   onSearch,
@@ -295,6 +297,7 @@ export function MultiSelectInput({
               </CustomOptionContent>
             ) : (
               <>
+                {columns && <OptionColumnsHeader columns={columns} />}
                 {displayOptions.map((option, index) => (
                   <OptionButton
                     key={option.token}
@@ -320,7 +323,11 @@ export function MultiSelectInput({
                       }
                     }}
                   >
-                    {option.label}
+                    {columns && option.cells ? (
+                      <OptionCells columns={columns} cells={option.cells} />
+                    ) : (
+                      option.label
+                    )}
                   </OptionButton>
                 ))}
                 {specifyOtherOption && (

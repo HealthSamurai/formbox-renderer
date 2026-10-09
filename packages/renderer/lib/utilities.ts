@@ -228,6 +228,7 @@ export const EXT = {
   SDC_COLLAPSIBLE:                  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-collapsible",
   SDC_SHORT_TEXT:                   "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-shortText",
   SDC_WIDTH:                        "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-width",
+  SDC_CHOICE_COLUMN:                "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn",
   SUPPORT_LINK:                     "http://hl7.org/fhir/StructureDefinition/questionnaire-supportLink",
   SUPPORT_HYPERLINK:                "http://hl7.org/fhir/StructureDefinition/questionnaire-supportHyperlink",
   SDC_OPEN_LABEL:                   "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-openLabel",
@@ -247,6 +248,25 @@ export const EXT = {
                                   "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-preferredTerminologyServer",
   TRANSLATION:                      "http://hl7.org/fhir/StructureDefinition/translation",
 } as const;
+
+export function widthFromQuantity(
+  quantity: Quantity | undefined,
+): string | undefined {
+  const value = quantity?.value;
+  if (typeof value !== "number") {
+    return undefined;
+  }
+
+  if (quantity?.code === "%") {
+    return `${value}%`;
+  }
+
+  if (quantity?.code === undefined) {
+    return `${value}px`;
+  }
+
+  return undefined;
+}
 
 export function answerify<T extends AnswerType>(
   type: T,

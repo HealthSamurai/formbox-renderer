@@ -47,6 +47,7 @@ import {
   EXT,
   extractExtensionsValues,
   extractExtensionValue,
+  widthFromQuantity,
   findExtension,
   getIssueMessage,
   getItemControlCode,
@@ -249,27 +250,9 @@ export class QuestionStore<T extends AnswerType = AnswerType>
 
   @computed
   get columnWidth(): string | undefined {
-    const quantity = extractExtensionValue(
-      "Quantity",
-      this.template,
-      EXT.SDC_WIDTH,
+    return widthFromQuantity(
+      extractExtensionValue("Quantity", this.template, EXT.SDC_WIDTH),
     );
-    const value = quantity?.value;
-    const code = quantity?.code;
-
-    if (typeof value !== "number") {
-      return undefined;
-    }
-
-    if (code === "%") {
-      return `${value}%`;
-    }
-
-    if (code === undefined) {
-      return `${value}px`;
-    }
-
-    return undefined;
   }
 
   @computed

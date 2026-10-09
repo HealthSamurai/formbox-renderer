@@ -51,6 +51,11 @@ export const SingleDropdownSelectControl = observer(
         />
       ) : undefined;
 
+    const columns =
+      node.answerOption.choiceColumns.length > 0
+        ? node.answerOption.choiceColumns
+        : undefined;
+
     const options = useMemo<OptionItem[]>(() => {
       return store.filteredOptions.map((entry) => ({
         token: entry.token,
@@ -65,6 +70,7 @@ export const SingleDropdownSelectControl = observer(
         ),
         disabled: entry.disabled,
         exclusive: entry.exclusive === true,
+        cells: entry.cells,
       }));
     }, [OptionDisplay, id, store.filteredOptions]);
 
@@ -103,6 +109,7 @@ export const SingleDropdownSelectControl = observer(
     return (
       <SelectInput
         options={options}
+        columns={columns}
         selectedOption={selectedOption}
         searchQuery={store.searchQuery}
         onChange={(token) => store.selectOptionForAnswer(answer, token)}

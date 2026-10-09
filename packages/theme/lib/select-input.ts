@@ -1,9 +1,15 @@
 import type { ComponentType, ReactNode } from "react";
 import type { NodePath } from "./path.ts";
-import type { OptionItem, SelectedOptionItem } from "./option-item.ts";
+import type {
+  OptionColumn,
+  OptionItem,
+  SelectedOptionItem,
+} from "./option-item.ts";
 
 export type SelectInputProperties = {
   options: readonly OptionItem[];
+  // Render options as a table with these columns (SDC choiceColumn).
+  columns?: readonly OptionColumn[] | undefined;
   selectedOption: SelectedOptionItem | undefined;
   searchQuery: string;
   onChange: (token?: string) => void;
