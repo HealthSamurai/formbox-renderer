@@ -1,0 +1,261 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "choice-column",
+  "status": "active",
+  "title": "Choice Column",
+  "description": "Demonstrates sdc-questionnaire-choiceColumn on drop-down choice items.",
+  "item": [
+    {
+      "linkId": "allergy",
+      "type": "coding",
+      "text": "Allergy (answerOption, forDisplay = Substance)",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "drop-down"
+              }
+            ]
+          }
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn",
+          "extension": [
+            {
+              "url": "path",
+              "valueString": "code"
+            },
+            {
+              "url": "label",
+              "valueString": "SCTID"
+            },
+            {
+              "url": "width",
+              "valueQuantity": {
+                "value": 30,
+                "system": "http://unitsofmeasure.org",
+                "code": "%",
+                "unit": "%"
+              }
+            }
+          ]
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn",
+          "extension": [
+            {
+              "url": "path",
+              "valueString": "display"
+            },
+            {
+              "url": "label",
+              "valueString": "Substance"
+            },
+            {
+              "url": "forDisplay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "91936005",
+            "display": "Penicillin"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "227493005",
+            "display": "Cashew nut"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "256349002",
+            "display": "Peanut"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "387207008",
+            "display": "Ibuprofen"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "111088007",
+            "display": "Latex"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "marital-status",
+      "type": "coding",
+      "text": "Marital status (answerValueSet)",
+      "answerValueSet": "http://hl7.org/fhir/ValueSet/marital-status",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "drop-down"
+              }
+            ]
+          }
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn",
+          "extension": [
+            {
+              "url": "path",
+              "valueString": "code"
+            },
+            {
+              "url": "label",
+              "valueString": "Code"
+            },
+            {
+              "url": "width",
+              "valueQuantity": {
+                "value": 20,
+                "system": "http://unitsofmeasure.org",
+                "code": "%",
+                "unit": "%"
+              }
+            }
+          ]
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn",
+          "extension": [
+            {
+              "url": "path",
+              "valueString": "display"
+            },
+            {
+              "url": "label",
+              "valueString": "Display"
+            },
+            {
+              "url": "forDisplay",
+              "valueBoolean": true
+            }
+          ]
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn",
+          "extension": [
+            {
+              "url": "path",
+              "valueString": "system"
+            },
+            {
+              "url": "label",
+              "valueString": "System"
+            },
+            {
+              "url": "width",
+              "valueQuantity": {
+                "value": 40,
+                "system": "http://unitsofmeasure.org",
+                "code": "%",
+                "unit": "%"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "allergies",
+      "type": "coding",
+      "repeats": true,
+      "text": "Allergies (repeating, no labels \u2192 no header)",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "drop-down"
+              }
+            ]
+          }
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn",
+          "extension": [
+            {
+              "url": "path",
+              "valueString": "display"
+            },
+            {
+              "url": "forDisplay",
+              "valueBoolean": true
+            }
+          ]
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn",
+          "extension": [
+            {
+              "url": "path",
+              "valueString": "code"
+            }
+          ]
+        }
+      ],
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "91936005",
+            "display": "Penicillin"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "227493005",
+            "display": "Cashew nut"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "256349002",
+            "display": "Peanut"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "387207008",
+            "display": "Ibuprofen"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "111088007",
+            "display": "Latex"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -28,6 +28,7 @@ import numericUnits from "./samples/numeric-units.json" with { type: "json" };
 import openLabel from "./samples/open-label.json" with { type: "json" };
 import optionExclusive from "./samples/option-exclusive.json" with { type: "json" };
 import optionPrefix from "./samples/option-prefix.json" with { type: "json" };
+import choiceColumn from "./samples/choice-column.json" with { type: "json" };
 import quantityUnitOptions from "./samples/quantity-unit-options.json" with { type: "json" };
 import quantityUnitOpen from "./samples/quantity-unit-open.json" with { type: "json" };
 import quantityUnitSupplementalSystem from "./samples/quantity-unit-supplemental-system.json" with { type: "json" };
@@ -195,6 +196,10 @@ export const AnswerConstraints = makeStory(
 export const AnswerValueSet = makeStory(
   "Answer ValueSet",
   answerValueSet as Questionnaire,
+);
+export const ChoiceColumn = makeStory(
+  "Choice Column",
+  choiceColumn as Questionnaire,
 );
 export const AnswerValueSetExpression = makeStory(
   "Answer ValueSet Expression",

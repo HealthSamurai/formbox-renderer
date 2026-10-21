@@ -10,7 +10,16 @@ export class ValueSetExpander implements IValueSetExpander {
   async expand(
     canonical: string,
     preferredServers: ReadonlyArray<string>,
+    properties: ReadonlyArray<string> = [],
   ): Promise<Coding[]> {
+    // Property and designation names for choiceColumn paths.
+    const parameters =
+      properties.length > 0
+        ? `&includeDesignations=true${properties
+            .map((property) => `&property=${encodeURIComponent(property)}`)
+            .join("")}`
+        : "";
+    const key = canonical + parameters;
     const attempts = dedupe(
       this.defaultServer
         ? [...preferredServers, this.defaultServer]
@@ -33,19 +42,21 @@ export class ValueSetExpander implements IValueSetExpander {
           this.caches.set(target, cache);
         }
 
-        let promise = cache.get(canonical);
+        let promise = cache.get(key);
         if (!promise) {
-          promise = this.requestExpansion(target, canonical).catch((error) => {
-            if (
-              !hasHttpStatus(error) ||
-              error.status < 400 ||
-              error.status >= 500
-            ) {
-              cache?.delete(canonical);
-            }
-            throw error;
-          });
-          cache.set(canonical, promise);
+          promise = this.requestExpansion(target, canonical, parameters).catch(
+            (error) => {
+              if (
+                !hasHttpStatus(error) ||
+                error.status < 400 ||
+                error.status >= 500
+              ) {
+                cache?.delete(key);
+              }
+              throw error;
+            },
+          );
+          cache.set(key, promise);
         }
 
         return await promise;
@@ -65,12 +76,13 @@ export class ValueSetExpander implements IValueSetExpander {
   private async requestExpansion(
     server: string,
     canonical: string,
+    parameters: string,
   ): Promise<Coding[]> {
     const base =
       server.endsWith("/") || server.endsWith("\\")
         ? server.replace(/[\\/]+$/, "")
         : server;
-    const url = `${base}/ValueSet/$expand?url=${encodeURIComponent(canonical)}`;
+    const url = `${base}/ValueSet/$expand?url=${encodeURIComponent(canonical)}${parameters}`;
 
     const response = await fetch(url, {
       headers: {

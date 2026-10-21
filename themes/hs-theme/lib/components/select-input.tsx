@@ -3,10 +3,12 @@ import { useStrings, type SelectInputProperties } from "@formbox/theme";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FocusEvent, KeyboardEvent } from "react";
 import { LoadingSpinner } from "./loading-spinner.tsx";
+import { OptionCells, OptionColumnsHeader } from "./option-columns.tsx";
 import { inputClass } from "./tokens.ts";
 
 export function SelectInput({
   options,
+  columns,
   selectedOption,
   specifyOtherOption,
   customOptionForm,
@@ -319,6 +321,7 @@ export function SelectInput({
                 </CustomOptionForm>
               ) : (
                 <>
+                  {columns && <OptionColumnsHeader columns={columns} />}
                   {options.map((entry, index) => (
                     <OptionButton
                       key={entry.token}
@@ -345,7 +348,11 @@ export function SelectInput({
                         }
                       }}
                     >
-                      {entry.label}
+                      {columns && entry.cells ? (
+                        <OptionCells columns={columns} cells={entry.cells} />
+                      ) : (
+                        entry.label
+                      )}
                     </OptionButton>
                   ))}
                   {specifyOtherOption && (

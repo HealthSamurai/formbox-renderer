@@ -53,6 +53,7 @@ import type {
   FormPagination,
   Hyperlink,
   NodePath,
+  OptionColumn,
   Strings,
 } from "@formbox/theme";
 import type { RendererRegistry } from "./renderer-registry.ts";
@@ -291,6 +292,12 @@ export type AnswerOption<T extends AnswerType> = {
   readonly answerType: AnswerType;
   readonly prefix?: string | undefined;
   readonly media?: Attachment | undefined;
+  readonly cells?: readonly string[] | undefined;
+};
+
+export type ChoiceColumn = OptionColumn & {
+  readonly path: string;
+  readonly forDisplay: boolean;
 };
 
 export type ValueDisplayProperties<T extends AnswerType> = {
@@ -718,6 +725,7 @@ export interface IAnswerOptions<T extends AnswerType = AnswerType> {
   readonly issues: OperationOutcomeIssue[];
   readonly inherentOptions: ReadonlyArray<AnswerOption<T>>;
   readonly constraint: AnswerConstraint;
+  readonly choiceColumns: ReadonlyArray<ChoiceColumn>;
   readonly select: IOptionSelection<T>;
 }
 
@@ -840,6 +848,7 @@ export interface IValueSetExpander {
   expand(
     canonical: string,
     preferredServers: ReadonlyArray<string>,
+    properties?: ReadonlyArray<string>,
   ): Promise<Coding[]>;
 }
 
@@ -916,4 +925,8 @@ export type ValueKeyFor<T extends DataType> = PolyKeyFor<"value", T>;
 
 export type ValueCarrierFor<T extends DataType> = PolyCarrierFor<"value", T>;
 
-export { type SelectedOptionItem, type OptionItem } from "@formbox/theme";
+export {
+  type SelectedOptionItem,
+  type OptionItem,
+  type OptionColumn,
+} from "@formbox/theme";

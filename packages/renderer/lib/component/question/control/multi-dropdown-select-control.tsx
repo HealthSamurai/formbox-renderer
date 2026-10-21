@@ -68,11 +68,17 @@ export const MultiDropdownSelectControl = observer(
       />
     ) : undefined;
 
+    const columns =
+      node.answerOption.choiceColumns.length > 0
+        ? node.answerOption.choiceColumns
+        : undefined;
+
     const options = useMemo<OptionItem[]>(() => {
       return store.filteredOptions.map((entry) => ({
         token: entry.token,
         disabled: entry.disabled,
         exclusive: entry.exclusive === true,
+        cells: entry.cells,
         label: (
           <OptionDisplay prefix={entry.prefix} media={entry.media}>
             <ValueDisplay
@@ -103,6 +109,7 @@ export const MultiDropdownSelectControl = observer(
     return (
       <MultiSelectInput
         options={options}
+        columns={columns}
         searchQuery={store.searchQuery}
         onSelect={store.selectOption}
         onDeselect={store.deselectOption}
