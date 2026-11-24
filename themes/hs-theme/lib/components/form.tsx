@@ -1,6 +1,6 @@
 import type { FormEvent } from "react";
 import { useStrings, type FormProperties } from "@formbox/theme";
-import { styled } from "@linaria/react";
+import { Button } from "@health-samurai/react-components";
 
 export function Form({
   onSubmit,
@@ -25,196 +25,98 @@ export function Form({
   const actions = (
     <>
       {signature}
-      <PrimaryButton type="submit" disabled={!onSubmit}>
+      <Button type="submit" variant="primary" disabled={!onSubmit}>
         {strings.form.submit}
-      </PrimaryButton>
-      <SecondaryButton
+      </Button>
+      <Button
         type="button"
+        variant="secondary"
         onClick={handleCancel}
         disabled={!onCancel}
       >
         {strings.form.cancel}
-      </SecondaryButton>
+      </Button>
     </>
   );
   const header =
     title || description ? (
-      <Header>
-        {Boolean(title) && <Title>{title}</Title>}
-        {Boolean(description) && <Description>{description}</Description>}
-      </Header>
+      <header className="flex flex-col gap-1">
+        {Boolean(title) && (
+          <h1 className="typo-page-header m-0 block text-text-primary">
+            {title}
+          </h1>
+        )}
+        {Boolean(description) && (
+          <p className="typo-body block text-text-secondary">{description}</p>
+        )}
+      </header>
     ) : undefined;
   const top =
     header || languageSelector ? (
-      <TopRow>
-        {header && <HeaderSlot>{header}</HeaderSlot>}
-        {languageSelector && <LanguageSlot>{languageSelector}</LanguageSlot>}
-      </TopRow>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        {header && <div className="min-w-0 flex-[1_1_20rem]">{header}</div>}
+        {languageSelector && (
+          <div className="ml-auto min-w-0 flex-none">{languageSelector}</div>
+        )}
+      </div>
     ) : undefined;
 
   if (pagination) {
     return (
-      <FormElement onSubmit={handleSubmit}>
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         {top}
-        {Boolean(errors) && <Slot>{errors}</Slot>}
-        {Boolean(before) && <Slot>{before}</Slot>}
+        {Boolean(errors) && (
+          <div className="flex flex-col gap-4 empty:hidden">{errors}</div>
+        )}
+        {Boolean(before) && (
+          <div className="flex flex-col gap-4 empty:hidden">{before}</div>
+        )}
         {children}
-        <Controls>
-          <Nav>
-            <NavButton
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="typo-body flex items-center gap-2 text-text-primary">
+            <Button
+              variant="secondary"
               type="button"
               onClick={pagination.onPrev}
               disabled={pagination.disabledPrev}
             >
               {strings.pagination.previous}
-            </NavButton>
+            </Button>
             <span>
               {pagination.current} / {pagination.total}
             </span>
-            <NavButton
+            <Button
+              variant="secondary"
               type="button"
               onClick={pagination.onNext}
               disabled={pagination.disabledNext}
             >
               {strings.pagination.next}
-            </NavButton>
-          </Nav>
-          <Actions>{actions}</Actions>
-        </Controls>
-        {Boolean(after) && <Slot>{after}</Slot>}
-      </FormElement>
+            </Button>
+          </div>
+          <div className="flex flex-wrap gap-3">{actions}</div>
+        </div>
+        {Boolean(after) && (
+          <div className="flex flex-col gap-4 empty:hidden">{after}</div>
+        )}
+      </form>
     );
   }
 
   return (
-    <FormElement onSubmit={handleSubmit}>
+    <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
       {top}
-      {Boolean(errors) && <Slot>{errors}</Slot>}
-      {Boolean(before) && <Slot>{before}</Slot>}
+      {Boolean(errors) && (
+        <div className="flex flex-col gap-4 empty:hidden">{errors}</div>
+      )}
+      {Boolean(before) && (
+        <div className="flex flex-col gap-4 empty:hidden">{before}</div>
+      )}
       {children}
-      {Boolean(after) && <Slot>{after}</Slot>}
-      <Actions>{actions}</Actions>
-    </FormElement>
+      {Boolean(after) && (
+        <div className="flex flex-col gap-4 empty:hidden">{after}</div>
+      )}
+      <div className="flex flex-wrap gap-3">{actions}</div>
+    </form>
   );
 }
-
-const FormElement = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
-
-const TopRow = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-`;
-
-const HeaderSlot = styled.div`
-  flex: 1 1 20rem;
-  min-width: 0;
-`;
-
-const LanguageSlot = styled.div`
-  flex: 0 0 auto;
-  min-width: 0;
-  margin-left: auto;
-`;
-
-const Slot = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-
-  &:empty {
-    display: none;
-  }
-`;
-
-const Header = styled.header`
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-`;
-
-const Title = styled.h1`
-  display: block;
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 700;
-`;
-
-const Description = styled.p`
-  display: block;
-  color: #4a5568;
-`;
-
-const Nav = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-`;
-
-const Controls = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-`;
-
-const Actions = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-`;
-
-const BaseButton = styled.button`
-  cursor: pointer;
-  border-radius: 0.375rem;
-  padding: 0.5rem 1rem;
-  border: 1px solid transparent;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-`;
-
-const PrimaryButton = styled(BaseButton)`
-  background: #2563eb;
-  color: #fff;
-  border-color: #1d4ed8;
-`;
-
-const SecondaryButton = styled(BaseButton)`
-  background: #edf2f7;
-  color: #1a202c;
-  border-color: #cbd5e0;
-`;
-
-const NavButton = styled.button`
-  cursor: pointer;
-  border-radius: 0.375rem;
-  padding: 0.5rem 1rem;
-  border: 1px solid transparent;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-
-  background: #edf2f7;
-  color: #1a202c;
-  border-color: #cbd5e0;
-`;

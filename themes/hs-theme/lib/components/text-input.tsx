@@ -1,5 +1,5 @@
 import type { TextInputProperties } from "@formbox/theme";
-import { inputClass } from "./tokens.ts";
+import { Input } from "@health-samurai/react-components";
 
 export function TextInput({
   id,
@@ -15,10 +15,10 @@ export function TextInput({
   maxLength,
 }: TextInputProperties) {
   return (
-    <input
+    <Input
       id={id}
-      className={inputClass}
-      type={type}
+      // Input narrows `type` to text/password, but the native element accepts any.
+      type={type as "text"}
       value={value}
       onChange={(event) => onChange(event.target.value)}
       disabled={disabled}

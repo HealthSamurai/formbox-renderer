@@ -1,5 +1,4 @@
 import { useStrings, type GroupListProperties } from "@formbox/theme";
-import { styled } from "@linaria/react";
 import { Plus } from "../icons/plus.tsx";
 import { IconButton } from "./icon-button.tsx";
 
@@ -13,42 +12,21 @@ export function GroupList({
   const strings = useStrings();
 
   return (
-    <Container data-linkid={linkId}>
+    <div className="flex flex-col gap-4" data-linkid={linkId}>
       {header}
-      <Items>{children}</Items>
+      <div className="flex flex-col gap-4 [interpolate-size:allow-keywords] empty:hidden">
+        {children}
+      </div>
       {onAdd && (
-        <Toolbar>
+        <div className="flex justify-start gap-3">
           <IconButton
             icon={<Plus size={16} />}
             onClick={onAdd}
             disabled={canAdd === false}
             label={strings.group.addSection}
           />
-        </Toolbar>
+        </div>
       )}
-    </Container>
+    </div>
   );
 }
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
-
-const Items = styled.div`
-  interpolate-size: allow-keywords;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-
-  &:empty {
-    display: none;
-  }
-`;
-
-const Toolbar = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  gap: 0.75rem;
-`;

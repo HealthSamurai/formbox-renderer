@@ -1,6 +1,5 @@
 import { useStrings, type TableProperties } from "@formbox/theme";
 import type { ReactElement, ReactNode } from "react";
-import { styled } from "@linaria/react";
 import { Trash } from "../icons/trash.tsx";
 import { IconButton } from "./icon-button.tsx";
 import { LoadingSpinner } from "./loading-spinner.tsx";
@@ -12,45 +11,69 @@ export function Table({
   const strings = useStrings();
 
   if (rows.length === 0 || columns.length === 0) {
-    return <Empty>{strings.table.empty}</Empty>;
+    return (
+      <p className="typo-body text-text-tertiary italic">
+        {strings.table.empty}
+      </p>
+    );
   }
 
   const hasRowHeader = rows.some((row) => row.content != undefined);
   const hasRowAction = rows.some((row) => row.onRemove != undefined);
 
   return (
-    <Wrapper>
-      <TableElement>
+    <div className="overflow-x-auto">
+      <table className="typo-body w-full border-collapse text-text-primary">
         <thead>
           <tr>
-            {hasRowHeader && <Header scope="col" aria-hidden="true" />}
+            {hasRowHeader && (
+              <th
+                className="typo-label border border-border-separator p-2 text-left"
+                scope="col"
+                aria-hidden="true"
+              />
+            )}
             {columns.map((column) => (
-              <Header
+              <th
+                className="typo-label border border-border-separator p-2 text-left"
                 key={column.token}
                 scope="col"
                 style={{ width: column.width }}
               >
                 {renderHeaderContent(column.content, column)}
-              </Header>
+              </th>
             ))}
-            {hasRowAction && <Header scope="col" aria-hidden="true" />}
+            {hasRowAction && (
+              <th
+                className="typo-label border border-border-separator p-2 text-left"
+                scope="col"
+                aria-hidden="true"
+              />
+            )}
           </tr>
         </thead>
         <tbody>
           {rows.map((row) => (
             <tr key={row.token}>
               {hasRowHeader && (
-                <RowHeader scope="row">
+                <th
+                  className="typo-label border border-border-separator p-2 text-left min-w-40"
+                  scope="row"
+                >
                   {renderHeaderContent(row.content, row)}
-                </RowHeader>
+                </th>
               )}
               {row.cells.map((cell, index) => (
-                <Cell key={cell.token} style={{ width: columns[index]?.width }}>
+                <td
+                  className="border border-border-separator p-2 align-top"
+                  key={cell.token}
+                  style={{ width: columns[index]?.width }}
+                >
                   {cell.content}
-                </Cell>
+                </td>
               ))}
               {hasRowAction && (
-                <Cell>
+                <td className="border border-border-separator p-2 align-top">
                   {row.onRemove && (
                     <IconButton
                       icon={<Trash />}
@@ -59,13 +82,13 @@ export function Table({
                       label={strings.group.removeSection}
                     />
                   )}
-                </Cell>
+                </td>
               )}
             </tr>
           ))}
         </tbody>
-      </TableElement>
-    </Wrapper>
+      </table>
+    </div>
   );
 }
 
@@ -80,67 +103,14 @@ function renderHeaderContent(content: ReactNode, meta: TableMeta) {
   }
 
   return (
-    <HeaderContent>
-      <HeaderRow>
+    <div className="flex flex-col items-start gap-1">
+      <div className="inline-flex flex-wrap items-center gap-1.5">
         {content}
         {meta.isLoading && <LoadingSpinner />}
-      </HeaderRow>
-      {meta.errors ? <HeaderErrors>{meta.errors}</HeaderErrors> : undefined}
-    </HeaderContent>
+      </div>
+      {meta.errors ? (
+        <div className="flex flex-col gap-1">{meta.errors}</div>
+      ) : undefined}
+    </div>
   );
 }
-
-const Wrapper = styled.div`
-  overflow-x: auto;
-`;
-
-const TableElement = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-`;
-
-const Header = styled.th`
-  border: 1px solid #e2e8f0;
-  padding: 0.5rem;
-  text-align: left;
-  font-weight: normal;
-`;
-
-const RowHeader = styled.th`
-  border: 1px solid #e2e8f0;
-  padding: 0.5rem;
-  text-align: left;
-  font-weight: normal;
-  min-width: 160px;
-`;
-
-const Cell = styled.td`
-  border: 1px solid #e2e8f0;
-  padding: 0.5rem;
-  vertical-align: top;
-`;
-
-const HeaderContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  align-items: flex-start;
-`;
-
-const HeaderRow = styled.div`
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.35rem;
-`;
-
-const HeaderErrors = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-`;
-
-const Empty = styled.p`
-  font-style: italic;
-  color: #94a3b8;
-`;

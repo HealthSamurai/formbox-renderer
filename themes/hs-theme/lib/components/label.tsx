@@ -1,5 +1,5 @@
-import { styled } from "@linaria/react";
 import { useStrings, type LabelProperties } from "@formbox/theme";
+import { cn } from "@health-samurai/react-components";
 import { useMediaQuery } from "../use-media-query.ts";
 import { Media } from "./media.tsx";
 import { Link } from "./link.tsx";
@@ -31,12 +31,17 @@ export function Label({
 
   const text = useShortText && shortText != undefined ? shortText : children;
 
+  const LabelTag = labelTag;
+  const LabelRowTag = labelRowTag;
+  const LabelTextTag = labelTextTag;
+
   return (
-    <Wrapper as={labelTag} htmlFor={labelFor}>
-      <LabelRow as={labelRowTag}>
+    <LabelTag className="m-0 block border-0 p-0" htmlFor={labelFor}>
+      <LabelRowTag className="inline-flex items-start gap-1.5">
         {!!onToggleExpanded && (
-          <ToggleButton
+          <button
             type="button"
+            className="inline-flex size-6 flex-none cursor-pointer items-center justify-center rounded-md border border-border-primary bg-bg-primary p-0 text-text-secondary outline-none hover:bg-bg-secondary hover:text-text-primary focus-visible:ring-4 focus-visible:ring-ring-blue"
             onClick={onToggleExpanded}
             aria-label={
               isExpanded
@@ -50,27 +55,43 @@ export function Label({
                 : strings.collapsible.expand
             }
           >
-            <ToggleTriangle data-expanded={isExpanded ? "true" : undefined} />
-          </ToggleButton>
+            <span
+              data-expanded={isExpanded ? "true" : undefined}
+              className={cn(
+                "size-0 origin-[35%_50%] border-y-[0.3rem] border-l-[0.4rem] border-y-transparent border-l-current transition-transform duration-200",
+                isExpanded && "rotate-90",
+              )}
+            />
+          </button>
         )}
-        <LabelText
+        <LabelTextTag
           id={id}
-          as={labelTextTag}
           data-emphasis={isEmphasized ? "true" : undefined}
           data-size={isLegend ? "legend" : undefined}
+          className={cn(
+            "inline-flex items-center gap-1 text-text-primary",
+            isLegend ? "h5" : isEmphasized ? "typo-label" : "typo-body",
+          )}
         >
-          {prefix && <Prefix>{prefix}</Prefix>}
+          {prefix && <span className="font-semibold">{prefix}</span>}
           {text}
-          {required && <Required aria-hidden>*</Required>}
-        </LabelText>
+          {required && (
+            <span className="text-text-error-primary" aria-hidden>
+              *
+            </span>
+          )}
+        </LabelTextTag>
         {help}
         {legal}
         {flyover}
-      </LabelRow>
+      </LabelRowTag>
       {supportHyperlinks && supportHyperlinks.length > 0 && (
-        <SupportLinks>
+        <div className="flex flex-wrap gap-2">
           {supportHyperlinks.map((supportHyperlink, index) => (
-            <SupportLink key={`${supportHyperlink.href}-${index}`}>
+            <span
+              key={`${supportHyperlink.href}-${index}`}
+              className="inline-flex"
+            >
               <Link
                 href={supportHyperlink.href}
                 target="_blank"
@@ -78,106 +99,15 @@ export function Label({
               >
                 {`${supportHyperlink.label ?? supportHyperlink.href} ↗`}
               </Link>
-            </SupportLink>
+            </span>
           ))}
-        </SupportLinks>
+        </div>
       )}
       {media && (
-        <MediaContainer>
+        <span className="mt-2 block">
           <Media attachment={media} />
-        </MediaContainer>
+        </span>
       )}
-    </Wrapper>
+    </LabelTag>
   );
 }
-
-const Wrapper = styled.label`
-  display: block;
-  margin: 0;
-  padding: 0;
-  border: 0;
-`;
-
-const LabelRow = styled.div`
-  display: inline-flex;
-  align-items: flex-start;
-  gap: 0.35rem;
-`;
-
-const LabelText = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-
-  &[data-emphasis="true"] {
-    font-weight: 600;
-  }
-
-  &[data-size="legend"] {
-    font-size: 1.25rem;
-  }
-`;
-
-const Prefix = styled.span`
-  font-weight: 600;
-`;
-
-const Required = styled.span`
-  color: #e53e3e;
-`;
-
-const SupportLink = styled.span`
-  display: inline-flex;
-`;
-
-const SupportLinks = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-`;
-
-const MediaContainer = styled.span`
-  display: block;
-  margin-top: 0.5rem;
-`;
-
-const ToggleButton = styled.button`
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  inline-size: 1.5rem;
-  block-size: 1.5rem;
-  border: 1px solid #cbd5e0;
-  border-radius: 0.375rem;
-  background: #edf2f7;
-  color: #1a202c;
-  box-shadow: inset 0 1px 0 #fff;
-  padding: 0;
-  cursor: pointer;
-
-  &:hover {
-    background: #e2e8f0;
-    border-color: #a0aec0;
-  }
-
-  &:focus-visible {
-    outline: 2px solid #3182ce;
-    outline-offset: 1px;
-  }
-`;
-
-const ToggleTriangle = styled.span`
-  inline-size: 0;
-  block-size: 0;
-  border-top: 0.3rem solid transparent;
-  border-bottom: 0.3rem solid transparent;
-  border-left: 0.4rem solid currentColor;
-  transform-origin: 35% 50%;
-  transition: transform 200ms ease;
-  transform: rotate(0deg);
-
-  &[data-expanded="true"] {
-    transform: rotate(90deg);
-  }
-`;

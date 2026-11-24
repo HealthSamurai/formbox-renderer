@@ -1,5 +1,5 @@
-import { styled } from "@linaria/react";
 import { useStrings, type SpinnerInputProperties } from "@formbox/theme";
+import { Button } from "@health-samurai/react-components";
 import { Minus } from "../icons/minus.tsx";
 import { Plus } from "../icons/plus.tsx";
 import { getPrecision, roundToPrecision } from "./utilities.ts";
@@ -42,16 +42,22 @@ export function SpinnerInput({
   };
 
   const control = (
-    <Spinner data-disabled={disabled ? "true" : "false"}>
-      <SpinnerButton
+    <div
+      className="flex h-9 flex-1 items-stretch overflow-hidden rounded-md border border-border-primary bg-bg-primary transition-all duration-300 hover:border-border-primary_hover focus-within:border-border-link"
+      data-disabled={disabled ? "true" : "false"}
+    >
+      <Button
         type="button"
+        variant="ghost"
+        className="h-auto rounded-none px-2"
         onClick={() => handleAdjust(-1)}
         disabled={disabled}
         aria-label={strings.spinner.decrease}
       >
         <Minus size={14} />
-      </SpinnerButton>
-      <SpinnerField
+      </Button>
+      <input
+        className="typo-body w-full min-w-0 flex-1 appearance-none border-0 bg-transparent px-3 text-text-primary outline-none placeholder:text-text-quaternary disabled:cursor-not-allowed disabled:bg-bg-secondary disabled:text-text-disabled"
         id={id}
         type="number"
         value={value ?? ""}
@@ -72,15 +78,17 @@ export function SpinnerInput({
         aria-describedby={describedBy.length > 0 ? describedBy : undefined}
         placeholder={placeholder}
       />
-      <SpinnerButton
+      <Button
         type="button"
+        variant="ghost"
+        className="h-auto rounded-none px-2"
         onClick={() => handleAdjust(1)}
         disabled={disabled}
         aria-label={strings.spinner.increase}
       >
         <Plus size={14} />
-      </SpinnerButton>
-    </Spinner>
+      </Button>
+    </div>
   );
 
   if (!unitLabel) {
@@ -88,65 +96,11 @@ export function SpinnerInput({
   }
 
   return (
-    <SpinnerShell>
+    <div className="flex w-full min-w-0 items-center gap-2">
       {control}
-      <Unit id={unitId}>{unitLabel}</Unit>
-    </SpinnerShell>
+      <span id={unitId} className="typo-body text-text-secondary">
+        {unitLabel}
+      </span>
+    </div>
   );
 }
-
-const SpinnerShell = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  width: 100%;
-  min-width: 0;
-`;
-
-const Spinner = styled.div`
-  display: flex;
-  align-items: stretch;
-  border: 1px solid #cbd5e0;
-  border-radius: 0.375rem;
-  overflow: hidden;
-  flex: 1;
-
-  &:focus-within {
-    border-color: #3182ce;
-    box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.35);
-    outline: none;
-  }
-`;
-
-const SpinnerButton = styled.button`
-  border: none;
-  padding: 0.5rem 0.5rem;
-  cursor: pointer;
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-
-  &:active {
-    background: #edf2f7;
-  }
-`;
-
-const SpinnerField = styled.input`
-  border: none;
-  padding: 0.5rem 0.75rem;
-  min-width: 0;
-  width: 100%;
-  flex: 1;
-  appearance: none;
-
-  &:focus {
-    outline: none;
-  }
-`;
-
-const Unit = styled.span`
-  color: #4a5568;
-  font-size: 0.9rem;
-`;

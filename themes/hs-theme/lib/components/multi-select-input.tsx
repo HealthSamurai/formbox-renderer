@@ -1,7 +1,7 @@
-import { styled } from "@linaria/react";
 import { useStrings, type MultiSelectInputProperties } from "@formbox/theme";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FocusEvent, KeyboardEvent } from "react";
+import { cn } from "@health-samurai/react-components";
 import { LoadingSpinner } from "./loading-spinner.tsx";
 
 function isInteractiveTarget(target: EventTarget | undefined): boolean {
@@ -180,8 +180,9 @@ export function MultiSelectInput({
   };
 
   return (
-    <Stack>
-      <SelectField
+    <div className="flex flex-col gap-2">
+      <div
+        className="typo-body relative flex min-h-9 w-full flex-wrap items-center gap-1.5 rounded-md border border-border-primary bg-transparent px-2 py-1 text-text-primary transition-all duration-300 hover:border-border-primary_hover focus-within:border-border-link data-[disabled=true]:bg-bg-secondary data-[disabled=true]:text-text-disabled"
         ref={containerReference}
         onBlur={handleBlur}
         data-disabled={disabled ? "true" : undefined}
@@ -189,8 +190,10 @@ export function MultiSelectInput({
         {selectedOptions.map((chip) => {
           const isChipDisabled = disabled || Boolean(chip.disabled);
           return (
-            <ChipColumn key={chip.token}>
-              <Chip
+            <div key={chip.token} className="flex flex-col gap-0.5">
+              <div
+                data-slot="multi-select-chip"
+                className="typo-body inline-flex cursor-pointer items-center gap-1 rounded-full border border-border-primary bg-bg-secondary px-2 py-0.5 text-text-primary outline-none hover:bg-bg-tertiary focus-visible:ring-4 focus-visible:ring-ring-blue data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-60 data-[disabled=true]:hover:bg-bg-secondary"
                 role="button"
                 tabIndex={isChipDisabled ? undefined : 0}
                 aria-label={strings.selection.removeSelection}
@@ -211,15 +214,16 @@ export function MultiSelectInput({
                   }
                 }}
               >
-                <ChipContent>{chip.label}</ChipContent>
-              </Chip>
+                <div className="inline-flex items-center">{chip.label}</div>
+              </div>
               {chip.errors}
-            </ChipColumn>
+            </div>
           );
         })}
-        <SelectWrapper>
+        <div className="relative min-w-32 flex-[1_1_10rem]">
           {isSearchable ? (
-            <SelectInputField
+            <input
+              className="typo-body w-full border-0 bg-transparent p-1 text-text-primary outline-none placeholder:text-text-quaternary disabled:cursor-not-allowed"
               id={id}
               value={query}
               onChange={(event) => {
@@ -250,7 +254,8 @@ export function MultiSelectInput({
               autoComplete="off"
             />
           ) : (
-            <SelectTrigger
+            <div
+              className="flex min-h-6 w-full cursor-text items-center p-1 outline-none aria-disabled:cursor-not-allowed"
               id={id}
               role="combobox"
               aria-labelledby={ariaLabelledBy}
@@ -270,33 +275,35 @@ export function MultiSelectInput({
               onKeyDown={handleNavigationKeyDown}
             >
               {selectedOptions.length === 0 && (
-                <PlaceholderText>
+                <span className="text-text-quaternary">
                   {placeholder ?? strings.selection.selectPlaceholder}
-                </PlaceholderText>
+                </span>
               )}
-            </SelectTrigger>
+            </div>
           )}
-        </SelectWrapper>
+        </div>
         {isLoading && (
-          <SelectActions>
+          <div className="ml-auto inline-flex items-center">
             <LoadingSpinner />
-          </SelectActions>
+          </div>
         )}
         {isOpenWithCustom && (
-          <DropdownPanel
+          <div
+            className="dropdown-menu-shadow absolute inset-x-0 top-[calc(100%+0.25rem)] z-10 flex max-h-64 flex-col overflow-auto rounded-md border border-border-primary bg-bg-primary p-1"
             id={listboxId}
             role="listbox"
             aria-labelledby={ariaLabelledBy}
             aria-describedby={ariaDescribedBy}
           >
             {customOptionForm ? (
-              <CustomOptionContent role="presentation">
+              <div className="p-3" role="presentation">
                 {customOptionForm}
-              </CustomOptionContent>
+              </div>
             ) : (
               <>
                 {displayOptions.map((option, index) => (
-                  <OptionButton
+                  <button
+                    className={optionClass}
                     key={option.token}
                     id={`${listboxId}-option-${index}`}
                     type="button"
@@ -321,10 +328,14 @@ export function MultiSelectInput({
                     }}
                   >
                     {option.label}
-                  </OptionButton>
+                  </button>
                 ))}
                 {specifyOtherOption && (
-                  <StickyOption
+                  <button
+                    className={cn(
+                      optionClass,
+                      "sticky bottom-0 z-[1] rounded-none border-t border-border-separator bg-bg-primary",
+                    )}
                     key={specifyOtherOption.token}
                     id={`${listboxId}-option-${stickyIndex}`}
                     type="button"
@@ -356,180 +367,16 @@ export function MultiSelectInput({
                     }}
                   >
                     {specifyOtherOption.label}
-                  </StickyOption>
+                  </button>
                 )}
               </>
             )}
-          </DropdownPanel>
+          </div>
         )}
-      </SelectField>
-    </Stack>
+      </div>
+    </div>
   );
 }
 
-const Stack = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`;
-
-const SelectField = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.375rem;
-  align-items: center;
-  border: 1px solid #cbd5e0;
-  border-radius: 0.375rem;
-  padding: 0.25rem 0.5rem;
-  background: transparent;
-  position: relative;
-
-  &[data-disabled="true"] {
-    background: #edf2f7;
-  }
-
-  &:focus-within {
-    border-color: #3182ce;
-    box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.35);
-  }
-`;
-
-const SelectWrapper = styled.div`
-  position: relative;
-  flex: 1 1 10rem;
-  min-width: 8rem;
-`;
-
-const SelectInputField = styled.input`
-  width: 100%;
-  border: none;
-  padding: 0.25rem 0.25rem;
-  font: inherit;
-  background: transparent;
-  outline: none;
-
-  &::placeholder {
-    color: #a0aec0;
-    opacity: 1;
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-  }
-`;
-
-const SelectTrigger = styled.div`
-  width: 100%;
-  min-height: 1.5rem;
-  display: flex;
-  align-items: center;
-  padding: 0.25rem 0.25rem;
-  outline: none;
-  cursor: text;
-
-  &[aria-disabled="true"] {
-    cursor: not-allowed;
-  }
-`;
-
-const SelectActions = styled.div`
-  display: inline-flex;
-  align-items: center;
-  margin-left: auto;
-`;
-
-const PlaceholderText = styled.span`
-  color: #a0aec0;
-`;
-
-const DropdownPanel = styled.div`
-  position: absolute;
-  top: calc(100% + 0.25rem);
-  left: 0;
-  right: 0;
-  max-height: 16rem;
-  overflow: auto;
-  border: 1px solid #cbd5e0;
-  border-radius: 0.375rem;
-  background: #fff;
-  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08);
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-`;
-
-const OptionButton = styled.button`
-  border: none;
-  background: transparent;
-  text-align: left;
-  padding: 0.5rem 0.75rem;
-  cursor: pointer;
-  font: inherit;
-  color: inherit;
-
-  &[data-active="true"] {
-    background: #e2e8f0;
-  }
-
-  &:hover:not(:disabled) {
-    background: #edf2f7;
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-`;
-
-const StickyOption = styled(OptionButton)`
-  position: sticky;
-  bottom: 0;
-  background: #fff;
-  border-top: 1px solid #e2e8f0;
-  z-index: 1;
-`;
-
-const ChipColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.125rem;
-`;
-
-export const Chip = styled.div`
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.125rem 0.5rem;
-  border: 1px solid #cbd5e0;
-  border-radius: 9999px;
-  background: #f7fafc;
-
-  &[data-clickable="true"] {
-    cursor: pointer;
-  }
-
-  &[data-clickable="true"]:hover {
-    background: #edf2f7;
-  }
-
-  &[data-clickable="true"][data-disabled="true"] {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-
-  &[data-clickable="true"][data-disabled="true"]:hover {
-    background: #f7fafc;
-  }
-`;
-
-const ChipContent = styled.div`
-  display: inline-flex;
-  align-items: center;
-`;
-
-const CustomOptionContent = styled.div`
-  padding: 0.5rem 0.75rem;
-  border-top: 1px solid #e2e8f0;
-  background: #fff;
-`;
+const optionClass =
+  "typo-body cursor-pointer rounded px-2 py-1.5 text-left text-text-primary hover:bg-bg-secondary data-[active=true]:bg-bg-tertiary aria-selected:font-medium! disabled:cursor-not-allowed disabled:opacity-50";

@@ -1,5 +1,4 @@
 import { useStrings, type GroupScaffoldProperties } from "@formbox/theme";
-import { styled } from "@linaria/react";
 import { Children } from "react";
 import { Trash } from "../icons/trash.tsx";
 import { Collapsible } from "./collapsible.tsx";
@@ -18,20 +17,20 @@ export function GroupScaffold({
   const content = Children.toArray(children);
 
   return (
-    <Container>
+    <div className="flex flex-col gap-4">
       {header}
       {content.length > 0 && (
         <Collapsible isExpanded={isExpanded}>
           {onRemove ? (
-            <ItemContent>{content}</ItemContent>
+            <div className="flex flex-col gap-4">{content}</div>
           ) : (
-            <GroupContent>{content}</GroupContent>
+            <div className="grid gap-4">{content}</div>
           )}
         </Collapsible>
       )}
       {errors}
       {onRemove ? (
-        <Toolbar>
+        <div className="flex justify-end gap-2">
           {signature}
           <IconButton
             icon={<Trash />}
@@ -39,33 +38,10 @@ export function GroupScaffold({
             disabled={canRemove === false}
             label={strings.group.removeSection}
           />
-        </Toolbar>
+        </div>
       ) : (
         signature
       )}
-    </Container>
+    </div>
   );
 }
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
-
-const GroupContent = styled.div`
-  display: grid;
-  gap: 1rem;
-`;
-
-const ItemContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
-
-const Toolbar = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-`;

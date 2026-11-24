@@ -1,5 +1,4 @@
 import type { QuestionScaffoldProperties } from "@formbox/theme";
-import { styled } from "@linaria/react";
 import { Collapsible } from "./collapsible.tsx";
 
 export function QuestionScaffold({
@@ -11,17 +10,11 @@ export function QuestionScaffold({
   isExpanded,
 }: QuestionScaffoldProperties) {
   return (
-    <Container data-linkid={linkId}>
+    <div className="flex flex-col gap-2" data-linkid={linkId}>
       {header}
       <Collapsible isExpanded={isExpanded}>{children}</Collapsible>
       {errors}
       {signature}
-    </Container>
+    </div>
   );
 }
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`;

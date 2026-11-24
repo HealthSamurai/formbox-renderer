@@ -1,5 +1,6 @@
-import { styled } from "@linaria/react";
 import type { NumberInputProperties } from "@formbox/theme";
+import { cn } from "@health-samurai/react-components";
+import { fieldClass } from "./classes.ts";
 
 export function NumberInput({
   id,
@@ -21,11 +22,14 @@ export function NumberInput({
   const describedBy =
     describedByValues.length > 0 ? describedByValues.join(" ") : undefined;
 
-  const solo = !unitLabel;
   return (
-    <NumberInputShell data-has-unit={unitLabel ? "true" : "false"}>
-      <Frame $solo={solo}>
-        <Field
+    <div
+      className="flex w-full items-stretch"
+      data-has-unit={unitLabel ? "true" : "false"}
+    >
+      <div className="flex w-full items-stretch">
+        <input
+          className={cn(fieldClass, unitLabel && "rounded-r-none")}
           id={id}
           type="number"
           inputMode="numeric"
@@ -41,48 +45,17 @@ export function NumberInput({
           max={max}
           aria-labelledby={ariaLabelledBy}
           aria-describedby={describedBy}
-          $solo={solo}
         />
         {unitLabel && (
-          <Unit id={unitId} aria-hidden="true">
+          <span
+            id={unitId}
+            aria-hidden="true"
+            className="typo-body inline-flex h-9 items-center rounded-r-md border border-l-0 border-border-primary bg-bg-secondary px-3 text-text-secondary"
+          >
             {unitLabel}
-          </Unit>
+          </span>
         )}
-      </Frame>
-    </NumberInputShell>
+      </div>
+    </div>
   );
 }
-
-const NumberInputShell = styled.div`
-  display: flex;
-  align-items: stretch;
-  width: 100%;
-`;
-
-const Frame = styled.div<{ $solo: boolean }>`
-  display: flex;
-  align-items: center;
-  border: 1px solid #cbd5e0;
-  border-radius: 0.375rem;
-  overflow: hidden;
-  width: 100%;
-
-  &:focus-within {
-    border-color: #3182ce;
-    box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.35);
-  }
-`;
-
-const Field = styled.input<{ $solo: boolean }>`
-  border: none;
-  outline: none;
-  padding: 0.5rem 0.75rem;
-  min-width: 0;
-  flex: 1;
-`;
-
-const Unit = styled.span`
-  padding: 0.5rem 0.75rem;
-  background: #edf2f7;
-  border-left: 1px solid #cbd5e0;
-`;

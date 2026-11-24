@@ -1,19 +1,5 @@
-import { css } from "@linaria/core";
 import type { TextAreaProperties } from "@formbox/theme";
-
-const textAreaClass = css`
-  width: 100%;
-  min-height: 6rem;
-  border: 1px solid #cbd5e0;
-  border-radius: 0.375rem;
-  padding: 0.5rem 0.75rem;
-  font-size: 1rem;
-
-  &:disabled {
-    background: #edf2f7;
-    cursor: not-allowed;
-  }
-`;
+import { Textarea } from "@health-samurai/react-components";
 
 export function TextArea({
   id,
@@ -28,9 +14,9 @@ export function TextArea({
   maxLength,
 }: TextAreaProperties) {
   return (
-    <textarea
+    <Textarea
       id={id}
-      className={textAreaClass}
+      className="min-h-24"
       value={value}
       onChange={(event) => onChange(event.target.value)}
       disabled={disabled}

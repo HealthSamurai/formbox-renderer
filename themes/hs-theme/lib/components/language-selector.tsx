@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { type LanguageSelectorProperties, useStrings } from "@formbox/theme";
-import { styled } from "@linaria/react";
+import { Button, cn } from "@health-samurai/react-components";
 
 export function LanguageSelector({
   options,
@@ -12,114 +12,51 @@ export function LanguageSelector({
   const selectedLanguage = options.find((option) => option.value === value);
 
   return (
-    <Root>
-      <TriggerButton
+    <div className="relative">
+      <Button
         type="button"
+        variant="secondary"
         aria-label={strings.language.label}
         aria-haspopup="menu"
         aria-expanded={isOpen}
         onClick={() => setIsOpen((open) => !open)}
       >
         {selectedLanguage?.label ?? value}
-        <Chevron aria-hidden data-open={isOpen ? "true" : undefined} />
-      </TriggerButton>
+        <span
+          aria-hidden
+          data-open={isOpen ? "true" : undefined}
+          className={cn(
+            "ml-0.5 inline-block size-0 border-x-[0.25rem] border-t-[0.35rem] border-x-transparent border-t-fg-tertiary transition-transform duration-100",
+            isOpen && "rotate-180",
+          )}
+        />
+      </Button>
       {isOpen && (
-        <Menu role="menu">
+        <div
+          role="menu"
+          className="dropdown-menu-shadow absolute top-[calc(100%+0.25rem)] right-0 z-20 min-w-28 rounded-md border border-border-primary bg-bg-primary p-1"
+        >
           {options.map((option) => (
-            <MenuItem
+            <button
               key={option.value}
               type="button"
               role="menuitemradio"
               aria-checked={option.value === value}
               data-selected={option.value === value ? "true" : undefined}
+              className={cn(
+                "typo-body flex w-full cursor-pointer justify-start rounded-sm border-0 bg-transparent px-2 py-1.5 text-left text-text-primary hover:bg-bg-secondary",
+                option.value === value && "bg-bg-tertiary font-medium!",
+              )}
               onClick={() => {
                 onChange(option.value);
                 setIsOpen(false);
               }}
             >
               {option.label}
-            </MenuItem>
+            </button>
           ))}
-        </Menu>
+        </div>
       )}
-    </Root>
+    </div>
   );
 }
-
-const Root = styled.div`
-  position: relative;
-`;
-
-const TriggerButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  border-radius: 0.375rem;
-  border: 1px solid #cbd5e0;
-  background: #ffffff;
-  color: #1a202c;
-  cursor: pointer;
-  font-size: 0.875rem;
-  line-height: 1.25;
-  padding: 0.4375rem 0.625rem;
-
-  &:hover {
-    background: #edf2f7;
-  }
-
-  &:focus-visible {
-    outline: 2px solid #3182ce;
-    outline-offset: 1px;
-  }
-`;
-
-const Chevron = styled.span`
-  display: inline-block;
-  inline-size: 0;
-  block-size: 0;
-  margin-inline-start: 0.125rem;
-  border-inline-start: 0.25rem solid transparent;
-  border-inline-end: 0.25rem solid transparent;
-  border-block-start: 0.35rem solid #718096;
-  transform-origin: center;
-  transition: transform 120ms ease;
-
-  &[data-open="true"] {
-    transform: rotate(180deg);
-  }
-`;
-
-const Menu = styled.div`
-  position: absolute;
-  top: calc(100% + 0.25rem);
-  right: 0;
-  z-index: 20;
-  min-width: 7rem;
-  border-radius: 0.375rem;
-  border: 1px solid #cbd5e0;
-  background: #fff;
-  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.14);
-  padding: 0.25rem;
-`;
-
-const MenuItem = styled.button`
-  width: 100%;
-  border: 0;
-  border-radius: 0.25rem;
-  background: transparent;
-  color: #1a202c;
-  cursor: pointer;
-  display: flex;
-  justify-content: flex-start;
-  padding: 0.375rem 0.5rem;
-  text-align: left;
-
-  &:hover {
-    background: #edf2f7;
-  }
-
-  &[data-selected="true"] {
-    background: #e2e8f0;
-    font-weight: 600;
-  }
-`;

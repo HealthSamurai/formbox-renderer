@@ -1,5 +1,9 @@
-import { styled } from "@linaria/react";
 import type { RadioButtonListProperties } from "@formbox/theme";
+import {
+  RadioGroup,
+  RadioGroupItem,
+  cn,
+} from "@health-samurai/react-components";
 import { LoadingSpinner } from "./loading-spinner.tsx";
 
 export function RadioButtonList({
@@ -19,71 +23,38 @@ export function RadioButtonList({
     ? [...options, specifyOtherOption]
     : options;
   const selectedToken = selectedOption?.token ?? "";
-  const hasOptions = displayOptions.length > 0;
 
   return (
-    <Stack id={id}>
-      {hasOptions && (
-        <RadioGroupContainer
-          role="radiogroup"
-          data-orientation={orientation}
+    <div id={id} className="flex flex-col gap-2">
+      {displayOptions.length > 0 && (
+        <RadioGroup
+          name={id}
+          value={selectedToken}
+          onValueChange={(token) => onChange(token)}
+          orientation={orientation}
+          disabled={disabled || isLoading}
           aria-labelledby={ariaLabelledBy}
           aria-describedby={ariaDescribedBy}
           aria-busy={isLoading || undefined}
+          className={cn(
+            "flex flex-col gap-1",
+            orientation === "horizontal" &&
+              "flex-row flex-wrap gap-x-4 gap-y-2",
+          )}
         >
           {displayOptions.map((entry) => (
-            <RadioOption key={entry.token}>
-              <RadioLabel>
-                <input
-                  type="radio"
-                  name={id}
-                  value={entry.token}
-                  checked={selectedToken === entry.token}
-                  disabled={disabled || isLoading || entry.disabled}
-                  onChange={(event) => onChange(event.target.value)}
-                />
-                {entry.label}
-              </RadioLabel>
-            </RadioOption>
+            <label
+              key={entry.token}
+              className="typo-body inline-flex items-center gap-2 text-text-primary"
+            >
+              <RadioGroupItem value={entry.token} disabled={entry.disabled} />
+              {entry.label}
+            </label>
           ))}
-        </RadioGroupContainer>
+        </RadioGroup>
       )}
       {isLoading && <LoadingSpinner showLabel />}
-      {customOptionForm && <CustomFormSlot>{customOptionForm}</CustomFormSlot>}
-    </Stack>
+      {customOptionForm && <div className="pl-6">{customOptionForm}</div>}
+    </div>
   );
 }
-
-const Stack = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`;
-
-const RadioGroupContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-
-  &[data-orientation="horizontal"] {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 0.5rem 1rem;
-  }
-`;
-
-const RadioOption = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-`;
-
-const RadioLabel = styled.label`
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-`;
-
-const CustomFormSlot = styled.div`
-  padding-left: 1.5rem;
-`;

@@ -1,4 +1,3 @@
-import { styled } from "@linaria/react";
 import { useStrings, type AnswerScaffoldProperties } from "@formbox/theme";
 import { Trash } from "../icons/trash.tsx";
 import { IconButton } from "./icon-button.tsx";
@@ -13,54 +12,24 @@ export function AnswerScaffold({
   const strings = useStrings();
 
   return (
-    <Row>
-      <MainRow>
-        <Control>{control}</Control>
+    <div className="flex flex-col gap-1.5">
+      <div className="flex items-start gap-2">
+        <div className="min-w-0 flex-1">{control}</div>
         {onRemove && (
-          <Toolbar>
+          <div className="flex gap-1">
             <IconButton
               icon={<Trash />}
               onClick={onRemove}
               disabled={canRemove === false}
               label={strings.group.removeSection}
             />
-          </Toolbar>
+          </div>
         )}
-      </MainRow>
-      <Children>
+      </div>
+      <div className="pt-3 pl-3 empty:hidden">
         {children}
         {errors}
-      </Children>
-    </Row>
+      </div>
+    </div>
   );
 }
-
-const Row = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-`;
-
-const MainRow = styled.div`
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-`;
-
-const Control = styled.div`
-  flex: 1;
-  min-width: 0;
-`;
-
-const Toolbar = styled.div`
-  display: flex;
-  gap: 0.25rem;
-`;
-
-const Children = styled.div`
-  padding: 0.75rem 0 0 0.75rem;
-
-  &:empty {
-    display: none;
-  }
-`;

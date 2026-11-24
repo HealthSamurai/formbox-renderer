@@ -1,4 +1,3 @@
-import { styled } from "@linaria/react";
 import { Children } from "react";
 import { useStrings, type AnswerListProperties } from "@formbox/theme";
 import { Plus } from "../icons/plus.tsx";
@@ -9,36 +8,18 @@ export function AnswerList({ children, onAdd, canAdd }: AnswerListProperties) {
   const items = Children.toArray(children);
 
   return (
-    <Container>
-      {items.length > 0 && <List>{items}</List>}
+    <div className="flex flex-col gap-2">
+      {items.length > 0 && <div className="flex flex-col gap-3">{items}</div>}
       {onAdd && (
-        <Toolbar>
+        <div className="flex flex-wrap gap-2">
           <IconButton
             icon={<Plus size={15} />}
             onClick={onAdd}
             disabled={canAdd === false}
             label={strings.selection.addAnother}
           />
-        </Toolbar>
+        </div>
       )}
-    </Container>
+    </div>
   );
 }
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`;
-
-const List = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-`;
-
-const Toolbar = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-`;

@@ -1,16 +1,14 @@
-import { styled } from "@linaria/react";
 import { useStrings, type OptionsLoadingProperties } from "@formbox/theme";
 
 export function OptionsLoading({ isLoading }: OptionsLoadingProperties) {
   const strings = useStrings();
 
   if (isLoading) {
-    return <Hint role="status">{strings.selection.loadingOptions}</Hint>;
+    return (
+      <div className="typo-body text-text-secondary" role="status">
+        {strings.selection.loadingOptions}
+      </div>
+    );
   }
   return;
 }
-
-const Hint = styled.div`
-  font-size: 0.875rem;
-  color: #4a5568;
-`;

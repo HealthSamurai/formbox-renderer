@@ -2,6 +2,7 @@ import type { StorybookConfig } from "@storybook/react-vite";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import linaria from "@wyw-in-js/vite";
+import tailwindcss from "@tailwindcss/vite";
 
 const fromRoot = (...segments: string[]) =>
   path.resolve(
@@ -13,7 +14,6 @@ const fromRoot = (...segments: string[]) =>
   );
 
 const linariaInclude = [
-  fromRoot("themes/hs-theme/lib/components/**/*.{ts,tsx}"),
   fromRoot("themes/af-theme/lib/components/**/*.{ts,tsx}"),
   fromRoot("themes/nshuk-theme/lib/components/**/*.{ts,tsx}"),
   fromRoot("themes/antd-theme/lib/components/**/*.{ts,tsx}"),
@@ -50,6 +50,7 @@ const config: StorybookConfig = {
     };
     config.plugins = [
       ...(config.plugins ?? []),
+      tailwindcss(),
       linaria({
         include: linariaInclude,
         babelOptions: {
