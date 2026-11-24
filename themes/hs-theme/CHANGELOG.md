@@ -1,5 +1,11 @@
 # @formbox/hs-theme
 
+## 0.5.0
+
+### Minor Changes
+
+- [#22](https://github.com/HealthSamurai/formbox-renderer/pull/22) [`d2664de`](https://github.com/HealthSamurai/formbox-renderer/commit/d2664de3372fd04a219de571cbd946933236a23f) Thanks [@xamelon](https://github.com/xamelon)! - Rebuild the theme on `@health-samurai/react-components` and Tailwind CSS v4 instead of Linaria. Controls, typography and colors now follow the Health Samurai UI kit. The theme CSS includes Tailwind's preflight reset. The Inter and JetBrains Mono fonts are no longer implied: the host page loads them (see the theme README).
+
 ## 0.4.1
 
 ### Patch Changes
