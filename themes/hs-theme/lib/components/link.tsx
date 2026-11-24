@@ -1,20 +1,15 @@
 import type { LinkProperties } from "@formbox/theme";
-import { styled } from "@linaria/react";
 
 export function Link({ id, href, children, target, rel }: LinkProperties) {
   return (
-    <Anchor id={id} href={href} target={target} rel={rel}>
+    <a
+      id={id}
+      href={href}
+      target={target}
+      rel={rel}
+      className="text-text-link underline hover:text-text-link_hover focus:text-text-link_hover"
+    >
       {children}
-    </Anchor>
+    </a>
   );
 }
-
-const Anchor = styled.a`
-  color: #2563eb;
-  text-decoration: underline;
-
-  &:hover,
-  &:focus {
-    color: #1d4ed8;
-  }
-`;

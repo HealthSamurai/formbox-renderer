@@ -1,101 +1,29 @@
-@import "modern-normalize";
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@health-samurai/react-components/css";
 
-/* Tailwind preflight additions (minimal, on top of modern-normalize). */
-*,
-::after,
-::before,
-::backdrop,
-::file-selector-button {
-  margin: 0;
-  padding: 0;
-  border: 0 solid;
-}
+/* Tailwind skips node_modules by default; the kit's class names live in its dist. */
+@source "../node_modules/@health-samurai/react-components/dist";
+@source "./components";
 
-html {
-  line-height: 1.5;
-  -webkit-text-size-adjust: 100%;
-  tab-size: 4;
-  font-family: var(
-    --default-font-family,
-    ui-sans-serif,
-    system-ui,
-    sans-serif,
-    "Apple Color Emoji",
-    "Segoe UI Emoji",
-    "Segoe UI Symbol",
-    "Noto Color Emoji"
-  );
-  -webkit-tap-highlight-color: transparent;
-}
-
-a {
-  color: inherit;
-  -webkit-text-decoration: inherit;
-  text-decoration: inherit;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-size: inherit;
-  font-weight: inherit;
-}
-
-ol,
-ul,
-menu {
-  list-style: none;
-}
-
-img,
-svg,
-video,
-canvas,
-audio,
-iframe,
-embed,
-object {
-  display: block;
-  vertical-align: middle;
-}
-
-img,
-video {
-  max-width: 100%;
-  height: auto;
-}
-
-button,
-input,
-select,
-optgroup,
-textarea,
-::file-selector-button {
-  font: inherit;
-  font-feature-settings: inherit;
-  font-variation-settings: inherit;
-  letter-spacing: inherit;
-  color: inherit;
-  border-radius: 0;
-  background-color: transparent;
-  opacity: 1;
-}
-
-::file-selector-button {
-  margin-inline-end: 4px;
-}
-
-::placeholder {
-  opacity: 1;
-}
-
-textarea {
-  resize: vertical;
-}
-
-[hidden]:where(:not([hidden="until-found"])) {
-  display: none !important;
+/*
+ * The kit's typography tokens are in px, Tailwind's scale is in rem. Pin the
+ * Tailwind scale to px as well so the form keeps the kit's geometry no matter
+ * what root font-size the host page sets.
+ */
+@theme {
+  --spacing: 4px;
+  --text-xs: 12px;
+  --text-xs--line-height: 16px;
+  --text-sm: 14px;
+  --text-sm--line-height: 20px;
+  --text-base: 16px;
+  --text-base--line-height: 24px;
+  --text-lg: 18px;
+  --text-lg--line-height: 28px;
+  --text-xl: 20px;
+  --text-xl--line-height: 28px;
+  --text-2xl: 24px;
+  --text-2xl--line-height: 32px;
+  --radius-xs: 2px;
 }

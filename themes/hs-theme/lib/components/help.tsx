@@ -1,95 +1,28 @@
-import { styled } from "@linaria/react";
 import { useStrings, type HelpProperties } from "@formbox/theme";
 
 export function Help({ id, children }: HelpProperties) {
   const strings = useStrings();
 
   return (
-    <Wrapper>
-      <HelpButton
+    <span className="relative inline-flex items-center">
+      <button
         type="button"
         aria-describedby={id}
         aria-label={strings.aria.help}
+        className="peer relative inline-flex size-4 cursor-help items-center justify-center rounded-full border border-border-primary bg-bg-primary text-xs leading-none text-text-secondary outline-none hover:bg-bg-secondary focus-visible:ring-4 focus-visible:ring-ring-blue"
       >
         ?
-      </HelpButton>
-      <Tooltip role="tooltip" aria-hidden="true">
+      </button>
+      <div
+        role="tooltip"
+        aria-hidden="true"
+        className="typo-body pointer-events-none absolute top-0 left-1/2 z-10 max-w-lg -translate-x-1/2 -translate-y-[110%] rounded-md bg-bg-primary_inverse px-3 py-2 text-text-primary_on-brand opacity-0 shadow-lg transition-opacity duration-150 peer-hover:pointer-events-auto peer-hover:opacity-100 peer-focus-visible:pointer-events-auto peer-focus-visible:opacity-100"
+      >
         {children}
-      </Tooltip>
-      <SrOnly id={id}>{children}</SrOnly>
-    </Wrapper>
+      </div>
+      <span id={id} className="sr-only">
+        {children}
+      </span>
+    </span>
   );
 }
-
-const Wrapper = styled.span`
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-`;
-
-const HelpButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1rem;
-  height: 1rem;
-  border-radius: 100%;
-  border: 1px solid #cbd5e0;
-  color: #687387;
-  font-size: 0.75rem;
-  line-height: 1;
-  cursor: help;
-  background: #fff;
-  position: relative;
-
-  &:hover {
-    background: #e2e8f0;
-  }
-
-  &:focus {
-    outline: none;
-  }
-
-  &:focus-visible {
-    outline: 2px solid #3182ce;
-    outline-offset: 2px;
-  }
-
-  &:focus-visible + div,
-  &:hover + div {
-    opacity: 1;
-    pointer-events: auto;
-  }
-`;
-
-const Tooltip = styled.div`
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translate(-50%, -110%);
-  max-width: 32rem;
-  background: #1a202c;
-  color: #fff;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  line-height: 1.25;
-  box-shadow:
-    0 10px 15px -3px rgba(15, 23, 42, 0.3),
-    0 4px 6px -4px rgba(15, 23, 42, 0.2);
-  opacity: 0;
-  transition: opacity 0.15s ease;
-  pointer-events: none;
-  z-index: 10;
-`;
-
-const SrOnly = styled.span`
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-`;

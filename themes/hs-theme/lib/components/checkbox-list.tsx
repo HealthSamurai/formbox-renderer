@@ -1,5 +1,5 @@
-import { styled } from "@linaria/react";
 import type { CheckboxListProperties } from "@formbox/theme";
+import { Checkbox, cn } from "@health-samurai/react-components";
 import { LoadingSpinner } from "./loading-spinner.tsx";
 
 export function CheckboxList({
@@ -27,7 +27,8 @@ export function CheckboxList({
   const hasOptions = displayOptions.length > 0;
 
   return (
-    <Stack
+    <div
+      className="flex flex-col gap-2"
       id={id}
       data-orientation={orientation}
       data-disabled={disabled}
@@ -37,7 +38,14 @@ export function CheckboxList({
       aria-describedby={ariaDescribedBy}
     >
       {hasOptions && (
-        <OptionsList data-orientation={orientation}>
+        <div
+          data-orientation={orientation}
+          className={cn(
+            "flex flex-col gap-1",
+            orientation === "horizontal" &&
+              "flex-row flex-wrap gap-x-4 gap-y-2",
+          )}
+        >
           {displayOptions.map((option, index) => {
             const optionId = `${id}-option-${index}`;
             const selectedOption = selectedByToken.get(option.token);
@@ -48,10 +56,9 @@ export function CheckboxList({
                 .join(" ") || undefined;
 
             return (
-              <CheckboxOption key={option.token}>
-                <CheckboxLabel>
-                  <input
-                    type="checkbox"
+              <div key={option.token} className="flex flex-col gap-1">
+                <label className="typo-body inline-flex items-center gap-2 text-text-primary">
+                  <Checkbox
                     name={id}
                     checked={
                       isSpecifyOtherOption
@@ -66,8 +73,8 @@ export function CheckboxList({
                     }
                     aria-labelledby={`${ariaLabelledBy} ${optionId}`}
                     aria-describedby={optionAriaDescribedBy}
-                    onChange={(event) => {
-                      if (event.target.checked) {
+                    onCheckedChange={(checked) => {
+                      if (checked === true) {
                         onSelect(option.token);
                       } else {
                         onDeselect(option.token);
@@ -75,45 +82,15 @@ export function CheckboxList({
                     }}
                   />
                   <span id={optionId}>{option.label}</span>
-                </CheckboxLabel>
+                </label>
                 {selectedOption?.errors ?? undefined}
-              </CheckboxOption>
+              </div>
             );
           })}
-        </OptionsList>
+        </div>
       )}
       {isLoading && <LoadingSpinner showLabel />}
       {Boolean(customOptionForm) && <div>{customOptionForm}</div>}
-    </Stack>
+    </div>
   );
 }
-
-const Stack = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`;
-
-const OptionsList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-
-  &[data-orientation="horizontal"] {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 0.5rem 1rem;
-  }
-`;
-
-const CheckboxOption = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-`;
-
-const CheckboxLabel = styled.label`
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-`;

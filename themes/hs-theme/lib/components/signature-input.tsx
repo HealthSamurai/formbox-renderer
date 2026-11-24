@@ -3,11 +3,9 @@ import {
   type SignatureInputProperties,
   PerfectFreehand as BaseSignatureInput,
 } from "@formbox/theme";
-import { styled } from "@linaria/react";
+import { Button, cn } from "@health-samurai/react-components";
 import { useCallback, useState } from "react";
 import { IconButton } from "./icon-button.tsx";
-
-const SIGNATURE_WIDTH = 300;
 
 export function SignatureInput({
   id,
@@ -30,9 +28,10 @@ export function SignatureInput({
   }, [disabled, onChange]);
 
   return (
-    <Wrapper>
-      <ActionButton
+    <div className="relative inline-flex flex-col items-start">
+      <Button
         type="button"
+        variant="secondary"
         disabled={disabled}
         aria-haspopup="dialog"
         aria-expanded={isOpen}
@@ -40,12 +39,23 @@ export function SignatureInput({
         onClick={() => setIsOpen((open) => !open)}
       >
         {value ? strings.signature.signed : strings.signature.sign}
-        <Chevron aria-hidden data-open={isOpen ? "true" : undefined} />
-      </ActionButton>
+        <span
+          aria-hidden
+          data-open={isOpen ? "true" : undefined}
+          className={cn(
+            "inline-block size-0 border-x-[0.25rem] border-t-[0.35rem] border-x-transparent border-t-fg-tertiary transition-transform duration-100",
+            isOpen && "rotate-180",
+          )}
+        />
+      </Button>
       {isOpen ? (
-        <Dropdown id={`${id}-dropdown`}>
-          <Surface>
-            <StyledSignatureInput
+        <div
+          id={`${id}-dropdown`}
+          className="dropdown-menu-shadow absolute top-[calc(100%+0.5rem)] left-0 z-10 flex w-[300px] flex-col overflow-hidden rounded-lg border border-border-primary bg-bg-primary"
+        >
+          <div className="relative">
+            <BaseSignatureInput
+              className="block h-auto w-full cursor-crosshair touch-none rounded-none border-0 bg-bg-primary outline-none aria-disabled:cursor-not-allowed aria-disabled:opacity-60"
               key={signatureVersion}
               id={id}
               value={value}
@@ -55,105 +65,17 @@ export function SignatureInput({
               onChange={onChange}
             />
             {!disabled && value != undefined ? (
-              <ClearButtonSlot>
+              <div className="absolute top-2 right-2 z-[1]">
                 <IconButton
                   icon="×"
                   onClick={handleClear}
                   label={strings.signature.clearAction}
                 />
-              </ClearButtonSlot>
+              </div>
             ) : undefined}
-          </Surface>
-        </Dropdown>
+          </div>
+        </div>
       ) : undefined}
-    </Wrapper>
+    </div>
   );
 }
-
-const Wrapper = styled.div`
-  position: relative;
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-start;
-`;
-
-const ActionButton = styled.button`
-  cursor: pointer;
-  border-radius: 0.375rem;
-  padding: 0.5rem 1rem;
-  border: 1px solid #cbd5e0;
-  background: #edf2f7;
-  color: #1a202c;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  line-height: 1.2;
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-`;
-
-const Chevron = styled.span`
-  display: inline-block;
-  inline-size: 0;
-  block-size: 0;
-  border-inline-start: 0.25rem solid transparent;
-  border-inline-end: 0.25rem solid transparent;
-  border-block-start: 0.35rem solid #718096;
-  transform-origin: center;
-  transition: transform 120ms ease;
-
-  &[data-open="true"] {
-    transform: rotate(180deg);
-  }
-`;
-
-const Dropdown = styled.div`
-  position: absolute;
-  top: calc(100% + 0.5rem);
-  left: 0;
-  z-index: 10;
-  width: ${SIGNATURE_WIDTH}px;
-  border: 1px solid #cbd5e0;
-  border-radius: 0.5rem;
-  background: #ffffff;
-  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.14);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-`;
-
-const Surface = styled.div`
-  position: relative;
-`;
-
-const StyledSignatureInput = styled(BaseSignatureInput)`
-  border: none;
-  border-radius: 0;
-  background: #ffffff;
-  display: block;
-  width: 100%;
-  height: auto;
-  touch-action: none;
-  cursor: crosshair;
-
-  &:focus,
-  &:focus-visible {
-    outline: none;
-  }
-
-  &[aria-disabled="true"] {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-`;
-const ClearButtonSlot = styled.div`
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  z-index: 1;
-`;

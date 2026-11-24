@@ -1,4 +1,3 @@
-import { styled } from "@linaria/react";
 import { useStrings, type TabContainerProperties } from "@formbox/theme";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { clamp } from "./utilities.ts";
@@ -112,16 +111,21 @@ export function TabContainer({
   };
 
   if (items.length === 0) {
-    return <Empty>{strings.tab.empty}</Empty>;
+    return (
+      <p className="typo-body text-text-tertiary italic">{strings.tab.empty}</p>
+    );
   }
 
   const active = items[clampedIndex];
 
   return (
-    <Shell data-linkid={linkId}>
-      {Boolean(header) && <Header>{header}</Header>}
-      <TabStrip>
-        <TabScrollButton
+    <div className="flex flex-col gap-3" data-linkid={linkId}>
+      {Boolean(header) && (
+        <div className="typo-label text-text-primary">{header}</div>
+      )}
+      <div className="relative">
+        <button
+          className="absolute top-0 bottom-px z-[3] flex w-8 cursor-pointer items-center justify-center border-0 p-0 text-text-secondary outline-none before:inline-block before:border-r-2 before:border-b-2 before:border-current before:p-[3px] before:content-[''] hover:text-text-primary focus-visible:ring-2 focus-visible:ring-ring-blue focus-visible:ring-inset disabled:cursor-default data-[visible=false]:pointer-events-none data-[visible=false]:opacity-0 left-0 bg-gradient-to-r from-bg-primary from-75% to-transparent before:rotate-[135deg]"
           ref={leftScrollReference}
           type="button"
           aria-label={strings.tab.scrollLeft}
@@ -130,15 +134,21 @@ export function TabContainer({
           data-visible={isScrollable && canScrollLeft ? "true" : "false"}
           disabled={!canScrollLeft}
         />
-        <TabList role="tablist" ref={tabListReference}>
-          <TabListInner
+        <div
+          role="tablist"
+          ref={tabListReference}
+          className="no-scrollbar overflow-x-auto overflow-y-hidden scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          <div
+            className="relative inline-flex min-w-full flex-nowrap gap-1 border-b border-border-separator px-1 whitespace-nowrap"
             ref={tabListInnerReference}
             data-scrollable={isScrollable ? "true" : "false"}
           >
             {items.map((item, index) => {
               const selected = index === clampedIndex;
               return (
-                <TabButton
+                <button
+                  className="typo-body -mb-px h-10 flex-none cursor-pointer border-b-2 border-b-transparent px-3 pt-2.5 pb-2 whitespace-nowrap text-text-tertiary outline-none transition-[color,box-shadow] hover:bg-bg-secondary/60 hover:text-text-tertiary_hover focus-visible:ring-2 focus-visible:ring-ring-blue data-[selected=true]:border-b-border-brand data-[selected=true]:text-text-primary"
                   key={item.token}
                   type="button"
                   role="tab"
@@ -149,12 +159,13 @@ export function TabContainer({
                   data-selected={selected ? "true" : "false"}
                 >
                   {item.label}
-                </TabButton>
+                </button>
               );
             })}
-          </TabListInner>
-        </TabList>
-        <TabScrollButton
+          </div>
+        </div>
+        <button
+          className="absolute top-0 bottom-px z-[3] flex w-8 cursor-pointer items-center justify-center border-0 p-0 text-text-secondary outline-none before:inline-block before:border-r-2 before:border-b-2 before:border-current before:p-[3px] before:content-[''] hover:text-text-primary focus-visible:ring-2 focus-visible:ring-ring-blue focus-visible:ring-inset disabled:cursor-default data-[visible=false]:pointer-events-none data-[visible=false]:opacity-0 right-0 bg-gradient-to-l from-bg-primary from-75% to-transparent before:-rotate-45"
           ref={rightScrollReference}
           type="button"
           aria-label={strings.tab.scrollRight}
@@ -163,185 +174,15 @@ export function TabContainer({
           data-visible={isScrollable && canScrollRight ? "true" : "false"}
           disabled={!canScrollRight}
         />
-      </TabStrip>
-      <Panel
+      </div>
+      <div
         role="tabpanel"
         id={active.panelId}
         aria-labelledby={active.buttonId}
       >
         {active.content}
-      </Panel>
-      {Boolean(errors) && <ErrorsSlot>{errors}</ErrorsSlot>}
-    </Shell>
+      </div>
+      {Boolean(errors) && <div className="flex flex-col gap-2">{errors}</div>}
+    </div>
   );
 }
-
-const Shell = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-`;
-
-const Header = styled.div`
-  font-weight: 700;
-`;
-
-const TabStrip = styled.div`
-  position: relative;
-`;
-
-const TabList = styled.div`
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  scroll-behavior: smooth;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const TabListInner = styled.div`
-  position: relative;
-  display: inline-flex;
-  flex-wrap: nowrap;
-  gap: 0.25rem;
-  min-width: 100%;
-  padding: 0 0.25rem;
-  white-space: nowrap;
-
-  &::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 1px;
-    background: #cbd5e0;
-    pointer-events: none;
-    z-index: 1;
-  }
-`;
-
-const TabButton = styled.button`
-  flex: 0 0 auto;
-  position: relative;
-  z-index: 0;
-  border: 1px solid transparent;
-  border-bottom: 1px solid transparent;
-  background: transparent;
-  border-radius: 0.5rem 0.5rem 0 0;
-  padding: 0.5rem 0.9rem;
-  cursor: pointer;
-  color: #4a5568;
-  white-space: nowrap;
-
-  &:first-child {
-    margin-left: 0.25rem;
-  }
-
-  &:hover {
-    color: #2d3748;
-    background: #f7fafc;
-  }
-
-  &[data-selected="true"] {
-    background: #fff;
-    border-color: #cbd5e0;
-    border-bottom-color: #fff;
-    color: #2d3748;
-    z-index: 2;
-  }
-
-  &:focus-visible {
-    outline: 2px solid #2b6cb0;
-    outline-offset: 2px;
-  }
-`;
-
-const TabScrollButton = styled.button`
-  position: absolute;
-  top: 0;
-  bottom: 1px;
-  width: 2rem;
-  border: 0;
-  background: transparent;
-  color: #4a5568;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 3;
-
-  &[data-direction="left"] {
-    left: 0;
-    background: linear-gradient(
-      to right,
-      rgba(255, 255, 255, 1),
-      rgba(255, 255, 255, 1) 75%,
-      rgba(255, 255, 255, 0)
-    );
-  }
-
-  &[data-direction="right"] {
-    right: 0;
-    background: linear-gradient(
-      to left,
-      rgba(255, 255, 255, 1),
-      rgba(255, 255, 255, 1) 75%,
-      rgba(255, 255, 255, 0)
-    );
-  }
-
-  &[data-visible="false"] {
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  &::before {
-    content: "";
-    border: solid currentColor;
-    border-width: 0 2px 2px 0;
-    display: inline-block;
-    padding: 3px;
-  }
-
-  &[data-direction="left"]::before {
-    transform: rotate(135deg);
-  }
-
-  &[data-direction="right"]::before {
-    transform: rotate(-45deg);
-  }
-
-  &:hover {
-    color: #2d3748;
-  }
-
-  &:focus-visible {
-    outline: 2px solid #2b6cb0;
-    outline-offset: -2px;
-  }
-
-  &:disabled {
-    cursor: default;
-  }
-`;
-
-const Panel = styled.div`
-  border: 0;
-  padding: 0;
-`;
-
-const ErrorsSlot = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`;
-
-const Empty = styled.p`
-  font-style: italic;
-  color: #94a3b8;
-`;

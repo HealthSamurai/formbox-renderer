@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { styled } from "@linaria/react";
+import { Button } from "@health-samurai/react-components";
 
 export type IconButtonProperties = {
   icon: ReactNode;
@@ -15,34 +15,17 @@ export function IconButton({
   label,
 }: IconButtonProperties) {
   return (
-    <ButtonRoot
+    <Button
       type="button"
+      variant="secondary"
+      size="small"
+      className="size-8 px-0"
       onClick={onClick}
       disabled={disabled}
       title={label}
       aria-label={label}
     >
       {icon}
-    </ButtonRoot>
+    </Button>
   );
 }
-
-const ButtonRoot = styled.button`
-  cursor: pointer;
-  border-radius: 0.375rem;
-  padding: 0.5rem;
-  border: 1px solid transparent;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-
-  background: #edf2f7;
-  color: #1a202c;
-  border-color: #cbd5e0;
-`;

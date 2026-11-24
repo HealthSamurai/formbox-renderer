@@ -35,6 +35,14 @@ vi.mock("@formbox/renderer/ui/theme.tsx", () => ({
   useTheme: () => themeWithStringsFallback,
 }));
 
+// jsdom lacks ResizeObserver; Radix primitives used by the hs theme measure
+// their controls with it.
+globalThis.ResizeObserver ??= class {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
+
 afterEach(() => {
   cleanup();
 });

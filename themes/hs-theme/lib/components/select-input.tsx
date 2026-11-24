@@ -1,9 +1,9 @@
-import { styled } from "@linaria/react";
 import { useStrings, type SelectInputProperties } from "@formbox/theme";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FocusEvent, KeyboardEvent } from "react";
 import { LoadingSpinner } from "./loading-spinner.tsx";
-import { inputClass } from "./tokens.ts";
+import { cn } from "@health-samurai/react-components";
+import { fieldClass } from "./classes.ts";
 
 export function SelectInput({
   options,
@@ -43,9 +43,9 @@ export function SelectInput({
   const displayContent = selectedOption ? (
     selectedOption.label
   ) : (
-    <PlaceholderText>
+    <span className={"text-text-quaternary"}>
       {placeholder ?? strings.selection.selectPlaceholder}
-    </PlaceholderText>
+    </span>
   );
 
   const listboxId = `${id}-listbox`;
@@ -211,13 +211,16 @@ export function SelectInput({
       ref={containerReference}
       onBlur={handleBlur}
     >
-      <FieldRow>
-        <SelectWrapper>
+      <div className={"flex items-center gap-2"}>
+        <div className={"relative flex-1"}>
           {showSearchInput ? (
-            <SelectInputField
+            <input
               ref={inputReference}
               id={id}
-              className={inputClass}
+              className={cn(
+                fieldClass,
+                (selectedOption || isLoading) && "pr-8",
+              )}
               data-has-actions={
                 selectedOption || isLoading ? "true" : undefined
               }
@@ -259,9 +262,14 @@ export function SelectInput({
               autoComplete="off"
             />
           ) : (
-            <DisplayField
+            <div
+              data-slot="select-display"
               id={id}
-              className={inputClass}
+              className={cn(
+                fieldClass,
+                "flex cursor-pointer items-center aria-disabled:cursor-not-allowed aria-disabled:bg-bg-secondary aria-disabled:text-text-disabled",
+                (selectedOption || isLoading) && "pr-8",
+              )}
               data-has-actions={
                 selectedOption || isLoading ? "true" : undefined
               }
@@ -288,12 +296,19 @@ export function SelectInput({
               onKeyDown={handleNavigationKeyDown}
             >
               {displayContent}
-            </DisplayField>
+            </div>
           )}
           {(selectedOption || isLoading) && (
-            <SelectActions>
+            <div
+              className={
+                "absolute top-1/2 right-2 inline-flex -translate-y-1/2 items-center gap-1"
+              }
+            >
               {selectedOption && (
-                <ClearButton
+                <button
+                  className={
+                    "rounded-md px-2 py-1 text-xl leading-none text-text-secondary hover:bg-bg-secondary disabled:cursor-not-allowed disabled:opacity-60"
+                  }
                   type="button"
                   onClick={handleClear}
                   disabled={disabled || isLoading}
@@ -301,26 +316,30 @@ export function SelectInput({
                   aria-label={strings.selection.removeSelection}
                 >
                   {"\u00D7"}
-                </ClearButton>
+                </button>
               )}
               {isLoading && <LoadingSpinner />}
-            </SelectActions>
+            </div>
           )}
           {isOpenWithCustom && (
-            <OptionsList
+            <div
+              className={
+                "dropdown-menu-shadow absolute inset-x-0 top-[calc(100%+0.25rem)] z-10 flex max-h-64 flex-col overflow-auto rounded-md border border-border-primary bg-bg-primary p-1"
+              }
               id={listboxId}
               role="listbox"
               aria-labelledby={ariaLabelledBy}
               aria-describedby={ariaDescribedBy}
             >
               {customOptionForm ? (
-                <CustomOptionForm role="presentation">
+                <div className={"p-3"} role="presentation">
                   {customOptionForm}
-                </CustomOptionForm>
+                </div>
               ) : (
                 <>
                   {options.map((entry, index) => (
-                    <OptionButton
+                    <button
+                      className={optionClass}
                       key={entry.token}
                       id={`${listboxId}-option-${index}`}
                       type="button"
@@ -346,10 +365,14 @@ export function SelectInput({
                       }}
                     >
                       {entry.label}
-                    </OptionButton>
+                    </button>
                   ))}
                   {specifyOtherOption && (
-                    <StickyOption
+                    <button
+                      className={cn(
+                        optionClass,
+                        "sticky bottom-0 z-[1] rounded-none border-t border-border-separator bg-bg-primary",
+                      )}
                       id={`${listboxId}-option-${stickyIndex}`}
                       type="button"
                       role="option"
@@ -381,131 +404,17 @@ export function SelectInput({
                       }}
                     >
                       {specifyOtherOption.label}
-                    </StickyOption>
+                    </button>
                   )}
                 </>
               )}
-            </OptionsList>
+            </div>
           )}
-        </SelectWrapper>
-      </FieldRow>
+        </div>
+      </div>
     </div>
   );
 }
 
-const FieldRow = styled.div`
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-`;
-
-const SelectWrapper = styled.div`
-  position: relative;
-  flex: 1;
-`;
-
-const SelectInputField = styled.input`
-  &[data-has-actions="true"] {
-    padding-right: 2rem;
-  }
-
-  &::placeholder {
-    color: #a0aec0;
-    opacity: 1;
-  }
-`;
-
-export const DisplayField = styled.div`
-  display: flex;
-  align-items: center;
-
-  &[data-has-actions="true"] {
-    padding-right: 2rem;
-  }
-
-  &[aria-disabled="true"] {
-    background: #edf2f7;
-    cursor: not-allowed;
-  }
-`;
-
-const PlaceholderText = styled.span`
-  color: #a0aec0;
-`;
-
-const OptionsList = styled.div`
-  position: absolute;
-  top: calc(100% + 0.25rem);
-  left: 0;
-  right: 0;
-  max-height: 16rem;
-  overflow: auto;
-  border: 1px solid #cbd5e0;
-  border-radius: 0.375rem;
-  background: #fff;
-  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08);
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-`;
-
-const CustomOptionForm = styled.div`
-  padding: 0.75rem;
-`;
-
-const OptionButton = styled.button`
-  border: none;
-  background: transparent;
-  text-align: left;
-  padding: 0.5rem 0.75rem;
-  cursor: pointer;
-  font: inherit;
-  color: inherit;
-
-  &[data-active="true"] {
-    background: #e2e8f0;
-  }
-
-  &:hover:not(:disabled) {
-    background: #edf2f7;
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-`;
-
-const StickyOption = styled(OptionButton)`
-  position: sticky;
-  bottom: 0;
-  background: #fff;
-  border-top: 1px solid #e2e8f0;
-  z-index: 1;
-`;
-
-const ClearButton = styled.button`
-  border: none;
-  background: transparent;
-  border-radius: 0.375rem;
-  padding: 0.25rem 0.5rem;
-  cursor: pointer;
-  color: #4a5568;
-  font-size: 1.25rem;
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-`;
-
-const SelectActions = styled.div`
-  position: absolute;
-  right: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-`;
+const optionClass =
+  "typo-body cursor-pointer rounded px-2 py-1.5 text-left text-text-primary hover:bg-bg-secondary data-[active=true]:bg-bg-tertiary aria-selected:font-medium! disabled:cursor-not-allowed disabled:opacity-50";

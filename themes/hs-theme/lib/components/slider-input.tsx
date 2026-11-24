@@ -1,4 +1,3 @@
-import { styled } from "@linaria/react";
 import { useRef } from "react";
 import type { SliderInputProperties } from "@formbox/theme";
 import { clamp, useIsWithinGap } from "./utilities.ts";
@@ -53,11 +52,19 @@ export function SliderInput({
     [value],
   );
 
-  const unit = Boolean(unitLabel) && <Unit id={unitId}>{unitLabel}</Unit>;
+  const unit = Boolean(unitLabel) && (
+    <span id={unitId} className="typo-body text-text-secondary">
+      {unitLabel}
+    </span>
+  );
 
   return (
-    <Wrapper data-disabled={disabled ? "true" : "false"}>
-      <Slider
+    <div
+      className="flex flex-col gap-0.5"
+      data-disabled={disabled ? "true" : "false"}
+    >
+      <input
+        className="block w-full accent-[var(--color-fg-link)] disabled:cursor-not-allowed disabled:opacity-60"
         id={id}
         type="range"
         min={sliderMin}
@@ -72,10 +79,22 @@ export function SliderInput({
         aria-labelledby={ariaLabelledBy}
         aria-describedby={describedBy.length > 0 ? describedBy : undefined}
       />
-      <Labels aria-hidden="true" ref={labelsReference}>
-        <Value aria-hidden="true" $left={clampedPercent} ref={valueReference}>
+      <div
+        aria-hidden="true"
+        ref={labelsReference}
+        className="typo-body relative flex w-full justify-between text-text-secondary [&_[data-hidden=true]]:invisible"
+      >
+        <div
+          aria-hidden="true"
+          ref={valueReference}
+          className="absolute top-0 inline-flex items-center gap-1.5 whitespace-nowrap"
+          style={{
+            left: `${clampedPercent}%`,
+            transform: `translate(-${clampedPercent}%, 0)`,
+          }}
+        >
           {value} {unit}
-        </Value>
+        </div>
         <div ref={lowerReference} data-hidden={isLowerClose ? "true" : "false"}>
           {lowerLabel ?? (
             <>
@@ -90,47 +109,7 @@ export function SliderInput({
             </>
           )}
         </div>
-      </Labels>
-    </Wrapper>
+      </div>
+    </div>
   );
 }
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-`;
-
-const Slider = styled.input`
-  width: 100%;
-  display: block;
-`;
-
-const Value = styled.div<{ $left: number }>`
-  position: absolute;
-  left: ${(properties) => `${properties.$left}%`};
-  top: 0;
-  transform: ${(properties) => `translate(-${properties.$left}%, 0)`};
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  white-space: nowrap;
-`;
-
-const Labels = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.875rem;
-  color: #4a5568;
-  width: 100%;
-
-  & [data-hidden="true"] {
-    visibility: hidden;
-  }
-`;
-
-const Unit = styled.span`
-  color: #4a5568;
-  font-size: 0.875rem;
-`;

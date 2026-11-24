@@ -1,5 +1,5 @@
 import { useStrings, type FileInputProperties } from "@formbox/theme";
-import { styled } from "@linaria/react";
+import { Button, cn } from "@health-samurai/react-components";
 import {
   type ChangeEvent,
   type MouseEvent,
@@ -63,7 +63,8 @@ export function FileInput({
   };
 
   return (
-    <Summary
+    <div
+      className="typo-body relative flex h-9 min-w-0 cursor-pointer items-center rounded-md border border-border-primary bg-transparent py-2 pr-9 pl-3 text-text-primary outline-none transition-all duration-300 hover:border-border-primary_hover focus-visible:border-border-link aria-disabled:cursor-not-allowed aria-disabled:bg-bg-secondary aria-disabled:text-text-disabled"
       role="button"
       tabIndex={disabled ? -1 : 0}
       aria-disabled={disabled ? "true" : undefined}
@@ -72,7 +73,8 @@ export function FileInput({
       onClick={handleSummaryClick}
       onKeyDown={handleSummaryKeyDown}
     >
-      <HiddenInput
+      <input
+        className="hidden"
         ref={fileInputReference}
         id={id}
         type="file"
@@ -82,87 +84,29 @@ export function FileInput({
         disabled={disabled}
         accept={accept}
       />
-      <Label data-empty={isEmpty ? "true" : undefined}>
+      <span
+        data-empty={isEmpty ? "true" : undefined}
+        className={cn(
+          "block min-w-0 flex-1 truncate",
+          isEmpty && "text-text-quaternary",
+        )}
+      >
         {displayLabel}
         {displaySizeLabel ? ` (${displaySizeLabel})` : ""}
-      </Label>
+      </span>
       {hasValue && (
-        <ClearButton
+        <Button
           type="button"
+          variant="ghost"
+          size="small"
+          className="absolute top-1/2 right-1.5 -translate-y-1/2 text-xl leading-none"
           onClick={() => onChange?.()}
           disabled={disabled}
           aria-label={strings.file.clearAction}
         >
           ×
-        </ClearButton>
+        </Button>
       )}
-    </Summary>
+    </div>
   );
 }
-
-const HiddenInput = styled.input`
-  display: none;
-`;
-
-const Summary = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-  border: 1px solid #cbd5e0;
-  border-radius: 0.375rem;
-  padding: 0.5rem 0.75rem;
-  font-size: 1rem;
-  cursor: pointer;
-  padding-right: 2.25rem;
-  min-width: 0;
-
-  &:focus-within {
-    border-color: #3182ce;
-    box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.35);
-  }
-
-  &:focus,
-  &:focus-visible {
-    border-color: #3182ce;
-    box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.35);
-    outline: none;
-  }
-
-  &[aria-disabled="true"] {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-`;
-
-const Label = styled.span`
-  display: block;
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-
-  &[data-empty="true"] {
-    color: #a0aec0;
-  }
-`;
-
-const ClearButton = styled.button`
-  position: absolute;
-  right: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  background: transparent;
-  border: none;
-  border-radius: 0.375rem;
-  padding: 0.25rem 0.5rem;
-  color: #4a5568;
-  font-size: 1.25rem;
-  cursor: pointer;
-  flex-shrink: 0;
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-`;

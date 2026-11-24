@@ -1,5 +1,5 @@
 import type { TimeInputProperties } from "@formbox/theme";
-import { inputClass } from "./tokens.ts";
+import { fieldClass } from "./classes.ts";
 
 export function TimeInput({
   id,
@@ -15,7 +15,7 @@ export function TimeInput({
   return (
     <input
       id={id}
-      className={inputClass}
+      className={fieldClass}
       type="time"
       value={value}
       onChange={(event) => onChange(event.target.value)}

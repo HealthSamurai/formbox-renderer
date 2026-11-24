@@ -1,94 +1,28 @@
-import { styled } from "@linaria/react";
 import { useStrings, type FlyoverProperties } from "@formbox/theme";
 
 export function Flyover({ id, children }: FlyoverProperties) {
   const strings = useStrings();
 
   return (
-    <Wrapper>
-      <FlyoverButton
+    <span className="relative inline-flex items-center">
+      <button
         type="button"
         aria-describedby={id}
         aria-label={strings.aria.flyover}
+        className="peer inline-flex size-4 cursor-pointer items-center justify-center rounded-full border border-border-link bg-bg-info-primary text-xs leading-none text-text-link outline-none hover:bg-bg-link_hover/10 focus-visible:ring-4 focus-visible:ring-ring-blue"
       >
         i
-      </FlyoverButton>
-      <Tooltip role="tooltip" aria-hidden="true">
+      </button>
+      <div
+        role="tooltip"
+        aria-hidden="true"
+        className="typo-body pointer-events-none absolute top-0 left-1/2 z-10 max-w-lg -translate-x-1/2 -translate-y-[110%] rounded-md bg-bg-primary_inverse px-3 py-2 text-text-primary_on-brand opacity-0 shadow-lg transition-opacity duration-150 peer-hover:pointer-events-auto peer-hover:opacity-100 peer-focus-visible:pointer-events-auto peer-focus-visible:opacity-100"
+      >
         {children}
-      </Tooltip>
-      <SrOnly id={id}>{children}</SrOnly>
-    </Wrapper>
+      </div>
+      <span id={id} className="sr-only">
+        {children}
+      </span>
+    </span>
   );
 }
-
-const Wrapper = styled.span`
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-`;
-
-const FlyoverButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1rem;
-  height: 1rem;
-  border-radius: 100%;
-  border: 1px solid #cbd5e0;
-  color: #4f46e5;
-  font-size: 0.75rem;
-  line-height: 1;
-  cursor: pointer;
-  background: #eef2ff;
-
-  &:hover {
-    background: #e0e7ff;
-  }
-
-  &:focus {
-    outline: none;
-  }
-
-  &:focus-visible {
-    outline: 2px solid #4f46e5;
-    outline-offset: 2px;
-  }
-
-  &:focus-visible + div,
-  &:hover + div {
-    opacity: 1;
-    pointer-events: auto;
-  }
-`;
-
-const Tooltip = styled.div`
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translate(-50%, -110%);
-  max-width: 32rem;
-  background: #312e81;
-  color: #fff;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  line-height: 1.25;
-  box-shadow:
-    0 10px 15px -3px rgba(15, 23, 42, 0.3),
-    0 4px 6px -4px rgba(15, 23, 42, 0.2);
-  opacity: 0;
-  transition: opacity 0.15s ease;
-  pointer-events: none;
-  z-index: 10;
-`;
-
-const SrOnly = styled.span`
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-`;

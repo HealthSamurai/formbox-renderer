@@ -1,5 +1,5 @@
 import type { DateTimeInputProperties } from "@formbox/theme";
-import { inputClass } from "./tokens.ts";
+import { fieldClass } from "./classes.ts";
 
 export function DateTimeInput({
   id,
@@ -15,7 +15,7 @@ export function DateTimeInput({
   return (
     <input
       id={id}
-      className={inputClass}
+      className={fieldClass}
       type="datetime-local"
       value={value}
       onChange={(event) => onChange(event.target.value)}

@@ -1,4 +1,3 @@
-import { styled } from "@linaria/react";
 import { useStrings, type Attachment } from "@formbox/theme";
 
 function getAttachmentSource(attachment: Attachment): string | undefined {
@@ -22,51 +21,43 @@ export function Media({ attachment }: { attachment: Attachment }) {
   const contentType = attachment.contentType?.toLowerCase();
 
   if (source == undefined) {
-    return <MediaText>{label}</MediaText>;
+    return <span className="text-text-secondary">{label}</span>;
   }
 
   if (contentType?.startsWith("image/")) {
-    return <MediaImage src={source} alt={label} />;
+    return (
+      <img
+        className="block h-auto max-w-[min(24rem,100%)] rounded-md"
+        src={source}
+        alt={label}
+      />
+    );
   }
 
   if (contentType?.startsWith("audio/")) {
-    return <MediaAudio controls src={source} />;
+    return (
+      <audio className="block max-w-[min(24rem,100%)]" controls src={source} />
+    );
   }
 
   if (contentType?.startsWith("video/")) {
-    return <MediaVideo controls src={source} />;
+    return (
+      <video
+        className="block h-auto max-w-[min(24rem,100%)]"
+        controls
+        src={source}
+      />
+    );
   }
 
   return (
-    <MediaLink href={source} target="_blank" rel="noreferrer">
+    <a
+      className="text-text-link underline"
+      href={source}
+      target="_blank"
+      rel="noreferrer"
+    >
       {label}
-    </MediaLink>
+    </a>
   );
 }
-
-const MediaText = styled.span`
-  color: #4a5568;
-`;
-
-const MediaImage = styled.img`
-  display: block;
-  max-width: min(24rem, 100%);
-  height: auto;
-  border-radius: 0.375rem;
-`;
-
-const MediaAudio = styled.audio`
-  display: block;
-  max-width: min(24rem, 100%);
-`;
-
-const MediaVideo = styled.video`
-  display: block;
-  max-width: min(24rem, 100%);
-  height: auto;
-`;
-
-const MediaLink = styled.a`
-  color: #1a56db;
-  text-decoration: underline;
-`;

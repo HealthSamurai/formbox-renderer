@@ -1,5 +1,5 @@
 import type { DateInputProperties } from "@formbox/theme";
-import { inputClass } from "./tokens.ts";
+import { fieldClass } from "./classes.ts";
 
 export function DateInput({
   id,
@@ -15,7 +15,7 @@ export function DateInput({
   return (
     <input
       id={id}
-      className={inputClass}
+      className={fieldClass}
       type="date"
       value={value}
       onChange={(event) => onChange(event.target.value)}

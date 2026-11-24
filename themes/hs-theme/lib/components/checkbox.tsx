@@ -1,5 +1,5 @@
-import { styled } from "@linaria/react";
 import type { CheckboxProperties } from "@formbox/theme";
+import { Checkbox as BaseCheckbox } from "@health-samurai/react-components";
 
 export function Checkbox({
   id,
@@ -11,23 +11,16 @@ export function Checkbox({
   label,
 }: CheckboxProperties) {
   return (
-    <CheckboxLabel>
-      <input
+    <label className="typo-body inline-flex items-center gap-2 text-text-primary">
+      <BaseCheckbox
         id={id}
-        type="checkbox"
         checked={checked}
         disabled={disabled}
         aria-labelledby={ariaLabelledBy}
         aria-describedby={ariaDescribedBy}
-        onChange={onChange}
+        onCheckedChange={() => onChange()}
       />
       {Boolean(label) && <span>{label}</span>}
-    </CheckboxLabel>
+    </label>
   );
 }
-
-const CheckboxLabel = styled.label`
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-`;
