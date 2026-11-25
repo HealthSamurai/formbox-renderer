@@ -131,7 +131,6 @@ export type ChoiceOrientation = "horizontal" | "vertical";
 export type ExpressionSlotKind =
   | "variable"
   | "enable-when"
-  | "initial"
   | "calculated"
   | "answer"
   | "answer-valueset"
@@ -165,7 +164,6 @@ export interface AnswerOptionToggleDefinition {
 
 export interface INodeExpressionRegistry extends IExpressionRegistry {
   readonly enableWhen: IExpressionSlot | undefined;
-  readonly initial: IExpressionSlot | undefined;
   readonly calculated: IExpressionSlot | undefined;
   readonly answer: IExpressionSlot | undefined;
   readonly answerValueSet: IExpressionSlot | undefined;

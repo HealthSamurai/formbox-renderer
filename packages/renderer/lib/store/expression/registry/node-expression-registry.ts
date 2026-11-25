@@ -29,7 +29,6 @@ export class NodeExpressionRegistry
   implements INodeExpressionRegistry
 {
   readonly enableWhen: IExpressionSlot | undefined;
-  readonly initial: IExpressionSlot | undefined;
   readonly calculated: IExpressionSlot | undefined;
   readonly answer: IExpressionSlot | undefined;
   readonly answerValueSet: IExpressionSlot | undefined;
@@ -65,11 +64,6 @@ export class NodeExpressionRegistry
     this.enableWhen = this.createSlot(
       extractExtensionValue("Expression", element, EXT.SDC_ENABLE_WHEN_EXPR),
       "enable-when",
-    );
-
-    this.initial = this.createSlot(
-      extractExtensionValue("Expression", element, EXT.SDC_INITIAL_EXPR),
-      "initial",
     );
 
     this.calculated = this.createSlot(

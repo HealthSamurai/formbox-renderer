@@ -413,13 +413,6 @@ export class QuestionStore<T extends AnswerType = AnswerType>
     this.disposers.push(disposer);
   }
 
-  private unregisterDisposer(disposer: IReactionDisposer) {
-    const index = this.disposers.indexOf(disposer);
-    if (index !== -1) {
-      this.disposers.splice(index, 1);
-    }
-  }
-
   private setupBaselineAnswerReaction() {
     this.trackDisposer(
       reaction(
@@ -435,30 +428,7 @@ export class QuestionStore<T extends AnswerType = AnswerType>
   }
 
   private setupExpressionReactions() {
-    const { initial, calculated } = this.expressionRegistry;
-    if (initial) {
-      const disposer = reaction(
-        () => [
-          this.isEnabled,
-          initial.value,
-          this.hasResponseContent,
-          this.lifecycle,
-        ],
-        (_argument: unknown, _previous: unknown, reaction) => {
-          if (this.applyInitialExpressionValue()) {
-            this.unregisterDisposer(disposer);
-            reaction.dispose();
-          }
-        },
-        {
-          name: `${this.token}:apply-initial-value-reaction`,
-          equals: comparer.structural,
-          fireImmediately: true,
-        },
-      );
-      this.trackDisposer(disposer);
-    }
-
+    const { calculated } = this.expressionRegistry;
     if (calculated) {
       const disposer = reaction(
         () => [this.isEnabled, this.lifecycle, calculated.value],
@@ -534,41 +504,6 @@ export class QuestionStore<T extends AnswerType = AnswerType>
     if (seeded) {
       this.lifecycle = "template";
     }
-  }
-
-  @action
-  private applyInitialExpressionValue() {
-    const initial = this.expressionRegistry.initial;
-    if (!initial || !this.isEnabled) return false;
-
-    const seededContent = this.lifecycle === "template";
-    if (this.hasResponseContent && !seededContent) return true;
-    if (initial.value === undefined) return false;
-
-    const values = normalizeExpressionValues(this.type, initial.value);
-    if (values.length === 0) return false;
-
-    if (this.repeats) {
-      const cappedValues = Number.isFinite(this.maxOccurs)
-        ? values.slice(0, this.maxOccurs)
-        : values;
-
-      const existing = [...this.answers];
-      this.answers.clear();
-      existing.forEach((answer) => answer.dispose());
-      cappedValues.forEach((entry) => {
-        this.pushAnswer(entry);
-      });
-    } else {
-      const coerced = values[0] ?? undefined;
-      this.ensureBaselineAnswers(true);
-      const answer = this.answers[0];
-      if (answer) {
-        answer.setValueBySystem(coerced);
-      }
-    }
-    this.lifecycle = "expression";
-    return true;
   }
 
   @action
