@@ -662,6 +662,11 @@ export class QuestionStore<T extends AnswerType = AnswerType>
     return this.buildItemSnapshot("expression");
   }
 
+  override clearDirty(): void {
+    super.clearDirty();
+    this.answers.clear();
+  }
+
   private buildItemSnapshot(kind: SnapshotKind): QuestionnaireResponseItem[] {
     const answers = this.collectAnswers(kind);
 
