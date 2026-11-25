@@ -339,7 +339,7 @@ describe("@formbox/htmx expression parity", () => {
     expect(html).toContain("because it references unavailable data");
   });
 
-  it("applies initialExpression when an item becomes enabled through a full-form post", async () => {
+  it("ignores initialExpression when an item becomes enabled through a full-form post", async () => {
     const questionnaire: Questionnaire = {
       resourceType: "Questionnaire",
       status: "active",
@@ -368,11 +368,10 @@ describe("@formbox/htmx expression parity", () => {
 
     expect(response.item).toEqual([
       { linkId: "gate", text: "Gate", answer: [{ valueBoolean: true }] },
-      { linkId: "name", text: "Name", answer: [{ valueString: "prefill" }] },
     ]);
   });
 
-  it("runs initialExpression once when the item is disabled and re-enabled across stateless posts", async () => {
+  it("preserves user input across stateless posts without applying initialExpression", async () => {
     const questionnaire: Questionnaire = {
       resourceType: "Questionnaire",
       status: "active",
@@ -438,7 +437,7 @@ describe("@formbox/htmx expression parity", () => {
     ]);
   });
 
-  it("allows initialExpression to override template defaults", async () => {
+  it("keeps static defaults instead of applying initialExpression", async () => {
     const questionnaire: Questionnaire = {
       resourceType: "Questionnaire",
       status: "active",
@@ -462,12 +461,12 @@ describe("@formbox/htmx expression parity", () => {
       {
         linkId: "favorite",
         text: "Favorite color",
-        answer: [{ valueString: "Expression" }],
+        answer: [{ valueString: "Template" }],
       },
     ]);
   });
 
-  it("caps repeating initialExpression seeding to maxOccurs limits", async () => {
+  it("does not seed repeating answers from initialExpression", async () => {
     const questionnaire: Questionnaire = {
       resourceType: "Questionnaire",
       status: "active",
@@ -493,58 +492,10 @@ describe("@formbox/htmx expression parity", () => {
       fhirVersion: "r5",
     });
 
-    expect(response.item).toEqual([
-      {
-        linkId: "history",
-        text: "History",
-        answer: [{ valueString: "Alpha" }, { valueString: "Beta" }],
-      },
-    ]);
+    expect(response.item).toBeUndefined();
   });
 
-  it("exposes named initialExpression values for descendants", async () => {
-    const questionnaire: Questionnaire = {
-      resourceType: "Questionnaire",
-      status: "active",
-      url: "Questionnaire/htmx-initial-named-descendant",
-      item: [
-        {
-          linkId: "parent",
-          text: "Parent",
-          type: "group",
-          item: [
-            {
-              linkId: "answer",
-              text: "Answer",
-              type: "string",
-              extension: [initialExpression("'value'", "baseInit")],
-              item: [
-                {
-                  linkId: "mirror",
-                  text: "Mirror",
-                  type: "string",
-                  extension: [calculatedExpression("%baseInit")],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    };
-    const response = await renderQuestionnaireResponse({
-      questionnaire,
-      fhirVersion: "r5",
-    });
-    const parent = response.item?.find((item) => item.linkId === "parent");
-    const answer = parent?.item?.find((item) => item.linkId === "answer");
-    const mirror = answer?.answer?.[0]?.item?.find(
-      (item) => item.linkId === "mirror",
-    );
-
-    expect(mirror?.answer?.[0]?.valueString).toBe("value");
-  });
-
-  it("renders unavailable-data errors from initialExpression", async () => {
+  it("ignores initialExpression referencing population-only variables", async () => {
     const questionnaire: Questionnaire = {
       resourceType: "Questionnaire",
       status: "active",
@@ -563,11 +514,11 @@ describe("@formbox/htmx expression parity", () => {
       fhirVersion: "r5",
     });
 
-    expect(html).toContain("Failed to evaluate initial expression");
-    expect(html).toContain("because it references unavailable data");
+    expect(html).not.toContain("Failed to evaluate initial expression");
+    expect(html).not.toContain("because it references unavailable data");
   });
 
-  it("renders syntax errors from initialExpression", async () => {
+  it("ignores syntax errors in host-managed initialExpression", async () => {
     const questionnaire: Questionnaire = {
       resourceType: "Questionnaire",
       status: "active",
@@ -586,8 +537,8 @@ describe("@formbox/htmx expression parity", () => {
       fhirVersion: "r5",
     });
 
-    expect(html).toContain("Failed to evaluate initial expression");
-    expect(html).toContain("because the expression has a syntax error");
+    expect(html).not.toContain("Failed to evaluate initial expression");
+    expect(html).not.toContain("because the expression has a syntax error");
   });
 
   it("recalculates calculatedExpression values instead of accepting stale submitted control values", async () => {
