@@ -1,262 +1,97 @@
 import { describe, expect, it } from "vitest";
-
 import { FormStore } from "@formbox/renderer/store/form/form-store.ts";
-import en from "@formbox/strings/en";
+import { assertGroupNode } from "@formbox/renderer/store/group/group-store.ts";
 import { assertQuestionNode } from "@formbox/renderer/store/question/question-store.ts";
-import { assertDefined } from "@formbox/renderer/utilities.ts";
+import en from "@formbox/strings/en";
+import type {
+  QuestionnaireOf,
+  QuestionnaireResponseOf,
+} from "@formbox/renderer";
 
-import {
-  makeCalculatedExpression,
-  makeInitialExpression,
-} from "../../../../../../utilities.ts";
-
-import type { QuestionnaireOf } from "@formbox/renderer";
-type Questionnaire = QuestionnaireOf<"r5">;
-describe("initialExpression", () => {
-  it("runs once when the item first becomes enabled", () => {
-    const questionnaire: Questionnaire = {
-      resourceType: "Questionnaire",
-      status: "active",
-      item: [
-        {
-          linkId: "gate",
-          text: "Gate",
-          type: "boolean",
-        },
-        {
-          linkId: "name",
-          text: "Name",
-          type: "string",
-          extension: [makeInitialExpression("namePrefill", "'prefill'")],
-          enableWhen: [
-            {
-              question: "gate",
-              operator: "=",
-              answerBoolean: true,
-            },
-          ],
-        },
-      ],
-    };
-
-    const form = new FormStore(
-      en,
-      "r5",
-      "form",
-      questionnaire,
-      undefined,
-      undefined,
-    );
-    const gate = form.scope.lookupNode("gate");
-    const name = form.scope.lookupNode("name");
-
-    assertQuestionNode(gate);
-    assertQuestionNode(name);
-
-    expect(name.isEnabled).toBe(false);
-    expect(name.answers[0]?.value).toBeUndefined();
-
-    const gateAnswer = gate.answers[0];
-    assertDefined(gateAnswer);
-    gateAnswer.setValueByUser(true);
-    expect(name.isEnabled).toBe(true);
-    expect(name.answers[0]?.value).toBe("prefill");
-
-    const nameAnswer = name.answers[0];
-    assertDefined(nameAnswer);
-    nameAnswer.setValueByUser("custom");
-
-    gateAnswer.setValueByUser(false);
-    gateAnswer.setValueByUser(true);
-    expect(name.answers[0]?.value).toBe("custom");
-  });
-
-  it("allows initialExpression to override template defaults", () => {
-    const questionnaire: Questionnaire = {
-      resourceType: "Questionnaire",
-      status: "active",
-      item: [
-        {
-          linkId: "favorite",
-          text: "Favorite color",
-          type: "string",
-          initial: [{ valueString: "Template" }],
-          extension: [makeInitialExpression(undefined, "'Expression'")],
-        },
-      ],
-    };
-
-    const form = new FormStore(
-      en,
-      "r5",
-      "form",
-      questionnaire,
-      undefined,
-      undefined,
-    );
-    const node = form.scope.lookupNode("favorite");
-    expect(node).toBeDefined();
-    assertQuestionNode(node);
-
-    expect(node.answers.at(0)?.value).toBe("Expression");
-  });
-
-  it("caps repeating initialExpression seeding to maxOccurs limits", () => {
-    const questionnaire: Questionnaire = {
-      resourceType: "Questionnaire",
-      status: "active",
-      item: [
-        {
-          linkId: "history",
-          type: "string",
-          repeats: true,
-          extension: [
-            {
-              url: "http://hl7.org/fhir/StructureDefinition/questionnaire-maxOccurs",
-              valueInteger: 2,
-            },
-            makeInitialExpression(undefined, "'Alpha' | 'Beta' | 'Gamma'"),
-          ],
-        },
-      ],
-    };
-
-    const form = new FormStore(
-      en,
-      "r5",
-      "form",
-      questionnaire,
-      undefined,
-      undefined,
-    );
-    const history = form.scope.lookupNode("history");
-
-    assertQuestionNode(history);
-
-    expect(history.repeats).toBe(true);
-    expect(history.answers).toHaveLength(2);
-    expect(history.answers.map((answer) => answer.value)).toEqual([
-      "Alpha",
-      "Beta",
-    ]);
-  });
-
-  it("exposes named initial expressions for descendants", () => {
-    const questionnaire: Questionnaire = {
-      resourceType: "Questionnaire",
-      status: "active",
-      item: [
-        {
-          linkId: "parent",
-          type: "group",
-          item: [
-            {
-              linkId: "answer",
-              type: "string",
-              extension: [makeInitialExpression("baseInit", "'value'")],
-              item: [
-                {
-                  linkId: "mirror",
-                  type: "string",
-                  extension: [makeCalculatedExpression(undefined, "%baseInit")],
+describe("host-managed expression population", () => {
+  it.each([
+    ["text/fhirpath", "'prefill'"],
+    ["text/fhirpath", "%demographicsPatient.name.first().given.first()"],
+    ["text/fhirpath", "1 +"],
+    ["application/x-fhir-query", "Patient?_id={{%patient.id}}"],
+  ])(
+    "ignores initialExpression (%s: %s) with and without an existing response",
+    (language, expression) => {
+      const questionnaire: QuestionnaireOf<"r5"> = {
+        resourceType: "Questionnaire",
+        status: "active",
+        item: [
+          {
+            linkId: "demographics",
+            type: "group",
+            extension: [
+              {
+                url: "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemPopulationContext",
+                valueExpression: {
+                  name: "demographicsPatient",
+                  language: "application/x-fhir-query",
+                  expression: "Patient?_id={{%patient.id}}",
                 },
-              ],
-            },
-          ],
-        },
-      ],
-    };
+              },
+            ],
+            item: [
+              {
+                linkId: "name",
+                type: "string",
+                extension: [
+                  {
+                    url: "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                    valueExpression: {
+                      name: "namePrefill",
+                      language,
+                      expression,
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      };
+      const response: QuestionnaireResponseOf<"r5"> = {
+        resourceType: "QuestionnaireResponse",
+        questionnaire: "Questionnaire/host-populated",
+        status: "in-progress",
+        item: [
+          {
+            linkId: "demographics",
+            item: [
+              { linkId: "name", answer: [{ valueString: "Server populated" }] },
+            ],
+          },
+        ],
+      };
 
-    const form = new FormStore(
-      en,
-      "r5",
-      "form",
-      questionnaire,
-      undefined,
-      undefined,
-    );
-    const answer = form.scope.lookupNode("answer");
+      for (const existingResponse of [undefined, response]) {
+        const form = new FormStore(
+          en,
+          "r5",
+          "form",
+          questionnaire,
+          existingResponse,
+          undefined,
+        );
+        const group = form.scope.lookupNode("demographics");
+        assertGroupNode(group);
+        expect(
+          group.scope.lookupVariable("demographicsPatient"),
+        ).toBeUndefined();
+        expect(group.issues).toEqual([]);
 
-    assertQuestionNode(answer);
-
-    const mirror = answer.answers[0]?.nodes.find(
-      (child) => child.linkId === "mirror",
-    );
-
-    assertQuestionNode(mirror);
-
-    expect(mirror.answers[0]?.value).toBe("value");
-  });
-
-  it("captures errors from initial expressions that reference unknown variables", () => {
-    const questionnaire: Questionnaire = {
-      resourceType: "Questionnaire",
-      status: "active",
-      item: [
-        {
-          linkId: "target",
-          type: "string",
-          extension: [makeInitialExpression(undefined, "%missingInit")],
-        },
-      ],
-    };
-
-    const form = new FormStore(
-      en,
-      "r5",
-      "form",
-      questionnaire,
-      undefined,
-      undefined,
-    );
-    const target = form.scope.lookupNode("target");
-
-    assertQuestionNode(target);
-
-    const issue = target.issues.find((entry) => entry.code === "invalid");
-    expect(issue).toBeTruthy();
-    expect(issue?.diagnostics).toContain(
-      "Failed to evaluate initial expression",
-    );
-    expect(issue?.diagnostics).toContain(
-      "because it references unavailable data",
-    );
-    expect(target.answers[0]?.value).toBeUndefined();
-  });
-
-  it("captures syntax errors from initial expressions", () => {
-    const questionnaire: Questionnaire = {
-      resourceType: "Questionnaire",
-      status: "active",
-      item: [
-        {
-          linkId: "target",
-          type: "string",
-          extension: [makeInitialExpression(undefined, "1 +")],
-        },
-      ],
-    };
-
-    const form = new FormStore(
-      en,
-      "r5",
-      "form",
-      questionnaire,
-      undefined,
-      undefined,
-    );
-    const target = form.scope.lookupNode("target");
-
-    assertQuestionNode(target);
-
-    const issue = target.issues.find((entry) => entry.code === "invalid");
-    expect(issue).toBeTruthy();
-    expect(issue?.diagnostics).toContain(
-      "Failed to evaluate initial expression",
-    );
-    expect(issue?.diagnostics).toContain(
-      "because the expression has a syntax error",
-    );
-    expect(target.answers[0]?.value).toBeUndefined();
-  });
+        const question = form.scope.lookupNode("name");
+        assertQuestionNode(question);
+        expect(question.scope.lookupVariable("namePrefill")).toBeUndefined();
+        expect(question.answers[0]?.value).toBe(
+          existingResponse ? "Server populated" : undefined,
+        );
+        expect(question.issues).toEqual([]);
+        expect(form.validateAll()).toBe(true);
+      }
+    },
+  );
 });

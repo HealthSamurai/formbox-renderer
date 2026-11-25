@@ -20,6 +20,17 @@ Install these in your app (your package manager will usually warn you):
 - fhirpath
 - @lhncbc/ucum-lhc
 
+## Population
+
+Expression-based population is delegated to the host (for example, a server-side
+`Questionnaire/$populate` operation). The renderer ignores `initialExpression` and
+`itemPopulationContext`, regardless of expression language. Pass the populated
+QuestionnaireResponse to the renderer before editing.
+
+Static `Questionnaire.item.initial` values remain supported for new answers.
+Runtime expressions such as `calculatedExpression`, `enableWhenExpression`, and
+`answerExpression` are evaluated by the renderer.
+
 ## Usage
 
 ```tsx
